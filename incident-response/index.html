@@ -304,6 +304,11 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
       <label for="lang-en">EN</label>
       <label for="lang-nl">NL</label>
     </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
   </div>
 </nav>
 
@@ -591,8 +596,8 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 <footer>
   <div class="wrap">
     <div class="meta">
-      <span class="en">INCIDENT RESPONSE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
-      <span class="nl">INCIDENT RESPONSE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+      <span class="en">INCIDENT RESPONSE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">INCIDENT RESPONSE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
     </div>
   </div>
 </footer>

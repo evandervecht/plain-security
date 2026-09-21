@@ -47,6 +47,11 @@ footer{margin-top:64px;font-size:11px;letter-spacing:.18em;color:#637b88;text-tr
       <label for="lang-en">EN</label>
       <label for="lang-nl">NL</label>
     </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
   </div>
 
   <h1><span class="en">Security, <em>explained for the board.</em></span><span class="nl">Security, <em>uitgelegd voor de directie.</em></span></h1>
@@ -89,7 +94,7 @@ footer{margin-top:64px;font-size:11px;letter-spacing:.18em;color:#637b88;text-tr
     <a class="btn" href="https://github.com/evandervecht" rel="noopener">Sponsor</a>
   </div>
 
-  <footer><span class="en">PLAIN SECURITY // SINGLE HTML FILES // NO JAVASCRIPT // NO TRACKING</span><span class="nl">PLAIN SECURITY // LOSSE HTML-BESTANDEN // GEEN JAVASCRIPT // GEEN TRACKING</span></footer>
+  <footer><span class="en">PLAIN SECURITY // SINGLE HTML FILES // NO TRACKING // NO COOKIES</span><span class="nl">PLAIN SECURITY // LOSSE HTML-BESTANDEN // GEEN TRACKING // GEEN COOKIES</span></footer>
 </div>
 </body>
 </html>
