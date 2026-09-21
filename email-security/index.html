@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Email Security // Briefing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   EMAIL SECURITY // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+
+/* --- scene 1 : eavesdropping --- */
+.s1 .env{animation:travel1 6.5s linear infinite}
+@keyframes travel1{
+  0%{left:118px;opacity:0}
+  7%{opacity:1}
+  93%{opacity:1}
+  100%{left:calc(100% - 170px);opacity:0}
+}
+.s1 .spy{left:50%;margin-left:-31px;bottom:36px}
+.s1 .leak{position:absolute;left:50%;margin-left:-26px;top:50%;margin-top:-17px;width:52px;height:34px;background:rgba(255,93,115,.85);opacity:0;z-index:2;animation:leak1 6.5s linear infinite}
+@keyframes leak1{
+  0%,45%{opacity:0;transform:translateY(0)}
+  51%{opacity:1;transform:translateY(0)}
+  76%{opacity:.8;transform:translateY(42px)}
+  84%,100%{opacity:0;transform:translateY(48px)}
+}
+.s1 .ear{position:absolute;left:50%;bottom:96px;width:14px;height:14px;margin-left:-7px;border:2px solid rgba(255,93,115,.6);border-radius:50%;animation:ring 2.6s ease-out infinite}
+.s1 .ear.b{animation-delay:.9s}
+@keyframes ring{0%{transform:scale(.4);opacity:.9}100%{transform:scale(4);opacity:0}}
+
+/* --- scene 2 : manipulation --- */
+.s2 .env{animation:travel2 7.5s ease-in-out infinite;font-size:0}
+@keyframes travel2{
+  0%{left:118px}
+  38%{left:calc(50% - 26px)}
+  58%{left:calc(50% - 26px)}
+  100%{left:calc(100% - 170px)}
+}
+.val{position:absolute;top:50%;left:50%;transform:translate(-50%,-74px);font-size:13px;font-weight:700;letter-spacing:.08em;padding:8px 14px;white-space:nowrap}
+.val.orig{background:rgba(55,211,155,.14);border:1px solid rgba(55,211,155,.45);color:#8ff0cd;animation:showA 7.5s ease-in-out infinite}
+.val.fake{background:rgba(255,93,115,.16);border:1px solid rgba(255,93,115,.5);color:var(--bad-soft);animation:showB 7.5s ease-in-out infinite}
+@keyframes showA{0%,44%{opacity:1}50%,100%{opacity:0}}
+@keyframes showB{0%,46%{opacity:0}54%,100%{opacity:1}}
+.s2 .hand{left:50%;margin-left:-31px;top:calc(50% + 50px);animation:grab 7.5s ease-in-out infinite}
+@keyframes grab{
+  0%,34%{transform:translateY(0) rotate(0)}
+  46%{transform:translateY(-40px) rotate(-10deg)}
+  56%{transform:translateY(-40px) rotate(8deg)}
+  66%,100%{transform:translateY(0) rotate(0)}
+}
+
+/* --- scene 3 : spoofing --- */
+.s3{display:flex;align-items:center;justify-content:center;gap:34px}
+.idcard{position:relative;width:212px;padding:18px;background:var(--surface);border:1px solid var(--line);z-index:1}
+.idcard .who{font-family:var(--sans);font-weight:700;font-size:16px;color:var(--white);letter-spacing:.01em}
+.idcard .addr{font-family:var(--mono);font-size:11.5px;color:var(--muted);word-break:break-all;margin-top:2px}
+.idcard .note{margin-top:12px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;line-height:1.5}
+.idcard.real{border-color:rgba(55,211,155,.55);box-shadow:0 0 24px rgba(55,211,155,.12)}
+.idcard.real .note{color:#8ff0cd}
+.idcard.fake{border-color:rgba(255,93,115,.55);animation:wobble 4.4s ease-in-out infinite}
+.idcard.fake .note{color:var(--bad-soft)}
+@keyframes wobble{0%,100%{transform:rotate(-1.2deg)}50%{transform:rotate(1.2deg)}}
+.stamp{position:absolute;top:-1px;right:-1px;font-size:9.5px;font-weight:700;letter-spacing:.2em;padding:5px 10px}
+.stamp.ok{background:var(--good);color:#04291d}
+.stamp.no{background:var(--bad);color:#33060e;animation:blink 1.8s steps(1) infinite}
+@keyframes blink{0%,62%{opacity:1}63%,100%{opacity:.2}}
+.vs{font-size:12px;letter-spacing:.2em;color:var(--slate);font-weight:700}
+.magnify{position:absolute;left:50%;top:50%;width:58px;height:58px;margin:-29px 0 0 -29px;z-index:3;border:3px solid var(--warn);border-radius:50%;animation:scan 6.5s ease-in-out infinite}
+.magnify::after{content:"";position:absolute;right:-18px;bottom:-13px;width:22px;height:5px;background:var(--warn);border-radius:3px;transform:rotate(42deg)}
+@keyframes scan{0%,100%{transform:translate(-138px,12px)}50%{transform:translate(138px,12px)}}
+
+/* --- scene 4 : man in the middle --- */
+.s4 .mitm{left:50%;margin-left:-31px;top:50%;margin-top:-31px}
+.s4 .env.a{animation:mitmA 6.5s ease-in-out infinite}
+.s4 .env.b{animation:mitmB 6.5s ease-in-out infinite;animation-delay:3.25s;opacity:0}
+@keyframes mitmA{
+  0%{left:118px;opacity:1}
+  40%{left:calc(50% - 92px);opacity:1}
+  48%,100%{left:calc(50% - 92px);opacity:0}
+}
+@keyframes mitmB{
+  0%{left:calc(50% + 40px);opacity:0}
+  7%{opacity:1}
+  50%{left:calc(100% - 170px);opacity:1}
+  57%,100%{left:calc(100% - 170px);opacity:0}
+}
+.lock{position:absolute;left:50%;margin-left:-10px;top:calc(50% - 78px);font-size:22px;color:var(--warn);animation:breakLock 6.5s ease-in-out infinite}
+@keyframes breakLock{
+  0%,30%{transform:translateY(0) rotate(0);opacity:1}
+  40%{transform:translateY(-7px) rotate(-16deg)}
+  46%{transform:translateY(-7px) rotate(16deg)}
+  52%{transform:translateY(-3px) rotate(-9deg)}
+  60%,100%{transform:translateY(12px) rotate(26deg);opacity:.25}
+}
+.downgrade{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;animation:fadeIn 6.5s ease-in-out infinite}
+@keyframes fadeIn{0%,45%{opacity:0}55%,100%{opacity:1}}
+
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .env,.s2 .env{left:calc(50% - 26px)}
+  .s1 .leak{opacity:.8;transform:translateY(42px)}
+  .s4 .env.a{left:118px}
+  .s4 .env.b{left:calc(100% - 170px);opacity:1}
+  .val.fake{opacity:1}.val.orig{opacity:0}
+  .lock{transform:translateY(12px) rotate(26deg);opacity:.25}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <div class="brand"><i></i> EMAIL SECURITY</div>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">INTERCEPT</span><span class="nl">AFLUISTEREN</span></a>
+      <a href="#r2"><span class="en">TAMPER</span><span class="nl">MANIPULATIE</span></a>
+      <a href="#r3"><span class="en">SPOOF</span><span class="nl">SPOOFING</span></a>
+      <a href="#r4">MITM</a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Email security. <em>Four ways it breaks.</em></span>
+      <span class="nl">E-mailbeveiliging. <em>Vier manieren waarop het misgaat.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Interception, manipulation, domain impersonation and man-in-the-middle — in plain language: what each one costs us, and the single control that stops it.</span>
+      <span class="nl">Afluisteren, manipulatie, domeinnabootsing en man-in-the-middle — in gewone taal: wat elk risico ons kost, en welke maatregel het stopt.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE RISKS</span><span class="nl">BEKIJK DE RISICO'S</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT STOPS IT</span><span class="nl">WAT HET STOPT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 01</span><span class="nl">RISICO 01</span></span>
+    <h2>
+      <span class="en">Someone is <em>listening in.</em></span>
+      <span class="nl">Iemand <em>luistert mee.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">“afgeluisterd worden” / eavesdropping / interception</span>
+      <span class="nl">afgeluisterd worden / interceptie</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">IN TRANSIT</span><span class="nl">ONDERWEG</span></div>
+      <div class="node left"><div class="box">🏢</div><span class="en">Our mail server</span><span class="nl">Onze mailserver</span></div>
+      <div class="node right"><div class="box">🏦</div><span class="en">Their mail server</span><span class="nl">Hun mailserver</span></div>
+      <div class="wire"></div>
+      <div class="env">✉</div>
+      <div class="leak"></div>
+      <div class="ear"></div><div class="ear b"></div>
+      <div class="actor spy pulse">🕵️<span class="tag"><span class="en">READING EVERYTHING</span><span class="nl">LEEST ALLES MEE</span></span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">An email is not one hop — it crosses several networks and relays before it lands. If any hop negotiates plaintext instead of TLS, everything in that message is readable by whoever sits on that path: a transit provider, a compromised router, a hostile Wi-Fi, a nation-state tap. Nothing breaks, no alert fires, and the recipient still receives the mail. That is exactly why it goes unnoticed for years.</p>
+      <p class="en"><strong>What is exposed:</strong> M&amp;A and contract negotiations, HR and medical data, invoices and bank details, password-reset links, board material. Under GDPR this is a personal-data breach with a 72-hour notification clock.</p>
+      <p class="nl">Een e-mail maakt niet één sprong — hij passeert meerdere netwerken en relays voordat hij aankomt. Onderhandelt één van die hops platte tekst in plaats van TLS, dan is de volledige inhoud leesbaar voor iedereen op dat pad: een transitprovider, een gehackte router, een vijandig wifinetwerk, een statelijke tap. Er gaat niets stuk, er komt geen alarm, en de ontvanger krijgt de mail gewoon. Precies daarom blijft dit jarenlang onopgemerkt.</p>
+      <p class="nl"><strong>Wat er op straat ligt:</strong> overname- en contractonderhandelingen, HR- en medische gegevens, facturen en bankrekeningnummers, wachtwoord-resetlinks, bestuursstukken. Onder de AVG is dit een datalek met een meldtermijn van 72 uur.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">SILENT · UNDETECTABLE · RETROACTIVE</span><span class="nl">STIL · ONOPGEMERKT · TERUGWERKEND</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: ENFORCED TLS + MTA-STS + DANE</span><span class="nl">OPLOSSING: AFGEDWONGEN TLS + MTA-STS + DANE</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 02</span><span class="nl">RISICO 02</span></span>
+    <h2>
+      <span class="en">Someone <em>rewrites the message.</em></span>
+      <span class="nl">Iemand <em>verandert het bericht.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">“verkeer gemanipuleerd worden” / tampering / integrity loss</span>
+      <span class="nl">verkeer gemanipuleerd worden / integriteitsverlies</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">INVOICE FLOW</span><span class="nl">FACTUURSTROOM</span></div>
+      <div class="node left"><div class="box">🧾</div><span class="en">Supplier</span><span class="nl">Leverancier</span></div>
+      <div class="node right"><div class="box">💳</div><span class="en">Finance</span><span class="nl">Finance</span></div>
+      <div class="wire"></div>
+      <div class="val orig">IBAN …4417 · € 84.200</div>
+      <div class="val fake">IBAN …9902 · € 84.200</div>
+      <div class="env">✉</div>
+      <div class="actor hand">✍️<span class="tag"><span class="en">EDITS IN TRANSIT</span><span class="nl">PAST ONDERWEG AAN</span></span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Reading is passive. Changing is active — and far more expensive. An attacker positioned on an unprotected path can alter the message body, swap an attached invoice, or rewrite a single IBAN, then forward the mail onward. Both sender and recipient see a normal conversation thread. The mismatch only surfaces weeks later, when the real supplier asks where their money is.</p>
+      <p class="en"><strong>Business impact:</strong> direct financial loss (invoice-redirection fraud averages six figures per incident), contract disputes over “what was actually agreed”, and no reliable evidence trail — because without a cryptographic signature you cannot prove the message you hold is the message that was sent.</p>
+      <p class="nl">Meelezen is passief. Wijzigen is actief — en veel duurder. Een aanvaller op een onbeschermd pad kan de tekst aanpassen, een bijgevoegde factuur vervangen of één IBAN herschrijven, en de mail daarna gewoon doorsturen. Zowel afzender als ontvanger ziet een normale gespreksdraad. Het verschil komt pas weken later boven water, als de echte leverancier vraagt waar zijn geld blijft.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> direct financieel verlies (factuurfraude loopt gemiddeld in de zes cijfers per incident), contractdiscussies over “wat er nu écht is afgesproken”, en geen betrouwbaar bewijsspoor — zonder cryptografische handtekening kun je niet aantonen dat het bericht dat je hebt, het bericht is dat is verstuurd.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">DIRECT FINANCIAL LOSS · NO EVIDENCE TRAIL</span><span class="nl">DIRECT GELDVERLIES · GEEN BEWIJSSPOOR</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: DKIM SIGNING + S/MIME ON KEY FLOWS</span><span class="nl">OPLOSSING: DKIM + S/MIME OP KRITIEKE STROMEN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 03</span><span class="nl">RISICO 03</span></span>
+    <h2>
+      <span class="en">Someone <em>pretends to be us.</em></span>
+      <span class="nl">Iemand <em>doet zich voor als ons.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">“het domein kan nagebootst worden” / domain spoofing</span>
+      <span class="nl">het domein kan nagebootst worden / spoofing</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">INBOX VIEW</span><span class="nl">INBOX-BEELD</span></div>
+      <div class="idcard real">
+        <span class="stamp ok"><span class="en">REAL</span><span class="nl">ECHT</span></span>
+        <div class="who">CFO</div>
+        <div class="addr">cfo@ons-bedrijf.nl</div>
+        <div class="note">SPF ✓ DKIM ✓ DMARC ✓</div>
+      </div>
+      <div class="vs">VS</div>
+      <div class="idcard fake">
+        <span class="stamp no"><span class="en">FAKE</span><span class="nl">NEP</span></span>
+        <div class="who">CFO</div>
+        <div class="addr">cfo@ons-bedrijf.nl</div>
+        <div class="note"><span class="en">sent from an attacker's server</span><span class="nl">vanaf server van aanvaller</span></div>
+      </div>
+      <div class="magnify"></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Nothing in the email protocol stops a stranger from typing our domain into the “From:” field. Without SPF, DKIM and an enforcing DMARC policy, anyone on the internet can send mail that <em>is</em> — for every practical purpose the recipient can check — from our CFO. Their mail client shows our name, our domain, our branding.</p>
+      <p class="en"><strong>Business impact:</strong> CEO fraud and payment-instruction fraud aimed at our own staff; phishing of our customers under our brand; our domain's sending reputation destroyed, which means our <em>legitimate</em> mail starts landing in spam. And this risk exists whether or not we are otherwise “secure” — the attacker never has to touch our infrastructure.</p>
+      <p class="nl">Niets in het e-mailprotocol verhindert een vreemde om ons domein in het “Van:”-veld te typen. Zonder SPF, DKIM en een handhavend DMARC-beleid kan iedereen op internet mail versturen die — voor alles wat de ontvanger kan controleren — van onze CFO ís. In hun mailprogramma staat onze naam, ons domein, onze huisstijl.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> CEO-fraude en betaalinstructiefraude richting onze eigen medewerkers; phishing van onze klanten onder onze merknaam; vernietiging van de verzendreputatie van ons domein, waardoor onze <em>legitieme</em> post in de spamfolder belandt. Dit risico bestaat los van hoe “veilig” wij verder zijn — de aanvaller hoeft onze infrastructuur nooit aan te raken.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">CEO FRAUD · BRAND ABUSE · DELIVERABILITY</span><span class="nl">CEO-FRAUDE · MERKMISBRUIK · BEZORGBAARHEID</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: SPF + DKIM + DMARC AT P=REJECT</span><span class="nl">OPLOSSING: SPF + DKIM + DMARC OP P=REJECT</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 04</span><span class="nl">RISICO 04</span></span>
+    <h2>
+      <span class="en">Someone <em>sits in the middle.</em></span>
+      <span class="nl">Iemand <em>zit ertussen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">man-in-the-middle attack / TLS downgrade</span>
+      <span class="nl">man-in-the-middle-aanval / TLS-downgrade</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">TLS HANDSHAKE</span><span class="nl">TLS-HANDSHAKE</span></div>
+      <div class="node left"><div class="box">🏢</div><span class="en">Us</span><span class="nl">Wij</span></div>
+      <div class="node right"><div class="box">🤝</div><span class="en">Partner</span><span class="nl">Partner</span></div>
+      <div class="wire"></div>
+      <div class="lock">🔒</div>
+      <div class="env a">✉</div>
+      <div class="env b">✉</div>
+      <div class="actor mitm pulse">🎭<span class="tag"><span class="en">RELAYS BOTH SIDES</span><span class="nl">SPEELT BEIDE KANTEN</span></span></div>
+      <div class="downgrade"><span class="en">TLS STRIPPED → PLAINTEXT</span><span class="nl">TLS VERWIJDERD → PLATTE TEKST</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">This is risks 01 and 02 combined and weaponised. The attacker inserts themselves between the two mail servers and impersonates each side to the other. Because STARTTLS is <em>opportunistic</em> by default, they simply strip the encryption offer during the handshake — both servers then fall back to plaintext and neither complains. From that position the attacker reads everything, changes anything, and can hold the conversation open for months.</p>
+      <p class="en"><strong>Why this is the board-level one:</strong> it defeats the assumption that “we have encryption”. Opportunistic TLS is encryption that silently turns itself off when asked nicely. MTA-STS and DANE remove the “opportunistic” part — they make encryption mandatory, so a stripped connection <em>fails</em> instead of quietly downgrading.</p>
+      <p class="nl">Dit is risico 01 en 02 gecombineerd en tot wapen gemaakt. De aanvaller plaatst zich tussen beide mailservers en doet zich naar elke kant voor als de ander. Omdat STARTTLS standaard <em>opportunistisch</em> is, verwijdert hij simpelweg het versleutelingsaanbod tijdens de handshake — beide servers vallen terug op platte tekst en geen van beide klaagt. Vanuit die positie leest de aanvaller alles, wijzigt hij wat hij wil, en kan hij de conversatie maandenlang openhouden.</p>
+      <p class="nl"><strong>Waarom dit een directiethema is:</strong> het ondergraaft de aanname dat “wij versleuteling hebben”. Opportunistische TLS is versleuteling die zichzelf stilletjes uitschakelt zodra er vriendelijk om wordt gevraagd. MTA-STS en DANE halen het “opportunistische” eruit — zij maken versleuteling verplicht, zodat een gestripte verbinding <em>faalt</em> in plaats van stil te degraderen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">READ + REWRITE + IMPERSONATE, AT ONCE</span><span class="nl">MEELEZEN + WIJZIGEN + NABOOTSEN TEGELIJK</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: MTA-STS ENFORCE + DANE + TLS-RPT</span><span class="nl">OPLOSSING: MTA-STS ENFORCE + DANE + TLS-RPT</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>actually stops this.</em></span>
+      <span class="nl">Wat dit <em>daadwerkelijk stopt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">DNS records and mail-server settings — no new product, no licence</span>
+      <span class="nl">DNS-records en mailserverinstellingen — geen nieuw product, geen licentie</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1">SPF</span>
+        <span class="chip c2">DKIM</span>
+        <span class="chip c3">DMARC</span>
+        <span class="chip c4">MTA-STS</span>
+        <span class="chip c5">DANE / TLS-RPT</span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Stops</th><th>In one line</th></tr>
+        <tr><td class="ctl">SPF</td><td>Spoofing (03)</td><td>A DNS list of the servers allowed to send mail as our domain.</td></tr>
+        <tr><td class="ctl">DKIM</td><td>Manipulation (02)</td><td>A cryptographic signature over the message — any edit in transit breaks it.</td></tr>
+        <tr><td class="ctl">DMARC</td><td>Spoofing (03)</td><td>Tells receivers what to do when SPF/DKIM fail. Only <code>p=reject</code> actually blocks; it also gives us reports on who is abusing our domain.</td></tr>
+        <tr><td class="ctl">MTA-STS</td><td>Interception (01), MITM (04)</td><td>Declares “encryption is mandatory for my domain” — a stripped connection fails instead of downgrading.</td></tr>
+        <tr><td class="ctl">DANE</td><td>MITM (04)</td><td>Pins the expected certificate in DNSSEC-signed DNS, so a forged certificate is rejected.</td></tr>
+        <tr><td class="ctl">TLS-RPT</td><td>Blind spots</td><td>Daily reports on failed TLS connections — how we find out that an attack or misconfiguration is happening.</td></tr>
+        <tr><td class="ctl">S/MIME · PGP</td><td>01 + 02, end-to-end</td><td>Encrypts and signs the message itself, not just the transport. For the small set of genuinely high-value flows.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Stopt</th><th>In één zin</th></tr>
+        <tr><td class="ctl">SPF</td><td>Spoofing (03)</td><td>Een DNS-lijst van servers die namens ons domein mogen versturen.</td></tr>
+        <tr><td class="ctl">DKIM</td><td>Manipulatie (02)</td><td>Een cryptografische handtekening over het bericht — elke wijziging onderweg breekt hem.</td></tr>
+        <tr><td class="ctl">DMARC</td><td>Spoofing (03)</td><td>Vertelt ontvangers wat te doen als SPF/DKIM falen. Alleen <code>p=reject</code> blokkeert echt; daarnaast krijgen we rapportages over wie ons domein misbruikt.</td></tr>
+        <tr><td class="ctl">MTA-STS</td><td>Afluisteren (01), MITM (04)</td><td>Verklaart “versleuteling is verplicht voor mijn domein” — een gestripte verbinding faalt in plaats van te degraderen.</td></tr>
+        <tr><td class="ctl">DANE</td><td>MITM (04)</td><td>Legt het verwachte certificaat vast in DNSSEC-ondertekende DNS, zodat een vervalst certificaat wordt geweigerd.</td></tr>
+        <tr><td class="ctl">TLS-RPT</td><td>Blinde vlekken</td><td>Dagelijkse rapportage over mislukte TLS-verbindingen — zo merken we dat er een aanval of misconfiguratie speelt.</td></tr>
+        <tr><td class="ctl">S/MIME · PGP</td><td>01 + 02, end-to-end</td><td>Versleutelt en ondertekent het bericht zelf, niet alleen het transport. Voor de kleine set echt kritieke stromen.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> all of the above are DNS records and mail-server configuration. Cost is engineering hours, not licences. The real decision is whether we are willing to move DMARC to <code>p=reject</code> and MTA-STS to <code>enforce</code> — the monitoring-only modes cost the same effort and stop nothing.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> dit zijn allemaal DNS-records en mailserverconfiguratie. De kosten zijn engineeringuren, geen licenties. De echte beslissing is of we DMARC naar <code>p=reject</code> en MTA-STS naar <code>enforce</code> durven te zetten — de monitoring-standen kosten evenveel werk en stoppen niets.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">EMAIL SECURITY BRIEFING <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> PURE CSS ANIMATIONS <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">E-MAILBEVEILIGING BRIEFING <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> PURE CSS-ANIMATIES <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
