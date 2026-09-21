@@ -300,6 +300,16 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
   .val.fake{opacity:1}.val.orig{opacity:0}
   .lock{transform:translateY(12px) rotate(26deg);opacity:.25}
 }
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 </style>
 </head>
 <body>
@@ -312,6 +322,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
       <a href="#r2"><span class="en">TAMPER</span><span class="nl">MANIPULATIE</span></a>
       <a href="#r3"><span class="en">SPOOF</span><span class="nl">SPOOFING</span></a>
       <a href="#r4">MITM</a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
       <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
     </div>
     <div class="lang">
@@ -561,6 +572,46 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
         <span class="en"><strong>The board-level point:</strong> all of the above are DNS records and mail-server configuration. Cost is engineering hours, not licences. The real decision is whether we are willing to move DMARC to <code>p=reject</code> and MTA-STS to <code>enforce</code> — the monitoring-only modes cost the same effort and stop nothing.</span>
         <span class="nl"><strong>De kern voor de directie:</strong> dit zijn allemaal DNS-records en mailserverconfiguratie. De kosten zijn engineeringuren, geen licenties. De echte beslissing is of we DMARC naar <code>p=reject</code> en MTA-STS naar <code>enforce</code> durven te zetten — de monitoring-standen kosten evenveel werk en stoppen niets.</span>
       </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Spoofing needs no access to our systems. Anyone on the internet can try it today, and many do.</span><span class="nl">Spoofing vraagt geen toegang tot onze systemen. Iedereen op internet kan het vandaag proberen, en velen doen dat.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Invoice and CEO fraud, phishing of customers under our brand, exposure of confidential mail, and legitimate mail landing in spam.</span><span class="nl">Factuur- en CEO-fraude, phishing van klanten onder onze naam, blootstelling van vertrouwelijke mail, en legitieme mail die in de spam belandt.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low</span><span class="nl">Laag</span></span><p><span class="en">With DMARC on reject and MTA-STS enforced, spoofing and downgrade are blocked. What remains is a compromised mailbox, which is an identity problem.</span><span class="nl">Met DMARC op reject en MTA-STS op enforce zijn spoofing en downgrade geblokkeerd. Wat overblijft is een gehackte mailbox, en dat is een identiteitsprobleem.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CIO / CFO</span><span class="nl">CIO / CFO</span></span><p><span class="en">IT owns the DNS records. Finance owns payment verification, which catches what the technology misses.</span><span class="nl">IT is eigenaar van de DNS-records. Finance is eigenaar van de betaalverificatie, die opvangt wat de techniek mist.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">DMARC policy level (none / quarantine / reject) · % of outbound mail passing DMARC · MTA-STS mode (testing / enforce) · TLS-RPT failures per week.</span><span class="nl">DMARC-beleidsniveau (none / quarantine / reject) · % uitgaande mail dat DMARC doorstaat · MTA-STS-modus (testing / enforce) · TLS-RPT-fouten per week.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Spoofing or interception of company email causes payment fraud, phishing of customers under our name and disclosure of confidential correspondence.”</span><span class="nl">“Spoofing of onderschepping van bedrijfsmail veroorzaakt betaalfraude, phishing van klanten onder onze naam en het uitlekken van vertrouwelijke correspondentie.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Basic cyber hygiene, encryption of communication where appropriate, and measures against phishing and impersonation are part of the required risk management measures.</td><td>Ask suppliers for their DMARC policy. It is public in DNS and takes one lookup to verify, unlike most claims in a questionnaire.</td><td>A large fraud or a spoofing campaign against customers can be a significant incident with the 24-hour early warning. Intercepted personal data is a GDPR notification within 72 hours.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Secure communication and protection of data in transit are part of the ICT risk framework. Email is a channel with clients and with the supervisor.</td><td>Providers whose email carries your instructions should themselves enforce DMARC. Check before trusting instructions that arrive from them.</td><td>Payment fraud through spoofed mail may qualify as a major ICT incident with notification to the supervisor. Document detection and response times.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Email authentication and transport encryption fall under logical access and communication controls. Auditors expect DMARC and TLS enforcement as evidence.</td><td>A SOC 2 report rarely tests email authentication explicitly. Check the DNS yourself; it takes a minute.</td><td>A fraud through spoofed mail is tested as an incident, and weak payment controls can appear as an exception in the report.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant where email carries payment or financial instructions. The auditor looks at how instructions are authorised, not at the protocol.</td><td>Look for controls on how instructions are verified, not on how email is sent. The report will not tell you whether their domain can be spoofed.</td><td>A fraud through spoofed instructions becomes a control failure in the report period and must be disclosed to the user auditors.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Basale cyberhygiëne, versleuteling van communicatie waar passend, en maatregelen tegen phishing en nabootsing vallen onder de verplichte risicobeheersmaatregelen.</td><td>Vraag leveranciers naar hun DMARC-beleid. Het staat openbaar in DNS en is met één opzoekactie te controleren, anders dan de meeste antwoorden in een vragenlijst.</td><td>Een grote fraude of een spoofingcampagne richting klanten kan een significant incident zijn met de 24-uurs vroegtijdige waarschuwing. Onderschepte persoonsgegevens zijn een AVG-melding binnen 72 uur.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Veilige communicatie en bescherming van gegevens onderweg maken deel uit van het ICT-risicokader. E-mail is een kanaal met klanten en met de toezichthouder.</td><td>Leveranciers wier e-mail uw instructies vervoert, moeten zelf DMARC afdwingen. Controleer dat voordat u instructies van hen vertrouwt.</td><td>Betaalfraude via nagebootste mail kan een ernstig ICT-incident zijn met melding aan de toezichthouder. Documenteer detectie- en reactietijden.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>E-mailauthenticatie en transportversleuteling vallen onder logische toegang en communicatiebeheersing. Auditors verwachten DMARC en afgedwongen TLS als bewijs.</td><td>Een SOC 2-rapport test e-mailauthenticatie zelden expliciet. Controleer de DNS zelf; dat kost een minuut.</td><td>Een fraude via nagebootste mail wordt als incident getest, en zwakke betaalcontroles kunnen als afwijking in het rapport verschijnen.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant waar e-mail betaal- of financiële instructies vervoert. De auditor kijkt naar hoe instructies worden geautoriseerd, niet naar het protocol.</td><td>Zoek naar maatregelen voor het verifiëren van instructies, niet voor het verzenden van e-mail. Het rapport vertelt u niet of hun domein na te bootsen is.</td><td>Een fraude via nagebootste instructies wordt een tekortkoming in de rapportperiode en moet aan de auditors van de klanten worden gemeld.</td></tr>
+      </table>
     </div>
   </div>
 </section>

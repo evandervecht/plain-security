@@ -260,6 +260,16 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
   .s4 .vault.online .box::after{opacity:1}
   .banner{opacity:1}
 }
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 </style>
 </head>
 <body>
@@ -272,6 +282,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
       <a href="#r2"><span class="en">SPREAD</span><span class="nl">VERSPREIDEN</span></a>
       <a href="#r3"><span class="en">STEAL</span><span class="nl">STELEN</span></a>
       <a href="#r4"><span class="en">BACKUPS</span><span class="nl">BACK-UPS</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
       <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
     </div>
     <div class="lang">
@@ -514,6 +525,46 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
         <span class="en"><strong>The board-level point:</strong> two numbers decide everything — how many days can we be down, and how much data can we afford to lose. Every control above is priced against those two. And decide now, in calm, whether we would ever pay. At 03:00 with the company down is the wrong moment to have that debate.</span>
         <span class="nl"><strong>De kern voor de directie:</strong> twee getallen bepalen alles — hoeveel dagen kunnen we plat liggen, en hoeveel data kunnen we ons veroorloven te verliezen. Elke maatregel hierboven wordt tegen die twee afgewogen. En beslis nu, in rust, of we ooit zouden betalen. Om 03:00 met een stilstaand bedrijf is het verkeerde moment voor dat debat.</span>
       </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Every organisation with email and remote access is a target. Entry needs a password, not an exploit.</span><span class="nl">Elke organisatie met e-mail en externe toegang is doelwit. Binnenkomen vraagt een wachtwoord, geen exploit.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">Critical</span><span class="nl">Kritiek</span></span><p><span class="en">Weeks of downtime, a data breach with notification duties, a ransom demand and months of recovery cost.</span><span class="nl">Weken stilstand, een datalek met meldplicht, een losgeldeis en maanden herstelkosten.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Middel</span></span><p><span class="en">Entry stays possible. Segmentation, EDR and immutable backups bound the blast radius and cut downtime to days.</span><span class="nl">Binnenkomen blijft mogelijk. Segmentatie, EDR en onveranderbare back-ups beperken de schade en brengen de stilstand terug tot dagen.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CIO / COO</span><span class="nl">CIO / COO</span></span><p><span class="en">Executes through the CISO and IT. The board owns the two numbers: tolerable downtime and tolerable data loss.</span><span class="nl">Uitvoering via de CISO en IT. De directie is eigenaar van de twee getallen: aanvaardbare stilstand en aanvaardbaar dataverlies.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">% of external logins without MFA · days to patch a critical internet-facing flaw · date and duration of the last full restore test · % of endpoints with EDR.</span><span class="nl">% externe inlogs zonder MFA · dagen tot een kritieke kwetsbaarheid aan de buitenkant is gepatcht · datum en duur van de laatste volledige hersteltest · % apparaten met EDR.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Ransomware through compromised credentials and a flat network causes a multi-week outage, a personal-data breach and extortion.”</span><span class="nl">“Ransomware via gestolen inloggegevens en een plat netwerk veroorzaakt wekenlange stilstand, een datalek en afpersing.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Risk management measures covering incident handling, backup and continuity, supply chain, MFA and encryption. Management approves them, follows training, and is personally accountable.</td><td>There is no NIS2 certificate. Ask how the supplier covers these measures, and put their duty to warn you of incidents in the contract.</td><td>A significant incident: early warning to the national authority within 24 hours, full notification within 72, final report within a month. Affected customers must be informed.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities: an ICT risk framework approved by the board, backup and restore policies that are actually tested, a register of ICT third parties, and resilience testing.</td><td>A report is input, not a substitute. Critical ICT providers need the contractual clauses DORA prescribes, including audit rights and an exit strategy.</td><td>A major ICT incident: initial notification to the supervisor within hours of classification, intermediate report within 72 hours, final report within a month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>If you issue one: controls for access, change, backup and incident response are tested over a period (Type II). Every exception is printed in the report.</td><td>Check the period, the systems in scope and the exceptions. Then read the complementary user entity controls: that is the list of things you must do yourself.</td><td>The incident appears in the next report as a deviation, auditors test the response, and customers will ask for a bridge letter and your root-cause analysis.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Assurance over outsourced processes relevant to financial reporting. The service organisation sets the scope, so security controls may be thin or absent.</td><td>Read the control objectives first. If backup and recovery are not among them, the report says nothing about ransomware resilience.</td><td>The service organisation must disclose the incident to the user auditors. If you are the service organisation, expect it in your opinion and in your customers’ audits.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Risicobeheersmaatregelen voor incidentafhandeling, back-up en continuïteit, toeleveringsketen, MFA en versleuteling. Het bestuur keurt ze goed, volgt training en is persoonlijk aansprakelijk.</td><td>Er bestaat geen NIS2-certificaat. Vraag hoe de leverancier deze maatregelen invult, en leg zijn plicht om u bij incidenten te waarschuwen vast in het contract.</td><td>Een significant incident: vroegtijdige waarschuwing aan de toezichthouder binnen 24 uur, volledige melding binnen 72 uur, eindrapport binnen een maand. Getroffen klanten moeten worden geïnformeerd.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: een ICT-risicokader dat het bestuur goedkeurt, back-up- en herstelbeleid dat echt wordt getest, een register van ICT-derden, en weerbaarheidstesten.</td><td>Een rapport is input, geen vervanging. Kritieke ICT-leveranciers vereisen de contractbepalingen die DORA voorschrijft, inclusief auditrechten en een exitstrategie.</td><td>Een ernstig ICT-incident: eerste melding aan de toezichthouder binnen enkele uren na classificatie, tussenrapport binnen 72 uur, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Als u er zelf een afgeeft: maatregelen voor toegang, wijzigingen, back-up en incidentrespons worden over een periode getest (Type II). Elke afwijking staat in het rapport.</td><td>Controleer de periode, de systemen binnen scope en de afwijkingen. Lees daarna de complementary user entity controls: dat is de lijst van wat u zelf moet doen.</td><td>Het incident verschijnt in het volgende rapport als afwijking, auditors testen de respons, en klanten vragen om een bridge letter en uw oorzaakanalyse.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Zekerheid over uitbestede processen die relevant zijn voor de financiële verslaggeving. De serviceorganisatie bepaalt de scope, dus beveiligingsmaatregelen kunnen mager of afwezig zijn.</td><td>Lees eerst de beheersdoelstellingen. Staan back-up en herstel er niet bij, dan zegt het rapport niets over weerbaarheid tegen ransomware.</td><td>De serviceorganisatie moet het incident melden aan de auditors van haar klanten. Bent u zelf de serviceorganisatie, verwacht het dan in uw oordeel en in de audits van uw klanten.</td></tr>
+      </table>
     </div>
   </div>
 </section>
