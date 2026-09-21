@@ -19,6 +19,7 @@ body{margin:0;background:#0b1b2b;color:#c8d8e1;font-family:"JetBrains Mono",ui-m
 .en,.nl{display:none}
 body:has(#lang-en:checked) .en{display:revert}
 body:has(#lang-nl:checked) .nl{display:revert}
+body:has(#lang-en:checked) .btn.en,body:has(#lang-nl:checked) .btn.nl{display:inline-block}
 h1{font-family:system-ui,sans-serif;font-weight:800;color:#fff;font-size:clamp(28px,4vw,48px);letter-spacing:-.02em;margin:0 0 12px}
 h1 em{font-style:normal;color:#87a2b0}
 .lede{font-family:system-ui,sans-serif;font-size:17px;color:#e6eff5;max-width:62ch;margin:0 0 48px}
@@ -90,7 +91,8 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="en">Missing a topic your board keeps asking about? Request it and it goes on the list. Find it useful? Sponsoring keeps the briefings free and ad-free.</span>
       <span class="nl">Mist u een onderwerp waar uw directie steeds naar vraagt? Vraag het aan en het komt op de lijst. Nuttig? Sponsoren houdt de briefings gratis en reclamevrij.</span>
     </p>
-    <a class="btn solid" href="https://github.com/evandervecht/plain-security/issues/new?title=Topic%20request%3A%20&amp;body=Which%20topic%2C%20and%20what%20question%20does%20the%20board%20ask%20about%20it%3F"><span class="en">Request a topic</span><span class="nl">Vraag een onderwerp aan</span></a>
+    <a class="btn solid en" href="https://github.com/evandervecht/plain-security/issues/new?title=Topic%20request%3A%20&amp;body=Which%20topic%2C%20and%20what%20question%20does%20the%20board%20ask%20about%20it%3F">Request a topic</a>
+    <a class="btn solid nl" href="https://github.com/evandervecht/plain-security/issues/new?title=Onderwerpverzoek%3A%20&amp;body=Welk%20onderwerp%2C%20en%20welke%20vraag%20stelt%20de%20directie%20erover%3F%20Antwoorden%20in%20het%20Nederlands%20is%20prima.">Vraag een onderwerp aan</a>
     <a class="btn" href="https://github.com/evandervecht" rel="noopener">Sponsor</a>
   </div>
 
