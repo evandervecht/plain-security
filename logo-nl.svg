@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 64" width="460" height="64" role="img" aria-label="Plain Security">
+  <rect x="0" y="0" width="19" height="19" fill="#ffffff"/>
+  <rect x="21" y="0" width="19" height="19" fill="#637b88"/>
+  <rect x="0" y="21" width="19" height="19" fill="#2a4858"/>
+  <rect x="21" y="21" width="19" height="19" fill="#637b88"/>
+  <rect x="0" y="45" width="40" height="3" fill="#637b88"/>
+  <text x="62" y="30" font-family="Poppins, Montserrat, system-ui, -apple-system, 'Segoe UI', sans-serif" font-weight="800" font-size="30" letter-spacing="-0.5" fill="#ffffff">PLAIN</text>
+  <text x="62" y="54" font-family="'JetBrains Mono', ui-monospace, Consolas, monospace" font-weight="700" font-size="12" letter-spacing="4.2" fill="#87a2b0">SECURITY // VOOR DE DIRECTIE</text>
+</svg>
