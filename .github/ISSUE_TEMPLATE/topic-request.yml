@@ -1,0 +1,47 @@
+name: Topic request
+description: Ask for a new Plain Security briefing.
+title: "Topic request: "
+labels: ["topic-request"]
+body:
+  - type: input
+    id: topic
+    attributes:
+      label: Topic name
+      description: Short name of the briefing you want, as it should appear on the landing page.
+      placeholder: e.g. Deepfakes in the boardroom
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: The board's question
+      description: What does the board actually ask about this? One or two sentences.
+      placeholder: e.g. Can someone impersonate our CFO on a video call, and would we notice?
+    validations:
+      required: true
+  - type: dropdown
+    id: audience
+    attributes:
+      label: Who is asking
+      options:
+        - Board or C-level
+        - Risk or compliance
+        - IT or security team
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options:
+        - English and Dutch (default)
+        - English only
+        - Dutch only
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else
+      description: Regulations, incidents or examples that must be in it. Optional.

@@ -1,0 +1,47 @@
+name: Onderwerpverzoek
+description: Vraag een nieuwe Plain Security-briefing aan.
+title: "Onderwerpverzoek: "
+labels: ["topic-request"]
+body:
+  - type: input
+    id: topic
+    attributes:
+      label: Naam van het onderwerp
+      description: Korte naam van de briefing, zoals die op de startpagina moet staan.
+      placeholder: bijv. Deepfakes in de bestuurskamer
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: De vraag van de directie
+      description: Wat vraagt de directie hier eigenlijk over? Eén of twee zinnen.
+      placeholder: bijv. Kan iemand onze CFO nadoen in een videogesprek, en zouden we dat merken?
+    validations:
+      required: true
+  - type: dropdown
+    id: audience
+    attributes:
+      label: Wie vraagt het
+      options:
+        - Directie of C-level
+        - Risk of compliance
+        - IT- of securityteam
+        - Anders
+    validations:
+      required: true
+  - type: dropdown
+    id: language
+    attributes:
+      label: Taal
+      options:
+        - Engels en Nederlands (standaard)
+        - Alleen Engels
+        - Alleen Nederlands
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Verder nog iets
+      description: Regelgeving, incidenten of voorbeelden die erin moeten. Optioneel.

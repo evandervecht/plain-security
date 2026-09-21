@@ -1,0 +1,61 @@
+# Auto-labels for issues. Regexes are matched against title + body (case-insensitive).
+# Category labels
+topic-request:
+  - '(topic request|onderwerpverzoek|new topic|nieuw onderwerp|please (add|cover|write)|kunnen jullie|graag een)'
+bug:
+  - '(bug|broken|does not work|doesn.t work|werkt niet|kapot|fout|error|overlap|404|not loading|laadt niet)'
+mobile:
+  - '(mobile|phone|telefoon|tablet|iphone|android|small screen|klein scherm|responsive)'
+translation:
+  - '(translation|vertaling|dutch|nederlands|english|engels|typo|spelling|taalfout|grammar|grammatica|wording)'
+compliance:
+  - '(nis ?2|dora|soc ?2|isae ?3402|gdpr|avg|compliance|regulator|toezichthouder|cyberbeveiligingswet|iso ?27001|audit)'
+region:
+  - '(\buk\b|\bus\b|united states|united kingdom|germany|duitsland|france|frankrijk|switzerland|zwitserland|denmark|sweden|country|land specifiek|region)'
+sponsor:
+  - '(sponsor|donat|doneer|payment|betaling|stripe)'
+# Which briefing the issue is about
+'page: email-security':
+  - '(email.?security|e-?mail|spf|dkim|dmarc|mta-sts)'
+'page: ransomware':
+  - '(ransomware|losgeld|gijzelsoftware)'
+'page: phishing':
+  - '(phishing|ceo.?fraud|smishing|vishing)'
+'page: identity':
+  - '(password|wachtwoord|identity|identiteit|passkey|\bmfa\b|\b2fa\b)'
+'page: entra':
+  - '(entra|azure ad|microsoft 365|m365|conditional access|global admin)'
+'page: iam':
+  - '(\biam\b|service account|serviceaccount|segregation of duties|functiescheiding|least privilege)'
+'page: supply-chain':
+  - '(supply.?chain|toeleveringsketen|vendor|leverancier|third.?party)'
+'page: cloud':
+  - '(\bcloud\b|\baws\b|azure|gcp|bucket|misconfig)'
+'page: insider':
+  - '(insider|binnenuit|leaver|vertrekker)'
+'page: ddos':
+  - '(ddos|denial of service|availability|beschikbaarheid|uptime)'
+'page: patching':
+  - '(patch|vulnerability|kwetsbaarheid|end.of.life|\beol\b|cve)'
+'page: shadow-it':
+  - '(shadow.?it|saas sprawl|wildgroei|oauth)'
+'page: ai-security':
+  - '(\bai\b|llm|chatgpt|copilot|deepfake|prompt injection)'
+'page: web-security':
+  - '(website|web.?security|webshop|injection|\bwaf\b|skimm)'
+'page: endpoints':
+  - '(endpoint|laptop|byod|device|apparaat|browser)'
+'page: data':
+  - '(data classification|classificatie|crown jewel|kroonjuwe|retention|bewaartermijn|\bdlp\b)'
+'page: detection':
+  - '(detection|detectie|\bsoc\b(?! ?2)|siem|monitoring|logging|\bedr\b|\bmdr\b)'
+'page: ot-iot':
+  - '(\bot\b|\biot\b|scada|factory|fabriek|camera|building system|gebouwbeheer)'
+'page: secure-development':
+  - '(secure development|devsecops|pipeline|source code|broncode|repository|\bsdlc\b)'
+'page: incident-response':
+  - '(incident response|incidentrespons|72 hours|72 uur|crisis|tabletop|forensic)'
+'page: cyber-insurance':
+  - '(insurance|verzekering|polis|policy exclusion|premium)'
+'page: nis2-dora':
+  - '(nis ?2|dora|cyberbeveiligingswet|board liability|bestuurdersaansprakelijkheid)'
