@@ -5,19 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <title>Plain Security</title>
-<meta name="description" content="Plain-language security briefings for the board. Each topic: how it breaks, what stops it, what it means for your risk register and your audit. English and Dutch.">
+<meta name="description" content="Plain-language security briefings for the board. Each topic: how it breaks, what stops it, what it means for your risk register and your audit. English and Dutch. / Begrijpelijke securitybriefings voor de directie, in het Engels en Nederlands.">
 <style>
 body{margin:0;background:#0b1b2b;color:#c8d8e1;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:15px;line-height:1.75}
-.wrap{max-width:1000px;margin:0 auto;padding:80px 40px}
+.wrap{max-width:1000px;margin:0 auto;padding:60px 40px 80px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;margin-bottom:40px}
+.top img{display:block;max-width:100%}
+.lang{display:flex;border:1px solid #335364;flex:none}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:#87a2b0;user-select:none;transition:.15s}
+.lang label:hover{color:#fff}
+#lang-en:checked ~ label[for=lang-en],#lang-nl:checked ~ label[for=lang-nl]{background:#637b88;color:#051324}
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
 h1{font-family:system-ui,sans-serif;font-weight:800;color:#fff;font-size:clamp(28px,4vw,48px);letter-spacing:-.02em;margin:0 0 12px}
 h1 em{font-style:normal;color:#87a2b0}
 .lede{font-family:system-ui,sans-serif;font-size:17px;color:#e6eff5;max-width:62ch;margin:0 0 48px}
-.kicker{font-size:12px;letter-spacing:.34em;color:#87a2b0;text-transform:uppercase;display:block;margin-bottom:20px}
 .cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 a.card{display:block;background:#2a4858;border:1px solid #335364;padding:24px 28px;text-decoration:none;color:inherit}
 a.card:hover{border-color:#87a2b0}
 a.card b{display:block;font-family:system-ui,sans-serif;color:#fff;font-size:19px;margin-bottom:6px}
-a.card span{font-family:system-ui,sans-serif;font-size:14.5px;line-height:1.55;color:#c8d8e1}
+a.card small{display:block;font-family:system-ui,sans-serif;font-size:14.5px;line-height:1.55;color:#c8d8e1}
 .cta{margin-top:56px;padding-top:36px;border-top:1px solid #335364;display:flex;flex-wrap:wrap;gap:16px;align-items:center}
 .cta p{font-family:system-ui,sans-serif;color:#87a2b0;margin:0;flex:1 1 320px}
 .btn{display:inline-block;padding:14px 28px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;border:1px solid #335364;color:#c8d8e1}
@@ -25,47 +34,62 @@ a.card span{font-family:system-ui,sans-serif;font-size:14.5px;line-height:1.55;c
 .btn.solid{background:#637b88;color:#051324;border-color:#637b88}
 .btn.solid:hover{background:#fff;border-color:#fff}
 footer{margin-top:64px;font-size:11px;letter-spacing:.18em;color:#637b88;text-transform:uppercase}
-@media (max-width:760px){.wrap{padding:56px 22px}.cards{grid-template-columns:1fr}}
+@media (max-width:760px){.wrap{padding:40px 22px 56px}.cards{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="wrap">
-  <img src="logo.svg" alt="Plain Security" width="368" height="51" style="display:block;margin-bottom:40px;max-width:100%">
-  <h1>Security, <em>explained for the board.</em></h1>
-  <p class="lede">Plain-language briefings on the risks that matter and the single control that stops each one. Every topic ends with what it means for your risk register and for NIS2, DORA, SOC 2 and ISAE 3402. English and Dutch.</p>
+  <div class="top">
+    <img src="logo.svg" alt="Plain Security" width="368" height="51">
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+
+  <h1><span class="en">Security, <em>explained for the board.</em></span><span class="nl">Security, <em>uitgelegd voor de directie.</em></span></h1>
+  <p class="lede">
+    <span class="en">Plain-language briefings on the risks that matter and the single control that stops each one. Every topic ends with what it means for your risk register and for NIS2, DORA, SOC 2 and ISAE 3402. English and Dutch.</span>
+    <span class="nl">Begrijpelijke briefings over de risico's die ertoe doen en de ene maatregel die elk risico stopt. Elk onderwerp eindigt met wat het betekent voor uw risicoregister en voor NIS2, DORA, SOC 2 en ISAE 3402. Engels en Nederlands.</span>
+  </p>
 
   <div class="cards">
-    <a class="card" href="email-security/"><b>Email security</b><span>Interception, tampering, spoofing and man-in-the-middle. What each costs, what stops it.</span></a>
-    <a class="card" href="ransomware/"><b>Ransomware</b><span>One stolen login, four steps to a standstill. What happens at each step, what breaks the chain.</span></a>
-    <a class="card" href="phishing/"><b>Phishing</b><span>Fake login pages, MFA fatigue, CEO fraud and every other channel. What one click can and cannot do.</span></a>
-    <a class="card" href="identity/"><b>Passwords &amp; identity</b><span>Reused passwords, phone-read codes, leavers and standing admins. Who can get in, who can do anything.</span></a>
-    <a class="card" href="entra/"><b>Entra ID: the keys to Microsoft 365</b><span>Global Admins, an open Conditional Access gate, guests who never left, and the hybrid sync back door.</span></a>
-    <a class="card" href="iam/"><b>IAM: who may do what</b><span>Orphaned service accounts, wildcard roles, one person with both signatures, shared admin logins. With examples.</span></a>
-    <a class="card" href="supply-chain/"><b>Supply chain attacks</b><span>Breached through someone we trust: vendor updates, supplier logins, open-source code and SaaS leaks.</span></a>
-    <a class="card" href="cloud/"><b>Cloud misconfiguration</b><span>The cloud is secure, our settings are not. Four mistakes behind most cloud breaches, and what prevents each.</span></a>
-    <a class="card" href="insider/"><b>Insider threat</b><span>Four people who already have the keys: leaver, careless colleague, unwatched admin, pressured employee.</span></a>
-    <a class="card" href="ddos/"><b>DDoS &amp; availability</b><span>Offline without a break-in. Floods, fake shoppers, one DNS provider, extortion, what keeps us up.</span></a>
-    <a class="card" href="patching/"><b>The unpatched server</b><span>Known hole, published fix, still open. Four ways patching fails, and the one control that closes each.</span></a>
-    <a class="card" href="shadow-it/"><b>Shadow IT &amp; SaaS sprawl</b><span>Company data in tools nobody approved, accounts nobody manages, apps nobody revoked. How to see it again.</span></a>
-    <a class="card" href="ai-security/"><b>AI at work</b><span>Public chatbots, hijacked assistants, cloned voices and confident nonsense. What each costs, what contains it.</span></a>
-    <a class="card" href="web-security/"><b>Your website is a front door</b><span>Injection, forgotten plugins, account takeover and skimmed checkouts. Four ways in, one control each.</span></a>
-    <a class="card" href="endpoints/"><b>Laptops, phones and the kitchen table</b><span>Lost laptops, unmanaged phones, admin for everyone, an outdated browser. Where the data really lives.</span></a>
-    <a class="card" href="data/"><b>Knowing what to protect</b><span>Crown jewels nobody can name, forty copies, links for anyone, data kept fifteen years. How to see it again.</span></a>
-    <a class="card" href="detection/"><b>Would we even notice?</b><span>Logs nobody kept, alerts nobody read, half the estate unwatched, tickets read Monday. Would we notice?</span></a>
-    <a class="card" href="ot-iot/"><b>The factory, the building and the cameras</b><span>Production lines, building systems and cameras that cannot be patched. Four ways they stop, one fix each.</span></a>
-    <a class="card" href="secure-development/"><b>Building software that holds</b><span>Secrets in code, a hijacked build server, testing after launch, apps nobody owns. What closes each gap.</span></a>
-    <a class="card" href="incident-response/"><b>The first 72 hours</b><span>Who decides, what gets wiped, who says what, who to call. How the first three days derail.</span></a>
-    <a class="card" href="cyber-insurance/"><b>Cyber insurance: what it pays, what it won't</b><span>The policy is a control with small print. Questionnaire, exclusions, sub-limits, notification: what each costs.</span></a>
-    <a class="card" href="nis2-dora/"><b>NIS2 &amp; DORA: what the board must own</b><span>The law now names the board. Four things that changed, and what has to be in place before the audit.</span></a>
+    <a class="card" href="email-security/"><b><span class="en">Email security</span><span class="nl">E-mailbeveiliging</span></b><small><span class="en">Interception, tampering, spoofing and man-in-the-middle. What each costs, what stops it.</span><span class="nl">Afluisteren, manipulatie, spoofing en man-in-the-middle. Wat elk kost, wat het stopt.</span></small></a>
+    <a class="card" href="ransomware/"><b>Ransomware</b><small><span class="en">One stolen login, four steps to a standstill. What happens at each step, what breaks the chain.</span><span class="nl">Eén gestolen inlog, vier stappen naar stilstand. Wat er bij elke stap gebeurt, wat de keten breekt.</span></small></a>
+    <a class="card" href="phishing/"><b>Phishing</b><small><span class="en">Fake login pages, MFA fatigue, CEO fraud and every other channel. What one click can and cannot do.</span><span class="nl">Nepinlogpagina's, MFA-moeheid, CEO-fraude en elk ander kanaal. Wat één klik wel en niet kan.</span></small></a>
+    <a class="card" href="identity/"><b><span class="en">Passwords &amp; identity</span><span class="nl">Wachtwoorden &amp; identiteit</span></b><small><span class="en">Reused passwords, phone-read codes, leavers and standing admins. Who can get in, who can do anything.</span><span class="nl">Hergebruikte wachtwoorden, voorgelezen codes, vertrekkers en vaste beheerders. Wie binnenkomt, wie alles kan.</span></small></a>
+    <a class="card" href="entra/"><b><span class="en">Entra ID: the keys to Microsoft 365</span><span class="nl">Entra ID: de sleutels van Microsoft 365</span></b><small><span class="en">Global Admins, an open Conditional Access gate, guests who never left, and the hybrid sync back door.</span><span class="nl">Global Admins, een open Conditional Access-poort, gasten die nooit vertrokken, en de hybride sync-achterdeur.</span></small></a>
+    <a class="card" href="iam/"><b><span class="en">IAM: who may do what</span><span class="nl">IAM: wie mag wat</span></b><small><span class="en">Orphaned service accounts, wildcard roles, one person with both signatures, shared admin logins. With examples.</span><span class="nl">Verweesde serviceaccounts, wildcard-rollen, één persoon met beide handtekeningen, gedeelde beheerlogins. Met voorbeelden.</span></small></a>
+    <a class="card" href="supply-chain/"><b><span class="en">Supply chain attacks</span><span class="nl">Aanvallen via de toeleveringsketen</span></b><small><span class="en">Breached through someone we trust: vendor updates, supplier logins, open-source code and SaaS leaks.</span><span class="nl">Gehackt via iemand die we vertrouwen: leveranciersupdates, leverancierslogins, open-sourcecode en SaaS-lekken.</span></small></a>
+    <a class="card" href="cloud/"><b><span class="en">Cloud misconfiguration</span><span class="nl">Cloudmisconfiguratie</span></b><small><span class="en">The cloud is secure, our settings are not. Four mistakes behind most cloud breaches, and what prevents each.</span><span class="nl">De cloud is veilig, onze instellingen niet. Vier fouten achter de meeste cloudlekken, en wat elk voorkomt.</span></small></a>
+    <a class="card" href="insider/"><b><span class="en">Insider threat</span><span class="nl">De dreiging van binnenuit</span></b><small><span class="en">Four people who already have the keys: leaver, careless colleague, unwatched admin, pressured employee.</span><span class="nl">Vier mensen die de sleutels al hebben: vertrekker, onoplettende collega, ongecontroleerde beheerder, medewerker onder druk.</span></small></a>
+    <a class="card" href="ddos/"><b><span class="en">DDoS &amp; availability</span><span class="nl">DDoS &amp; beschikbaarheid</span></b><small><span class="en">Offline without a break-in. Floods, fake shoppers, one DNS provider, extortion, what keeps us up.</span><span class="nl">Offline zonder inbraak. Verkeersvloedgolven, nepklanten, één DNS-provider, afpersing, wat ons online houdt.</span></small></a>
+    <a class="card" href="patching/"><b><span class="en">The unpatched server</span><span class="nl">De ongepatchte server</span></b><small><span class="en">Known hole, published fix, still open. Four ways patching fails, and the one control that closes each.</span><span class="nl">Bekend gat, fix beschikbaar, nog steeds open. Vier manieren waarop patchen faalt, en de maatregel die elk sluit.</span></small></a>
+    <a class="card" href="shadow-it/"><b><span class="en">Shadow IT &amp; SaaS sprawl</span><span class="nl">Shadow IT &amp; SaaS-wildgroei</span></b><small><span class="en">Company data in tools nobody approved, accounts nobody manages, apps nobody revoked. How to see it again.</span><span class="nl">Bedrijfsdata in tools die niemand goedkeurde, accounts die niemand beheert, apps die niemand introk. Hoe je het weer in beeld krijgt.</span></small></a>
+    <a class="card" href="ai-security/"><b><span class="en">AI at work</span><span class="nl">AI op de werkvloer</span></b><small><span class="en">Public chatbots, hijacked assistants, cloned voices and confident nonsense. What each costs, what contains it.</span><span class="nl">Publieke chatbots, gekaapte assistenten, gekloonde stemmen en zelfverzekerde onzin. Wat elk kost, wat het beheerst.</span></small></a>
+    <a class="card" href="web-security/"><b><span class="en">Your website is a front door</span><span class="nl">Je website is een voordeur</span></b><small><span class="en">Injection, forgotten plugins, account takeover and skimmed checkouts. Four ways in, one control each.</span><span class="nl">Injectie, vergeten plug-ins, accountovername en afgeroomde betaalpagina's. Vier ingangen, één maatregel per ingang.</span></small></a>
+    <a class="card" href="endpoints/"><b><span class="en">Laptops, phones and the kitchen table</span><span class="nl">Laptops, telefoons en de keukentafel</span></b><small><span class="en">Lost laptops, unmanaged phones, admin for everyone, an outdated browser. Where the data really lives.</span><span class="nl">Verloren laptops, onbeheerde telefoons, admin voor iedereen, een verouderde browser. Waar de data echt staat.</span></small></a>
+    <a class="card" href="data/"><b><span class="en">Knowing what to protect</span><span class="nl">Weten wat je beschermt</span></b><small><span class="en">Crown jewels nobody can name, forty copies, links for anyone, data kept fifteen years. How to see it again.</span><span class="nl">Kroonjuwelen die niemand kan noemen, veertig kopieën, links voor iedereen, data die vijftien jaar bewaard blijft. Hoe je het weer in beeld krijgt.</span></small></a>
+    <a class="card" href="detection/"><b><span class="en">Would we even notice?</span><span class="nl">Zouden we het merken?</span></b><small><span class="en">Logs nobody kept, alerts nobody read, half the estate unwatched, tickets read Monday. Would we notice?</span><span class="nl">Logs die niemand bewaarde, alarmen die niemand las, de helft onbewaakt, tickets pas op maandag. Zouden we het merken?</span></small></a>
+    <a class="card" href="ot-iot/"><b><span class="en">The factory, the building and the cameras</span><span class="nl">De fabriek, het gebouw en de camera's</span></b><small><span class="en">Production lines, building systems and cameras that cannot be patched. Four ways they stop, one fix each.</span><span class="nl">Productielijnen, gebouwsystemen en camera's die niet te patchen zijn. Vier manieren waarop ze stilvallen, één oplossing per stuk.</span></small></a>
+    <a class="card" href="secure-development/"><b><span class="en">Building software that holds</span><span class="nl">Software bouwen die standhoudt</span></b><small><span class="en">Secrets in code, a hijacked build server, testing after launch, apps nobody owns. What closes each gap.</span><span class="nl">Geheimen in code, een gekaapte buildserver, testen na de lancering, apps zonder eigenaar. Wat elk gat sluit.</span></small></a>
+    <a class="card" href="incident-response/"><b><span class="en">The first 72 hours</span><span class="nl">De eerste 72 uur</span></b><small><span class="en">Who decides, what gets wiped, who says what, who to call. How the first three days derail.</span><span class="nl">Wie beslist, wat gewist wordt, wie wat zegt, wie je belt. Hoe de eerste drie dagen ontsporen.</span></small></a>
+    <a class="card" href="cyber-insurance/"><b><span class="en">Cyber insurance: what it pays, what it won't</span><span class="nl">Cyberverzekering: wat het betaalt, wat niet</span></b><small><span class="en">The policy is a control with small print. Questionnaire, exclusions, sub-limits, notification: what each costs.</span><span class="nl">De polis is een maatregel met kleine lettertjes. Vragenlijst, uitsluitingen, sublimieten, melding: wat elk kost.</span></small></a>
+    <a class="card" href="nis2-dora/"><b><span class="en">NIS2 &amp; DORA: what the board must own</span><span class="nl">NIS2 &amp; DORA: wat de directie moet dragen</span></b><small><span class="en">The law now names the board. Four things that changed, and what has to be in place before the audit.</span><span class="nl">De wet noemt nu de directie. Vier dingen die veranderden, en wat er moet staan vóór de audit.</span></small></a>
   </div>
 
   <div class="cta">
-    <p>Missing a topic your board keeps asking about? Request it and it goes on the list. Find it useful? Sponsoring keeps the briefings free and ad-free.</p>
-    <a class="btn solid" href="https://github.com/evandervecht/plain-security/issues/new?title=Topic%20request%3A%20&amp;body=Which%20topic%2C%20and%20what%20question%20does%20the%20board%20ask%20about%20it%3F">Request a topic</a>
+    <p>
+      <span class="en">Missing a topic your board keeps asking about? Request it and it goes on the list. Find it useful? Sponsoring keeps the briefings free and ad-free.</span>
+      <span class="nl">Mist u een onderwerp waar uw directie steeds naar vraagt? Vraag het aan en het komt op de lijst. Nuttig? Sponsoren houdt de briefings gratis en reclamevrij.</span>
+    </p>
+    <a class="btn solid" href="https://github.com/evandervecht/plain-security/issues/new?title=Topic%20request%3A%20&amp;body=Which%20topic%2C%20and%20what%20question%20does%20the%20board%20ask%20about%20it%3F"><span class="en">Request a topic</span><span class="nl">Vraag een onderwerp aan</span></a>
     <a class="btn" href="https://github.com/evandervecht" rel="noopener">Sponsor</a>
   </div>
 
-  <footer>PLAIN SECURITY // SINGLE HTML FILES // NO JAVASCRIPT // NO TRACKING</footer>
+  <footer><span class="en">PLAIN SECURITY // SINGLE HTML FILES // NO JAVASCRIPT // NO TRACKING</span><span class="nl">PLAIN SECURITY // LOSSE HTML-BESTANDEN // GEEN JAVASCRIPT // GEEN TRACKING</span></footer>
 </div>
 </body>
 </html>
