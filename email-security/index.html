@@ -291,6 +291,21 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
   .chip{display:none}
   .panel{padding:24px 22px}
   table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important}
