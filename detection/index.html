@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Would we even notice? // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   DETECTION // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4}
+
+/* --- scene 1 : logs never kept --- */
+.s1 .bin{position:absolute;left:50%;top:50%;width:66px;height:66px;margin:-33px 0 0 -33px;display:grid;place-items:center;font-size:28px;background:var(--surface);border:1px solid var(--line);z-index:2}
+.s1 .log{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:11px;font-weight:700;letter-spacing:.12em;background:var(--white);border:1px solid #9fb3c0;color:var(--deep);animation:tolog 6s linear infinite}
+.s1 .log.b{animation-delay:2s}.s1 .log.c{animation-delay:4s}
+@keyframes tolog{0%{left:118px;opacity:0}8%{opacity:1}44%{left:calc(50% - 26px);opacity:1;transform:scale(1)}52%,100%{left:calc(50% - 26px);opacity:0;transform:scale(.3)}}
+.s1 .tagline{position:absolute;left:50%;top:calc(50% + 46px);transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px;z-index:4}
+.s1 .node.right .box{opacity:.55}
+.s1 .empty{position:absolute;right:20px;width:96px;text-align:center;top:calc(50% - 74px);font-size:9.5px;letter-spacing:.18em;font-weight:700;color:var(--warn);white-space:nowrap}
+.s1 .banner{animation:fadeIn 6s ease-in-out infinite}
+
+/* --- scene 2 : alerts nobody reads --- */
+.s2 .feed{position:absolute;left:60px;right:200px;top:42px;bottom:56px;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:1fr;gap:8px}
+.s2 .al{display:flex;align-items:center;gap:8px;padding:0 10px;font-size:9px;letter-spacing:.12em;font-weight:700;color:var(--muted);background:var(--surface);border:1px solid var(--line);opacity:0;animation:pop 9s ease-in-out infinite;animation-delay:var(--d);white-space:nowrap;overflow:hidden}
+.s2 .al::before{content:"";width:6px;height:6px;background:var(--slate);flex:none}
+@keyframes pop{0%{opacity:0;transform:translateY(6px)}5%{opacity:1;transform:translateY(0)}80%{opacity:1}88%,100%{opacity:0}}
+.s2 .al.real{color:var(--bad-soft);border-color:rgba(255,93,115,.6);background:rgba(255,93,115,.14);animation:popreal 9s ease-in-out infinite;animation-delay:var(--d)}
+.s2 .al.real::before{background:var(--bad)}
+@keyframes popreal{0%{opacity:0}5%{opacity:1}30%{opacity:1;background:rgba(255,93,115,.14)}55%{opacity:1;background:var(--surface);color:var(--muted);border-color:var(--line)}80%{opacity:1;background:var(--surface);color:var(--muted);border-color:var(--line)}88%,100%{opacity:0}}
+.s2 .night{position:absolute;right:20px;top:50%;transform:translateY(-50%);width:150px;text-align:center;font-size:9.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;line-height:1.6}
+.s2 .night .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;background:var(--surface);border:1px solid var(--line)}
+.s2 .banner{animation:fadeIn 9s ease-in-out infinite}
+
+/* --- scene 3 : blind spots --- */
+.s3 .zone{position:absolute;top:56%;transform:translateY(-50%);width:150px;text-align:center;font-size:9.5px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.s3 .zone .box{position:relative;width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.s3 .zone.z1{left:20px}.s3 .zone.z2{left:calc(25% - 45px)}.s3 .zone.z3{left:calc(50% - 75px)}.s3 .zone.z4{right:calc(25% - 45px)}.s3 .zone.z5{right:20px}
+.s3 .zone.seen .box{border-color:rgba(55,211,155,.55);box-shadow:0 0 18px rgba(55,211,155,.12)}
+.s3 .zone.seen .box::after{content:"👁";position:absolute;top:-10px;right:-10px;font-size:14px;background:var(--good);color:#04291d;padding:1px 5px;line-height:1.3}
+.s3 .zone.dark .box{background:#0a1620;border-color:var(--line-soft);color:var(--slate)}
+.s3 .zone.dark .box::after{content:"?";position:absolute;top:-10px;right:-10px;font-size:11px;font-weight:700;background:var(--bad);color:var(--white);padding:1px 7px;line-height:1.5}
+.s3 .intruder{top:8px;animation:sneak 9s ease-in-out infinite}
+@keyframes sneak{0%{left:calc(50% - 31px);opacity:0}8%{opacity:1}30%{left:calc(50% - 31px)}55%{left:calc(75% - 31px)}70%,88%{left:calc(100% - 160px);opacity:1}100%{left:calc(100% - 160px);opacity:0}}
+.s3 .banner{animation:fadeIn 9s ease-in-out infinite}
+
+/* --- scene 4 : detection without response --- */
+.s4 .node.left .box{animation:ring 7s ease-in-out infinite}
+@keyframes ring{0%,6%{border-color:var(--line);box-shadow:none}10%,100%{border-color:var(--bad);box-shadow:0 0 22px rgba(255,93,115,.35)}}
+.s4 .ticket{position:absolute;top:50%;width:64px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:10px;font-weight:700;letter-spacing:.12em;background:var(--white);border:1px solid #9fb3c0;color:var(--deep);animation:queue 7s linear infinite}
+@keyframes queue{0%,10%{left:118px;opacity:0}14%{opacity:1}36%{left:calc(50% - 32px);opacity:1}100%{left:calc(50% - 32px);opacity:1}}
+.s4 .q{position:absolute;left:50%;top:50%;width:96px;height:66px;margin:-33px 0 0 -48px;border:1px dashed var(--line);z-index:2}
+.s4 .q span{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;letter-spacing:.18em;color:var(--slate);font-weight:700}
+.s4 .days{position:absolute;left:50%;transform:translateX(-50%);top:36px;display:flex;gap:10px}
+.s4 .days i{display:block;width:44px;padding:5px 0;text-align:center;font-style:normal;font-size:9.5px;letter-spacing:.14em;font-weight:700;color:var(--muted);background:var(--surface);border:1px solid var(--line);animation:day 7s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes day{0%{opacity:.25}10%,100%{opacity:1;color:var(--bad-soft);border-color:rgba(255,93,115,.5)}}
+.s4 .days i:first-child{opacity:1}
+.s4 .node.right .box{animation:dwell 7s ease-in-out infinite}
+@keyframes dwell{0%,40%{border-color:var(--line)}60%,100%{border-color:var(--bad);background:rgba(255,93,115,.18)}}
+.s4 .banner{animation:fadeIn 7s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .log{left:calc(50% - 26px);opacity:.6}.s1 .log.b,.s1 .log.c{display:none}
+  .s2 .al{opacity:1}
+  .s3 .intruder{left:calc(100% - 160px);opacity:1}
+  .s4 .ticket{left:calc(50% - 32px);opacity:1}.s4 .node.left .box{border-color:var(--bad)}.s4 .days i{opacity:1;color:var(--bad-soft)}
+  .s4 .node.right .box{border-color:var(--bad);background:rgba(255,93,115,.18)}
+  .banner{opacity:1}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> PLAIN SECURITY <span style="color:var(--slate)">//</span> DETECTION</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">LOGS</span><span class="nl">LOGS</span></a>
+      <a href="#r2"><span class="en">ALERTS</span><span class="nl">MELDINGEN</span></a>
+      <a href="#r3"><span class="en">BLIND SPOTS</span><span class="nl">BLINDE VLEKKEN</span></a>
+      <a href="#r4"><span class="en">RESPONSE</span><span class="nl">RESPONS</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Would we even notice? <em>Four ways an attack stays invisible.</em></span>
+      <span class="nl">Zouden we het überhaupt merken? <em>Vier manieren waarop een aanval onzichtbaar blijft.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Every other briefing assumes someone is watching. This one is about the watching itself: the logs, the alerts, the people on duty — in plain language: where it goes dark, what that costs, and the single control that switches the light back on.</span>
+      <span class="nl">Elke andere briefing gaat ervan uit dat iemand meekijkt. Deze gaat over het meekijken zelf: de logs, de meldingen, de mensen die dienst hebben — in gewone taal: waar het donker wordt, wat dat kost, en welke maatregel het licht weer aandoet.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE BLIND SPOTS</span><span class="nl">BEKIJK DE BLINDE VLEKKEN</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT MAKES US SEE</span><span class="nl">WAT ONS LAAT ZIEN</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">The evidence was <em>deleted before anyone looked.</em></span>
+      <span class="nl">Het bewijs was <em>al weg voordat iemand keek.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">logging / retention / nothing to investigate</span>
+      <span class="nl">logging / bewaartermijn / niets om te onderzoeken</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">RETENTION: 14 DAYS</span><span class="nl">BEWAARTERMIJN: 14 DAGEN</span></div>
+      <div class="node left"><div class="box">🖥️</div><span class="en">Our systems</span><span class="nl">Onze systemen</span></div>
+      <div class="node right"><div class="box">🔎</div><span class="en">Investigator · month 4</span><span class="nl">Onderzoeker · maand 4</span></div>
+      <div class="empty"><span class="en">NOTHING TO READ</span><span class="nl">NIETS OM TE LEZEN</span></div>
+      <div class="wire"></div>
+      <div class="bin">🗑</div>
+      <div class="tagline"><span class="en">AUTO-DELETE · DAY 15</span><span class="nl">AUTOMATISCH GEWIST · DAG 15</span></div>
+      <div class="log a">LOG</div><div class="log b">LOG</div><div class="log c">LOG</div>
+      <div class="banner"><span class="en">BREACH FOUND IN MONTH 4 · LOGS KEPT 14 DAYS</span><span class="nl">INBREUK ONTDEKT IN MAAND 4 · LOGS 14 DAGEN BEWAARD</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Most breaches are discovered months after they started, often by someone else: a bank, a customer, the police. The first question is always the same: what did they touch, and since when? The answer lives in logs. If those were never collected, or were overwritten after two weeks to save disk space, the answer is “we do not know”. Every server, cloud account and application writes logs; the question is only whether anyone kept them.</p>
+      <p class="en"><strong>Business impact:</strong> without evidence you must assume the worst. Every customer record becomes “possibly affected”, every notification becomes maximal, and the regulator hears that we cannot say what happened. Storage for a year of the important logs costs less than one hour of the lawyers who will otherwise be guessing.</p>
+      <p class="nl">De meeste inbreuken worden maanden na het begin ontdekt, vaak door iemand anders: een bank, een klant, de politie. De eerste vraag is altijd dezelfde: wat hebben ze aangeraakt, en sinds wanneer? Het antwoord zit in logs. Als die nooit zijn verzameld, of na twee weken zijn overschreven om schijfruimte te sparen, is het antwoord “we weten het niet”. Elke server, elk cloudaccount en elke applicatie schrijft logs; de vraag is alleen of iemand ze heeft bewaard.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> zonder bewijs moet u van het slechtste uitgaan. Elk klantrecord wordt “mogelijk getroffen”, elke melding wordt maximaal, en de toezichthouder hoort dat we niet kunnen zeggen wat er is gebeurd. Een jaar opslag van de belangrijke logs kost minder dan één uur van de advocaten die anders moeten gokken.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NO EVIDENCE · MAXIMAL NOTIFICATION · “WE DON'T KNOW”</span><span class="nl">GEEN BEWIJS · MAXIMALE MELDING · “WE WETEN HET NIET”</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: CENTRAL LOG STORE + 12 MONTHS RETENTION</span><span class="nl">OPLOSSING: CENTRALE LOGOPSLAG + 12 MAANDEN BEWAREN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">The alarm went off. <em>Nobody was listening.</em></span>
+      <span class="nl">Het alarm ging af. <em>Niemand luisterde.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">alert fatigue / no one on duty / the real one buried</span>
+      <span class="nl">meldingsmoeheid / niemand van dienst / de echte begraven</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">SATURDAY 02:40</span><span class="nl">ZATERDAG 02:40</span></div>
+      <div class="feed">
+        <div class="al" style="--d:0s">LOGIN OK</div><div class="al" style="--d:.5s">DISK 81%</div><div class="al" style="--d:.9s">CERT 30D</div><div class="al" style="--d:1.3s">LOGIN OK</div>
+        <div class="al" style="--d:1.7s">SCAN DONE</div><div class="al real" style="--d:2.1s"><span class="en">NEW ADMIN 02:40</span><span class="nl">NIEUWE ADMIN 02:40</span></div><div class="al" style="--d:2.5s">DISK 82%</div><div class="al" style="--d:2.9s">VPN OK</div>
+        <div class="al" style="--d:3.3s">PATCH OK</div><div class="al" style="--d:3.7s">LOGIN OK</div><div class="al" style="--d:4.1s">BACKUP OK</div><div class="al" style="--d:4.5s">DISK 83%</div>
+        <div class="al" style="--d:4.9s">LOGIN OK</div><div class="al" style="--d:5.3s">CERT 29D</div><div class="al" style="--d:5.7s">VPN OK</div><div class="al" style="--d:6.1s">LOGIN OK</div>
+      </div>
+      <div class="night"><div class="box">🌙</div><span class="en">Security team · off duty</span><span class="nl">Securityteam · geen dienst</span></div>
+      <div class="banner"><span class="en">4,000 ALERTS A DAY · ONE THAT MATTERED</span><span class="nl">4.000 MELDINGEN PER DAG · ÉÉN DIE TELDE</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Buying a monitoring tool produces alerts. It does not produce attention. A typical set-up generates thousands of notifications a day, most of them noise: a disk filling up, a certificate expiring, a user mistyping a password. The one that mattered — a new administrator account created at 02:40 on a Saturday — sits in the same list, in the same colour, and is read on Monday, if at all. Attackers know office hours. They work weekends and holidays on purpose.</p>
+      <p class="en"><strong>Business impact:</strong> a tool without people is a receipt, not a defence. It proves afterwards that the warning was there. The real cost is the gap between “detected” and “seen”: for most organisations that gap is the weekend, and a weekend is enough to encrypt everything.</p>
+      <p class="nl">Een monitoringtool kopen levert meldingen op. Het levert geen aandacht op. Een gemiddelde opstelling produceert duizenden meldingen per dag, meestal ruis: een schijf die vol raakt, een certificaat dat verloopt, een gebruiker die zijn wachtwoord verkeerd typt. De melding die telde — een nieuw beheerdersaccount aangemaakt om 02:40 op een zaterdag — staat in dezelfde lijst, in dezelfde kleur, en wordt maandag gelezen, als het meezit. Aanvallers kennen kantooruren. Ze werken met opzet in het weekend en op feestdagen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een tool zonder mensen is een kassabon, geen verdediging. Het bewijst achteraf dat de waarschuwing er was. De echte kosten zitten in het gat tussen “gedetecteerd” en “gezien”: voor de meeste organisaties is dat gat het weekend, en een weekend is genoeg om alles te versleutelen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NOISE · NO NIGHT SHIFT · READ ON MONDAY</span><span class="nl">RUIS · GEEN NACHTDIENST · MAANDAG GELEZEN</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: TEN DETECTIONS THAT MATTER + 24/7 EYES ON THEM</span><span class="nl">OPLOSSING: TIEN DETECTIES DIE TELLEN + 24/7 IEMAND DIE KIJKT</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">We watch where it is easy. <em>They attack where it is not.</em></span>
+      <span class="nl">Wij kijken waar het makkelijk is. <em>Zij vallen aan waar het niet is.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">blind spots / coverage / cloud, SaaS, legacy, factory floor</span>
+      <span class="nl">blinde vlekken / dekking / cloud, SaaS, legacy, fabrieksvloer</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">WHAT IS MONITORED</span><span class="nl">WAT WORDT BEWAAKT</span></div>
+      <div class="zone z1 seen"><div class="box">🏢</div><span class="en">Office network</span><span class="nl">Kantoornetwerk</span></div>
+      <div class="zone z2 seen"><div class="box">💻</div><span class="en">Laptops</span><span class="nl">Laptops</span></div>
+      <div class="zone z3 dark"><div class="box">☁️</div><span class="en">Cloud accounts</span><span class="nl">Cloudaccounts</span></div>
+      <div class="zone z4 dark"><div class="box">🧩</div><span class="en">SaaS tools</span><span class="nl">SaaS-tools</span></div>
+      <div class="zone z5 dark"><div class="box">🏭</div><span class="en">Legacy · factory</span><span class="nl">Legacy · fabriek</span></div>
+      <div class="actor intruder pulse">🕵️<span class="tag"><span class="en">SETTLES WHERE NO ONE LOOKS</span><span class="nl">NESTELT ZICH WAAR NIEMAND KIJKT</span></span></div>
+      <div class="banner"><span class="en">MONITORED: 2 OF 5 · ATTACKED: THE OTHER 3</span><span class="nl">BEWAAKT: 2 VAN 5 · AANGEVALLEN: DE ANDERE 3</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Monitoring grew up around the office network and the laptops, because that is where the tools worked first. Meanwhile the business moved: to cloud accounts, to a hundred SaaS tools, to the production line whose controllers run software from 2009 and cannot send a log anywhere. Ask for the coverage map and the honest answer is often “we see about half”. Attackers find the other half quickly, because it is also the half nobody patches.</p>
+      <p class="en"><strong>Business impact:</strong> the board hears “we have monitoring” and assumes it means everything. A breach in the unmonitored half lasts months rather than hours, and is found by an outsider. The first step is not more tooling; it is a one-page map that says, per system, watched or not watched, and who signed off on the “not”.</p>
+      <p class="nl">Monitoring is opgegroeid rond het kantoornetwerk en de laptops, omdat de tools daar het eerst werkten. Ondertussen verhuisde het bedrijf: naar cloudaccounts, naar honderd SaaS-tools, naar de productielijn waarvan de besturingen software uit 2009 draaien en nergens een log naartoe kunnen sturen. Vraag om de dekkingskaart en het eerlijke antwoord is vaak “we zien ongeveer de helft”. Aanvallers vinden de andere helft snel, want dat is ook de helft die niemand patcht.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de directie hoort “we hebben monitoring” en neemt aan dat het alles dekt. Een inbreuk in de onbewaakte helft duurt maanden in plaats van uren, en wordt door een buitenstaander gevonden. De eerste stap is niet meer tooling; het is een kaart van één pagina die per systeem zegt: bewaakt of niet bewaakt, en wie het “niet” heeft afgetekend.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">HALF THE ESTATE UNSEEN · FOUND BY OUTSIDERS</span><span class="nl">HELFT ONZICHTBAAR · GEVONDEN DOOR BUITENSTAANDERS</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: A SIGNED COVERAGE MAP + CLOUD AND SAAS LOGS IN THE SAME PLACE</span><span class="nl">OPLOSSING: EEN AFGETEKENDE DEKKINGSKAART + CLOUD- EN SAAS-LOGS OP DEZELFDE PLEK</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">Detected on Friday. <em>Handled on Monday.</em></span>
+      <span class="nl">Vrijdag gedetecteerd. <em>Maandag opgepakt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">detection without response / the ticket queue / dwell time</span>
+      <span class="nl">detectie zonder respons / de ticketwachtrij / verblijftijd</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">FRIDAY 17:30</span><span class="nl">VRIJDAG 17:30</span></div>
+      <div class="days"><i style="--d:0s">FRI</i><i style="--d:1.6s">SAT</i><i style="--d:3.2s">SUN</i><i style="--d:4.8s"><span class="en">MON</span><span class="nl">MA</span></i></div>
+      <div class="node left"><div class="box">🔔</div><span class="en">Alert fires</span><span class="nl">Alarm gaat af</span></div>
+      <div class="node right"><div class="box">🕵️</div><span class="en">Attacker · inside</span><span class="nl">Aanvaller · binnen</span></div>
+      <div class="wire"></div>
+      <div class="q"><span><span class="en">TICKET QUEUE · P3</span><span class="nl">TICKETWACHTRIJ · P3</span></span></div>
+      <div class="ticket">TICKET</div>
+      <div class="banner"><span class="en">ALERT FRIDAY · TICKET READ MONDAY · 62 HOURS INSIDE</span><span class="nl">ALARM VRIJDAG · TICKET MAANDAG GELEZEN · 62 UUR BINNEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Detection is only half a control. The alert fires, becomes a ticket, lands in a queue with a priority someone set years ago, and waits. The person who could isolate the machine is not the person who saw the alert, and neither of them is sure they are allowed to pull a server off the network on a Friday evening. So it waits until Monday. The attacker did not wait.</p>
+      <p class="en"><strong>Business impact:</strong> the difference between a contained incident and a company-wide one is usually measured in hours, and it is decided by two things: whether someone is on duty, and whether they have written permission to act without asking. Both are decisions for this room, not for the tool.</p>
+      <p class="nl">Detectie is maar een halve maatregel. Het alarm gaat af, wordt een ticket, landt in een wachtrij met een prioriteit die iemand jaren geleden heeft ingesteld, en wacht. De persoon die de machine kan isoleren is niet degene die het alarm zag, en geen van beiden weet zeker of hij op vrijdagavond een server van het netwerk mag halen. Dus wacht het tot maandag. De aanvaller wachtte niet.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> het verschil tussen een beheerst incident en een bedrijfsbreed incident wordt meestal in uren gemeten, en wordt door twee dingen bepaald: of er iemand dienst heeft, en of die schriftelijk toestemming heeft om te handelen zonder te vragen. Beide zijn beslissingen voor deze vergaderzaal, niet voor de tool.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">SEEN BUT NOT STOPPED · THE ATTACKER HAD THE WEEKEND</span><span class="nl">GEZIEN MAAR NIET GESTOPT · DE AANVALLER HAD HET WEEKEND</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: PLAYBOOKS + STANDING AUTHORITY TO ISOLATE</span><span class="nl">OPLOSSING: DRAAIBOEKEN + VASTE BEVOEGDHEID OM TE ISOLEREN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>makes us see.</em></span>
+      <span class="nl">Wat <em>ons laat zien.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">one place for logs, ten detections, people on duty, permission to act</span>
+      <span class="nl">één plek voor logs, tien detecties, mensen van dienst, bevoegdheid om te handelen</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">CENTRAL LOGS</span><span class="nl">CENTRALE LOGS</span></span>
+        <span class="chip c2">EDR</span>
+        <span class="chip c3"><span class="en">24/7 MONITORING</span><span class="nl">24/7 BEWAKING</span></span>
+        <span class="chip c4"><span class="en">COVERAGE MAP</span><span class="nl">DEKKINGSKAART</span></span>
+        <span class="chip c5"><span class="en">PLAYBOOKS</span><span class="nl">DRAAIBOEKEN</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Fixes</th><th>In one line</th></tr>
+        <tr><td class="ctl">Central log store</td><td>Logs (01)</td><td>Every key system sends its logs to one place that an attacker cannot edit, kept for at least a year.</td></tr>
+        <tr><td class="ctl">Ten detections</td><td>Alerts (02)</td><td>A short, written list of the events that matter to us: new administrator, backup deleted, login from a new country, gigabytes leaving. Everything else is a report, not an alarm.</td></tr>
+        <tr><td class="ctl">24/7 monitoring</td><td>Alerts (02), Response (04)</td><td>Someone awake and watching at 02:40, in-house or a managed provider. The contract says who acts within how many minutes, not just who emails.</td></tr>
+        <tr><td class="ctl">EDR everywhere</td><td>Alerts (02), Blind spots (03)</td><td>Software on every endpoint and server that spots attacker behaviour and reports to the same place as the logs.</td></tr>
+        <tr><td class="ctl">Coverage map</td><td>Blind spots (03)</td><td>One page: every system, watched or not watched, and a signature under every “not”. Reviewed quarterly.</td></tr>
+        <tr><td class="ctl">Playbooks and authority</td><td>Response (04)</td><td>For each of the ten detections, the steps to take and standing permission to isolate a machine or account without asking first.</td></tr>
+        <tr><td class="ctl">Detection testing</td><td>All four</td><td>Simulate the attack a few times a year and time how long until someone acts. If nobody notices, that is the finding.</td></tr>
+        <tr><td class="ctl">Two numbers to the board</td><td>All four</td><td>Mean time to detect and mean time to respond, every quarter, in hours. The trend matters more than the number.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Lost op</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Centrale logopslag</td><td>Logs (01)</td><td>Elk belangrijk systeem stuurt zijn logs naar één plek die een aanvaller niet kan aanpassen, minstens een jaar bewaard.</td></tr>
+        <tr><td class="ctl">Tien detecties</td><td>Meldingen (02)</td><td>Een korte, opgeschreven lijst van gebeurtenissen die voor ons tellen: nieuwe beheerder, back-up gewist, inlog vanuit een nieuw land, gigabytes die vertrekken. Alles daarbuiten is een rapport, geen alarm.</td></tr>
+        <tr><td class="ctl">24/7 bewaking</td><td>Meldingen (02), Respons (04)</td><td>Iemand die wakker is en kijkt om 02:40, intern of bij een dienstverlener. Het contract zegt wie binnen hoeveel minuten handelt, niet alleen wie mailt.</td></tr>
+        <tr><td class="ctl">EDR overal</td><td>Meldingen (02), Blinde vlekken (03)</td><td>Software op elk apparaat en elke server die aanvallersgedrag herkent en rapporteert naar dezelfde plek als de logs.</td></tr>
+        <tr><td class="ctl">Dekkingskaart</td><td>Blinde vlekken (03)</td><td>Eén pagina: elk systeem, bewaakt of niet bewaakt, en een handtekening onder elk “niet”. Elk kwartaal herzien.</td></tr>
+        <tr><td class="ctl">Draaiboeken en bevoegdheid</td><td>Respons (04)</td><td>Voor elk van de tien detecties de te nemen stappen en een vaste bevoegdheid om een machine of account te isoleren zonder eerst te vragen.</td></tr>
+        <tr><td class="ctl">Detectietesten</td><td>Alle vier</td><td>Simuleer de aanval een paar keer per jaar en klok hoe lang het duurt voordat iemand handelt. Merkt niemand het, dan is dát de bevinding.</td></tr>
+        <tr><td class="ctl">Twee getallen naar de directie</td><td>Alle vier</td><td>Gemiddelde tijd tot detectie en gemiddelde tijd tot respons, elk kwartaal, in uren. De trend telt zwaarder dan het getal.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> prevention fails eventually; every other briefing on this site assumes it. The only real question is whether we find out in hours, from our own screens, or in months, from a journalist. Ask one thing at the next meeting: what was our mean time to detect last quarter? If nobody can answer, that is the answer.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> preventie faalt uiteindelijk; elke andere briefing op deze site gaat daarvan uit. De enige echte vraag is of we het binnen uren ontdekken, op onze eigen schermen, of na maanden, van een journalist. Stel bij de volgende vergadering één vraag: wat was onze gemiddelde tijd tot detectie vorig kwartaal? Kan niemand antwoorden, dan is dát het antwoord.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Something will get past prevention. Without detection, every other risk on this site runs for months instead of hours.</span><span class="nl">Er komt iets door de preventie. Zonder detectie loopt elk ander risico op deze site maanden in plaats van uren.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Long dwell time multiplies every incident: more systems, more data, no evidence, maximal notifications, and discovery by an outsider.</span><span class="nl">Een lange verblijftijd vermenigvuldigt elk incident: meer systemen, meer data, geen bewijs, maximale meldingen, en ontdekking door een buitenstaander.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low to medium</span><span class="nl">Laag tot middel</span></span><p><span class="en">With central logs, ten tuned detections and someone on duty with authority to act, most intrusions are caught and contained within hours.</span><span class="nl">Met centrale logs, tien afgestelde detecties en iemand van dienst met bevoegdheid om te handelen, worden de meeste inbraken binnen uren ontdekt en ingedamd.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CIO / CISO</span><span class="nl">CIO / CISO</span></span><p><span class="en">Owns the coverage map and the two numbers. The board owns the decision to fund people on duty, not only tools.</span><span class="nl">Eigenaar van de dekkingskaart en de twee getallen. De directie is eigenaar van de beslissing om mensen van dienst te betalen, niet alleen tools.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">mean time to detect last quarter, in hours · % of critical systems sending logs to the central store · log retention in months · % of high alerts acted on within one hour, including nights and weekends.</span><span class="nl">gemiddelde tijd tot detectie vorig kwartaal, in uren · % kritieke systemen dat logs naar de centrale opslag stuurt · bewaartermijn van logs in maanden · % hoge meldingen binnen een uur opgepakt, inclusief nachten en weekenden.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Insufficient logging, monitoring coverage and out-of-hours response allow an intrusion to persist undetected for months, multiplying its damage and leaving no evidence for investigation or notification.”</span><span class="nl">“Onvoldoende logging, monitoringdekking en respons buiten kantooruren laten een inbraak maandenlang onopgemerkt voortduren, vermenigvuldigen de schade en laten geen bewijs achter voor onderzoek of melding.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Incident handling and logging are named risk management measures. You cannot report within 24 hours what you cannot detect, so detection capability is implicitly mandatory. Confirm scope with legal.</td><td>There is no NIS2 certificate. Ask what they monitor around the clock, how fast they must tell you about an incident touching your data, and write that number into the contract.</td><td>The reporting clocks start when you become aware: early warning within about 24 hours, notification within 72, final report within a month. Late awareness does not stop the clock; the regulator will ask why detection took months.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities: mechanisms to detect anomalous activity promptly, logging, and classification of incidents within hours. Detection is an explicit chapter of the ICT risk framework. Confirm scope with legal.</td><td>Check whether monitoring of the service you outsource is in their scope, what their notification deadline to you is, and whether their logs are available to your investigation.</td><td>Classification and the initial notification run in hours after awareness, intermediate within about 72 hours, final within a month. Your logs are the evidence those reports are built on; without them the reports are guesses.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>If you issue one: the monitoring criteria test logging, anomaly detection, alert handling and incident response over the period. Unhandled alerts become printed exceptions.</td><td>Read whether monitoring and incident response are in scope, how fast they commit to detect and notify, and the exceptions in that area. A clean opinion with monitoring out of scope proves nothing here.</td><td>An intrusion discovered late is a control failure for the whole period it went unseen. Expect a deviation, a bridge letter request, and customers asking for your detection timeline.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant where processing affects financial reporting: logging of who changed what, and monitoring of processing integrity. Security monitoring is only covered if it is a control objective.</td><td>Check the control objectives for logging and monitoring. If they are absent, the report says nothing about whether the supplier would notice an intrusion in your data.</td><td>An undetected intrusion in a service organisation is a risk of misstatement for every client. It must be disclosed to the user auditors, and the missing evidence is itself a finding.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Incidentafhandeling en logging zijn benoemde risicobeheersmaatregelen. U kunt niet binnen 24 uur melden wat u niet detecteert, dus detectievermogen is impliciet verplicht. Bevestig de reikwijdte met legal.</td><td>Er bestaat geen NIS2-certificaat. Vraag wat zij dag en nacht bewaken, hoe snel zij u moeten informeren over een incident dat uw data raakt, en zet dat getal in het contract.</td><td>De meldklokken starten zodra u het weet: vroegtijdige waarschuwing binnen ongeveer 24 uur, melding binnen 72 uur, eindrapport binnen een maand. Laat ontdekken stopt de klok niet; de toezichthouder vraagt waarom detectie maanden duurde.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: mechanismen om afwijkend gedrag snel te detecteren, logging, en classificatie van incidenten binnen uren. Detectie is een expliciet hoofdstuk van het ICT-risicokader. Bevestig de reikwijdte met legal.</td><td>Controleer of bewaking van de uitbestede dienst binnen hun scope valt, welke meldtermijn zij naar u hebben, en of hun logs beschikbaar zijn voor uw onderzoek.</td><td>Classificatie en de eerste melding lopen in uren na ontdekking, tussenrapport binnen ongeveer 72 uur, eindrapport binnen een maand. Uw logs zijn het bewijs waarop die rapporten rusten; zonder logs zijn het gissingen.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Als u er zelf een afgeeft: de monitoringcriteria toetsen logging, detectie van afwijkingen, afhandeling van meldingen en incidentrespons over de periode. Onbehandelde meldingen worden gedrukte afwijkingen.</td><td>Lees of monitoring en incidentrespons binnen scope vallen, hoe snel zij beloven te detecteren en te melden, en welke afwijkingen daar staan. Een schoon oordeel met monitoring buiten scope bewijst hier niets.</td><td>Een laat ontdekte inbraak is een tekortkoming voor de hele periode dat die onopgemerkt bleef. Verwacht een afwijking, een verzoek om een bridge letter, en klanten die uw detectietijdlijn opvragen.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant waar verwerking de financiële verslaggeving raakt: logging van wie wat heeft gewijzigd, en bewaking van de integriteit van de verwerking. Securitymonitoring valt er alleen onder als het een beheersdoelstelling is.</td><td>Controleer de beheersdoelstellingen op logging en monitoring. Ontbreken die, dan zegt het rapport niets over of de leverancier een inbraak in uw data zou opmerken.</td><td>Een onopgemerkte inbraak bij een serviceorganisatie is een risico op onjuistheden voor elke klant. Het moet aan de auditors van de klanten worden gemeld, en het ontbrekende bewijs is zelf een bevinding.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">DETECTION BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">DETECTIE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

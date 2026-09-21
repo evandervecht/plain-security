@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Laptops, phones and the kitchen table // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   ENDPOINTS // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4}
+.tagline{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px;z-index:4}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : lost laptop --- */
+.s1 .lap{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:20px;background:var(--white);border:1px solid #9fb3c0;animation:lose 8s linear infinite}
+@keyframes lose{0%{left:118px;opacity:0}6%{opacity:1}46%{left:calc(50% - 26px);opacity:1}54%{left:calc(50% - 26px);opacity:0}100%{left:calc(50% - 26px);opacity:0}}
+.s1 .open{position:absolute;top:50%;left:50%;width:66px;height:66px;margin:-33px 0 0 -33px;display:grid;place-items:center;font-size:28px;background:rgba(255,93,115,.18);border:1px solid var(--bad);z-index:2;opacity:0;animation:fadeIn 8s ease-in-out infinite}
+.s1 .tagline{top:calc(50% + 46px);opacity:0;animation:fadeIn 8s ease-in-out infinite}
+.s1 .thief{right:130px;bottom:34px}
+.s1 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 2 : personal devices --- */
+.s2 .grid{position:absolute;left:60px;right:60px;top:42px;bottom:56px;display:grid;grid-template-columns:repeat(8,1fr);gap:12px}
+.s2 .ph{position:relative;display:grid;place-items:center;font-size:24px;background:var(--surface);border:1px solid var(--line)}
+.s2 .ph i{position:absolute;top:6px;right:6px;width:16px;height:16px;display:grid;place-items:center;font-size:9px;font-style:normal;background:var(--white);color:var(--deep);font-weight:700}
+.s2 .ph.ok{border-color:rgba(55,211,155,.55)}
+.s2 .ph.ok::after{content:"MANAGED";position:absolute;bottom:0;left:0;right:0;font-size:8px;letter-spacing:.14em;text-align:center;padding:3px 0;background:var(--good);color:#04291d;font-weight:700}
+.s2 .ph.no::after{content:"NO WIPE";position:absolute;inset:0;display:grid;place-items:center;font-size:9px;letter-spacing:.14em;font-weight:700;background:rgba(255,93,115,.85);color:var(--white);opacity:0;animation:nowipe 9s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes nowipe{0%{opacity:0}5%{opacity:1}75%{opacity:1}82%,100%{opacity:0}}
+.s2 .banner{animation:fadeIn 9s ease-in-out infinite}
+
+/* --- scene 3 : local admin --- */
+.s3 .prompt{position:absolute;left:50%;top:50%;width:150px;height:66px;margin:-33px 0 0 -75px;display:grid;place-items:center;font-size:10px;letter-spacing:.16em;font-weight:700;color:var(--muted);background:var(--surface);border:1px solid var(--line);z-index:2;text-align:center;line-height:1.6;animation:allow 8s ease-in-out infinite}
+@keyframes allow{0%,44%{background:var(--surface);border-color:var(--line);color:var(--muted)}52%,100%{background:rgba(255,93,115,.22);border-color:var(--bad);color:var(--bad-soft)}}
+.s3 .pkg{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:20px;background:var(--white);border:1px solid #9fb3c0;animation:pkg 8s linear infinite}
+@keyframes pkg{0%{left:118px;opacity:0}6%{opacity:1}40%{left:calc(50% - 100px);opacity:1}48%,100%{left:calc(50% - 100px);opacity:0}}
+.s3 .payload{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--bad);color:var(--white);animation:payload3 8s linear infinite}
+@keyframes payload3{0%,54%{left:calc(50% + 80px);opacity:0}60%{opacity:1}94%{left:calc(100% - 170px);opacity:1}100%{left:calc(100% - 170px);opacity:0}}
+.s3 .tagline{top:calc(50% + 46px)}
+.s3 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 4 : browser --- */
+.s4 .win{position:absolute;left:50%;top:50%;width:440px;height:170px;margin:-85px 0 0 -220px;background:var(--surface);border:1px solid var(--line);z-index:2}
+.s4 .win .bar{height:28px;background:var(--deep);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px;padding:0 10px}
+.s4 .win .bar b{width:9px;height:9px;background:var(--slate);display:block}
+.s4 .win .url{margin-left:8px;flex:1;height:14px;background:var(--bg-lo);border:1px solid var(--line-soft);font-size:8px;letter-spacing:.1em;color:var(--muted);line-height:12px;padding:0 6px;font-weight:400}
+.s4 .win .ext{position:absolute;top:5px;right:10px;width:18px;height:18px;display:grid;place-items:center;font-size:12px;background:var(--bg-lo);border:1px solid rgba(255,93,115,.6);animation:pulse 2.6s ease-out infinite}
+.s4 .ver{position:absolute;left:50%;top:44px;transform:translateX(-50%);font-size:8.5px;letter-spacing:.18em;color:var(--warn);font-weight:700;white-space:nowrap}
+.s4 .pop{position:absolute;left:50%;top:50%;width:230px;transform:translate(-50%,-30%);padding:14px 16px;background:var(--white);color:var(--deep);border:1px solid #9fb3c0;z-index:3;text-align:center;font-size:10px;letter-spacing:.14em;font-weight:700;line-height:1.7;opacity:0;animation:pop 8s ease-in-out infinite}
+.s4 .pop span.btn2{display:inline-block;margin-top:6px;padding:5px 14px;background:var(--bad);color:var(--white);font-size:9px;letter-spacing:.18em}
+@keyframes pop{0%,30%{opacity:0;transform:translate(-50%,-20%)}38%,100%{opacity:1;transform:translate(-50%,-30%)}}
+.s4 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .lap{display:none}.s1 .open,.s1 .tagline{opacity:1}
+  .s2 .ph.no::after{opacity:1}
+  .s3 .pkg{display:none}.s3 .prompt{background:rgba(255,93,115,.22);border-color:var(--bad);color:var(--bad-soft)}.s3 .payload{left:calc(100% - 170px);opacity:1}
+  .s4 .pop{opacity:1;transform:translate(-50%,-30%)}
+  .banner{opacity:1}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> PLAIN SECURITY <span style="color:var(--slate)">//</span> ENDPOINTS</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">LOST</span><span class="nl">VERLOREN</span></a>
+      <a href="#r2"><span class="en">PERSONAL</span><span class="nl">PRIVÉ</span></a>
+      <a href="#r3"><span class="en">ADMIN</span><span class="nl">ADMIN</span></a>
+      <a href="#r4"><span class="en">BROWSER</span><span class="nl">BROWSER</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Laptops, phones and the kitchen table. <em>Where the data really is.</em></span>
+      <span class="nl">Laptops, telefoons en de keukentafel. <em>Waar de data echt staat.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">The servers are locked down. The company's data sits on a laptop in a taxi, a phone in a jacket and a browser at someone's kitchen table — in plain language: four ways the device fails us, and the single control that fixes each.</span>
+      <span class="nl">De servers zijn dichtgetimmerd. De bedrijfsdata staat op een laptop in een taxi, een telefoon in een jaszak en een browser aan iemands keukentafel — in gewone taal: vier manieren waarop het apparaat ons in de steek laat, en de ene maatregel die elk daarvan oplost.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE RISKS</span><span class="nl">BEKIJK DE RISICO'S</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT FIXES IT</span><span class="nl">WAT HET OPLOST</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 01</span><span class="nl">RISICO 01</span></span>
+    <h2>
+      <span class="en">A laptop is left <em>in a taxi.</em></span>
+      <span class="nl">Een laptop blijft <em>in de taxi liggen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">lost or stolen device / no disk encryption</span>
+      <span class="nl">verloren of gestolen apparaat / geen schijfversleuteling</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">FRIDAY EVENING</span><span class="nl">VRIJDAGAVOND</span></div>
+      <div class="node left"><div class="box">🧑‍💼</div><span class="en">Employee</span><span class="nl">Medewerker</span></div>
+      <div class="node right"><div class="box">🚕</div><span class="en">Back seat</span><span class="nl">Achterbank</span></div>
+      <div class="wire"></div>
+      <div class="lap">💻</div>
+      <div class="open">📂</div>
+      <div class="tagline"><span class="en">NO ENCRYPTION · DISK READS LIKE A USB STICK</span><span class="nl">GEEN VERSLEUTELING · SCHIJF LEEST ALS EEN USB-STICK</span></div>
+      <div class="actor thief pulse">🕵️<span class="tag"><span class="en">NEEDS NO PASSWORD</span><span class="nl">HEEFT GEEN WACHTWOORD NODIG</span></span></div>
+      <div class="banner"><span class="en">PERSONAL DATA BREACH · 72-HOUR CLOCK RUNNING</span><span class="nl">DATALEK · 72-UURSKLOK LOOPT</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A login password protects the screen, not the disk. Take the drive out, or boot from a USB stick, and every file on an unencrypted laptop is readable in minutes: the customer export, the HR spreadsheet, the cached mailbox, the saved passwords in the browser. Nobody has to break anything. The laptop does not even have to be stolen on purpose; a bag left on a train is enough.</p>
+      <p class="en"><strong>Business impact:</strong> a lost device with unencrypted personal data is a reportable breach under GDPR, with the 72-hour clock starting when you learn of it. With encryption switched on and verified, the same loss is a hardware replacement and a form. The difference between those two outcomes is one setting.</p>
+      <p class="nl">Een inlogwachtwoord beschermt het scherm, niet de schijf. Haal de schijf eruit, of start op vanaf een USB-stick, en elk bestand op een onversleutelde laptop is binnen minuten leesbaar: de klantexport, het HR-spreadsheet, de gecachte mailbox, de opgeslagen wachtwoorden in de browser. Niemand hoeft iets te kraken. De laptop hoeft niet eens bewust gestolen te zijn; een tas die in de trein blijft liggen is genoeg.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een verloren apparaat met onversleutelde persoonsgegevens is een meldplichtig datalek onder de AVG, met een 72-uursklok die begint zodra u ervan weet. Met versleuteling ingeschakeld en gecontroleerd is hetzelfde verlies een vervangende laptop en een formulier. Het verschil tussen die twee uitkomsten is één instelling.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">READABLE IN MINUTES · REPORTABLE BREACH</span><span class="nl">IN MINUTEN LEESBAAR · MELDPLICHTIG DATALEK</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: FULL-DISK ENCRYPTION, ENFORCED AND VERIFIED</span><span class="nl">OPLOSSING: VOLLEDIGE SCHIJFVERSLEUTELING, AFGEDWONGEN EN GECONTROLEERD</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 02</span><span class="nl">RISICO 02</span></span>
+    <h2>
+      <span class="en">Company mail on a phone <em>we have never seen.</em></span>
+      <span class="nl">Bedrijfsmail op een telefoon <em>die wij nooit hebben gezien.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">unmanaged personal devices / bring your own device</span>
+      <span class="nl">onbeheerde privéapparaten / bring your own device</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">DEVICES WITH COMPANY DATA</span><span class="nl">APPARATEN MET BEDRIJFSDATA</span></div>
+      <div class="grid">
+        <div class="ph ok">📱<i>✉</i></div><div class="ph no" style="--d:.3s">📱<i>✉</i></div><div class="ph no" style="--d:1.1s">📱<i>✉</i></div><div class="ph ok">💻<i>✉</i></div>
+        <div class="ph no" style="--d:1.9s">📱<i>✉</i></div><div class="ph no" style="--d:2.6s">📲<i>✉</i></div><div class="ph ok">📱<i>✉</i></div><div class="ph no" style="--d:3.4s">📱<i>✉</i></div>
+      </div>
+      <div class="banner"><span class="en">5 OF 8 DEVICES CANNOT BE WIPED TONIGHT</span><span class="nl">5 VAN DE 8 APPARATEN KUNNEN VANAVOND NIET GEWIST WORDEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Mail, chat and files on a personal phone are convenient, and they work by default. That phone has no screen lock we can enforce, no update policy, no encryption we can check, and when it is sold, lost or handed to a teenager, nobody can wipe the company data on it. When the employee leaves, the mailbox is switched off, but the downloaded attachments and cached messages stay behind.</p>
+      <p class="en"><strong>Business impact:</strong> this is not a question of banning personal devices. It is a question of whether every device that holds company data is one we can wipe, update and lock from a distance. Devices that meet that bar are welcome. Devices that do not should be able to read mail in the browser, and nothing more.</p>
+      <p class="nl">Mail, chat en bestanden op een privételefoon zijn handig, en ze werken standaard. Die telefoon heeft geen schermvergrendeling die wij kunnen afdwingen, geen updatebeleid, geen versleuteling die wij kunnen controleren, en als hij wordt verkocht, verloren of aan een puber gegeven, kan niemand de bedrijfsdata erop wissen. Als de medewerker vertrekt, gaat de mailbox uit, maar de gedownloade bijlagen en gecachte berichten blijven staan.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> dit is geen kwestie van privéapparaten verbieden. Het is de vraag of elk apparaat met bedrijfsdata een apparaat is dat wij op afstand kunnen wissen, bijwerken en vergrendelen. Apparaten die aan die lat voldoen zijn welkom. Apparaten die dat niet doen, mogen mail lezen in de browser, en verder niets.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NO WIPE · NO UPDATES · DATA OUTLIVES THE EMPLOYEE</span><span class="nl">GEEN WISSEN · GEEN UPDATES · DATA OVERLEEFT DE MEDEWERKER</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: DEVICE MANAGEMENT + REMOTE WIPE FOR EVERY DEVICE WITH COMPANY DATA</span><span class="nl">OPLOSSING: APPARAATBEHEER + WISSEN OP AFSTAND VOOR ELK APPARAAT MET BEDRIJFSDATA</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 03</span><span class="nl">RISICO 03</span></span>
+    <h2>
+      <span class="en">Everyone is <em>their own administrator.</em></span>
+      <span class="nl">Iedereen is <em>zijn eigen beheerder.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">standing local administrator rights</span>
+      <span class="nl">permanente lokale beheerdersrechten</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">ONE DOWNLOAD</span><span class="nl">ÉÉN DOWNLOAD</span></div>
+      <div class="node left"><div class="box">⬇️</div><span class="en">“Free PDF tool”</span><span class="nl">“Gratis PDF-tool”</span></div>
+      <div class="node right"><div class="box">💻</div><span class="en">Company laptop</span><span class="nl">Bedrijfslaptop</span></div>
+      <div class="wire"></div>
+      <div class="pkg">📦</div>
+      <div class="prompt"><span class="en">INSTALL?<br>ADMIN ✔ — NO QUESTIONS</span><span class="nl">INSTALLEREN?<br>ADMIN ✔ — GEEN VRAGEN</span></div>
+      <div class="tagline"><span class="en">USER = ADMINISTRATOR</span><span class="nl">GEBRUIKER = BEHEERDER</span></div>
+      <div class="payload">🦠</div>
+      <div class="banner"><span class="en">INSTALLED SYSTEM-WIDE · SECURITY TOOLS SWITCHED OFF</span><span class="nl">SYSTEEMBREED GEÏNSTALLEERD · BEVEILIGING UITGEZET</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Local administrator rights let a user install anything, change any setting and switch off any protection. Most people have them because it was easier for the helpdesk, years ago. Malware knows this. A fake PDF tool, a cracked font pack or a “required plugin” runs with the same rights as the person who clicked it. With admin rights it disables the antivirus, installs itself deep in the system and hides. Without them, it is a file in a downloads folder that cannot do much.</p>
+      <p class="en"><strong>Business impact:</strong> standing admin rights turn every careless click into a full compromise of the device, and the device into a springboard into the network. Removing them costs some helpdesk friction for a few weeks. Keeping them costs the first incident.</p>
+      <p class="nl">Lokale beheerdersrechten laten een gebruiker alles installeren, elke instelling wijzigen en elke bescherming uitzetten. De meeste mensen hebben ze omdat het jaren geleden makkelijker was voor de helpdesk. Malware weet dat. Een nep-PDF-tool, een gekraakt lettertypepakket of een “vereiste plug-in” draait met dezelfde rechten als degene die erop klikte. Met beheerdersrechten schakelt hij de virusscanner uit, nestelt hij zich diep in het systeem en verbergt hij zich. Zonder die rechten is het een bestand in een downloadmap dat weinig kan.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> permanente beheerdersrechten maken van elke onvoorzichtige klik een volledige overname van het apparaat, en van het apparaat een springplank het netwerk in. Ze weghalen kost een paar weken wrijving met de helpdesk. Ze houden kost het eerste incident.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ONE CLICK = FULL DEVICE COMPROMISE</span><span class="nl">ÉÉN KLIK = APPARAAT VOLLEDIG OVERGENOMEN</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: NO STANDING LOCAL ADMIN + APPROVED-SOFTWARE CATALOGUE</span><span class="nl">OPLOSSING: GEEN PERMANENTE LOKALE ADMIN + CATALOGUS MET GOEDGEKEURDE SOFTWARE</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 04</span><span class="nl">RISICO 04</span></span>
+    <h2>
+      <span class="en">The browser is <em>the new operating system.</em></span>
+      <span class="nl">De browser is <em>het nieuwe besturingssysteem.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">unpatched devices / malicious extensions / fake updates</span>
+      <span class="nl">niet-bijgewerkte apparaten / kwaadaardige extensies / nep-updates</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">A NORMAL TUESDAY</span><span class="nl">EEN GEWONE DINSDAG</span></div>
+      <div class="win">
+        <div class="bar"><b></b><b></b><b></b><span class="url">https://news-site.example/article</span><span class="ext">🧩</span></div>
+        <div class="ver"><span class="en">BROWSER v118 · 41 DAYS BEHIND · 2 KNOWN EXPLOITED FLAWS</span><span class="nl">BROWSER v118 · 41 DAGEN ACHTER · 2 BEKENDE MISBRUIKTE FOUTEN</span></div>
+      </div>
+      <div class="pop"><span class="en">⚠ YOUR BROWSER IS OUT OF DATE<br><span class="btn2">UPDATE NOW</span></span><span class="nl">⚠ UW BROWSER IS VEROUDERD<br><span class="btn2">NU BIJWERKEN</span></span></div>
+      <div class="banner"><span class="en">FAKE UPDATE · EXTENSION READS EVERY PAGE, INCLUDING THE BANK</span><span class="nl">NEP-UPDATE · EXTENSIE LEEST ELKE PAGINA, OOK DE BANK</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Almost all work now happens in the browser: mail, finance, HR, the customer system. That makes the browser the most attacked program on the device. Three things go wrong. Updates wait weeks while known, actively exploited flaws stay open. A fake “update now” banner on a legitimate website delivers malware in one click. And a browser extension installed for convenience, a coupon finder or a PDF converter, is quietly sold to a new owner who makes it read every page, every form and every password typed.</p>
+      <p class="en"><strong>Business impact:</strong> a malicious extension sits inside the logged-in session, after MFA has already been passed. It sees what the employee sees, including the online banking and the admin consoles. None of this needs administrator rights. It needs a browser that is behind on updates and free to install anything from the store.</p>
+      <p class="nl">Bijna al het werk gebeurt nu in de browser: mail, finance, HR, het klantsysteem. Daarmee is de browser het meest aangevallen programma op het apparaat. Drie dingen gaan mis. Updates wachten weken terwijl bekende, actief misbruikte fouten openstaan. Een nep-banner “nu bijwerken” op een legitieme website levert met één klik malware af. En een browserextensie die voor het gemak is geïnstalleerd, een kortingszoeker of een PDF-converter, wordt stilletjes verkocht aan een nieuwe eigenaar die hem elke pagina, elk formulier en elk getypt wachtwoord laat meelezen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een kwaadaardige extensie zit ín de ingelogde sessie, nadat MFA al is doorlopen. Hij ziet wat de medewerker ziet, inclusief het internetbankieren en de beheerconsoles. Niets hiervan vereist beheerdersrechten. Het vereist een browser die achterloopt met updates en vrij is om alles uit de winkel te installeren.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">INSIDE THE SESSION · AFTER MFA · NO ADMIN NEEDED</span><span class="nl">IN DE SESSIE · NA MFA · GEEN ADMIN NODIG</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: AUTO-UPDATE WITHIN DAYS + EXTENSION ALLOW-LIST</span><span class="nl">OPLOSSING: AUTOMATISCH BIJWERKEN BINNEN DAGEN + TOEGESTANE EXTENSIES OP EEN LIJST</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>actually fixes this.</em></span>
+      <span class="nl">Wat dit <em>daadwerkelijk oplost.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">settings in the device management you already pay for — plus one rule people can follow</span>
+      <span class="nl">instellingen in het apparaatbeheer dat u al betaalt — plus één regel die mensen kunnen volgen</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">ENCRYPTION</span><span class="nl">VERSLEUTELING</span></span>
+        <span class="chip c2"><span class="en">REMOTE WIPE</span><span class="nl">WISSEN OP AFSTAND</span></span>
+        <span class="chip c3"><span class="en">NO LOCAL ADMIN</span><span class="nl">GEEN LOKALE ADMIN</span></span>
+        <span class="chip c4"><span class="en">AUTO-UPDATE</span><span class="nl">AUTO-UPDATE</span></span>
+        <span class="chip c5"><span class="en">COMPLIANT DEVICES ONLY</span><span class="nl">ALLEEN GOEDGEKEURDE APPARATEN</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Fixes</th><th>In one line</th></tr>
+        <tr><td class="ctl">Disk encryption</td><td>Lost (01)</td><td>Switched on for every laptop and phone, enforced by policy, and reported: a device that is not encrypted shows up on a list the same day.</td></tr>
+        <tr><td class="ctl">Device management</td><td>Personal (02)</td><td>Every device that holds company data is enrolled, so it can be locked, updated and wiped from a distance within minutes.</td></tr>
+        <tr><td class="ctl">Conditional access</td><td>Personal (02)</td><td>Company data opens only on devices that meet the bar: encrypted, updated, managed. Everything else gets the browser, read-only.</td></tr>
+        <tr><td class="ctl">BYOD rule</td><td>Personal (02)</td><td>One page: what personal devices may do, what they may not, and what enrolment means for the owner's privacy. Written so people actually follow it.</td></tr>
+        <tr><td class="ctl">No local admin</td><td>Admin (03)</td><td>Users work as users. Admin rights are granted for one task, for one hour, on request, and logged.</td></tr>
+        <tr><td class="ctl">Software catalogue</td><td>Admin (03)</td><td>An approved list people can install from themselves in one click, so the safe route is also the fast route.</td></tr>
+        <tr><td class="ctl">Auto-update</td><td>Browser (04)</td><td>Operating system and browser update automatically, with a deadline of days. A device that refuses is blocked until it complies.</td></tr>
+        <tr><td class="ctl">Extension allow-list</td><td>Browser (04)</td><td>Only vetted browser extensions install. Fake-update banners are blocked at the browser level. Downloads of executables are quarantined.</td></tr>
+        <tr><td class="ctl">EDR</td><td>All four</td><td>Detection on every device that spots an attacker's behaviour and isolates the machine. Covered in depth in the ransomware briefing.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Lost op</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Schijfversleuteling</td><td>Verloren (01)</td><td>Aan op elke laptop en telefoon, afgedwongen via beleid, en gerapporteerd: een apparaat dat niet versleuteld is, staat dezelfde dag op een lijst.</td></tr>
+        <tr><td class="ctl">Apparaatbeheer</td><td>Privé (02)</td><td>Elk apparaat met bedrijfsdata is ingeschreven, zodat het binnen minuten op afstand vergrendeld, bijgewerkt en gewist kan worden.</td></tr>
+        <tr><td class="ctl">Voorwaardelijke toegang</td><td>Privé (02)</td><td>Bedrijfsdata opent alleen op apparaten die aan de lat voldoen: versleuteld, bijgewerkt, beheerd. De rest krijgt de browser, alleen-lezen.</td></tr>
+        <tr><td class="ctl">BYOD-regel</td><td>Privé (02)</td><td>Eén pagina: wat privéapparaten mogen, wat niet, en wat inschrijving betekent voor de privacy van de eigenaar. Zo geschreven dat mensen hem echt volgen.</td></tr>
+        <tr><td class="ctl">Geen lokale admin</td><td>Admin (03)</td><td>Gebruikers werken als gebruiker. Beheerdersrechten worden per taak, voor een uur, op verzoek verleend en gelogd.</td></tr>
+        <tr><td class="ctl">Softwarecatalogus</td><td>Admin (03)</td><td>Een goedgekeurde lijst waaruit mensen zelf met één klik installeren, zodat de veilige route ook de snelle route is.</td></tr>
+        <tr><td class="ctl">Auto-update</td><td>Browser (04)</td><td>Besturingssysteem en browser werken zichzelf bij, met een deadline van dagen. Een apparaat dat weigert, wordt geblokkeerd tot het voldoet.</td></tr>
+        <tr><td class="ctl">Toegestane extensies</td><td>Browser (04)</td><td>Alleen gecontroleerde browserextensies installeren. Nep-updatebanners worden in de browser geblokkeerd. Gedownloade programma's gaan in quarantaine.</td></tr>
+        <tr><td class="ctl">EDR</td><td>Alle vier</td><td>Detectie op elk apparaat die aanvallersgedrag herkent en de machine isoleert. Uitgebreid behandeld in de ransomware-briefing.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> the perimeter is now every kitchen table. Ask two questions: how many devices hold company data, and how many of those could we wipe tonight. If the second number is smaller than the first, that gap is the risk, and it is measured in devices, not in policies.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> de buitengrens is nu elke keukentafel. Stel twee vragen: hoeveel apparaten bevatten bedrijfsdata, en hoeveel daarvan kunnen we vanavond wissen. Is het tweede getal kleiner dan het eerste, dan is dat gat het risico, en het wordt gemeten in apparaten, niet in beleidsstukken.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Devices get lost every year in any organisation of size. Malicious downloads and extensions need only one click.</span><span class="nl">In elke organisatie van enige omvang raken jaarlijks apparaten kwijt. Kwaadaardige downloads en extensies hebben aan één klik genoeg.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">A reportable data breach per lost device, a compromised device as a springboard into the network, and sessions hijacked after MFA.</span><span class="nl">Een meldplichtig datalek per verloren apparaat, een overgenomen apparaat als springplank het netwerk in, en gekaapte sessies na MFA.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low</span><span class="nl">Laag</span></span><p><span class="en">A lost encrypted, wipeable device is a hardware cost. Without admin rights and with an extension allow-list, one click no longer owns the device.</span><span class="nl">Een verloren versleuteld, wisbaar apparaat is een hardwarekostenpost. Zonder beheerdersrechten en met een extensielijst neemt één klik het apparaat niet meer over.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CIO / IT director</span><span class="nl">CIO / IT-directeur</span></span><p><span class="en">With HR for the BYOD rule and the leaver process. The board decides whether unmanaged devices may hold company data at all.</span><span class="nl">Samen met HR voor de BYOD-regel en het vertrekproces. De directie beslist of onbeheerde apparaten überhaupt bedrijfsdata mogen bevatten.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">% of devices with verified encryption · % of devices holding company data that are enrolled and wipeable · number of users with standing local admin · median days a device runs behind on browser and OS updates.</span><span class="nl">% apparaten met gecontroleerde versleuteling · % apparaten met bedrijfsdata die ingeschreven en wisbaar zijn · aantal gebruikers met permanente lokale admin · mediaan aantal dagen dat een apparaat achterloopt op browser- en OS-updates.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Loss or compromise of laptops and phones holding company data, through missing encryption, unmanaged devices, standing admin rights or an outdated browser, causes reportable data breaches and a foothold in the network.”</span><span class="nl">“Verlies of overname van laptops en telefoons met bedrijfsdata, door ontbrekende versleuteling, onbeheerde apparaten, permanente beheerdersrechten of een verouderde browser, leidt tot meldplichtige datalekken en een voet tussen de deur in het netwerk.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Basic cyber hygiene, asset management, encryption and access control are named risk management measures. That includes knowing which devices hold your data and being able to lock them.</td><td>Ask whether their staff work on managed, encrypted devices, and whether that applies to the subcontractors who touch your data. Put it in the contract; there is no certificate to check.</td><td>A lost unencrypted device with personal data is a GDPR breach: notify within 72 hours of learning of it. A compromised device that leads to a wider incident can be significant under NIS2: early warning within 24 hours, notification within 72, final report within a month. Confirm with legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities: ICT asset inventory, endpoint protection, encryption of data at rest and in transit, and patch management with defined deadlines, all inside a board-approved ICT risk framework.</td><td>Your ICT third parties' device hygiene is your risk. Ask for their patch deadlines and encryption evidence as part of the register of ICT arrangements, and include audit rights.</td><td>A compromised device that affects a critical function is a possible major ICT incident: initial notification to the supervisor within hours of classification, intermediate report within 72 hours, final within a month. Confirm with legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>If you issue one: encryption, endpoint protection, patching and logical access on workstations are tested over the period. An unencrypted laptop found in the sample is an exception in print.</td><td>Look for workstation encryption, device management and patch timelines in the tested controls. If the report only covers the data centre, it says nothing about the laptops that administer it.</td><td>Auditors test detection, containment and the wipe. A device-related breach in the period becomes a deviation, and customers will ask for a bridge letter.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Focused on outsourced processes relevant to financial reporting. Endpoint security only appears if the service organisation put it in the control objectives.</td><td>Check whether workstation controls are among the objectives at all. Often they are not, so ask the questions directly rather than inferring from the report.</td><td>If the incident touched the processes in scope, the service organisation must disclose it to the user auditors. Otherwise it is outside the report, which does not make it outside your risk.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Basale cyberhygiëne, assetbeheer, versleuteling en toegangsbeheer zijn benoemde risicobeheersmaatregelen. Daaronder valt weten welke apparaten uw data bevatten en ze kunnen vergrendelen.</td><td>Vraag of hun medewerkers op beheerde, versleutelde apparaten werken, en of dat ook geldt voor de onderaannemers die uw data aanraken. Leg het vast in het contract; er is geen certificaat om te controleren.</td><td>Een verloren onversleuteld apparaat met persoonsgegevens is een AVG-datalek: melden binnen 72 uur nadat u ervan weet. Een overgenomen apparaat dat tot een breder incident leidt, kan significant zijn onder NIS2: vroegtijdige waarschuwing binnen 24 uur, melding binnen 72 uur, eindrapport binnen een maand. Bevestig met legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: ICT-assetinventaris, bescherming van eindpunten, versleuteling van gegevens in rust en onderweg, en patchbeheer met vaste termijnen, alles binnen een door het bestuur goedgekeurd ICT-risicokader.</td><td>De apparaathygiëne van uw ICT-derden is uw risico. Vraag hun patchtermijnen en bewijs van versleuteling op als onderdeel van het register van ICT-overeenkomsten, en neem auditrechten op.</td><td>Een overgenomen apparaat dat een kritieke functie raakt, is een mogelijk ernstig ICT-incident: eerste melding aan de toezichthouder binnen enkele uren na classificatie, tussenrapport binnen 72 uur, eindrapport binnen een maand. Bevestig met legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Als u er zelf een afgeeft: versleuteling, eindpuntbescherming, patching en logische toegang op werkplekken worden over de periode getest. Een onversleutelde laptop in de steekproef is een afwijking in druk.</td><td>Zoek naar werkplekversleuteling, apparaatbeheer en patchtermijnen in de geteste maatregelen. Dekt het rapport alleen het datacenter, dan zegt het niets over de laptops waarmee het wordt beheerd.</td><td>Auditors testen detectie, indamming en het wissen. Een apparaatgerelateerd datalek in de periode wordt een afwijking, en klanten vragen om een bridge letter.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Gericht op uitbestede processen die relevant zijn voor de financiële verslaggeving. Eindpuntbeveiliging komt alleen voor als de serviceorganisatie het in de beheersdoelstellingen heeft opgenomen.</td><td>Controleer of werkplekmaatregelen überhaupt bij de doelstellingen staan. Vaak niet, dus stel de vragen direct in plaats van ze uit het rapport af te leiden.</td><td>Raakte het incident de processen binnen scope, dan moet de serviceorganisatie het melden aan de auditors van haar klanten. Anders valt het buiten het rapport, wat het niet buiten uw risico plaatst.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">ENDPOINTS BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">ENDPOINTS BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

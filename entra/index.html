@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Entra ID: the keys to Microsoft 365 // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   ENTRA ID // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4}
+.tagline{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px;z-index:4}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : global admins --- */
+.s1 .admins{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;gap:8px;z-index:2}
+.s1 .ga{position:relative;width:44px;height:44px;display:grid;place-items:center;font-size:18px;background:var(--surface);border:1px solid var(--line)}
+.s1 .ga::after{content:"GA";position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-size:8px;letter-spacing:.14em;color:var(--slate);font-weight:700}
+.s1 .ga.hit{animation:gaHit 8s ease-in-out infinite}
+@keyframes gaHit{0%,40%{background:var(--surface);border-color:var(--line)}48%,100%{background:rgba(255,93,115,.3);border-color:var(--bad)}}
+.s1 .hook{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--white);border:1px solid #9fb3c0;animation:hook 8s linear infinite}
+@keyframes hook{0%{left:118px;opacity:0}6%{opacity:1}40%{left:calc(50% - 26px);opacity:1}46%,100%{left:calc(50% - 26px);opacity:0}}
+.s1 .crown{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--bad);color:var(--white);animation:crown 8s linear infinite}
+@keyframes crown{0%,50%{left:calc(50% + 150px);opacity:0}56%{opacity:1}92%{left:calc(100% - 170px);opacity:1}100%{left:calc(100% - 170px);opacity:0}}
+.s1 .node.right .box{animation:tenantOwned 8s ease-in-out infinite}
+@keyframes tenantOwned{0%,88%{border-color:var(--line);background:var(--surface)}94%,100%{border-color:var(--bad);background:rgba(255,93,115,.3)}}
+.s1 .tagline{top:calc(50% + 48px)}
+.s1 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 2 : conditional access gaps --- */
+.s2 .gate{position:absolute;left:50%;top:50%;width:72px;height:150px;margin:-75px 0 0 -36px;display:grid;place-items:center;font-size:30px;background:var(--surface);border:1px solid var(--line);border-style:dashed;z-index:2}
+.s2 .gate span{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:8.5px;letter-spacing:.18em;color:var(--slate);font-weight:700}
+.s2 .req{position:absolute;left:118px;width:52px;height:34px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--white);border:1px solid #9fb3c0;color:var(--deep);animation:pass 7s linear infinite}
+.s2 .req.a{top:70px}.s2 .req.b{top:123px;animation-delay:2.3s}.s2 .req.c{top:176px;animation-delay:4.6s}
+.s2 .req i{position:absolute;left:50%;top:-17px;transform:translateX(-50%);white-space:nowrap;font-size:8.5px;letter-spacing:.14em;font-style:normal;font-weight:700;color:var(--bad-soft)}
+@keyframes pass{0%{left:118px;opacity:0}8%{opacity:1}92%{opacity:1}100%{left:calc(100% - 170px);opacity:0}}
+.s2 .banner{animation:fadeIn 7s ease-in-out infinite}
+
+/* --- scene 3 : guests --- */
+.s3 .guests{position:absolute;left:40px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:12px;z-index:3}
+.s3 .guest{position:relative;width:190px;padding:9px 12px;background:var(--surface);border:1px solid var(--line);animation:stale 9s ease-in-out infinite}
+.s3 .guest.b{animation-delay:.6s}.s3 .guest.c{animation-delay:1.2s}
+.s3 .guest .who{font-family:var(--sans);font-weight:700;font-size:12.5px;color:var(--white)}
+.s3 .guest .addr{font-size:9.5px;color:var(--muted);letter-spacing:.04em}
+.s3 .guest .since{position:absolute;top:-1px;right:-1px;font-size:8.5px;letter-spacing:.16em;font-weight:700;padding:3px 7px;background:var(--slate);color:var(--deep)}
+@keyframes stale{0%,45%{border-color:var(--line);box-shadow:none}55%,100%{border-color:var(--bad);box-shadow:0 0 18px rgba(255,93,115,.18)}}
+.s3 .wire{left:250px;right:118px}
+.s3 .cal{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:3;font-size:12px;font-weight:700;letter-spacing:.1em;padding:8px 14px;background:var(--deep);border:1px solid var(--line);color:var(--white);white-space:nowrap}
+.s3 .cal::after{content:"2019 → 2025";animation:years 9s steps(1) infinite}
+@keyframes years{0%,18%{content:"2019"}18.1%,36%{content:"2021"}36.1%,54%{content:"2023"}54.1%,100%{content:"2019 → 2025"}}
+.s3 .banner{animation:fadeIn 9s ease-in-out infinite}
+
+/* --- scene 4 : hybrid back door --- */
+.s4 .sync{position:absolute;left:50%;top:50%;width:66px;height:66px;margin:-33px 0 0 -33px;display:grid;place-items:center;font-size:28px;background:var(--surface);border:1px solid var(--line);z-index:2;animation:syncHit 8s ease-in-out infinite}
+@keyframes syncHit{0%,42%{background:var(--surface);border-color:var(--line)}50%,100%{background:rgba(255,93,115,.22);border-color:var(--bad)}}
+.s4 .node.left .box{background:rgba(255,93,115,.3);border-color:var(--bad)}
+.s4 .node.right .box{animation:tenantOwned 8s ease-in-out infinite}
+.s4 .creds{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--bad);color:var(--white);animation:creds 8s linear infinite}
+@keyframes creds{0%{left:118px;opacity:0}6%{opacity:1}42%{left:calc(50% - 26px);opacity:1}50%{left:calc(50% - 26px);opacity:1}56%{left:calc(50% + 40px)}88%{left:calc(100% - 170px);opacity:1}100%{left:calc(100% - 170px);opacity:0}}
+.s4 .tagline{top:calc(50% + 46px)}
+.s4 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .ga.hit{background:rgba(255,93,115,.3);border-color:var(--bad)}
+  .s1 .hook{display:none}.s1 .crown{left:calc(100% - 170px)}
+  .s1 .node.right .box,.s4 .node.right .box{border-color:var(--bad);background:rgba(255,93,115,.3)}
+  .s2 .req.a{left:calc(50% - 26px)}.s2 .req.b{left:calc(50% + 60px)}.s2 .req.c{left:calc(50% - 110px)}
+  .s3 .guest{border-color:var(--bad)}
+  .s4 .sync{background:rgba(255,93,115,.22);border-color:var(--bad)}
+  .s4 .creds{left:calc(100% - 170px)}
+  .banner{opacity:1}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> PLAIN SECURITY <span style="color:var(--slate)">//</span> ENTRA</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">ADMINS</span><span class="nl">BEHEERDERS</span></a>
+      <a href="#r2"><span class="en">GATE</span><span class="nl">POORT</span></a>
+      <a href="#r3"><span class="en">GUESTS</span><span class="nl">GASTEN</span></a>
+      <a href="#r4"><span class="en">HYBRID</span><span class="nl">HYBRIDE</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Entra ID. <em>The keys to Microsoft 365.</em></span>
+      <span class="nl">Entra ID. <em>De sleutels van Microsoft 365.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Every mailbox, every file in SharePoint, every Teams chat and every admin right lives behind one identity system: Entra ID. Four ways the tenant gets taken over — with real examples — and the one setting that stops each.</span>
+      <span class="nl">Elke mailbox, elk bestand in SharePoint, elke Teams-chat en elk beheerrecht zit achter één identiteitssysteem: Entra ID. Vier manieren waarop de tenant wordt overgenomen — met echte voorbeelden — en de ene instelling die elk ervan stopt.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FOUR WAYS</span><span class="nl">BEKIJK DE VIER MANIEREN</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT LOCKS IT DOWN</span><span class="nl">WAT HET AFSLUIT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 01</span><span class="nl">RISICO 01</span></span>
+    <h2>
+      <span class="en">Too many people <em>own the tenant.</em></span>
+      <span class="nl">Te veel mensen <em>bezitten de tenant.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">standing Global Administrator rights / no Privileged Identity Management</span>
+      <span class="nl">permanente Global Administrator-rechten / geen Privileged Identity Management</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">ONE PHISHED ADMIN</span><span class="nl">ÉÉN GEPHISHTE BEHEERDER</span></div>
+      <div class="node left"><div class="box">🎣</div><span class="en">Phishing mail</span><span class="nl">Phishingmail</span></div>
+      <div class="node right"><div class="box">☁️</div><span class="en">Our tenant</span><span class="nl">Onze tenant</span></div>
+      <div class="wire"></div>
+      <div class="admins"><div class="ga">👤</div><div class="ga">👤</div><div class="ga">👤</div><div class="ga hit">👤</div><div class="ga">👤</div><div class="ga">👤</div><div class="ga">👤</div></div>
+      <div class="tagline"><span class="en">7 GLOBAL ADMINS · ALWAYS ON</span><span class="nl">7 GLOBAL ADMINS · ALTIJD ACTIEF</span></div>
+      <div class="hook">🎣</div>
+      <div class="crown">👑</div>
+      <div class="banner"><span class="en">TENANT OWNED · EVERY MAILBOX, EVERY FILE</span><span class="nl">TENANT OVERGENOMEN · ELKE MAILBOX, ELK BESTAND</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Global Administrator is the master key of Microsoft 365. It reads every mailbox, changes every password, adds new administrators and turns off the logging that would show it happened. Most tenants hand that key to far more people than they think: the IT team, the helpdesk lead, two consultants from the migration project, a service account from 2018. All of them hold it permanently, whether they are using it or not. Attackers know this, so they do not attack the tenant. They phish one of those people.</p>
+      <p class="en"><strong>Example:</strong> a helpdesk employee with standing Global Administrator rights approves a fake “Microsoft security update” login on a Monday morning. By lunch the attacker has added their own administrator, set up mailbox forwarding on the CFO and finance team, and created an application that keeps access even after every password is reset. <strong>Business impact:</strong> total loss of confidentiality over the company's email and files, and a recovery that means rebuilding trust in the entire tenant, not just one account.</p>
+      <p class="nl">Global Administrator is de hoofdsleutel van Microsoft 365. Die leest elke mailbox, wijzigt elk wachtwoord, voegt nieuwe beheerders toe en zet de logging uit die zou laten zien dat het gebeurde. De meeste tenants geven die sleutel aan veel meer mensen dan ze denken: het IT-team, de teamleider van de helpdesk, twee consultants van het migratieproject, een serviceaccount uit 2018. Ze hebben hem allemaal permanent, of ze hem nu gebruiken of niet. Aanvallers weten dat, dus ze vallen de tenant niet aan. Ze phishen één van die mensen.</p>
+      <p class="nl"><strong>Voorbeeld:</strong> een helpdeskmedewerker met permanente Global Administrator-rechten keurt op maandagochtend een nep-inlog voor een “Microsoft-beveiligingsupdate” goed. Tegen de lunch heeft de aanvaller een eigen beheerder toegevoegd, doorsturen ingesteld op de mailboxen van de CFO en het financeteam, en een applicatie aangemaakt die toegang houdt nadat elk wachtwoord is gereset. <strong>Bedrijfsimpact:</strong> volledig verlies van vertrouwelijkheid over de e-mail en bestanden van het bedrijf, en een herstel dat neerkomt op het opnieuw opbouwen van vertrouwen in de hele tenant, niet in één account.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ONE CLICK · WHOLE TENANT · PERSISTENT</span><span class="nl">ÉÉN KLIK · HELE TENANT · BLIJVEND</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: PIM WITH JUST-IN-TIME ACTIVATION + ≤ 5 ELIGIBLE ADMINS</span><span class="nl">OPLOSSING: PIM MET JUST-IN-TIME-ACTIVERING + ≤ 5 BEHEERDERS</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 02</span><span class="nl">RISICO 02</span></span>
+    <h2>
+      <span class="en">The gate is there. <em>It is open.</em></span>
+      <span class="nl">De poort staat er. <em>Hij staat open.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">Conditional Access gaps / legacy authentication / unmanaged devices</span>
+      <span class="nl">gaten in Conditional Access / verouderde authenticatie / onbeheerde apparaten</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">SIGN-INS TODAY</span><span class="nl">AANMELDINGEN VANDAAG</span></div>
+      <div class="node left"><div class="box">🌍</div><span class="en">Anywhere</span><span class="nl">Overal</span></div>
+      <div class="node right"><div class="box">📧</div><span class="en">Mail &amp; SharePoint</span><span class="nl">Mail &amp; SharePoint</span></div>
+      <div class="wire"></div>
+      <div class="gate">🚧<span><span class="en">CONDITIONAL ACCESS</span><span class="nl">CONDITIONAL ACCESS</span></span></div>
+      <div class="req a">📟<i><span class="en">LEGACY AUTH · NO MFA POSSIBLE</span><span class="nl">VEROUDERDE AUTH · MFA ONMOGELIJK</span></i></div>
+      <div class="req b">📱<i><span class="en">PERSONAL PHONE · UNMANAGED</span><span class="nl">PRIVÉTELEFOON · ONBEHEERD</span></i></div>
+      <div class="req c">👤<i><span class="en">ADMIN · PASSWORD ONLY</span><span class="nl">BEHEERDER · ALLEEN WACHTWOORD</span></i></div>
+      <div class="banner"><span class="en">NO POLICY BLOCKS ANY OF THEM</span><span class="nl">GEEN ENKEL BELEID HOUDT ZE TEGEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Conditional Access is the gate in front of Microsoft 365: it decides, per sign-in, who gets in from where, on which device, and with what proof. Most tenants have a gate. Few have closed it. Legacy authentication — the old protocols used by IMAP, POP and ancient Office clients — cannot do MFA at all, and if it is still allowed, a password is enough. Administrators who are “too busy for MFA prompts” are exempted. Personal phones and home laptops that nobody manages open corporate mail and download SharePoint libraries.</p>
+      <p class="en"><strong>Example:</strong> an attacker takes a password leaked from a hobby forum and signs in over legacy IMAP from another continent. Because that protocol cannot ask for a second factor, Entra ID lets it through, and the attacker quietly syncs three years of the sales director's mail. <strong>Business impact:</strong> the company believes it “has MFA” while the doors that matter still take a password alone. The fix is configuration, not licences: a baseline of policies that block legacy authentication, require MFA for everyone and require a managed device for anything sensitive.</p>
+      <p class="nl">Conditional Access is de poort vóór Microsoft 365: het beslist per aanmelding wie binnenkomt, vanwaar, op welk apparaat en met welk bewijs. De meeste tenants hebben een poort. Weinig hebben hem dichtgedaan. Verouderde authenticatie — de oude protocollen van IMAP, POP en stokoude Office-clients — kan helemaal geen MFA, en als die nog is toegestaan, volstaat een wachtwoord. Beheerders die “te druk zijn voor MFA-prompts” krijgen een uitzondering. Privételefoons en thuislaptops die niemand beheert, openen bedrijfsmail en downloaden SharePoint-bibliotheken.</p>
+      <p class="nl"><strong>Voorbeeld:</strong> een aanvaller pakt een wachtwoord dat lekte bij een hobbyforum en meldt zich via verouderd IMAP aan vanaf een ander continent. Omdat dat protocol geen tweede factor kan vragen, laat Entra ID het door, en de aanvaller synchroniseert ongemerkt drie jaar mail van de salesdirecteur. <strong>Bedrijfsimpact:</strong> het bedrijf denkt dat het “MFA heeft”, terwijl de deuren die ertoe doen nog steeds op alleen een wachtwoord opengaan. De oplossing is configuratie, geen licenties: een basisset beleidsregels die verouderde authenticatie blokkeert, MFA voor iedereen eist en een beheerd apparaat vereist voor alles wat gevoelig is.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">“WE HAVE MFA” · BUT NOT WHERE IT COUNTS</span><span class="nl">“WE HEBBEN MFA” · MAAR NIET WAAR HET TELT</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: BLOCK LEGACY AUTH + MFA FOR ALL + COMPLIANT DEVICE FOR SENSITIVE APPS</span><span class="nl">OPLOSSING: BLOKKEER VEROUDERDE AUTH + MFA VOOR IEDEREEN + BEHEERD APPARAAT VOOR GEVOELIGE APPS</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 03</span><span class="nl">RISICO 03</span></span>
+    <h2>
+      <span class="en">The guests <em>never left.</em></span>
+      <span class="nl">De gasten <em>zijn nooit vertrokken.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">external identities / guest accounts without an expiry</span>
+      <span class="nl">externe identiteiten / gastaccounts zonder einddatum</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">GUEST LIST</span><span class="nl">GASTENLIJST</span></div>
+      <div class="guests">
+        <div class="guest a"><span class="since">2019</span><div class="who"><span class="en">Agency designer</span><span class="nl">Ontwerper bureau</span></div><div class="addr">j.doe@agency.example</div></div>
+        <div class="guest b"><span class="since">2021</span><div class="who"><span class="en">Auditor, ex-firm</span><span class="nl">Auditor, oud-kantoor</span></div><div class="addr">audit-team@old-firm.example</div></div>
+        <div class="guest c"><span class="since">2023</span><div class="who"><span class="en">Consultant, left</span><span class="nl">Consultant, vertrokken</span></div><div class="addr">consultant@personal.example</div></div>
+      </div>
+      <div class="wire"></div>
+      <div class="cal"></div>
+      <div class="node right"><div class="box">📁</div><span class="en">Teams &amp; files</span><span class="nl">Teams &amp; bestanden</span></div>
+      <div class="banner"><span class="en">STILL READING · NOBODY OWNS THE LIST</span><span class="nl">LEZEN NOG MEE · NIEMAND BEHEERT DE LIJST</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Inviting an outsider into Teams or a SharePoint site takes one click and creates a guest account in Entra ID. Removing it takes a decision nobody is assigned to make. So the list grows: the design agency from the rebrand, the auditors from two firms ago, a consultant who now works for a competitor and still logs in with a personal address. Guests keep every Team, channel and folder they were ever added to, and their home organisation — not you — controls how well their account is protected.</p>
+      <p class="en"><strong>Example:</strong> a tenant review finds 1,400 guest accounts, 600 of which have not signed in for over a year, and one that still sits in the “Board – Confidential” Team from the 2021 strategy project. <strong>Business impact:</strong> board material, contracts and personnel files readable by people you no longer have a contract with, through accounts whose passwords you cannot enforce. A guest lifecycle — invite with an owner and an expiry date, review every quarter, remove on silence — turns an unknown into a managed list.</p>
+      <p class="nl">Een buitenstaander uitnodigen in Teams of een SharePoint-site kost één klik en maakt een gastaccount aan in Entra ID. Het verwijderen kost een beslissing die aan niemand is toegewezen. Dus groeit de lijst: het ontwerpbureau van de rebranding, de auditors van twee kantoren geleden, een consultant die nu bij een concurrent werkt en nog inlogt met een privéadres. Gasten houden elk Team, kanaal en elke map waaraan ze ooit zijn toegevoegd, en hun eigen organisatie — niet u — bepaalt hoe goed hun account beschermd is.</p>
+      <p class="nl"><strong>Voorbeeld:</strong> een tenantreview vindt 1.400 gastaccounts, waarvan 600 al meer dan een jaar niet zijn ingelogd, en één die nog in het Team “Directie – Vertrouwelijk” zit van het strategieproject uit 2021. <strong>Bedrijfsimpact:</strong> bestuursstukken, contracten en personeelsdossiers leesbaar voor mensen met wie u geen contract meer hebt, via accounts waarvan u het wachtwoordbeleid niet kunt afdwingen. Een gastlevenscyclus — uitnodigen met een eigenaar en een einddatum, elk kwartaal beoordelen, verwijderen bij stilte — maakt van een onbekende een beheerde lijst.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">UNKNOWN READERS · UNENFORCEABLE PASSWORDS</span><span class="nl">ONBEKENDE LEZERS · NIET AFDWINGBARE WACHTWOORDEN</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: GUEST EXPIRY + QUARTERLY ACCESS REVIEWS + OWNER PER GUEST</span><span class="nl">OPLOSSING: EINDDATUM VOOR GASTEN + KWARTAALREVIEWS + EIGENAAR PER GAST</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 04</span><span class="nl">RISICO 04</span></span>
+    <h2>
+      <span class="en">The back door <em>between two worlds.</em></span>
+      <span class="nl">De achterdeur <em>tussen twee werelden.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">hybrid identity / Entra Connect / on-premises Active Directory</span>
+      <span class="nl">hybride identiteit / Entra Connect / on-premises Active Directory</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">THE SYNC SERVER</span><span class="nl">DE SYNCSERVER</span></div>
+      <div class="node left"><div class="box">🏢</div><span class="en">On-prem AD (breached)</span><span class="nl">On-prem AD (gehackt)</span></div>
+      <div class="node right"><div class="box">☁️</div><span class="en">Entra ID</span><span class="nl">Entra ID</span></div>
+      <div class="wire"></div>
+      <div class="sync">🔄</div>
+      <div class="tagline"><span class="en">ENTRA CONNECT · HOLDS BOTH SETS OF KEYS</span><span class="nl">ENTRA CONNECT · HEEFT BEIDE SLEUTELBOSSEN</span></div>
+      <div class="creds">🔑</div>
+      <div class="banner"><span class="en">DOMAIN ADMIN → TENANT ADMIN, NO PASSWORD NEEDED</span><span class="nl">DOMEINBEHEERDER → TENANTBEHEERDER, ZONDER WACHTWOORD</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Most companies did not move to the cloud; they connected to it. Entra Connect synchronises the on-premises Active Directory with Entra ID, so one login works everywhere. That convenience has a price: the sync server holds credentials powerful enough to change cloud accounts, and it lives on the same network as every other server. Whoever owns the on-premises domain — the classic outcome of a ransomware intrusion — can use it to reset cloud passwords, take over synced administrators or push their own account into the tenant. The opposite direction works too.</p>
+      <p class="en"><strong>Example:</strong> during a ransomware incident the responders find that the attackers reached the Entra Connect server on day two, extracted its credentials, and had been reading Microsoft 365 mail for a week before the encryption started. The company rebuilt its servers from backup and was still compromised, because the tenant was never treated as part of the breach. <strong>Business impact:</strong> a breach in either world becomes a breach of both. The sync server must be treated as a tier-0 asset: isolated, hardened, accessible to almost nobody, and its cloud accounts excluded from synchronisation so that no on-premises password ever unlocks a Global Administrator.</p>
+      <p class="nl">De meeste bedrijven zijn niet naar de cloud verhuisd; ze hebben zich ermee verbonden. Entra Connect synchroniseert de on-premises Active Directory met Entra ID, zodat één inlog overal werkt. Dat gemak heeft een prijs: de syncserver heeft inloggegevens die krachtig genoeg zijn om cloudaccounts te wijzigen, en hij staat in hetzelfde netwerk als elke andere server. Wie het on-premises domein bezit — de klassieke uitkomst van een ransomware-inbraak — kan daarmee cloudwachtwoorden resetten, gesynchroniseerde beheerders overnemen of een eigen account in de tenant duwen. De omgekeerde richting werkt ook.</p>
+      <p class="nl"><strong>Voorbeeld:</strong> tijdens een ransomware-incident ontdekken de hulpverleners dat de aanvallers op dag twee de Entra Connect-server bereikten, de inloggegevens eruit haalden en al een week Microsoft 365-mail meelazen voordat de versleuteling begon. Het bedrijf herstelde zijn servers vanaf back-up en was nog steeds gecompromitteerd, omdat de tenant nooit als onderdeel van de inbraak was behandeld. <strong>Bedrijfsimpact:</strong> een inbraak in de ene wereld wordt een inbraak in beide. De syncserver moet worden behandeld als tier-0-systeem: geïsoleerd, gehard, voor bijna niemand bereikbaar, en met cloudbeheerders die buiten de synchronisatie blijven zodat geen enkel on-premises wachtwoord ooit een Global Administrator ontsluit.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ONE BREACH · TWO WORLDS · REBUILT BUT STILL OWNED</span><span class="nl">ÉÉN INBRAAK · TWEE WERELDEN · HERSTELD MAAR NOG BEZET</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: TIER-0 SYNC SERVER + CLOUD-ONLY ADMINS + NO SYNCED PRIVILEGE</span><span class="nl">OPLOSSING: TIER-0-SYNCSERVER + CLOUD-ONLY BEHEERDERS + GEEN GESYNCHRONISEERDE RECHTEN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>locks the tenant down.</em></span>
+      <span class="nl">Wat <em>de tenant afsluit.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">settings in a licence you already pay for — the cost is engineering hours and a few difficult conversations</span>
+      <span class="nl">instellingen in een licentie die u al betaalt — de kosten zijn engineeringuren en een paar lastige gesprekken</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1">PIM</span>
+        <span class="chip c2">CONDITIONAL ACCESS</span>
+        <span class="chip c3"><span class="en">PHISHING-RESISTANT MFA</span><span class="nl">PHISHINGBESTENDIGE MFA</span></span>
+        <span class="chip c4"><span class="en">GUEST REVIEWS</span><span class="nl">GASTREVIEWS</span></span>
+        <span class="chip c5"><span class="en">TIER-0 SYNC SERVER</span><span class="nl">TIER-0-SYNCSERVER</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Stops</th><th>In one line</th></tr>
+        <tr><td class="ctl">PIM</td><td>Admins (01)</td><td>Privileged Identity Management: nobody is a Global Administrator by default. Rights are activated for a few hours, with a reason, approval and a log entry. Aim for five eligible people or fewer.</td></tr>
+        <tr><td class="ctl">Break-glass</td><td>Admins (01)</td><td>Two emergency accounts, cloud-only, long random passwords in a sealed envelope, excluded from Conditional Access, and an alert the moment either one signs in.</td></tr>
+        <tr><td class="ctl">Separate admin accounts</td><td>Admins (01)</td><td>The account that reads mail and browses is never the account that administers the tenant. Phishing the daily account then yields nothing.</td></tr>
+        <tr><td class="ctl">CA baseline</td><td>Gate (02)</td><td>A small set of Conditional Access policies: block legacy authentication, require MFA for every user, require a compliant device for finance, HR and admin portals, block sign-ins from countries you do not operate in.</td></tr>
+        <tr><td class="ctl">Phishing-resistant MFA</td><td>Admins (01), Gate (02)</td><td>Passkeys or hardware keys for every administrator. A push notification can be approved by mistake; a hardware key cannot be phished.</td></tr>
+        <tr><td class="ctl">Guest lifecycle</td><td>Guests (03)</td><td>Every guest has an owner and an expiry. Access reviews every quarter ask the owner one question; no answer means removal. Guests never reach admin or finance sites.</td></tr>
+        <tr><td class="ctl">Tier-0 sync</td><td>Hybrid (04)</td><td>The Entra Connect server is treated like a domain controller: isolated, patched first, no browsing, no mail, reachable only from admin workstations. All cloud administrators are cloud-only accounts, never synced.</td></tr>
+        <tr><td class="ctl">Logs &amp; alerts</td><td>All four</td><td>Sign-in and audit logs kept for at least a year, with alerts on new administrators, new mailbox forwarding rules, new application consents and break-glass use.</td></tr>
+        <tr><td class="ctl">Secure Score</td><td>All four</td><td>Microsoft's Identity Secure Score, reported to the board quarterly. Not a target in itself, but a number that only goes up when the settings above are actually switched on.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Stopt</th><th>In één zin</th></tr>
+        <tr><td class="ctl">PIM</td><td>Beheerders (01)</td><td>Privileged Identity Management: niemand is standaard Global Administrator. Rechten worden voor een paar uur geactiveerd, met een reden, goedkeuring en een logregel. Streef naar vijf of minder in aanmerking komende personen.</td></tr>
+        <tr><td class="ctl">Break-glass</td><td>Beheerders (01)</td><td>Twee noodaccounts, cloud-only, lange willekeurige wachtwoorden in een verzegelde envelop, uitgesloten van Conditional Access, en een alarm zodra een van beide inlogt.</td></tr>
+        <tr><td class="ctl">Aparte beheeraccounts</td><td>Beheerders (01)</td><td>Het account dat mail leest en browst, is nooit het account dat de tenant beheert. Het phishen van het dagelijkse account levert dan niets op.</td></tr>
+        <tr><td class="ctl">CA-basisset</td><td>Poort (02)</td><td>Een kleine set Conditional Access-regels: blokkeer verouderde authenticatie, eis MFA voor elke gebruiker, eis een beheerd apparaat voor finance, HR en beheerportalen, blokkeer inlogs uit landen waar u niet actief bent.</td></tr>
+        <tr><td class="ctl">Phishingbestendige MFA</td><td>Beheerders (01), Poort (02)</td><td>Passkeys of hardwaresleutels voor elke beheerder. Een pushmelding kan per ongeluk worden goedgekeurd; een hardwaresleutel is niet te phishen.</td></tr>
+        <tr><td class="ctl">Gastlevenscyclus</td><td>Gasten (03)</td><td>Elke gast heeft een eigenaar en een einddatum. Toegangsreviews stellen de eigenaar elk kwartaal één vraag; geen antwoord betekent verwijderen. Gasten komen nooit bij beheer- of financesites.</td></tr>
+        <tr><td class="ctl">Tier-0-sync</td><td>Hybride (04)</td><td>De Entra Connect-server wordt behandeld als een domeincontroller: geïsoleerd, als eerste gepatcht, geen browsen, geen mail, alleen bereikbaar vanaf beheerwerkplekken. Alle cloudbeheerders zijn cloud-only accounts, nooit gesynchroniseerd.</td></tr>
+        <tr><td class="ctl">Logs &amp; alarmen</td><td>Alle vier</td><td>Aanmeld- en auditlogs minstens een jaar bewaard, met alarmen bij nieuwe beheerders, nieuwe doorstuurregels op mailboxen, nieuwe app-toestemmingen en gebruik van break-glass.</td></tr>
+        <tr><td class="ctl">Secure Score</td><td>Alle vier</td><td>Microsofts Identity Secure Score, elk kwartaal aan de directie gerapporteerd. Geen doel op zich, maar een getal dat alleen stijgt als de instellingen hierboven echt aanstaan.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> the tenant <em>is</em> the company — its mail, its files, its meetings, its identities. Ask two questions: how many people can take it over today, and how many should that be? If the first answer is above five, or nobody knows it, that is the finding.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> de tenant <em>is</em> het bedrijf — zijn mail, zijn bestanden, zijn vergaderingen, zijn identiteiten. Stel twee vragen: hoeveel mensen kunnen hem vandaag overnemen, en hoeveel zouden dat moeten zijn? Is het eerste antwoord hoger dan vijf, of weet niemand het, dan is dát de bevinding.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Every Microsoft 365 tenant is probed daily with leaked passwords and phishing. Standing admin rights and open legacy protocols are the norm, not the exception.</span><span class="nl">Elke Microsoft 365-tenant wordt dagelijks afgetast met gelekte wachtwoorden en phishing. Permanente beheerrechten en open verouderde protocollen zijn de norm, niet de uitzondering.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">Critical</span><span class="nl">Kritiek</span></span><p><span class="en">Tenant takeover means every mailbox, file and Teams conversation exposed at once, plus persistent access that survives password resets.</span><span class="nl">Overname van de tenant betekent elke mailbox, elk bestand en elk Teams-gesprek tegelijk blootgelegd, plus blijvende toegang die wachtwoordresets overleeft.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low</span><span class="nl">Laag</span></span><p><span class="en">With PIM, a Conditional Access baseline, phishing-resistant MFA for admins and a tier-0 sync server, takeover requires physical access to a hardware key, not a click.</span><span class="nl">Met PIM, een Conditional Access-basisset, phishingbestendige MFA voor beheerders en een tier-0-syncserver vereist overname fysieke toegang tot een hardwaresleutel, geen klik.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CIO</span><span class="nl">CIO</span></span><p><span class="en">Executes through the identity or Microsoft 365 team. The board owns the answer to “how many people can take over the tenant”.</span><span class="nl">Uitvoering via het identiteits- of Microsoft 365-team. De directie is eigenaar van het antwoord op “hoeveel mensen kunnen de tenant overnemen”.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Number of Global Administrators and how many are permanent rather than PIM-eligible · % of administrators with phishing-resistant MFA · legacy-authentication sign-ins in the last 30 days · guest accounts not reviewed in the last 12 months, and the Identity Secure Score trend.</span><span class="nl">Aantal Global Administrators en hoeveel daarvan permanent zijn in plaats van via PIM · % beheerders met phishingbestendige MFA · aanmeldingen via verouderde authenticatie in de laatste 30 dagen · gastaccounts die in 12 maanden niet zijn beoordeeld, en de trend van de Identity Secure Score.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Takeover of the Microsoft 365 tenant through a phished administrator, an unclosed Conditional Access gap or the hybrid sync server exposes all company email and files and grants persistent attacker access.”</span><span class="nl">“Overname van de Microsoft 365-tenant via een gephishte beheerder, een niet-gesloten gat in Conditional Access of de hybride syncserver legt alle bedrijfsmail en -bestanden bloot en geeft de aanvaller blijvende toegang.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Access control and identity management, MFA and secure authentication, and asset management are named risk management measures. Management approves them and is accountable for a tenant it may never have looked at.</td><td>Microsoft's compliance documentation covers the platform, not your tenant settings. Ask MSPs and consultants with admin rights how their own accounts are protected and whether they use PIM in your tenant.</td><td>A tenant takeover is very likely a significant incident: early warning within 24 hours, notification within 72 hours, final report within a month. Confirm with legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Identity and access management, privileged access controls and logging are part of the ICT risk framework. Microsoft is an ICT third-party provider that belongs in your register with the contractual clauses DORA prescribes.</td><td>Microsoft's audit reports describe their side of the shared responsibility. Your Conditional Access, PIM and guest settings are your side, and the supervisor will ask about yours.</td><td>Loss of control over the tenant is a major ICT incident: initial notification within hours of classification, intermediate report within 72 hours, final report within a month. Confirm with legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>If you issue one: logical access controls over the tenant are tested, including who holds administrative roles, how MFA is enforced and how access is reviewed. Standing Global Administrators become a finding.</td><td>Microsoft 365 has SOC 2 reports; read the complementary user entity controls, which list tenant configuration as your responsibility. A supplier's own SOC 2 tells you how they protect the admin accounts they hold in your tenant.</td><td>The takeover appears in your next report as an exception in logical access, and customers will ask for the root cause and a bridge letter.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant where Microsoft 365 or an MSP administering it touches financially relevant processes. Control objectives around user access provisioning and privileged access will be tested.</td><td>Read whether tenant administration is in the MSP's scope at all. If access reviews and privileged access are not control objectives, the report says nothing about how they run your tenant.</td><td>A tenant compromise must be disclosed to the user auditors, and every control that relied on the integrity of identities in that period is in question.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Toegangsbeheer en identiteitsbeheer, MFA en veilige authenticatie, en assetbeheer zijn benoemde risicobeheersmaatregelen. Het bestuur keurt ze goed en is aansprakelijk voor een tenant waar het misschien nooit naar heeft gekeken.</td><td>Microsofts compliancedocumentatie dekt het platform, niet uw tenantinstellingen. Vraag MSP's en consultants met beheerrechten hoe hun eigen accounts zijn beveiligd en of ze PIM gebruiken in uw tenant.</td><td>Een tenantovername is zeer waarschijnlijk een significant incident: vroegtijdige waarschuwing binnen 24 uur, melding binnen 72 uur, eindrapport binnen een maand. Bevestig met legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Identiteits- en toegangsbeheer, beheersing van bevoorrechte toegang en logging maken deel uit van het ICT-risicokader. Microsoft is een ICT-derde die in uw register hoort met de contractbepalingen die DORA voorschrijft.</td><td>Microsofts auditrapporten beschrijven hun kant van de gedeelde verantwoordelijkheid. Uw Conditional Access-, PIM- en gastinstellingen zijn uw kant, en de toezichthouder vraagt naar die van u.</td><td>Verlies van controle over de tenant is een ernstig ICT-incident: eerste melding binnen enkele uren na classificatie, tussenrapport binnen 72 uur, eindrapport binnen een maand. Bevestig met legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Als u er zelf een afgeeft: logische toegangsbeheersing over de tenant wordt getest, inclusief wie beheerrollen heeft, hoe MFA wordt afgedwongen en hoe toegang wordt beoordeeld. Permanente Global Administrators worden een bevinding.</td><td>Microsoft 365 heeft SOC 2-rapporten; lees de complementary user entity controls, die tenantconfiguratie als uw verantwoordelijkheid benoemen. De eigen SOC 2 van een leverancier vertelt hoe hij de beheeraccounts beschermt die hij in uw tenant heeft.</td><td>De overname verschijnt in uw volgende rapport als afwijking in logische toegang, en klanten vragen naar de oorzaak en een bridge letter.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant waar Microsoft 365 of een MSP die het beheert financieel relevante processen raakt. Beheersdoelstellingen rond het toekennen van gebruikerstoegang en bevoorrechte toegang worden getest.</td><td>Lees of tenantbeheer überhaupt binnen de scope van de MSP valt. Zijn toegangsreviews en bevoorrechte toegang geen beheersdoelstellingen, dan zegt het rapport niets over hoe zij uw tenant beheren.</td><td>Een tenantcompromittering moet aan de auditors van de klanten worden gemeld, en elke maatregel die in die periode op de integriteit van identiteiten vertrouwde, staat ter discussie.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">ENTRA ID BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">ENTRA ID BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

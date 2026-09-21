@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>The factory, the building and the cameras // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   OT · IOT // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4}
+.tagline{position:absolute;left:50%;top:calc(50% + 46px);transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px;z-index:4}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : office reaches the line --- */
+.s1 .bug{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--bad);color:var(--white);animation:cross 8s linear infinite}
+@keyframes cross{0%{left:118px;opacity:0}6%{opacity:1}46%{left:calc(100% - 170px);opacity:1}52%,100%{left:calc(100% - 170px);opacity:0}}
+.s1 .node.right .box{animation:hitBox 8s ease-in-out infinite}
+@keyframes hitBox{0%,46%{background:var(--surface);border-color:var(--line)}54%,100%{background:rgba(255,93,115,.22);border-color:var(--bad)}}
+.s1 .nowall{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:66px;height:66px;display:grid;place-items:center;font-size:26px;color:var(--muted);border:1px dashed var(--line);background:var(--bg-lo);z-index:2}
+.s1 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 2 : cannot be patched --- */
+.s2{display:flex;align-items:center;justify-content:center;gap:34px}
+.dev{position:relative;width:200px;padding:18px;background:var(--surface);border:1px solid var(--line);z-index:1}
+.dev .ico{font-size:30px;line-height:1;margin-bottom:10px}
+.dev .who{font-family:var(--sans);font-weight:700;font-size:15px;color:var(--white)}
+.dev .addr{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:2px}
+.dev .note{margin-top:12px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;line-height:1.5;color:var(--bad-soft)}
+.dev .stamp{position:absolute;top:-1px;right:-1px;font-size:9.5px;font-weight:700;letter-spacing:.2em;padding:5px 10px;background:var(--bad);color:#33060e;animation:blink 1.8s steps(1) infinite}
+.dev.b .stamp{animation-delay:.6s}.dev.c .stamp{animation-delay:1.2s}
+@keyframes blink{0%,62%{opacity:1}63%,100%{opacity:.2}}
+.s2 .scan{position:absolute;top:0;bottom:0;width:2px;background:var(--warn);box-shadow:0 0 18px var(--warn);opacity:.8;animation:sweep 6.5s ease-in-out infinite;z-index:3}
+@keyframes sweep{0%,100%{left:8%}50%{left:92%}}
+
+/* --- scene 3 : vendor door --- */
+.s3 .door{position:absolute;left:50%;top:50%;width:66px;height:66px;margin:-33px 0 0 -33px;display:grid;place-items:center;font-size:28px;background:rgba(255,93,115,.22);border:1px solid var(--bad);z-index:2}
+.s3 .pkt{position:absolute;top:50%;width:44px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--white);border:1px solid #9fb3c0;color:var(--deep);animation:thru 6s linear infinite}
+.s3 .pkt.b{animation-delay:2s}.s3 .pkt.c{animation-delay:4s;background:var(--bad);color:var(--white);border-color:var(--bad)}
+@keyframes thru{0%{left:118px;opacity:0}8%{opacity:1}92%{opacity:1}100%{left:calc(100% - 162px);opacity:0}}
+.s3 .spy{left:50%;margin-left:-31px;top:28px;animation:appear 6s ease-in-out infinite}
+@keyframes appear{0%,55%{opacity:0}65%,100%{opacity:1}}
+.s3 .banner{animation:fadeIn 6s ease-in-out infinite}
+
+/* --- scene 4 : setpoint --- */
+.val{position:absolute;top:50%;left:50%;transform:translate(-50%,-74px);font-size:13px;font-weight:700;letter-spacing:.08em;padding:8px 14px;white-space:nowrap;z-index:3}
+.val.orig{background:rgba(55,211,155,.14);border:1px solid rgba(55,211,155,.45);color:#8ff0cd;animation:showA 7.5s ease-in-out infinite}
+.val.fake{background:rgba(255,93,115,.16);border:1px solid rgba(255,93,115,.5);color:var(--bad-soft);animation:showB 7.5s ease-in-out infinite}
+@keyframes showA{0%,44%{opacity:1}50%,100%{opacity:0}}
+@keyframes showB{0%,46%{opacity:0}54%,100%{opacity:1}}
+.s4 .cmd{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--bad);color:var(--white);animation:setp 7.5s linear infinite}
+@keyframes setp{0%{left:118px;opacity:0}8%{opacity:1}44%{left:calc(100% - 170px);opacity:1}50%,100%{left:calc(100% - 170px);opacity:0}}
+.s4 .node.right .box{animation:overheat 7.5s ease-in-out infinite}
+@keyframes overheat{0%,50%{background:var(--surface);border-color:var(--line);transform:translate(0,0)}56%{background:rgba(255,93,115,.3);border-color:var(--bad);transform:translate(-2px,1px)}60%{transform:translate(2px,-1px)}64%{transform:translate(-2px,0)}68%{transform:translate(2px,1px)}72%,100%{background:rgba(255,93,115,.3);border-color:var(--bad);transform:translate(0,0)}}
+.s4 .banner{animation:fadeIn 7.5s ease-in-out infinite}
+
+
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .bug{left:calc(100% - 170px)}
+  .s1 .node.right .box{background:rgba(255,93,115,.22);border-color:var(--bad)}
+  .s2 .scan{display:none}
+  .s3 .pkt{left:calc(50% - 22px)}.s3 .pkt.b,.s3 .pkt.c{display:none}
+  .s3 .spy{opacity:1}
+  .s4 .cmd{display:none}
+  .val.fake{opacity:1}.val.orig{opacity:0}
+  .s4 .node.right .box{background:rgba(255,93,115,.3);border-color:var(--bad)}
+  .banner{opacity:1}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> PLAIN SECURITY <span style="color:var(--slate)">//</span> OT · IOT</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">REACHABLE</span><span class="nl">BEREIKBAAR</span></a>
+      <a href="#r2"><span class="en">UNPATCHABLE</span><span class="nl">NIET TE PATCHEN</span></a>
+      <a href="#r3"><span class="en">VENDOR DOOR</span><span class="nl">LEVERANCIERSDEUR</span></a>
+      <a href="#r4"><span class="en">SAFETY</span><span class="nl">VEILIGHEID</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">The factory, the building and the cameras. <em>Four ways they stop.</em></span>
+      <span class="nl">De fabriek, het gebouw en de camera's. <em>Vier manieren waarop ze stilvallen.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Production lines, climate systems, door locks and cameras were built to run for twenty years, not to be attacked. In plain language: how they get reached, why they cannot simply be patched, and what keeps the plant running.</span>
+      <span class="nl">Productielijnen, klimaatsystemen, deursloten en camera's zijn gebouwd om twintig jaar te draaien, niet om aangevallen te worden. In gewone taal: hoe ze bereikt worden, waarom je ze niet zomaar kunt patchen, en wat de fabriek draaiend houdt.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE RISKS</span><span class="nl">BEKIJK DE RISICO'S</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT KEEPS IT RUNNING</span><span class="nl">WAT HET DRAAIEND HOUDT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 01</span><span class="nl">RISICO 01</span></span>
+    <h2>
+      <span class="en">The office can <em>reach the line.</em></span>
+      <span class="nl">Het kantoor kan <em>bij de lijn.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">flat network / no boundary between IT and OT</span>
+      <span class="nl">plat netwerk / geen grens tussen IT en OT</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">ONE NETWORK</span><span class="nl">ÉÉN NETWERK</span></div>
+      <div class="node left"><div class="box">💻</div><span class="en">Office laptop</span><span class="nl">Kantoorlaptop</span></div>
+      <div class="node right"><div class="box">🏭</div><span class="en">Production line</span><span class="nl">Productielijn</span></div>
+      <div class="wire"></div>
+      <div class="nowall">⋯</div>
+      <div class="tagline"><span class="en">NO WALL · SAME NETWORK</span><span class="nl">GEEN MUUR · ZELFDE NETWERK</span></div>
+      <div class="bug">☠</div>
+      <div class="banner"><span class="en">OFFICE INFECTION · LINE STOPPED</span><span class="nl">KANTOORBESMETTING · LIJN STAAT STIL</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Most plants, warehouses and buildings grew their networks over decades. The controllers on the line, the climate system, the badge readers and the cameras were plugged into whatever cable was nearest. Today that cable usually leads to the same network as the office laptops. An infection that starts with a spreadsheet in finance can, an hour later, be talking to the machine that fills the bottles. Nobody designed it that way. Nobody designed it at all.</p>
+      <p class="en"><strong>Business impact:</strong> an office incident becomes a production incident. Instead of “some laptops need rebuilding” the conversation is “the line is down, the shift is sent home, and we do not know when it restarts”. Downtime is measured in lost output per hour, and in penalties to customers who were promised delivery.</p>
+      <p class="nl">De meeste fabrieken, magazijnen en gebouwen hebben hun netwerk in tientallen jaren laten groeien. De besturingen op de lijn, het klimaatsysteem, de paslezers en de camera's werden aangesloten op de kabel die het dichtst bij lag. Vandaag leidt die kabel meestal naar hetzelfde netwerk als de kantoorlaptops. Een besmetting die begint met een spreadsheet bij finance kan een uur later praten met de machine die de flessen vult. Niemand heeft het zo ontworpen. Niemand heeft het überhaupt ontworpen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een kantoorincident wordt een productie-incident. In plaats van “een paar laptops moeten opnieuw geïnstalleerd worden” gaat het gesprek over “de lijn staat stil, de ploeg is naar huis gestuurd en we weten niet wanneer hij weer start”. Stilstand wordt gemeten in gemiste productie per uur, en in boetes aan klanten aan wie levering was beloofd.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ONE INFECTION · WHOLE PLANT · HOURS OF OUTPUT</span><span class="nl">ÉÉN BESMETTING · HELE FABRIEK · UREN PRODUCTIE</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: IT/OT SEGMENTATION + ONE MONITORED CROSSING</span><span class="nl">OPLOSSING: IT/OT-SEGMENTATIE + ÉÉN BEWAAKTE OVERGANG</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 02</span><span class="nl">RISICO 02</span></span>
+    <h2>
+      <span class="en">It cannot <em>be patched.</em></span>
+      <span class="nl">Het kan <em>niet gepatcht worden.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">legacy controllers / default passwords / devices nobody owns</span>
+      <span class="nl">verouderde besturingen / standaardwachtwoorden / apparaten zonder eigenaar</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">INVENTORY</span><span class="nl">INVENTARIS</span></div>
+      <div class="dev a">
+        <span class="stamp"><span class="en">NO PATCHES</span><span class="nl">GEEN PATCHES</span></span>
+        <div class="ico">⚙️</div>
+        <div class="who"><span class="en">Line controller</span><span class="nl">Lijnbesturing</span></div>
+        <div class="addr"><span class="en">installed 2008 · runs the line</span><span class="nl">geplaatst 2008 · draait de lijn</span></div>
+        <div class="note"><span class="en">vendor gone · reboot = stop</span><span class="nl">leverancier weg · herstart = stop</span></div>
+      </div>
+      <div class="dev b">
+        <span class="stamp">admin / admin</span>
+        <div class="ico">📷</div>
+        <div class="who"><span class="en">Camera, loading dock</span><span class="nl">Camera, laadperron</span></div>
+        <div class="addr"><span class="en">default password · internet-facing</span><span class="nl">standaardwachtwoord · aan internet</span></div>
+        <div class="note"><span class="en">owner: nobody</span><span class="nl">eigenaar: niemand</span></div>
+      </div>
+      <div class="dev c">
+        <span class="stamp"><span class="en">NEVER UPDATED</span><span class="nl">NOOIT BIJGEWERKT</span></span>
+        <div class="ico">📺</div>
+        <div class="who"><span class="en">Boardroom screen</span><span class="nl">Scherm bestuurskamer</span></div>
+        <div class="addr"><span class="en">microphone · Wi-Fi · app store</span><span class="nl">microfoon · wifi · app store</span></div>
+        <div class="note"><span class="en">listens to every board meeting</span><span class="nl">luistert elke vergadering mee</span></div>
+      </div>
+      <div class="scan"></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A laptop gets a security update every month. A controller on the line gets one never: the vendor no longer exists, or the update requires stopping production, or the machine is certified as a whole and touching its software voids that certification. Cameras, door controllers and meeting-room screens ship with a factory password that nobody changes because nobody owns them. These devices will run for another decade exactly as they are, holes included.</p>
+      <p class="en"><strong>Business impact:</strong> “patch it” is not an option, so the usual answer to a published vulnerability does not exist. The choice is between isolating the device so nothing can reach it, replacing it early at capital cost, or accepting that it is open. That is a business decision with a price tag, not an IT ticket.</p>
+      <p class="nl">Een laptop krijgt elke maand een beveiligingsupdate. Een besturing op de lijn krijgt er nooit een: de leverancier bestaat niet meer, of de update vereist dat de productie stopt, of de machine is als geheel gecertificeerd en aan de software komen maakt die certificering ongeldig. Camera's, deurbesturingen en vergaderschermen worden geleverd met een fabriekswachtwoord dat niemand verandert, omdat niemand er eigenaar van is. Deze apparaten draaien nog tien jaar precies zoals ze zijn, inclusief de gaten.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> “patch het” is geen optie, dus het gebruikelijke antwoord op een gepubliceerde kwetsbaarheid bestaat niet. De keuze is: het apparaat isoleren zodat niets het kan bereiken, het vervroegd vervangen tegen investeringskosten, of accepteren dat het open staat. Dat is een bedrijfsbeslissing met een prijskaartje, geen IT-ticket.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">TEN MORE YEARS · HOLES INCLUDED · NO OWNER</span><span class="nl">NOG TIEN JAAR · INCLUSIEF GATEN · GEEN EIGENAAR</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: INVENTORY + OWNER + ISOLATE WHAT CANNOT BE PATCHED</span><span class="nl">OPLOSSING: INVENTARIS + EIGENAAR + ISOLEER WAT NIET TE PATCHEN IS</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 03</span><span class="nl">RISICO 03</span></span>
+    <h2>
+      <span class="en">The vendor's door <em>is always open.</em></span>
+      <span class="nl">De deur van de leverancier <em>staat altijd open.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">permanent remote maintenance access / shared login / nobody watching</span>
+      <span class="nl">permanente onderhoudstoegang op afstand / gedeelde inlog / niemand kijkt</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">MAINTENANCE LINK</span><span class="nl">ONDERHOUDSVERBINDING</span></div>
+      <div class="node left"><div class="box">🛠️</div><span class="en">Machine vendor</span><span class="nl">Machineleverancier</span></div>
+      <div class="node right"><div class="box">⚙️</div><span class="en">Our controllers</span><span class="nl">Onze besturingen</span></div>
+      <div class="wire"></div>
+      <div class="door">🚪</div>
+      <div class="tagline"><span class="en">SINCE 2016 · ONE SHARED PASSWORD</span><span class="nl">SINDS 2016 · ÉÉN GEDEELD WACHTWOORD</span></div>
+      <div class="pkt a">🔧</div><div class="pkt b">🔧</div><div class="pkt c">☠</div>
+      <div class="actor spy pulse">🕵️<span class="tag"><span class="en">SAME PASSWORD, DIFFERENT PERSON</span><span class="nl">ZELFDE WACHTWOORD, ANDER PERSOON</span></span></div>
+      <div class="banner"><span class="en">PERMANENT · SHARED · UNMONITORED</span><span class="nl">PERMANENT · GEDEELD · ONBEWAAKT</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">When the line was installed, the vendor's engineer set up a remote connection so they could fix faults from their office. It was convenient, so it stayed. Years later it is still there: one password shared by the vendor's whole service team, past and present, valid around the clock, terminating directly on the controllers. If that vendor is breached, or an ex-engineer keeps the password, the attacker walks straight past every wall we did build.</p>
+      <p class="en"><strong>Business impact:</strong> this is the entry route in a large share of real plant incidents, because it is the one path that was deliberately built to bypass the network boundary. The maintenance contract usually says nothing about it. Whoever signs that contract is, in practice, granting standing access to the production floor.</p>
+      <p class="nl">Toen de lijn werd geïnstalleerd, richtte de monteur van de leverancier een verbinding op afstand in om storingen vanuit kantoor op te lossen. Het was handig, dus het bleef. Jaren later is het er nog: één wachtwoord, gedeeld door het hele serviceteam van de leverancier, huidig en voormalig, dag en nacht geldig, rechtstreeks op de besturingen. Wordt die leverancier gehackt, of houdt een ex-monteur het wachtwoord, dan loopt de aanvaller dwars door elke muur die we wél hebben gebouwd.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> dit is de ingang bij een groot deel van de echte fabrieksincidenten, omdat het de ene route is die bewust is aangelegd om de netwerkgrens te omzeilen. Het onderhoudscontract zegt er meestal niets over. Wie dat contract tekent, geeft in de praktijk permanente toegang tot de productievloer.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">BYPASSES EVERY WALL · NOBODY SEES IT</span><span class="nl">OMZEILT ELKE MUUR · NIEMAND ZIET HET</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: ACCESS ON REQUEST + JUMP HOST + SESSION RECORDING</span><span class="nl">OPLOSSING: TOEGANG OP AANVRAAG + JUMP HOST + SESSIEOPNAME</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 04</span><span class="nl">RISICO 04</span></span>
+    <h2>
+      <span class="en">It is not data. <em>It is safety.</em></span>
+      <span class="nl">Het gaat niet om data. <em>Het gaat om veiligheid.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">process manipulation / physical damage / injury / environment</span>
+      <span class="nl">procesmanipulatie / fysieke schade / letsel / milieu</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">SETPOINT</span><span class="nl">INSTELWAARDE</span></div>
+      <div class="node left"><div class="box">🖥️</div><span class="en">Operator screen</span><span class="nl">Bedienscherm</span></div>
+      <div class="node right"><div class="box">🧪</div><span class="en">Reactor</span><span class="nl">Reactor</span></div>
+      <div class="wire"></div>
+      <div class="val orig">TEMP 80 °C · <span class="en">NORMAL</span><span class="nl">NORMAAL</span></div>
+      <div class="val fake">TEMP 140 °C · <span class="en">SCREEN SAYS 80</span><span class="nl">SCHERM ZEGT 80</span></div>
+      <div class="cmd">✍</div>
+      <div class="banner"><span class="en">PHYSICAL DAMAGE · PEOPLE AT RISK · OUTPUT PER HOUR</span><span class="nl">FYSIEKE SCHADE · MENSEN IN GEVAAR · PRODUCTIE PER UUR</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">In the office, the worst case is data: stolen, leaked, encrypted. On the plant floor the worst case is physical. A changed setpoint overheats a vessel. A disabled interlock lets two things happen at once that must never happen at once. A frozen cooling system in a data centre or a cold store ruins what is inside. And the operator screen can be made to show normal values while the process is anything but. The damage is to equipment, product, people and the environment, and it is not restored from a backup.</p>
+      <p class="en"><strong>Business impact:</strong> a safety incident brings the labour inspectorate, the environmental regulator and the insurer, on top of the production loss. The board is accountable for safety in a way it is not for a data breach. This is why OT security belongs with the operations director and the safety officer, not only with IT.</p>
+      <p class="nl">Op kantoor is het ergste geval data: gestolen, gelekt, versleuteld. Op de productievloer is het ergste geval fysiek. Een gewijzigde instelwaarde laat een vat oververhitten. Een uitgeschakelde vergrendeling laat twee dingen tegelijk gebeuren die nooit tegelijk mogen gebeuren. Een stilgevallen koeling in een datacenter of een koelhuis verpest wat erin ligt. En het bedienscherm kan normale waarden tonen terwijl het proces alles behalve normaal is. De schade is aan apparatuur, product, mensen en milieu, en die komt niet terug uit een back-up.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een veiligheidsincident brengt de arbeidsinspectie, de milieutoezichthouder en de verzekeraar aan tafel, bovenop het productieverlies. De directie is aansprakelijk voor veiligheid op een manier die bij een datalek niet geldt. Daarom hoort OT-beveiliging bij de operationeel directeur en de veiligheidskundige, niet alleen bij IT.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NOT RESTORED FROM BACKUP · REGULATORS · LIABILITY</span><span class="nl">KOMT NIET TERUG UIT BACK-UP · TOEZICHTHOUDERS · AANSPRAKELIJKHEID</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: OT MONITORING + CONFIG BACKUPS + SAFETY IN THE INCIDENT PLAN</span><span class="nl">OPLOSSING: OT-MONITORING + CONFIGURATIEBACK-UPS + VEILIGHEID IN HET INCIDENTPLAN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>keeps the plant running.</em></span>
+      <span class="nl">Wat <em>de fabriek draaiend houdt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">mostly knowing what you have and drawing one line — not replacing the machines</span>
+      <span class="nl">vooral weten wat je hebt en één lijn trekken — niet de machines vervangen</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">INVENTORY</span><span class="nl">INVENTARIS</span></span>
+        <span class="chip c2"><span class="en">SEGMENTATION</span><span class="nl">SEGMENTATIE</span></span>
+        <span class="chip c3">JUMP HOST</span>
+        <span class="chip c4"><span class="en">OT MONITORING</span><span class="nl">OT-MONITORING</span></span>
+        <span class="chip c5"><span class="en">CONFIG BACKUPS</span><span class="nl">CONFIGURATIEBACK-UPS</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Stops</th><th>In one line</th></tr>
+        <tr><td class="ctl">Device inventory</td><td>Unpatchable (02)</td><td>Every connected controller, camera, sensor and screen on a list, with a named owner and a support end date. You cannot protect what you have not counted.</td></tr>
+        <tr><td class="ctl">IT/OT segmentation</td><td>Reachable (01)</td><td>A wall between the office network and the plant, with one crossing point that is monitored. An office infection stays an office infection.</td></tr>
+        <tr><td class="ctl">Vendor access on request</td><td>Vendor door (03)</td><td>Remote maintenance only when we open it, for a named person, for a set time, through a jump host that records the session. Closed by default.</td></tr>
+        <tr><td class="ctl">Isolate the unpatchable</td><td>Unpatchable (02)</td><td>Default passwords changed. Devices that cannot be patched put in their own corner where only what needs them can reach them.</td></tr>
+        <tr><td class="ctl">OT monitoring</td><td>Safety (04)</td><td>Listening to plant traffic for things that never happen normally: a new device, a controller being reprogrammed, a setpoint changed from an unusual place.</td></tr>
+        <tr><td class="ctl">Configuration backups</td><td>Safety (04)</td><td>The programs and settings of every controller saved offline, so a tampered or bricked machine can be restored in hours rather than re-engineered in weeks.</td></tr>
+        <tr><td class="ctl">Incident plan with operations</td><td>All four</td><td>The plant manager and the safety officer in the plan, with the authority to stop the line. Rehearsed with a scenario that involves a machine, not a laptop.</td></tr>
+        <tr><td class="ctl">Procurement rules</td><td>Unpatchable (02)</td><td>Before buying anything that connects: how long will it get security updates, can the password be changed, does it need the internet. No answer, no purchase.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Stopt</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Apparaatinventaris</td><td>Niet te patchen (02)</td><td>Elke aangesloten besturing, camera, sensor en scherm op een lijst, met een eigenaar bij naam en een einddatum van ondersteuning. Wat je niet geteld hebt, kun je niet beschermen.</td></tr>
+        <tr><td class="ctl">IT/OT-segmentatie</td><td>Bereikbaar (01)</td><td>Een muur tussen het kantoornetwerk en de fabriek, met één bewaakte overgang. Een kantoorbesmetting blijft een kantoorbesmetting.</td></tr>
+        <tr><td class="ctl">Leverancierstoegang op aanvraag</td><td>Leveranciersdeur (03)</td><td>Onderhoud op afstand alleen als wij het openzetten, voor een persoon bij naam, voor een vaste tijd, via een jump host die de sessie opneemt. Standaard dicht.</td></tr>
+        <tr><td class="ctl">Isoleer wat niet te patchen is</td><td>Niet te patchen (02)</td><td>Standaardwachtwoorden gewijzigd. Apparaten die niet gepatcht kunnen worden in een eigen hoek, waar alleen bij kan wat ze nodig heeft.</td></tr>
+        <tr><td class="ctl">OT-monitoring</td><td>Veiligheid (04)</td><td>Meeluisteren op het fabrieksverkeer naar dingen die normaal nooit gebeuren: een nieuw apparaat, een besturing die wordt geherprogrammeerd, een instelwaarde die vanaf een ongebruikelijke plek verandert.</td></tr>
+        <tr><td class="ctl">Configuratieback-ups</td><td>Veiligheid (04)</td><td>De programma's en instellingen van elke besturing offline bewaard, zodat een gesaboteerde of onbruikbare machine in uren wordt teruggezet in plaats van in weken opnieuw ontworpen.</td></tr>
+        <tr><td class="ctl">Incidentplan met operations</td><td>Alle vier</td><td>De fabrieksmanager en de veiligheidskundige in het plan, met de bevoegdheid om de lijn te stoppen. Geoefend met een scenario rond een machine, niet rond een laptop.</td></tr>
+        <tr><td class="ctl">Inkoopregels</td><td>Niet te patchen (02)</td><td>Voordat iets wordt gekocht dat verbinding maakt: hoe lang krijgt het beveiligingsupdates, kan het wachtwoord worden gewijzigd, heeft het internet nodig. Geen antwoord, geen aankoop.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> in the plant, security is safety and uptime, and both are already board responsibilities. Two questions settle where we stand: can a laptop in the office reach the production line today, and who would notice if it did? If the answers are “probably” and “nobody”, the first control on this list is not a product. It is a line drawn on a network diagram.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> in de fabriek is beveiliging veiligheid en beschikbaarheid, en beide zijn al verantwoordelijkheden van de directie. Twee vragen bepalen waar we staan: kan een laptop op kantoor vandaag bij de productielijn, en wie zou het merken als dat gebeurt? Zijn de antwoorden “waarschijnlijk” en “niemand”, dan is de eerste maatregel op deze lijst geen product. Het is een lijn op een netwerktekening.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Anyone with a plant, a building system or cameras has devices that were never meant to be on a network. Almost everyone does.</span><span class="nl">Iedereen met een fabriek, een gebouwbeheersysteem of camera's heeft apparaten die nooit voor een netwerk bedoeld waren. Dat is bijna iedereen.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">Critical</span><span class="nl">Kritiek</span></span><p><span class="en">Production stopped for days, physical damage to equipment or product, a possible safety or environmental incident, and lost output per hour.</span><span class="nl">Productie dagen stil, fysieke schade aan apparatuur of product, een mogelijk veiligheids- of milieu-incident, en gemiste productie per uur.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Middel</span></span><p><span class="en">The old devices stay. Segmentation, controlled vendor access and monitoring mean an incident is contained to one cell and restored from configuration backups.</span><span class="nl">De oude apparaten blijven. Segmentatie, gecontroleerde leverancierstoegang en monitoring zorgen dat een incident beperkt blijft tot één cel en wordt hersteld uit configuratieback-ups.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">COO / plant director</span><span class="nl">COO / fabrieksdirecteur</span></span><p><span class="en">With the CIO for the network boundary and the safety officer for consequences. Not an IT-only risk.</span><span class="nl">Samen met de CIO voor de netwerkgrens en de veiligheidskundige voor de gevolgen. Geen risico van IT alleen.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">connected devices without a named owner · network paths allowed from office to plant · vendor remote-access connections open right now · devices past vendor support still on the network.</span><span class="nl">aangesloten apparaten zonder eigenaar bij naam · toegestane netwerkpaden van kantoor naar fabriek · leveranciersverbindingen op afstand die nu open staan · apparaten zonder leveranciersondersteuning die nog op het netwerk zitten.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Compromise or manipulation of production and building systems through the office network or vendor remote access causes production loss, physical damage and a safety risk.”</span><span class="nl">“Compromittering of manipulatie van productie- en gebouwsystemen via het kantoornetwerk of leverancierstoegang op afstand veroorzaakt productieverlies, fysieke schade en een veiligheidsrisico.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Many OT operators are essential or important entities: energy, water, manufacturing, food, transport, health. The required measures apply to the plant as much as to the office, including access control, supply chain security and continuity. Management is accountable.</td><td>Machine builders and maintenance firms are suppliers under NIS2. Their remote access and update process is your risk: put security lifetime, access rules and incident notification in the contract. Confirm scope with legal.</td><td>A production disruption or safety event is a significant incident: early warning within roughly 24 hours, full notification within about 72, final report within a month. Safety and environmental regulators may need to hear separately.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities the OT is mostly buildings and data centres: cooling, power, physical access. These belong in the ICT risk framework as part of the critical functions they support.</td><td>Data-centre and facility providers are ICT third parties: they go in the register, and their report should show controls over physical access, environmental systems and remote maintenance. A report is input, not a substitute.</td><td>An outage of a critical function caused by a facility system is a major ICT incident: initial notification within hours of classification, intermediate report within about 72 hours, final report within a month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Physical and environmental controls and network segmentation are tested. Plant-floor devices are rarely in scope unless the service delivered depends on them.</td><td>For a manufacturing or hosting partner: check whether the plant and building systems appear in the system description. Often only the corporate IT does, and the line is out of scope.</td><td>An OT incident that hits a customer service becomes an availability deviation in the report. Expect auditors to ask for segmentation evidence and the incident timeline.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant where production or logistics is outsourced: continuity of processing and physical safeguards are common control objectives, but the service organisation chooses them.</td><td>Read whether the continuity objectives cover the machines and warehouse systems, not just the ERP. A report about the office systems says nothing about the line.</td><td>Production loss at a service organisation must be disclosed to the user auditors. If you are the operator, expect it in your opinion and in your customers’ audits.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Veel OT-exploitanten zijn essentiële of belangrijke entiteiten: energie, water, industrie, voeding, transport, zorg. De verplichte maatregelen gelden voor de fabriek net zo goed als voor het kantoor, inclusief toegangsbeheer, ketenbeveiliging en continuïteit. Het bestuur is aansprakelijk.</td><td>Machinebouwers en onderhoudsbedrijven zijn leveranciers onder NIS2. Hun toegang op afstand en updateproces zijn uw risico: leg beveiligingslevensduur, toegangsregels en incidentmelding vast in het contract. Bevestig de reikwijdte met legal.</td><td>Een productieverstoring of veiligheidsincident is een significant incident: vroegtijdige waarschuwing binnen ongeveer 24 uur, volledige melding binnen ongeveer 72 uur, eindrapport binnen een maand. Veiligheids- en milieutoezichthouders moeten mogelijk apart worden geïnformeerd.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen bestaat de OT vooral uit gebouwen en datacenters: koeling, stroom, fysieke toegang. Die horen in het ICT-risicokader als onderdeel van de kritieke functies die ze ondersteunen.</td><td>Datacenter- en facilitaire leveranciers zijn ICT-derden: ze staan in het register, en hun rapport moet maatregelen tonen voor fysieke toegang, klimaatsystemen en onderhoud op afstand. Een rapport is input, geen vervanging.</td><td>Een uitval van een kritieke functie door een gebouwsysteem is een ernstig ICT-incident: eerste melding binnen enkele uren na classificatie, tussenrapport binnen ongeveer 72 uur, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Fysieke en omgevingsmaatregelen en netwerksegmentatie worden getest. Apparaten op de productievloer vallen zelden binnen scope, tenzij de geleverde dienst ervan afhangt.</td><td>Bij een productie- of hostingpartner: controleer of de fabriek en de gebouwsystemen in de systeembeschrijving staan. Vaak staat alleen de kantoor-IT erin en valt de lijn erbuiten.</td><td>Een OT-incident dat een klantdienst raakt, wordt een afwijking op beschikbaarheid in het rapport. Verwacht dat auditors bewijs van segmentatie en de incidenttijdlijn opvragen.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant waar productie of logistiek is uitbesteed: continuïteit van verwerking en fysieke beveiliging zijn gangbare beheersdoelstellingen, maar de serviceorganisatie kiest ze zelf.</td><td>Lees of de continuïteitsdoelstellingen de machines en magazijnsystemen dekken, en niet alleen het ERP. Een rapport over de kantoorsystemen zegt niets over de lijn.</td><td>Productieverlies bij een serviceorganisatie moet aan de auditors van haar klanten worden gemeld. Bent u zelf de exploitant, verwacht het dan in uw oordeel en in de audits van uw klanten.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">OT · IOT BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">OT · IOT BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

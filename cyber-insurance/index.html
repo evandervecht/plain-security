@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Cyber insurance // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   CYBER INSURANCE // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : the questionnaire --- */
+.s1 .form{position:absolute;left:50%;top:50%;transform:translate(-50%,-56%);width:270px;background:var(--surface);border:1px solid var(--line);padding:14px 18px 10px;z-index:2}
+.s1 .form .t{font-size:9.5px;letter-spacing:.22em;color:var(--slate);font-weight:700;margin-bottom:6px}
+.s1 .row{display:flex;align-items:center;gap:10px;font-family:var(--read);font-size:12.5px;color:var(--prose);padding:6px 0;border-top:1px solid var(--line-soft)}
+.s1 .cb{position:relative;width:16px;height:16px;flex:none;display:grid;place-items:center;font-size:11px;font-weight:700;background:rgba(55,211,155,.15);border:1px solid rgba(55,211,155,.5);color:#8ff0cd}
+.s1 .cb::before{content:"✓"}
+.s1 .row.lie .cb::after{content:"✗";position:absolute;inset:-1px;display:grid;place-items:center;background:rgba(255,93,115,.25);border:1px solid var(--bad);color:var(--bad-soft);opacity:0;animation:flip 8s ease-in-out infinite}
+@keyframes flip{0%,48%{opacity:0}56%,100%{opacity:1}}
+.s1 .loupe{position:absolute;left:calc(50% + 118px);top:50%;width:46px;height:46px;margin-top:-23px;border:3px solid var(--warn);border-radius:50%;z-index:3;animation:scanY 8s ease-in-out infinite}
+.s1 .loupe::after{content:"";position:absolute;right:-16px;bottom:-11px;width:20px;height:5px;background:var(--warn);border-radius:3px;transform:rotate(42deg)}
+@keyframes scanY{0%{transform:translateY(-62px)}48%,100%{transform:translateY(14px)}}
+.s1 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 2 : exclusions --- */
+.s2 .policy{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:110px;height:132px;background:var(--white);color:var(--deep);display:grid;place-items:center;font-size:38px;border:1px solid #9fb3c0;z-index:2}
+.s2 .policy small{position:absolute;top:8px;left:0;right:0;text-align:center;font-size:8.5px;letter-spacing:.2em;font-weight:700;color:var(--slate)}
+.s2 .ex{position:absolute;font-size:10px;letter-spacing:.2em;font-weight:700;padding:8px 14px;background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.5);color:var(--bad-soft);white-space:nowrap;opacity:0;animation:stamp 9s ease-in-out infinite;z-index:3}
+.s2 .ex.e1{left:14%;top:46px}.s2 .ex.e2{right:14%;top:46px;animation-delay:1.2s}.s2 .ex.e3{left:12%;bottom:78px;animation-delay:2.4s}.s2 .ex.e4{right:12%;bottom:78px;animation-delay:3.6s}
+@keyframes stamp{0%{opacity:0;transform:scale(1.5) rotate(-6deg)}5%{opacity:1;transform:scale(1) rotate(-6deg)}70%{opacity:1;transform:scale(1) rotate(-6deg)}78%,100%{opacity:0;transform:scale(1) rotate(-6deg)}}
+.s2 .banner{animation:fadeIn 9s ease-in-out infinite}
+
+/* --- scene 3 : sub-limits --- */
+.s3 .gauge{position:absolute;left:60px;right:60px;top:50%;height:34px;margin-top:-17px;background:var(--surface);border:1px solid var(--line)}
+.s3 .fill{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--good);animation:spend 8s linear infinite}
+.s3 .fill.over{left:30%;background:var(--bad);animation:overspend 8s linear infinite}
+@keyframes spend{0%{width:0}35%,100%{width:30%}}
+@keyframes overspend{0%,35%{width:0}90%,100%{width:66%}}
+.s3 .cap{position:absolute;left:calc(60px + (100% - 120px)*.3);top:calc(50% - 46px);height:92px;width:2px;background:var(--warn);z-index:3}
+.s3 .cap span{position:absolute;top:-24px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;color:var(--warn);font-weight:700}
+.s3 .day{position:absolute;top:calc(50% + 30px);font-size:9.5px;letter-spacing:.2em;color:var(--muted);font-weight:700;white-space:nowrap}
+.s3 .day.d1{left:60px}.s3 .day.d3{left:calc(60px + (100% - 120px)*.3);transform:translateX(-50%);color:var(--warn)}.s3 .day.d21{right:60px}
+.s3 .lbl{position:absolute;left:60px;top:calc(50% - 74px);font-size:9.5px;letter-spacing:.2em;color:var(--muted);font-weight:700}
+.s3 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 4 : notification clause --- */
+.s4 .firm{left:50%;margin-left:-31px;top:50%;margin-top:-31px}
+.s4 .env{animation:call 8s linear infinite}
+@keyframes call{0%{left:118px;opacity:0}6%{opacity:1}38%{left:calc(50% - 98px);opacity:1}44%,100%{left:calc(50% - 98px);opacity:0}}
+.s4 .late{position:absolute;top:50%;width:70px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:10px;font-weight:700;letter-spacing:.12em;background:var(--white);border:1px solid #9fb3c0;color:var(--deep);animation:late 8s linear infinite}
+@keyframes late{0%,52%{left:calc(50% + 46px);opacity:0}58%{opacity:1}90%{left:calc(100% - 190px);opacity:1}100%{left:calc(100% - 190px);opacity:0}}
+.s4 .node .box{position:relative}
+.s4 .stampno{position:absolute;top:-12px;right:-18px;font-size:9.5px;font-weight:700;letter-spacing:.2em;padding:4px 8px;background:var(--bad);color:#33060e;white-space:nowrap;opacity:0;animation:lateStamp 8s ease-in-out infinite;z-index:4}
+@keyframes lateStamp{0%,88%{opacity:0}94%,100%{opacity:1}}
+.s4 .banner{animation:lateStamp 8s ease-in-out infinite}
+
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .row.lie .cb::after{opacity:1}
+  .s1 .loupe{transform:translateY(14px)}
+  .s2 .ex{opacity:1;transform:rotate(-6deg)}
+  .s3 .fill{width:30%}.s3 .fill.over{width:66%}
+  .s4 .env{display:none}.s4 .late{left:calc(100% - 190px);opacity:1}
+  .s4 .stampno{opacity:1}
+  .banner{opacity:1}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> PLAIN SECURITY <span style="color:var(--slate)">//</span> INSURANCE</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">THE FORM</span><span class="nl">HET FORMULIER</span></a>
+      <a href="#r2"><span class="en">EXCLUSIONS</span><span class="nl">UITSLUITINGEN</span></a>
+      <a href="#r3"><span class="en">LIMITS</span><span class="nl">LIMIETEN</span></a>
+      <a href="#r4"><span class="en">NOTIFY</span><span class="nl">MELDEN</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Cyber insurance. <em>Four surprises at claim time.</em></span>
+      <span class="nl">Cyberverzekering. <em>Vier verrassingen bij de claim.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">A policy feels like a safety net until you pull on it. In plain language: what it pays, what it refuses, and the four clauses that decide which. General information, not insurance or legal advice.</span>
+      <span class="nl">Een polis voelt als een vangnet tot u eraan trekt. In gewone taal: wat hij betaalt, wat hij weigert, en de vier bepalingen die dat bepalen. Algemene informatie, geen verzekerings- of juridisch advies.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE SURPRISES</span><span class="nl">BEKIJK DE VERRASSINGEN</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT MAKES IT PAY</span><span class="nl">WAT HEM LAAT BETALEN</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">SURPRISE 01</span><span class="nl">VERRASSING 01</span></span>
+    <h2>
+      <span class="en">The form said <em>“MFA everywhere”.</em></span>
+      <span class="nl">Op het formulier stond <em>“MFA overal”.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">application warranty / misrepresentation</span>
+      <span class="nl">aanvraagformulier / onjuiste opgave</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">AT CLAIM TIME</span><span class="nl">BIJ DE CLAIM</span></div>
+      <div class="node left"><div class="box">🏢</div><span class="en">Us, two years ago</span><span class="nl">Wij, twee jaar geleden</span></div>
+      <div class="node right"><div class="box">☂</div><span class="en">Claims adjuster</span><span class="nl">Schade-expert</span></div>
+      <div class="form">
+        <div class="t"><span class="en">APPLICATION · SECURITY CONTROLS</span><span class="nl">AANVRAAG · BEVEILIGINGSMAATREGELEN</span></div>
+        <div class="row"><span class="cb"></span><span class="en">Backups tested yearly</span><span class="nl">Back-ups jaarlijks getest</span></div>
+        <div class="row"><span class="cb"></span><span class="en">Endpoint detection deployed</span><span class="nl">Endpointdetectie uitgerold</span></div>
+        <div class="row lie"><span class="cb"></span><span class="en">MFA on all remote access</span><span class="nl">MFA op alle externe toegang</span></div>
+      </div>
+      <div class="loupe"></div>
+      <div class="banner"><span class="en">ONE ANSWER UNTRUE · CLAIM REDUCED</span><span class="nl">ÉÉN ANTWOORD ONJUIST · CLAIM VERLAAGD</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Every cyber policy starts with a questionnaire. Is multi-factor authentication enabled on all remote access? Are backups tested? Is endpoint detection deployed? Somebody in IT ticks yes, in good faith, on a Friday afternoon. Two years later the claims adjuster arrives with the same form and a forensics report showing the VPN box that never got MFA. In many policies those answers are warranties: if one was untrue, the insurer may reduce the payout or void the cover, whether or not that gap caused the breach.</p>
+      <p class="en"><strong>Business impact:</strong> the largest cheque you were counting on becomes a negotiation, at the worst possible moment. The fix is administrative, not technical: answer with evidence, keep the evidence, and re-read your own answers at every renewal as if you were the adjuster.</p>
+      <p class="nl">Elke cyberpolis begint met een vragenlijst. Is multifactorauthenticatie ingeschakeld op alle externe toegang? Worden back-ups getest? Is endpointdetectie uitgerold? Iemand van IT vinkt op een vrijdagmiddag te goeder trouw ‘ja’ aan. Twee jaar later staat de schade-expert voor de deur met hetzelfde formulier en een forensisch rapport waarin de VPN-server staat die nooit MFA kreeg. In veel polissen zijn die antwoorden garanties: was er één onjuist, dan mag de verzekeraar de uitkering verlagen of de dekking laten vervallen, of dat gat de inbraak nu veroorzaakte of niet.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de grootste cheque waarop u rekende wordt een onderhandeling, op het slechtst denkbare moment. De oplossing is administratief, niet technisch: antwoord met bewijs, bewaar dat bewijs, en herlees uw eigen antwoorden bij elke verlenging alsof u de expert bent.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">WARRANTY BREACH · CLAIM REDUCED OR VOID</span><span class="nl">GARANTIE GESCHONDEN · CLAIM VERLAAGD OF VERVALLEN</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: ANSWER WITH EVIDENCE, RE-CHECK EVERY RENEWAL</span><span class="nl">OPLOSSING: ANTWOORD MET BEWIJS, CONTROLEER BIJ ELKE VERLENGING</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">SURPRISE 02</span><span class="nl">VERRASSING 02</span></span>
+    <h2>
+      <span class="en">Four things that <em>are not covered.</em></span>
+      <span class="nl">Vier dingen die <em>niet gedekt zijn.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">exclusions</span>
+      <span class="nl">uitsluitingen</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">THE SMALL PRINT</span><span class="nl">DE KLEINE LETTERTJES</span></div>
+      <div class="policy"><small><span class="en">POLICY</span><span class="nl">POLIS</span></small>📜</div>
+      <span class="ex e1"><span class="en">WAR · STATE ACTORS</span><span class="nl">OORLOG · STATELIJKE ACTOREN</span></span>
+      <span class="ex e2"><span class="en">KNOWN, UNPATCHED</span><span class="nl">BEKEND, ONGEPATCHT</span></span>
+      <span class="ex e3"><span class="en">REGULATORY FINES</span><span class="nl">BOETES TOEZICHTHOUDER</span></span>
+      <span class="ex e4"><span class="en">CONTRACT PENALTIES</span><span class="nl">CONTRACTBOETES</span></span>
+      <div class="banner"><span class="en">EXCLUDED · UNINSURED EXPOSURE</span><span class="nl">UITGESLOTEN · ONVERZEKERDE BLOOTSTELLING</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Read the exclusions before the coverage. Four turn up in most policies. War and state-sponsored attacks: after several large incidents insurers tightened this clause, and attribution to a state can now void a claim you thought was plain ransomware. Known vulnerabilities left unpatched beyond a stated window. Regulatory fines, which in many jurisdictions cannot be insured by law. And contractual penalties to customers, which are your promise, not the insurer's.</p>
+      <p class="en"><strong>Business impact:</strong> the events that hurt most may sit entirely outside the policy. Each exclusion is uninsured exposure and belongs in the risk register with an amount next to it, so the board decides knowingly which risks it carries itself.</p>
+      <p class="nl">Lees de uitsluitingen vóór de dekking. Vier komen in de meeste polissen terug. Oorlog en statelijke aanvallen: na een aantal grote incidenten hebben verzekeraars deze bepaling aangescherpt, en toeschrijving aan een staat kan nu een claim ongeldig maken die u voor gewone ransomware hield. Bekende kwetsbaarheden die langer dan een genoemde termijn ongepatcht bleven. Boetes van toezichthouders, die in veel landen wettelijk niet verzekerbaar zijn. En contractuele boetes aan klanten, want dat is uw belofte, niet die van de verzekeraar.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de gebeurtenissen die het meeste pijn doen, kunnen volledig buiten de polis vallen. Elke uitsluiting is onverzekerde blootstelling en hoort in het risicoregister met een bedrag ernaast, zodat de directie bewust beslist welke risico's zij zelf draagt.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">WAR · UNPATCHED · FINES · PENALTIES</span><span class="nl">OORLOG · ONGEPATCHT · BOETES · CONTRACTBOETES</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: EXCLUSIONS IN THE RISK REGISTER, WITH A NUMBER</span><span class="nl">OPLOSSING: UITSLUITINGEN IN HET RISICOREGISTER, MET EEN BEDRAG</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">SURPRISE 03</span><span class="nl">VERRASSING 03</span></span>
+    <h2>
+      <span class="en">The money runs out <em>on day three.</em></span>
+      <span class="nl">Het geld is op <em>op dag drie.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">sub-limits and waiting periods</span>
+      <span class="nl">sublimieten en wachttermijnen</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">INCIDENT COST</span><span class="nl">INCIDENTKOSTEN</span></div>
+      <div class="lbl"><span class="en">FORENSICS &amp; LEGAL SPEND</span><span class="nl">UITGAVEN FORENSISCH &amp; JURIDISCH</span></div>
+      <div class="gauge"><div class="fill"></div><div class="fill over"></div></div>
+      <div class="cap"><span><span class="en">SUB-LIMIT</span><span class="nl">SUBLIMIET</span></span></div>
+      <div class="day d1"><span class="en">DAY 1</span><span class="nl">DAG 1</span></div>
+      <div class="day d3"><span class="en">DAY 3</span><span class="nl">DAG 3</span></div>
+      <div class="day d21"><span class="en">DAY 21</span><span class="nl">DAG 21</span></div>
+      <div class="banner"><span class="en">CAP REACHED · THE REST IS OURS</span><span class="nl">PLAFOND BEREIKT · DE REST IS VOOR ONS</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The headline limit is not the number that matters. Beneath it sit sub-limits: a cap for forensics and legal, a separate and often lower cap for ransom payments, and a waiting period of several days before business-interruption cover starts at all. A serious incident burns through the forensics cap in the first days, when the specialists cost the most and you need them the most. Everything above the cap is yours.</p>
+      <p class="en"><strong>Business impact:</strong> a policy with a large headline number can still leave the company paying most of a real incident. Ask for the sub-limits and the waiting period in one table, and compare them with what three weeks of standstill would actually cost. That comparison, not the premium, tells you whether the cover is adequate.</p>
+      <p class="nl">De hoofdlimiet is niet het getal dat telt. Daaronder zitten sublimieten: een plafond voor forensisch onderzoek en juridische bijstand, een apart en vaak lager plafond voor losgeld, en een wachttermijn van enkele dagen voordat de dekking voor bedrijfsschade überhaupt begint. Een serieus incident verbruikt het forensisch plafond in de eerste dagen, precies wanneer de specialisten het duurst zijn en u ze het hardst nodig hebt. Alles boven het plafond is voor u.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een polis met een groot hoofdbedrag kan het bedrijf alsnog het grootste deel van een echt incident laten betalen. Vraag de sublimieten en de wachttermijn in één tabel op, en zet ze naast wat drie weken stilstand werkelijk zou kosten. Die vergelijking, niet de premie, zegt of de dekking toereikend is.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">SUB-LIMITS · WAITING PERIOD · THE REST IS OURS</span><span class="nl">SUBLIMIETEN · WACHTTERMIJN · DE REST IS VOOR ONS</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: LIMITS TESTED AGAINST A COSTED WORST CASE</span><span class="nl">OPLOSSING: LIMIETEN GETOETST AAN EEN DOORGEREKEND WORSTCASESCENARIO</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">SURPRISE 04</span><span class="nl">VERRASSING 04</span></span>
+    <h2>
+      <span class="en">You called <em>the wrong people first.</em></span>
+      <span class="nl">U belde <em>eerst de verkeerden.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">notification clause and panel firms</span>
+      <span class="nl">meldingsplicht en panelpartijen</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">DAY 1 → DAY 4</span><span class="nl">DAG 1 → DAG 4</span></div>
+      <div class="node left"><div class="box">🏢</div><span class="en">Us, 03:00</span><span class="nl">Wij, 03:00</span></div>
+      <div class="node right"><div class="box">☂<span class="stampno"><span class="en">LATE</span><span class="nl">TE LAAT</span></span></div><span class="en">Insurer</span><span class="nl">Verzekeraar</span></div>
+      <div class="wire"></div>
+      <div class="env">☎</div>
+      <div class="actor firm pulse">🛠️<span class="tag"><span class="en">OUR OWN IT FIRM · OFF-PANEL</span><span class="nl">ONS EIGEN IT-BUREAU · BUITEN PANEL</span></span></div>
+      <div class="late"><span class="en">DAY 4</span><span class="nl">DAG 4</span></div>
+      <div class="banner"><span class="en">NOTIFIED ON DAY 4 · COVERAGE DISPUTED</span><span class="nl">GEMELD OP DAG 4 · DEKKING BETWIST</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Most policies require you to notify the insurer immediately, often within a fixed number of hours, and to use the insurer's approved forensics firm, law firm and negotiator. In the panic of day one, IT calls the firm it knows, legal calls the lawyer it knows, and somebody talks to the attackers. Three days later the insurer is informed, declines the invoices already incurred, and questions whether the response contaminated the evidence.</p>
+      <p class="en"><strong>Business impact:</strong> good instincts on day one can cost the coverage on day four. The insurer's hotline belongs on the first line of the printed contact list, and the incident plan must say who calls it before anyone else is engaged. If you want your own trusted firms, have them approved onto the panel in advance.</p>
+      <p class="nl">De meeste polissen eisen dat u de verzekeraar onmiddellijk informeert, vaak binnen een vast aantal uren, en dat u het forensisch bureau, het advocatenkantoor en de onderhandelaar van de verzekeraar gebruikt. In de paniek van dag één belt IT het bureau dat het kent, belt legal de advocaat die zij kent, en praat iemand met de aanvallers. Drie dagen later wordt de verzekeraar geïnformeerd, wijst die de al gemaakte facturen af, en betwijfelt hij of de aanpak het bewijs heeft besmet.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> goede reflexen op dag één kunnen op dag vier de dekking kosten. De hotline van de verzekeraar hoort op de eerste regel van de geprinte contactlijst, en het incidentplan moet zeggen wie die belt voordat iemand anders wordt ingeschakeld. Wilt u uw eigen vertrouwde partijen, laat ze dan vooraf op het panel goedkeuren.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">LATE NOTICE · OFF-PANEL FIRMS · COVERAGE DISPUTED</span><span class="nl">TE LATE MELDING · PARTIJEN BUITEN HET PANEL · DEKKING BETWIST</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: INSURER FIRST IN THE PLAN, OWN FIRMS PRE-APPROVED</span><span class="nl">OPLOSSING: VERZEKERAAR EERST IN HET PLAN, EIGEN PARTIJEN VOORAF GOEDGEKEURD</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What makes the policy <em>actually pay.</em></span>
+      <span class="nl">Wat de polis <em>echt laat uitbetalen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">paperwork and rehearsal — the policy is a control only if you treat it like one</span>
+      <span class="nl">papierwerk en oefening — de polis is alleen een maatregel als u hem zo behandelt</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">EVIDENCE</span><span class="nl">BEWIJS</span></span>
+        <span class="chip c2"><span class="en">EXCLUSIONS</span><span class="nl">UITSLUITINGEN</span></span>
+        <span class="chip c3"><span class="en">LIMITS</span><span class="nl">LIMIETEN</span></span>
+        <span class="chip c4"><span class="en">NOTIFY FIRST</span><span class="nl">EERST MELDEN</span></span>
+        <span class="chip c5"><span class="en">RENEWAL</span><span class="nl">VERLENGING</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Prevents</th><th>In one line</th></tr>
+        <tr><td class="ctl">Evidence file</td><td>Surprise 01</td><td>Answer every questionnaire item with a document behind it, and keep the file. The adjuster will ask for it.</td></tr>
+        <tr><td class="ctl">Control mapping</td><td>Surprise 01</td><td>Map each policy requirement to a real control and an owner. Re-check before every renewal, not after the breach.</td></tr>
+        <tr><td class="ctl">Exclusion register</td><td>Surprise 02</td><td>List every exclusion as uninsured exposure in the risk register with an estimated amount, and let the board accept it explicitly.</td></tr>
+        <tr><td class="ctl">Limit test</td><td>Surprise 03</td><td>Put sub-limits and waiting periods next to a costed worst case: weeks of standstill, forensics, legal, notification. Adjust the cover or accept the gap.</td></tr>
+        <tr><td class="ctl">Insurer first</td><td>Surprise 04</td><td>The insurer's hotline on line one of the printed contact list. The plan names who calls it and within how many hours.</td></tr>
+        <tr><td class="ctl">Panel alignment</td><td>Surprise 04</td><td>Get your preferred forensics and legal firms approved onto the panel in advance, or accept theirs and meet them before you need them.</td></tr>
+        <tr><td class="ctl">Ransom decision</td><td>Surprises 02, 03</td><td>Decide now whether you would ever pay, and check legality and the policy's sanctions clause. Do not discover both at 03:00.</td></tr>
+        <tr><td class="ctl">Premium as signal</td><td>All four</td><td>A rising premium or shrinking cover is the market grading your security. Treat it as an audit finding, not a procurement problem.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Voorkomt</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Bewijsdossier</td><td>Verrassing 01</td><td>Onderbouw elk antwoord op de vragenlijst met een document en bewaar het dossier. De expert zal ernaar vragen.</td></tr>
+        <tr><td class="ctl">Maatregelen koppelen</td><td>Verrassing 01</td><td>Koppel elke poliseis aan een echte maatregel en een eigenaar. Controleer dat vóór elke verlenging, niet na de inbraak.</td></tr>
+        <tr><td class="ctl">Uitsluitingenregister</td><td>Verrassing 02</td><td>Zet elke uitsluiting als onverzekerde blootstelling in het risicoregister met een geschat bedrag, en laat de directie dat expliciet accepteren.</td></tr>
+        <tr><td class="ctl">Limietentoets</td><td>Verrassing 03</td><td>Zet sublimieten en wachttermijnen naast een doorgerekend worstcasescenario: weken stilstand, forensisch onderzoek, juridische kosten, meldingen. Pas de dekking aan of accepteer het gat.</td></tr>
+        <tr><td class="ctl">Verzekeraar eerst</td><td>Verrassing 04</td><td>De hotline van de verzekeraar op regel één van de geprinte contactlijst. Het plan noemt wie belt en binnen hoeveel uur.</td></tr>
+        <tr><td class="ctl">Panel afstemmen</td><td>Verrassing 04</td><td>Laat uw voorkeurspartijen voor forensisch onderzoek en juridische bijstand vooraf op het panel goedkeuren, of accepteer die van de verzekeraar en maak vooraf kennis.</td></tr>
+        <tr><td class="ctl">Losgeldbesluit</td><td>Verrassing 02, 03</td><td>Beslis nu of u ooit zou betalen, en controleer de wettelijkheid en de sanctiebepaling in de polis. Ontdek beide niet om 03:00.</td></tr>
+        <tr><td class="ctl">Premie als signaal</td><td>Alle vier</td><td>Een stijgende premie of krimpende dekking is de markt die uw beveiliging beoordeelt. Behandel het als auditbevinding, niet als inkoopprobleem.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> insurance transfers some of the cost, never the responsibility. Three questions for the next renewal: what exactly is excluded, how long is the waiting period, and are the questionnaire answers still true today? This briefing is general information, not insurance or legal advice; check the actual wording with your broker and counsel.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> een verzekering verplaatst een deel van de kosten, nooit de verantwoordelijkheid. Drie vragen voor de volgende verlenging: wat is precies uitgesloten, hoe lang is de wachttermijn, en zijn de antwoorden op de vragenlijst vandaag nog waar? Deze briefing is algemene informatie, geen verzekerings- of juridisch advies; toets de werkelijke polistekst met uw makelaar en jurist.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Nearly every claim is tested against the questionnaire and the exclusions. Disputes over cover are routine, not rare.</span><span class="nl">Bijna elke claim wordt getoetst aan de vragenlijst en de uitsluitingen. Discussie over dekking is gewoon, geen uitzondering.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">The payout you planned around shrinks or vanishes while the incident costs are already running.</span><span class="nl">De uitkering waarop u rekende krimpt of verdwijnt terwijl de incidentkosten al lopen.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low</span><span class="nl">Laag</span></span><p><span class="en">With evidence-backed answers, exclusions on the register and the insurer first in the plan, the policy pays what it says.</span><span class="nl">Met onderbouwde antwoorden, uitsluitingen in het register en de verzekeraar vooraan in het plan betaalt de polis wat erin staat.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CFO / CRO</span><span class="nl">CFO / CRO</span></span><p><span class="en">Owns the policy and the uninsured exposure. The CISO supplies the evidence behind every questionnaire answer.</span><span class="nl">Eigenaar van de polis en de onverzekerde blootstelling. De CISO levert het bewijs achter elk antwoord op de vragenlijst.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">% of questionnaire answers with evidence attached · uninsured exposure from exclusions in € · forensics sub-limit versus the cost estimate of the last exercise · hours to notify the insurer in the last exercise.</span><span class="nl">% antwoorden op de vragenlijst met bewijs · onverzekerde blootstelling uit uitsluitingen in € · forensisch sublimiet tegenover de kostenraming van de laatste oefening · uren tot melding aan de verzekeraar in de laatste oefening.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Cyber insurance fails to pay as expected because of inaccurate application answers, exclusions, sub-limits or late notification, leaving incident costs uncovered.”</span><span class="nl">“De cyberverzekering betaalt niet zoals verwacht door onjuiste aanvraagantwoorden, uitsluitingen, sublimieten of te late melding, waardoor incidentkosten onverzekerd blijven.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Insurance is not a substitute for the required risk management measures. Management must approve and oversee the measures itself and stays liable; fines under NIS2 are generally not insurable.</td><td>A supplier's insurance certificate does not prove their controls. Ask for the measures, and add their cyber cover and their duty to notify you to the contract.</td><td>The 24-hour early warning to the authority runs alongside the insurer's notification clause. Both clocks start at once, so the plan must handle both. Confirm with legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Financial entities keep an ICT risk framework and may use insurance as one risk-transfer measure within it. The framework and the residual risk must be documented and approved by the board.</td><td>An ICT third party's policy is not one of the DORA contract clauses. Check the required clauses instead: audit rights, incident support, exit strategy.</td><td>Major incident reporting to the supervisor within hours of classification, then 72 hours and one month. The insurer's forensics firm must be able to support that pace. Confirm with legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>If you issue a SOC 2, insurance is not a tested control. The auditor tests the same controls the questionnaire asks about, so both should tell the same story.</td><td>Their SOC 2 report is exactly the evidence you would want them to hold for their own insurer. Exceptions in the report are questions to ask about their cover.</td><td>The incident response the auditor tests is the one the insurer reviews. Contradictions between the two narratives become findings on both sides.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Assurance over outsourced processes; insurance does not appear in it. Where a service organisation relies on insurance for continuity, user auditors may ask for the terms.</td><td>Ask whether the service organisation's continuity plan and its cyber cover line up with the control objectives. The report cannot say so on its own.</td><td>An incident at the service organisation touches your financial reporting controls. Their insurer's timeline and yours must not conflict with disclosure to the user auditors.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Een verzekering vervangt de verplichte risicobeheersmaatregelen niet. Het bestuur moet de maatregelen zelf goedkeuren en bewaken en blijft aansprakelijk; boetes onder NIS2 zijn in de regel niet verzekerbaar.</td><td>Een verzekeringscertificaat van een leverancier bewijst zijn maatregelen niet. Vraag naar de maatregelen, en neem zijn cyberdekking en zijn plicht om u te informeren op in het contract.</td><td>De 24-uurs vroegtijdige waarschuwing aan de toezichthouder loopt naast de meldingsplicht van de polis. Beide klokken starten tegelijk, dus het plan moet beide aankunnen. Bevestig met legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Financiële instellingen houden een ICT-risicokader bij en mogen een verzekering daarin als één risico-overdrachtsmaatregel gebruiken. Het kader en het restrisico moeten gedocumenteerd en door het bestuur goedgekeurd zijn.</td><td>De polis van een ICT-derde is geen van de DORA-contractbepalingen. Controleer in plaats daarvan de verplichte bepalingen: auditrechten, ondersteuning bij incidenten, exitstrategie.</td><td>Melding van een ernstig incident aan de toezichthouder binnen enkele uren na classificatie, daarna 72 uur en een maand. Het forensisch bureau van de verzekeraar moet dat tempo kunnen volgen. Bevestig met legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Geeft u zelf een SOC 2 af, dan is de verzekering geen geteste maatregel. De auditor test dezelfde maatregelen als waar de vragenlijst naar vraagt, dus beide moeten hetzelfde verhaal vertellen.</td><td>Hun SOC 2-rapport is precies het bewijs dat u zou willen dat zij voor hun eigen verzekeraar bewaren. Afwijkingen in het rapport zijn vragen over hun dekking.</td><td>De incidentrespons die de auditor test, is dezelfde die de verzekeraar beoordeelt. Tegenstrijdigheden tussen beide verhalen worden bevindingen aan beide kanten.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Zekerheid over uitbestede processen; een verzekering komt er niet in voor. Waar een serviceorganisatie voor continuïteit op een verzekering vertrouwt, kunnen de auditors van klanten de voorwaarden opvragen.</td><td>Vraag of het continuïteitsplan en de cyberdekking van de serviceorganisatie aansluiten op de beheersdoelstellingen. Het rapport kan dat niet uit zichzelf zeggen.</td><td>Een incident bij de serviceorganisatie raakt uw beheersing van de financiële verslaggeving. De tijdlijn van hun verzekeraar en de uwe mogen niet botsen met de melding aan de auditors van de klanten.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">CYBER INSURANCE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">CYBERVERZEKERING BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

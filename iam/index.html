@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>IAM: who may do what // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   IAM // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4}
+
+/* --- scene 1 : the account nobody owns --- */
+.s1 .badge{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:220px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);z-index:2;font-size:9.5px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;line-height:1.7}
+.s1 .badge b{display:block;font-family:var(--mono);font-size:14px;color:var(--white);letter-spacing:.04em;text-transform:none;margin-bottom:4px}
+.s1 .badge .stamp{position:absolute;top:-1px;right:-1px;font-size:9.5px;font-weight:700;letter-spacing:.2em;padding:5px 10px;background:var(--bad);color:#33060e}
+.s1 .key{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:20px;background:var(--white);border:1px solid #9fb3c0;animation:leak 8s linear infinite}
+@keyframes leak{0%,30%{left:calc(50% + 100px);opacity:0}36%{opacity:1}90%{left:calc(100% - 170px);opacity:1}100%{left:calc(100% - 170px);opacity:0}}
+.s1 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 2 : roles too wide --- */
+.s2 .pol{position:absolute;left:128px;top:calc(50% - 15px);font-family:var(--mono);font-size:11.5px;color:var(--warn);background:var(--deep);border:1px solid rgba(255,200,87,.5);padding:6px 10px;white-space:nowrap;z-index:3}
+.s2 .wire{left:118px;right:auto;width:220px}
+.s2 .dbs{position:absolute;left:340px;right:40px;top:44px;bottom:60px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.s2 .db{position:relative;display:grid;place-items:center;font-size:20px;background:var(--surface);border:1px solid var(--line)}
+.s2 .db::after{content:"R/W";position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);font-size:16px;letter-spacing:.1em;font-weight:700;color:var(--white);background:rgba(255,93,115,.85);opacity:0;animation:grant 9s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes grant{0%{opacity:0}5%{opacity:1}74%{opacity:1}80%,100%{opacity:0}}
+.s2 .banner{animation:fadeIn 9s ease-in-out infinite}
+
+/* --- scene 3 : one person, both signatures --- */
+.s3 .step{position:absolute;top:50%;transform:translateY(-50%);width:150px;padding:12px 10px 10px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);z-index:2;line-height:1.5}
+.s3 .step i{display:block;font-style:normal;font-size:24px;margin-bottom:6px}
+.s3 .step.a{left:calc(50% - 170px)}.s3 .step.b{left:calc(50% + 20px)}
+.s3 .step .ok{position:absolute;top:-11px;right:-11px;width:26px;height:26px;display:grid;place-items:center;background:var(--good);color:#04291d;font-weight:700;font-size:14px;opacity:0}
+.s3 .step.a .ok{animation:stampA 9s ease-in-out infinite}.s3 .step.b .ok{animation:stampB 9s ease-in-out infinite}
+@keyframes stampA{0%,18%{opacity:0;transform:scale(.3)}24%,100%{opacity:1;transform:scale(1)}}
+@keyframes stampB{0%,42%{opacity:0;transform:scale(.3)}48%,100%{opacity:1;transform:scale(1)}}
+.s3 .cash{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--white);border:1px solid #9fb3c0;animation:pay 9s linear infinite}
+@keyframes pay{0%,56%{left:calc(50% + 175px);opacity:0}62%{opacity:1}92%{left:calc(100% - 170px);opacity:1}100%{left:calc(100% - 170px);opacity:0}}
+.s3 .banner{animation:fadeIn 9s ease-in-out infinite}
+
+/* --- scene 4 : the login everybody shares --- */
+.s4 .people{position:absolute;left:24px;top:50%;transform:translateY(-50%);display:grid;gap:8px;z-index:2}
+.s4 .p{width:44px;height:44px;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);font-size:20px;animation:use 8s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes use{0%,100%{border-color:var(--line);box-shadow:none}8%,20%{border-color:var(--warn);box-shadow:0 0 14px rgba(255,200,87,.35)}}
+.s4 .wire{left:76px}
+.s4 .login{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:230px;padding:14px 16px;background:var(--surface);border:1px solid var(--line);z-index:2;font-size:9.5px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;line-height:1.7}
+.s4 .login b{display:block;font-family:var(--mono);font-size:13px;color:var(--white);letter-spacing:.04em;text-transform:none;margin-bottom:6px}
+.s4 .login .pw{display:block;font-family:var(--mono);font-size:13px;color:var(--white);background:var(--bg-lo);border:1px solid var(--line);padding:4px 8px;margin-bottom:6px;letter-spacing:.2em}
+.s4 .who{position:absolute;right:18px;top:calc(50% - 82px);font-size:11px;font-weight:700;letter-spacing:.2em;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px;z-index:3;animation:blink 1.8s steps(1) infinite}
+@keyframes blink{0%,62%{opacity:1}63%,100%{opacity:.2}}
+.s4 .banner{animation:fadeIn 8s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .key{left:calc(100% - 170px);opacity:1}
+  .s2 .db::after{opacity:1}
+  .s3 .step .ok{opacity:1;transform:scale(1)}
+  .s3 .cash{left:calc(100% - 170px);opacity:1}
+  .s4 .p{border-color:var(--warn)}
+  .banner{opacity:1}
+}
+
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> PLAIN SECURITY <span style="color:var(--slate)">//</span> IAM</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">ORPHANS</span><span class="nl">WEZEN</span></a>
+      <a href="#r2"><span class="en">WILDCARDS</span><span class="nl">WILDCARDS</span></a>
+      <a href="#r3"><span class="en">TWO HATS</span><span class="nl">TWEE PETTEN</span></a>
+      <a href="#r4"><span class="en">SHARED</span><span class="nl">GEDEELD</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">IAM. Who may do what, <em>and who checks.</em></span>
+      <span class="nl">IAM. Wie wat mag, <em>en wie dat controleert.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Every breach ends with someone using a right they should not have had. Four ways access rights go wrong, each with an example from practice, and the single control that fixes it.</span>
+      <span class="nl">Elke inbraak eindigt met iemand die een recht gebruikt dat hij niet had mogen hebben. Vier manieren waarop toegangsrechten misgaan, elk met een voorbeeld uit de praktijk, en de maatregel die het oplost.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FOUR</span><span class="nl">BEKIJK DE VIER</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT FIXES IT</span><span class="nl">WAT HET OPLOST</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 01</span><span class="nl">RISICO 01</span></span>
+    <h2>
+      <span class="en">The account <em>nobody owns.</em></span>
+      <span class="nl">Het account <em>waar niemand eigenaar van is.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">non-human identities / service accounts and API keys</span>
+      <span class="nl">non-human identities / serviceaccounts en API-sleutels</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">SINCE 2016</span><span class="nl">SINDS 2016</span></div>
+      <div class="node left"><div class="box">⚙️</div><span class="en">Payroll job</span><span class="nl">Salarisrun</span></div>
+      <div class="node right"><div class="box">🕵️</div><span class="en">Whoever finds it</span><span class="nl">Wie het vindt</span></div>
+      <div class="wire"></div>
+      <div class="badge pulse"><span class="stamp">DOMAIN ADMIN</span><b>svc_payroll</b><span class="en">owner: left in 2019<br>password changed: never</span><span class="nl">eigenaar: weg sinds 2019<br>wachtwoord gewijzigd: nooit</span></div>
+      <div class="key">🔑</div>
+      <div class="banner"><span class="en">NO OWNER · NEVER ROTATED · FULL RIGHTS</span><span class="nl">GEEN EIGENAAR · NOOIT GEWIJZIGD · ALLE RECHTEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Most identities in a company are not people. Service accounts run the backups and the payroll, API keys connect systems, scripts log in on a schedule. They were created by someone who has since left, their passwords never expire because expiring would break the job, and their rights were set generously once so nobody would be called at night. Nobody is paid to look at them, and they outnumber the staff.</p>
+      <p class="en"><strong>Example:</strong> a service account called svc_payroll, created in 2016, password unchanged since, member of Domain Admins because the payroll software “needed it” for one installation step years ago. The password sits in a script on a shared drive. Whoever reads that script owns the company. <strong>Business impact:</strong> the account nobody owns is the account nobody notices being abused, and the first thing an attacker looks for.</p>
+      <p class="nl">De meeste identiteiten in een bedrijf zijn geen mensen. Serviceaccounts draaien de back-ups en de salarisrun, API-sleutels verbinden systemen, scripts loggen volgens schema in. Ze zijn aangemaakt door iemand die inmiddels weg is, hun wachtwoorden verlopen nooit omdat verlopen de taak zou breken, en hun rechten zijn ooit ruim gezet zodat niemand ’s nachts gebeld zou worden. Niemand wordt betaald om ernaar te kijken, en ze zijn talrijker dan het personeel.</p>
+      <p class="nl"><strong>Voorbeeld:</strong> een serviceaccount met de naam svc_payroll, aangemaakt in 2016, wachtwoord sindsdien ongewijzigd, lid van Domain Admins omdat de salarissoftware dat jaren geleden “nodig had” voor één installatiestap. Het wachtwoord staat in een script op een gedeelde schijf. Wie dat script leest, is eigenaar van het bedrijf. <strong>Bedrijfsimpact:</strong> het account zonder eigenaar is het account waarvan niemand het misbruik opmerkt, en het eerste waar een aanvaller naar zoekt.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NO OWNER · NEVER ROTATED · MORE OF THEM THAN PEOPLE</span><span class="nl">GEEN EIGENAAR · NOOIT GEWIJZIGD · MEER DAN ER MENSEN ZIJN</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: IDENTITY INVENTORY + OWNER PER ACCOUNT + SECRETS VAULT</span><span class="nl">OPLOSSING: IDENTITEITENREGISTER + EIGENAAR PER ACCOUNT + SECRETS VAULT</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 02</span><span class="nl">RISICO 02</span></span>
+    <h2>
+      <span class="en">Roles designed <em>too wide.</em></span>
+      <span class="nl">Rollen <em>te ruim ontworpen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">least privilege / wildcard policies</span>
+      <span class="nl">least privilege / wildcard-rechten</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">ONE ROLE</span><span class="nl">ÉÉN ROL</span></div>
+      <div class="node left"><div class="box">👩‍💻</div><span class="en">Developer role</span><span class="nl">Developer-rol</span></div>
+      <div class="wire"></div>
+      <div class="pol">"Resource": "*"</div>
+      <div class="dbs">
+        <div class="db" style="--d:0s">🗄️</div><div class="db" style="--d:.5s">🗄️</div><div class="db" style="--d:1s">🗄️</div><div class="db" style="--d:1.5s">🗄️</div>
+        <div class="db" style="--d:2s">🗄️</div><div class="db" style="--d:2.5s">🗄️</div><div class="db" style="--d:3s">🗄️</div><div class="db" style="--d:3.5s">🗄️</div>
+      </div>
+      <div class="banner"><span class="en">ONE WILDCARD · EVERY DATABASE · NOBODY DECIDED THIS</span><span class="nl">ÉÉN WILDCARD · ELKE DATABASE · NIEMAND HEEFT DIT BESLOTEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Cloud platforms and business systems come with a fine-grained rights model. Nobody uses it under time pressure. A role gets a wildcard because the precise list was long, and the role is copied to the next team because it “works”. Years later every developer can read every database, the helpdesk can reset the CEO’s password, and nobody remembers deciding any of it.</p>
+      <p class="en"><strong>Example:</strong> an AWS IAM policy with <code>"Action": "*", "Resource": "*"</code> attached to the whole developer group; in Entra ID, Global Administrator handed to the service desk because password resets “needed it”. <strong>Business impact:</strong> one phished developer laptop equals the entire data estate. With narrow roles the same laptop equals one application.</p>
+      <p class="nl">Cloudplatforms en bedrijfssystemen hebben een fijnmazig rechtenmodel. Onder tijdsdruk gebruikt niemand het. Een rol krijgt een wildcard omdat de precieze lijst lang was, en de rol wordt gekopieerd naar het volgende team omdat hij “werkt”. Jaren later kan elke developer elke database lezen, kan de servicedesk het wachtwoord van de CEO resetten, en herinnert niemand zich dat ooit te hebben besloten.</p>
+      <p class="nl"><strong>Voorbeeld:</strong> een AWS IAM-policy met <code>"Action": "*", "Resource": "*"</code> gekoppeld aan de hele developergroep; in Entra ID de rol Global Administrator uitgedeeld aan de servicedesk omdat wachtwoordresets dat “nodig hadden”. <strong>Bedrijfsimpact:</strong> één gephishte developerlaptop staat gelijk aan het volledige databestand. Met smalle rollen staat dezelfde laptop gelijk aan één applicatie.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">WILDCARD RIGHTS · COPIED ROLES · WHOLE ESTATE EXPOSED</span><span class="nl">WILDCARD-RECHTEN · GEKOPIEERDE ROLLEN · ALLES BLOOTGESTELD</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: LEAST-PRIVILEGE ROLE DESIGN + REVIEW ON EVERY CHANGE</span><span class="nl">OPLOSSING: ROLLEN OP LEAST PRIVILEGE + REVIEW BIJ ELKE WIJZIGING</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 03</span><span class="nl">RISICO 03</span></span>
+    <h2>
+      <span class="en">One person, <em>both signatures.</em></span>
+      <span class="nl">Eén persoon, <em>beide handtekeningen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">segregation of duties / conflicting rights</span>
+      <span class="nl">functiescheiding / conflicterende rechten</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">IN THE ERP</span><span class="nl">IN HET ERP</span></div>
+      <div class="node left"><div class="box">👤</div><span class="en">One account</span><span class="nl">Eén account</span></div>
+      <div class="node right"><div class="box">🏦</div><span class="en">New vendor’s IBAN</span><span class="nl">IBAN nieuwe leverancier</span></div>
+      <div class="wire"></div>
+      <div class="step a"><span class="ok">✔</span><i>🧾</i><span class="en">Create vendor</span><span class="nl">Leverancier aanmaken</span></div>
+      <div class="step b"><span class="ok">✔</span><i>✍️</i><span class="en">Release payment</span><span class="nl">Betaling vrijgeven</span></div>
+      <div class="cash">💶</div>
+      <div class="banner"><span class="en">SAME PERSON · BOTH STEPS · MONEY GONE</span><span class="nl">DEZELFDE PERSOON · BEIDE STAPPEN · GELD WEG</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Some rights are harmless alone and dangerous together. Creating a supplier is fine. Releasing a payment is fine. The same account doing both means one person, or one attacker holding that account, can invent a vendor and pay it. Every system allows this unless someone deliberately configures it to say no, and most systems were never asked.</p>
+      <p class="en"><strong>Example:</strong> a finance employee moves teams and keeps the “vendor master” role from the old job while gaining “payment release” in the new one. Eighteen months later a phished password is used to create a supplier with a familiar name and a foreign IBAN, and to approve an invoice of €340,000. Both actions are logged, both look legitimate. <strong>Business impact:</strong> direct financial loss, plus an audit finding that the conflict had been visible in the rights table all along.</p>
+      <p class="nl">Sommige rechten zijn apart onschuldig en samen gevaarlijk. Een leverancier aanmaken is prima. Een betaling vrijgeven is prima. Hetzelfde account dat beide doet, betekent dat één persoon, of één aanvaller met dat account, een leverancier kan verzinnen en betalen. Elk systeem staat dit toe tenzij iemand het bewust instelt om nee te zeggen, en de meeste systemen is dat nooit gevraagd.</p>
+      <p class="nl"><strong>Voorbeeld:</strong> een medewerker van finance wisselt van team en houdt de rol “leveranciersstamgegevens” uit de oude functie, terwijl hij in de nieuwe “betaling vrijgeven” krijgt. Achttien maanden later wordt met een gephisht wachtwoord een leverancier met een vertrouwde naam en een buitenlands IBAN aangemaakt, en een factuur van € 340.000 goedgekeurd. Beide handelingen staan in het logboek, beide zien er legitiem uit. <strong>Bedrijfsimpact:</strong> direct financieel verlies, plus een auditbevinding dat het conflict al die tijd zichtbaar was in de rechtentabel.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">CONFLICTING RIGHTS · ONE ACCOUNT MOVES MONEY</span><span class="nl">CONFLICTERENDE RECHTEN · ÉÉN ACCOUNT VERPLAATST GELD</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: SOD MATRIX ENFORCED IN THE ERP + FOUR EYES ON PAYMENTS</span><span class="nl">OPLOSSING: FUNCTIESCHEIDINGSMATRIX AFGEDWONGEN IN HET ERP + VIER OGEN OP BETALINGEN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 04</span><span class="nl">RISICO 04</span></span>
+    <h2>
+      <span class="en">The login <em>everybody shares.</em></span>
+      <span class="nl">De inlog <em>die iedereen deelt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">shared accounts / accountability</span>
+      <span class="nl">gedeelde accounts / verantwoording</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">FOUR PEOPLE, ONE ADMIN</span><span class="nl">VIER MENSEN, ÉÉN ADMIN</span></div>
+      <div class="people"><div class="p" style="--d:0s">🧑‍💼</div><div class="p" style="--d:2s">👩‍💻</div><div class="p" style="--d:4s">🧔</div><div class="p" style="--d:6s">🧑‍🎓</div></div>
+      <div class="wire"></div>
+      <div class="login"><b>admin@company.nl</b><span class="pw">••••••••••</span><span class="en">password: in the team spreadsheet 📊</span><span class="nl">wachtwoord: in de teamspreadsheet 📊</span></div>
+      <div class="node right"><div class="box">📋</div><span class="en">Audit log</span><span class="nl">Auditlog</span></div>
+      <div class="who"><span class="en">WHO? “ADMIN”</span><span class="nl">WIE? “ADMIN”</span></div>
+      <div class="banner"><span class="en">ONE LOGIN · FOUR PEOPLE · NOBODY ACCOUNTABLE</span><span class="nl">ÉÉN INLOG · VIER MENSEN · NIEMAND VERANTWOORDELIJK</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A team of four uses one administrator account. The password lives in a spreadsheet, a chat thread and a sticky note. When someone leaves, it is not changed, because everyone else would need the new one. When something breaks, or disappears, the log says “admin” did it. Nobody did it. And the intern from last summer can still log in.</p>
+      <p class="en"><strong>Example:</strong> a shared admin@ account for the Microsoft 365 tenant, used by IT, an external consultant and a former intern. Multi-factor authentication is switched on, but the code goes to a shared phone in a drawer. When every mailbox is exported to an unknown address at 02:00, the investigation ends at the word “admin”. <strong>Business impact:</strong> no accountability, no forensic trail, no way to revoke one person, and an insurer asking why the basic rule was not followed.</p>
+      <p class="nl">Een team van vier gebruikt één beheerdersaccount. Het wachtwoord staat in een spreadsheet, een chatgesprek en op een geeltje. Als iemand vertrekt, wordt het niet gewijzigd, want dan moet iedereen het nieuwe hebben. Als er iets stukgaat, of verdwijnt, zegt het logboek dat “admin” het heeft gedaan. Niemand heeft het gedaan. En de stagiair van afgelopen zomer kan nog steeds inloggen.</p>
+      <p class="nl"><strong>Voorbeeld:</strong> een gedeeld admin@-account voor de Microsoft 365-tenant, gebruikt door IT, een externe consultant en een oud-stagiair. Multifactorauthenticatie staat aan, maar de code komt binnen op een gedeelde telefoon in een la. Als om 02:00 elke mailbox naar een onbekend adres wordt geëxporteerd, eindigt het onderzoek bij het woord “admin”. <strong>Bedrijfsimpact:</strong> geen verantwoording, geen forensisch spoor, geen manier om één persoon de toegang te ontnemen, en een verzekeraar die vraagt waarom de basisregel niet is gevolgd.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NO ATTRIBUTION · PASSWORD NEVER CHANGES · LEAVERS KEEP ACCESS</span><span class="nl">GEEN TOEREKENING · WACHTWOORD WIJZIGT NOOIT · VERTREKKERS HOUDEN TOEGANG</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: NAMED ACCOUNTS ONLY + PRIVILEGED ACCESS MANAGEMENT</span><span class="nl">OPLOSSING: ALLEEN PERSOONLIJKE ACCOUNTS + PRIVILEGED ACCESS MANAGEMENT</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>puts rights back in order.</em></span>
+      <span class="nl">Wat <em>de rechten weer op orde brengt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">the tooling exists in every platform — the work is deciding who needs what</span>
+      <span class="nl">de tooling zit in elk platform — het werk is beslissen wie wat nodig heeft</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">INVENTORY</span><span class="nl">REGISTER</span></span>
+        <span class="chip c2"><span class="en">LEAST PRIVILEGE</span><span class="nl">LEAST PRIVILEGE</span></span>
+        <span class="chip c3"><span class="en">SOD MATRIX</span><span class="nl">FUNCTIESCHEIDING</span></span>
+        <span class="chip c4">PAM</span>
+        <span class="chip c5"><span class="en">ACCESS CERTIFICATION</span><span class="nl">TOEGANGSCERTIFICERING</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Fixes</th><th>In one line</th></tr>
+        <tr><td class="ctl">Identity inventory</td><td>Orphans (01)</td><td>Every account, human or not, listed with a named owner who is asked yearly whether it should still exist. No owner means it is switched off.</td></tr>
+        <tr><td class="ctl">Secrets vault</td><td>Orphans (01)</td><td>Passwords and keys for service accounts live in a vault, rotate automatically, and are short-lived where the platform allows. Nothing in scripts or spreadsheets.</td></tr>
+        <tr><td class="ctl">Least-privilege roles</td><td>Wildcards (02)</td><td>Roles built from what the job actually does, no wildcards, and every widening of a role reviewed by a second person before it takes effect.</td></tr>
+        <tr><td class="ctl">SoD matrix</td><td>Two hats (03)</td><td>A written list of right combinations no single account may hold, enforced by the ERP itself, with finance signing off on any exception.</td></tr>
+        <tr><td class="ctl">Named accounts + PAM</td><td>Shared (04)</td><td>Only personal accounts. Administrator rights checked out for a task and time, with sessions recorded and the shared admin@ account retired.</td></tr>
+        <tr><td class="ctl">Access certification</td><td>All four</td><td>Business owners, not IT, confirm quarterly who may reach their data and their processes. Anything not confirmed is removed.</td></tr>
+        <tr><td class="ctl">Joiner-mover-leaver</td><td>01 · 03 · 04</td><td>HR events drive access automatically: a move removes the old role before adding the new one; a leaver is gone the same day, service accounts included.</td></tr>
+        <tr><td class="ctl">Privilege alerts</td><td>02 · 04</td><td>Any new administrator, any widened role, any new wildcard raises an alert to someone who checks it against a ticket.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Lost op</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Identiteitenregister</td><td>Wezen (01)</td><td>Elk account, mens of niet, staat op een lijst met een eigenaar die jaarlijks wordt gevraagd of het nog moet bestaan. Geen eigenaar betekent uitzetten.</td></tr>
+        <tr><td class="ctl">Secrets vault</td><td>Wezen (01)</td><td>Wachtwoorden en sleutels van serviceaccounts staan in een vault, roteren automatisch en zijn kortlevend waar het platform dat toelaat. Niets in scripts of spreadsheets.</td></tr>
+        <tr><td class="ctl">Least-privilege-rollen</td><td>Wildcards (02)</td><td>Rollen opgebouwd uit wat de functie echt doet, zonder wildcards, en elke verruiming beoordeeld door een tweede persoon voordat ze ingaat.</td></tr>
+        <tr><td class="ctl">Functiescheidingsmatrix</td><td>Twee petten (03)</td><td>Een vastgelegde lijst van rechtencombinaties die geen enkel account mag hebben, afgedwongen door het ERP zelf, met finance die elke uitzondering tekent.</td></tr>
+        <tr><td class="ctl">Persoonlijke accounts + PAM</td><td>Gedeeld (04)</td><td>Alleen persoonlijke accounts. Beheerdersrechten worden per taak en tijd uitgecheckt, sessies worden opgenomen en het gedeelde admin@-account gaat met pensioen.</td></tr>
+        <tr><td class="ctl">Toegangscertificering</td><td>Alle vier</td><td>Proceseigenaren, niet IT, bevestigen elk kwartaal wie bij hun data en processen mag. Wat niet bevestigd wordt, verdwijnt.</td></tr>
+        <tr><td class="ctl">Joiner-mover-leaver</td><td>01 · 03 · 04</td><td>HR-gebeurtenissen sturen de toegang automatisch: bij een overstap verdwijnt de oude rol vóór de nieuwe erbij komt; een vertrekker is dezelfde dag weg, serviceaccounts inbegrepen.</td></tr>
+        <tr><td class="ctl">Rechtenalarm</td><td>02 · 04</td><td>Elke nieuwe beheerder, elke verruimde rol, elke nieuwe wildcard geeft een melding aan iemand die het naast een ticket legt.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> every breach ends with someone using a right they should not have had. Two questions settle it: who owns the list of who may do what, and when did a business owner, not IT, last sign it off. If the answer to either is a shrug, the rights are whatever they have grown into.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> elke inbraak eindigt met iemand die een recht gebruikt dat hij niet had mogen hebben. Twee vragen beslissen het: wie is eigenaar van de lijst van wie wat mag, en wanneer heeft een proceseigenaar, niet IT, die voor het laatst afgetekend. Is het antwoord op een van beide een schouderophalen, dan zijn de rechten wat ze toevallig geworden zijn.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Rights accumulate by default. Any organisation older than a few years has orphaned accounts, wide roles and at least one shared login.</span><span class="nl">Rechten stapelen zich vanzelf op. Elke organisatie van meer dan een paar jaar oud heeft verweesde accounts, ruime rollen en minstens één gedeelde inlog.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">From payment fraud to full compromise, because rights decide what a stolen account can do. Plus audit findings that were avoidable.</span><span class="nl">Van betaalfraude tot volledige overname, omdat rechten bepalen wat een gestolen account kan. Plus auditbevindingen die te vermijden waren.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Middel</span></span><p><span class="en">Accounts will still be stolen. Least privilege and segregation limit what the thief gains to one application or one half of a transaction.</span><span class="nl">Accounts worden nog steeds gestolen. Least privilege en functiescheiding beperken de buit tot één applicatie of één helft van een transactie.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CIO / CFO</span><span class="nl">CIO / CFO</span></span><p><span class="en">IT runs the tooling. The business owns who needs what, and finance owns segregation of duties in the systems that move money.</span><span class="nl">IT beheert de tooling. De business is eigenaar van wie wat nodig heeft, en finance van de functiescheiding in de systemen die geld verplaatsen.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">number of non-human identities without a named owner · % of privileged roles containing a wildcard · open segregation-of-duties conflicts in the ERP · days since the last completed access certification.</span><span class="nl">aantal non-human identities zonder eigenaar · % bevoorrechte rollen met een wildcard · openstaande functiescheidingsconflicten in het ERP · dagen sinds de laatste afgeronde toegangscertificering.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Excessive, orphaned or shared access rights allow a single compromised or dishonest account to reach data and move money far beyond its job.”</span><span class="nl">“Overmatige, verweesde of gedeelde toegangsrechten stellen één gecompromitteerd of oneerlijk account in staat data te bereiken en geld te verplaatsen ver buiten zijn functie.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Access control and identity management are named risk management measures, including MFA and the handling of privileged and service accounts. Management approves the policy and is accountable for it.</td><td>Ask how the supplier’s staff reach your environment: named accounts, MFA, and revocation when their people leave. A shared vendor login is your finding too.</td><td>Misuse of a privileged account that causes a significant incident triggers the 24-hour early warning, 72-hour notification and one-month report. The first question will be who owned that account.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities the ICT risk framework must cover access management, privileged access and periodic reviews, and the register of ICT third parties lists what each provider may reach.</td><td>A report rarely shows which of the provider’s engineers hold rights in your tenant. Ask for the list, and put access limits and revocation in the contract DORA requires.</td><td>Fraud or data loss through excessive rights can be a major ICT incident: notification within hours of classification, intermediate report at 72 hours, final report within a month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Logical access is the largest set of criteria: provisioning, removal, privileged access and periodic reviews are all tested over the period, and service accounts are in scope.</td><td>Look for exceptions on access reviews and terminations; they are the most common ones. Then read the complementary user entity controls: you administer your own users in their platform.</td><td>An access review that should have caught the account becomes a noted exception or a qualified opinion, and customers will ask for evidence of the review and the remediation.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Where an outsourced process touches financial reporting, the auditor tests who could change the numbers: segregation of duties and privileged access at the service organisation.</td><td>Check whether segregation of duties and access control objectives are in scope and whether the exceptions concern them. The report says nothing about wildcard roles in the cloud.</td><td>Payment fraud through conflicting rights is a control failure disclosed to the user auditors, and can spill into your own financial statement audit.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Toegangsbeheer en identiteitsbeheer zijn benoemde risicobeheersmaatregelen, inclusief MFA en de omgang met bevoorrechte en serviceaccounts. Het bestuur keurt het beleid goed en is er verantwoordelijk voor.</td><td>Vraag hoe de medewerkers van de leverancier uw omgeving bereiken: persoonlijke accounts, MFA, en intrekking als hun mensen vertrekken. Een gedeelde leverancierslogin is ook uw bevinding.</td><td>Misbruik van een bevoorrecht account dat een significant incident veroorzaakt, start de vroegtijdige waarschuwing binnen 24 uur, de melding binnen 72 uur en het eindrapport binnen een maand. De eerste vraag zal zijn wie eigenaar van dat account was.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen moet het ICT-risicokader toegangsbeheer, bevoorrechte toegang en periodieke reviews omvatten, en het register van ICT-derden vermeldt wat elke leverancier mag bereiken.</td><td>Een rapport laat zelden zien welke engineers van de leverancier rechten in uw tenant hebben. Vraag de lijst op, en leg toegangsgrenzen en intrekking vast in het contract dat DORA vereist.</td><td>Fraude of dataverlies door overmatige rechten kan een ernstig ICT-incident zijn: melding binnen enkele uren na classificatie, tussenrapport na 72 uur, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Logische toegang is de grootste set criteria: toekennen, intrekken, bevoorrechte toegang en periodieke reviews worden over de periode getest, en serviceaccounts vallen binnen de scope.</td><td>Let op afwijkingen bij toegangsreviews en uitdiensttredingen; dat zijn de meest voorkomende. Lees daarna de complementary user entity controls: u beheert zelf uw gebruikers in hun platform.</td><td>Een toegangsreview die het account had moeten vangen, wordt een genoteerde afwijking of een oordeel met beperking, en klanten vragen om bewijs van de review en het herstel.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Waar een uitbesteed proces de financiële verslaggeving raakt, toetst de auditor wie de cijfers zou kunnen wijzigen: functiescheiding en bevoorrechte toegang bij de serviceorganisatie.</td><td>Controleer of functiescheiding en toegangsbeheer als beheersdoelstellingen in scope zijn en of de afwijkingen daarover gaan. Het rapport zegt niets over wildcard-rollen in de cloud.</td><td>Betaalfraude via conflicterende rechten is een tekortkoming die aan de auditors van de klanten wordt gemeld, en kan doorwerken in uw eigen jaarrekeningcontrole.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">IAM BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">IAM BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

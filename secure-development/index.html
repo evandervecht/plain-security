@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Building software that holds // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   SECURE DEVELOPMENT // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 8s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+.tagline{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px;z-index:4}
+
+/* --- scene 1 : secrets in code --- */
+.s1 .code{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:290px;padding:14px 18px;background:var(--deep);border:1px solid var(--line);font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--muted);z-index:2;text-align:left}
+.s1 .code b{color:var(--white);font-weight:500}
+.s1 .code .sec{display:inline-block;padding:0 5px;color:var(--bad-soft);border:1px solid rgba(255,93,115,.5);animation:glow 8s ease-in-out infinite}
+@keyframes glow{0%,30%{background:transparent}40%,100%{background:rgba(255,93,115,.22)}}
+.s1 .key{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:20px;background:var(--white);border:1px solid #9fb3c0;animation:keyout 8s linear infinite}
+@keyframes keyout{0%,38%{left:calc(50% + 110px);opacity:0}44%{opacity:1}90%{left:calc(100% - 170px);opacity:1}100%{left:calc(100% - 170px);opacity:0}}
+.s1 .tagline{top:calc(50% + 52px)}
+
+/* --- scene 2 : the pipeline --- */
+.s2 .build{position:absolute;left:50%;top:50%;width:80px;height:80px;margin:-40px 0 0 -40px;display:grid;place-items:center;font-size:32px;background:var(--surface);border:1px solid var(--line);z-index:2;animation:taken 8s ease-in-out infinite}
+@keyframes taken{0%,34%{border-color:var(--line);background:var(--surface)}42%,100%{border-color:var(--bad);background:rgba(255,93,115,.22)}}
+.s2 .blabel{position:absolute;left:50%;top:calc(50% + 48px);transform:translateX(-50%);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;white-space:nowrap}
+.s2 .pkg{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--white);border:1px solid #9fb3c0;animation:pkgin 8s linear infinite}
+@keyframes pkgin{0%{left:118px;opacity:0}6%{opacity:1}30%{left:calc(50% - 26px);opacity:1}36%,100%{left:calc(50% - 26px);opacity:0}}
+.s2 .pkg.bad{background:var(--bad);color:var(--white);animation:pkgout 8s linear infinite}
+@keyframes pkgout{0%,44%{left:calc(50% + 40px);opacity:0}50%{opacity:1}92%{left:calc(100% - 170px);opacity:1}100%{left:calc(100% - 170px);opacity:0}}
+.s2 .hacker{left:50%;margin-left:-31px;top:22px}
+.s2 .hacker .tag{bottom:auto;top:-26px}
+
+/* --- scene 3 : tested once a year --- */
+.s3 .tl{position:absolute;left:70px;right:70px;top:50%;height:2px;background:var(--line)}
+.s3 .m{position:absolute;top:calc(50% + 14px);font-size:9.5px;letter-spacing:.14em;color:var(--slate);transform:translateX(-50%)}
+.s3 .mark{position:absolute;top:calc(50% - 64px);transform:translateX(-50%);font-size:9.5px;letter-spacing:.2em;font-weight:700;padding:4px 9px;white-space:nowrap}
+.s3 .mark::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:48px;background:var(--line)}
+.s3 .mark.rel{background:var(--good);color:#04291d}
+.s3 .mark.pen{background:var(--warn);color:#33240a}
+.s3 .bug{position:absolute;top:calc(50% - 16px);transform:translateX(-50%);font-size:18px;opacity:0;animation:hatch 9s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes hatch{0%{opacity:0;margin-top:8px}5%{opacity:1;margin-top:0}80%{opacity:1}86%,100%{opacity:0}}
+.s3 .cost{position:absolute;left:50%;transform:translateX(-50%);top:26px;text-align:center;font-family:var(--sans);font-weight:800;font-size:26px;color:var(--bad-soft);animation:fadeIn 9s ease-in-out infinite}
+.s3 .cost small{display:block;font-family:var(--mono);font-weight:700;font-size:9.5px;letter-spacing:.2em;color:var(--muted)}
+
+/* --- scene 4 : built and abandoned --- */
+.s4 .agency{animation:leave 8s ease-in-out infinite}
+@keyframes leave{0%,25%{opacity:1}45%,100%{opacity:.18}}
+.s4 .app{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:230px;padding:16px 18px;background:var(--surface);border:1px solid var(--line);z-index:2;text-align:left}
+.s4 .app .who{font-family:var(--sans);font-weight:700;font-size:15px;color:var(--white)}
+.s4 .app .addr{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:2px}
+.s4 .app .note{margin-top:10px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--bad-soft);line-height:1.5}
+.s4 .warn{position:absolute;left:calc(50% + 124px);width:30px;height:30px;display:grid;place-items:center;font-size:16px;background:var(--warn);color:#33240a;border:1px solid var(--deep);z-index:3;opacity:0;animation:pile 8s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes pile{0%{opacity:0;transform:translateY(-14px)}6%{opacity:1;transform:translateY(0)}84%{opacity:1}92%,100%{opacity:0}}
+.s4 .node.right .box{animation:blinkq 2.2s steps(1) infinite}
+@keyframes blinkq{0%,60%{opacity:1}61%,100%{opacity:.3}}
+.s4 .tagline{top:22px}
+
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .code .sec{background:rgba(255,93,115,.22)}
+  .s1 .key{left:calc(100% - 170px);opacity:1}
+  .s2 .build{border-color:var(--bad);background:rgba(255,93,115,.22)}
+  .s2 .pkg{display:none}.s2 .pkg.bad{display:grid;left:calc(100% - 170px);opacity:1}
+  .s3 .bug{opacity:1}.s3 .cost{opacity:1}
+  .s4 .agency{opacity:.18}.s4 .warn{opacity:1}
+  .banner{opacity:1}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> PLAIN SECURITY <span style="color:var(--slate)">//</span> DEV</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">SECRETS</span><span class="nl">GEHEIMEN</span></a>
+      <a href="#r2"><span class="en">PIPELINE</span><span class="nl">PIPELINE</span></a>
+      <a href="#r3"><span class="en">TESTING</span><span class="nl">TESTEN</span></a>
+      <a href="#r4"><span class="en">OWNERSHIP</span><span class="nl">EIGENAARSCHAP</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Building software <em>that holds.</em></span>
+      <span class="nl">Software bouwen <em>die standhoudt.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Most of the software we run was built by us or for us. Four ways it fails long before anyone attacks it — and the one control that closes each gap.</span>
+      <span class="nl">De meeste software die we draaien is door of voor ons gebouwd. Vier manieren waarop ze faalt lang voordat iemand aanvalt — en de ene maatregel die elk gat sluit.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FOUR</span><span class="nl">BEKIJK DE VIER</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT CLOSES THEM</span><span class="nl">WAT ZE SLUIT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">The password is <em>in the code.</em></span>
+      <span class="nl">Het wachtwoord staat <em>in de code.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">secrets in source code / leaked credentials</span>
+      <span class="nl">geheimen in broncode / gelekte inloggegevens</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">THE REPOSITORY</span><span class="nl">DE REPOSITORY</span></div>
+      <div class="node left"><div class="box">📁</div><span class="en">Our source code</span><span class="nl">Onze broncode</span></div>
+      <div class="node right"><div class="box">🕵️</div><span class="en">Scanner bot</span><span class="nl">Scannerbot</span></div>
+      <div class="wire"></div>
+      <div class="code">
+        <b>db_host</b> = "prod-db-01"<br>
+        <b>db_user</b> = "admin"<br>
+        <b>db_pass</b> = <span class="sec">"Summer2024!"</span><br>
+        <b>api_key</b> = <span class="sec">"sk-live-9f3…"</span>
+      </div>
+      <div class="tagline"><span class="en">COMMITTED 3 YEARS AGO · STILL VALID</span><span class="nl">3 JAAR GELEDEN VASTGELEGD · NOG GELDIG</span></div>
+      <div class="key">🔑</div>
+      <div class="banner"><span class="en">FOUND BY A BOT WITHIN MINUTES OF LEAKING</span><span class="nl">BINNEN MINUTEN NA HET LEK DOOR EEN BOT GEVONDEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Developers need passwords and keys to make software talk to databases and cloud services. The fastest way to make it work is to type them straight into the code. That code is copied to every developer's laptop, to the build server, to backups, and often to an external agency. If the repository is ever made public by accident, or one laptop is stolen, automated bots find the keys within minutes and try them. Keys committed years ago usually still work.</p>
+      <p class="en"><strong>Business impact:</strong> a single leaked key can be direct access to the production database or the cloud account, with no password guessing and no alarm. The fix is not discipline but plumbing: a vault that hands out secrets at run time, and a scanner that blocks a commit containing one.</p>
+      <p class="nl">Ontwikkelaars hebben wachtwoorden en sleutels nodig om software met databases en clouddiensten te laten praten. De snelste manier om het werkend te krijgen is ze rechtstreeks in de code te typen. Die code wordt gekopieerd naar elke ontwikkelaarslaptop, naar de bouwserver, naar back-ups en vaak naar een extern bureau. Wordt de repository per ongeluk openbaar, of wordt één laptop gestolen, dan vinden geautomatiseerde bots de sleutels binnen minuten en proberen ze uit. Sleutels van jaren geleden werken meestal nog.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> één gelekte sleutel kan directe toegang tot de productiedatabase of het cloudaccount betekenen, zonder wachtwoorden raden en zonder alarm. De oplossing is geen discipline maar loodgieterswerk: een kluis die geheimen pas tijdens het draaien uitgeeft, en een scanner die een commit met een geheim erin blokkeert.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">DIRECT ACCESS · NO ALARM · YEARS OLD</span><span class="nl">DIRECTE TOEGANG · GEEN ALARM · JAREN OUD</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: SECRET SCANNING + A VAULT, NO SECRETS IN CODE</span><span class="nl">OPLOSSING: SECRET SCANNING + EEN KLUIS, GEEN GEHEIMEN IN CODE</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">Whoever owns the build server <em>owns every customer.</em></span>
+      <span class="nl">Wie de bouwserver heeft, <em>heeft elke klant.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">pipeline compromise / build integrity</span>
+      <span class="nl">pipelinecompromittering / integriteit van de build</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">THE PIPELINE</span><span class="nl">DE PIPELINE</span></div>
+      <div class="node left"><div class="box">💾</div><span class="en">Our code</span><span class="nl">Onze code</span></div>
+      <div class="node right"><div class="box">🏢</div><span class="en">Every customer</span><span class="nl">Elke klant</span></div>
+      <div class="wire"></div>
+      <div class="build">🏗️</div>
+      <div class="blabel"><span class="en">Build server</span><span class="nl">Bouwserver</span></div>
+      <div class="pkg">📦</div>
+      <div class="pkg bad">☠</div>
+      <div class="actor hacker pulse">🕵️<span class="tag"><span class="en">ONE ACCOUNT, NO MFA</span><span class="nl">ÉÉN ACCOUNT, GEEN MFA</span></span></div>
+      <div class="banner"><span class="en">SIGNED BY US · SHIPPED TO ALL · TRUSTED EVERYWHERE</span><span class="nl">DOOR ONS ONDERTEKEND · NAAR IEDEREEN · OVERAL VERTROUWD</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Between the code and the customer sits a chain of machines that compile, test, package and publish every release. It runs unattended, with broad rights, and rarely gets the attention the production systems get. An attacker who controls it does not need to break our software: they add a few lines during the build. The result is signed with our certificate, installed by every customer, and trusted by every security product on their side.</p>
+      <p class="en"><strong>Business impact:</strong> we become the supply chain attack on our own customers. Liability, recall of a release, and a loss of trust that outlasts the technical fix. The pipeline deserves the same protection as production: MFA on every account, least privilege for build jobs, and releases that are signed and verified, not just uploaded.</p>
+      <p class="nl">Tussen de code en de klant staat een keten van machines die elke release compileert, test, verpakt en publiceert. Die draait onbeheerd, met ruime rechten, en krijgt zelden de aandacht die productiesystemen krijgen. Een aanvaller die haar beheerst hoeft onze software niet te kraken: hij voegt tijdens het bouwen een paar regels toe. Het resultaat is ondertekend met ons certificaat, geïnstalleerd door elke klant en vertrouwd door elk beveiligingsproduct aan hun kant.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> wij worden de supply-chainaanval op onze eigen klanten. Aansprakelijkheid, het terugroepen van een release, en een vertrouwensbreuk die de technische fix overleeft. De pipeline verdient dezelfde bescherming als productie: MFA op elk account, minimale rechten voor bouwtaken, en releases die ondertekend en geverifieerd worden, niet alleen geüpload.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">OUR SIGNATURE ON THEIR MALWARE · EVERY CUSTOMER AT ONCE</span><span class="nl">ONZE HANDTEKENING OP HUN MALWARE · ALLE KLANTEN TEGELIJK</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: PROTECTED PIPELINE + SIGNED BUILDS + LEAST PRIVILEGE</span><span class="nl">OPLOSSING: BESCHERMDE PIPELINE + ONDERTEKENDE BUILDS + MINIMALE RECHTEN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">Tested once a year, <em>after it shipped.</em></span>
+      <span class="nl">Eén keer per jaar getest, <em>nadat het live ging.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">late security testing / cost of a late fix</span>
+      <span class="nl">te laat testen / de prijs van een late fix</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">ONE YEAR</span><span class="nl">ÉÉN JAAR</span></div>
+      <div class="tl"></div>
+      <div class="m" style="left:9%">JAN</div><div class="m" style="left:30%">APR</div><div class="m" style="left:51%">JUL</div><div class="m" style="left:72%">OKT</div><div class="m" style="left:93%">DEC</div>
+      <div class="mark rel" style="left:16%">RELEASE</div>
+      <div class="mark pen" style="left:90%">PENTEST</div>
+      <div class="bug" style="left:24%;--d:.5s">🐛</div>
+      <div class="bug" style="left:36%;--d:1.6s">🐛</div>
+      <div class="bug" style="left:47%;--d:2.7s">🐛</div>
+      <div class="bug" style="left:58%;--d:3.6s">🐛</div>
+      <div class="bug" style="left:69%;--d:4.5s">🐛</div>
+      <div class="bug" style="left:80%;--d:5.4s">🐛</div>
+      <div class="cost">× 10<small><span class="en">COST TO FIX NOW</span><span class="nl">KOSTEN OM NU TE FIXEN</span></small></div>
+      <div class="banner"><span class="en">LIVE FOR TEN MONTHS BEFORE ANYONE LOOKED</span><span class="nl">TIEN MAANDEN LIVE VOORDAT IEMAND KEEK</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Many organisations test security the way they pass a driving test: once, formally, after the fact. A penetration test months after release finds the flaws that were cheap to fix during design and are now expensive: the code is live, customers depend on it, and the team has moved on. Meanwhile the flaws have been reachable from the internet the whole time.</p>
+      <p class="en"><strong>Business impact:</strong> the same defect costs a fraction to fix when it is found at design time, and multiples once it is in production with data behind it. Security has to move into the way software is built: requirements in the definition of done, automated checks on every change, and a short threat-modelling session for any feature that handles money or personal data. The yearly pentest then confirms instead of discovers.</p>
+      <p class="nl">Veel organisaties testen beveiliging zoals je een rijexamen doet: één keer, formeel, achteraf. Een penetratietest maanden na de release vindt de fouten die tijdens het ontwerp goedkoop te herstellen waren en nu duur zijn: de code is live, klanten zijn ervan afhankelijk en het team is doorgegaan. Ondertussen waren de fouten de hele tijd vanaf internet bereikbaar.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> hetzelfde gebrek kost een fractie om te herstellen als het bij het ontwerp wordt gevonden, en een veelvoud zodra het in productie staat met data erachter. Beveiliging moet in de manier van bouwen zitten: eisen in de definition of done, geautomatiseerde controles op elke wijziging, en een korte threat-modellingsessie voor elke functie die geld of persoonsgegevens verwerkt. De jaarlijkse pentest bevestigt dan in plaats van ontdekt.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">EXPOSED FOR MONTHS · TEN TIMES THE FIX COST</span><span class="nl">MAANDEN BLOOTGESTELD · TIEN KEER DE HERSTELKOSTEN</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: SECURITY IN THE DEFINITION OF DONE + AUTOMATED CHECKS</span><span class="nl">OPLOSSING: BEVEILIGING IN DE DEFINITION OF DONE + AUTOMATISCHE CONTROLES</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">The people who built it <em>are gone.</em></span>
+      <span class="nl">De mensen die het bouwden <em>zijn weg.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">orphaned applications / no owner, no maintenance</span>
+      <span class="nl">verweesde applicaties / geen eigenaar, geen onderhoud</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">THREE YEARS LATER</span><span class="nl">DRIE JAAR LATER</span></div>
+      <div class="node left agency"><div class="box">🏢</div><span class="en">The agency</span><span class="nl">Het bureau</span></div>
+      <div class="node right"><div class="box">❓</div><span class="en">Owner</span><span class="nl">Eigenaar</span></div>
+      <div class="app">
+        <div class="who"><span class="en">Customer portal</span><span class="nl">Klantportaal</span></div>
+        <div class="addr">v2.3 · 2021 · <span class="en">last change 34 months ago</span><span class="nl">laatste wijziging 34 maanden geleden</span></div>
+        <div class="note"><span class="en">47 known vulnerabilities · no budget line</span><span class="nl">47 bekende kwetsbaarheden · geen budgetpost</span></div>
+      </div>
+      <div class="warn" style="top:52px;--d:.4s">⚠</div>
+      <div class="warn" style="top:86px;--d:1.4s">⚠</div>
+      <div class="warn" style="top:120px;--d:2.4s">⚠</div>
+      <div class="warn" style="top:154px;--d:3.4s">⚠</div>
+      <div class="tagline"><span class="en">CONTRACT ENDED · NOBODY UNDERSTANDS THE CODE</span><span class="nl">CONTRACT AFGELOPEN · NIEMAND BEGRIJPT DE CODE</span></div>
+      <div class="banner"><span class="en">STILL LIVE · STILL HOLDING CUSTOMER DATA</span><span class="nl">NOG LIVE · NOG VOL KLANTGEGEVENS</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Software is bought like a project and behaves like a pet. The agency delivers, the contract ends, the internal sponsor changes jobs, and the application keeps running for years with nobody assigned to it. Its components age, security advisories pile up unread, and when a fix is finally needed nobody can safely change the code. The portal still holds every customer record it ever collected.</p>
+      <p class="en"><strong>Business impact:</strong> an orphaned application is an unpatchable system with a public face. Every piece of software that runs in production needs a named owner, a maintenance budget that survives the project, and an exit plan: either it is maintained or it is switched off. “Nobody owns it” is the finding an auditor writes down first.</p>
+      <p class="nl">Software wordt gekocht als een project en gedraagt zich als een huisdier. Het bureau levert op, het contract loopt af, de interne opdrachtgever wisselt van baan, en de applicatie draait jaren door zonder dat iemand ervoor verantwoordelijk is. De onderdelen verouderen, beveiligingswaarschuwingen stapelen zich ongelezen op, en als er eindelijk iets gerepareerd moet worden kan niemand de code veilig aanpassen. Het portaal bevat nog steeds elk klantrecord dat het ooit verzamelde.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een verweesde applicatie is een onpatchbaar systeem met een publiek gezicht. Elk stuk software dat in productie draait heeft een eigenaar met naam nodig, een onderhoudsbudget dat het project overleeft, en een exitplan: óf het wordt onderhouden, óf het gaat uit. “Niemand is eigenaar” is de bevinding die een auditor als eerste opschrijft.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">UNPATCHABLE · PUBLIC · FULL OF DATA</span><span class="nl">ONPATCHBAAR · PUBLIEK · VOL DATA</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: A NAMED OWNER + A MAINTENANCE BUDGET PER APPLICATION</span><span class="nl">OPLOSSING: EEN EIGENAAR MET NAAM + ONDERHOUDSBUDGET PER APPLICATIE</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>closes the gaps.</em></span>
+      <span class="nl">Wat <em>de gaten sluit.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">mostly the way of working, plus tooling the developers already know</span>
+      <span class="nl">vooral de manier van werken, plus tooling die de ontwikkelaars al kennen</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">SECRET SCANNING</span><span class="nl">SECRET SCANNING</span></span>
+        <span class="chip c2"><span class="en">SIGNED BUILDS</span><span class="nl">ONDERTEKENDE BUILDS</span></span>
+        <span class="chip c3"><span class="en">CHECKS IN THE PIPELINE</span><span class="nl">CONTROLES IN DE PIPELINE</span></span>
+        <span class="chip c4"><span class="en">THREAT MODELLING</span><span class="nl">THREAT MODELLING</span></span>
+        <span class="chip c5"><span class="en">NAMED OWNER</span><span class="nl">EIGENAAR MET NAAM</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Closes</th><th>In one line</th></tr>
+        <tr><td class="ctl">Secret scanning + vault</td><td>Secrets (01)</td><td>A scanner blocks any commit that contains a key, and a vault hands secrets to software at run time. No secret lives in code.</td></tr>
+        <tr><td class="ctl">Protected pipeline</td><td>Pipeline (02)</td><td>MFA on every account that can touch the build, least privilege for build jobs, and every release signed and verified before it ships.</td></tr>
+        <tr><td class="ctl">Definition of done</td><td>Testing (03)</td><td>Security requirements are part of “finished”, not a separate phase. A feature with an open security finding is not done.</td></tr>
+        <tr><td class="ctl">Checks in the pipeline</td><td>Testing (03)</td><td>Automated dependency and code scanning on every change. Findings block the release above an agreed severity.</td></tr>
+        <tr><td class="ctl">Threat modelling</td><td>Testing (03)</td><td>One hour with the team before building a feature that handles money or personal data: what could go wrong, and what do we do about it.</td></tr>
+        <tr><td class="ctl">Named owner + budget</td><td>Ownership (04)</td><td>Every application in production has a person and a maintenance budget line. No owner means a switch-off date.</td></tr>
+        <tr><td class="ctl">Pentest + disclosure</td><td>All four</td><td>An independent test before every major release, and a public address where researchers can report a flaw to us first.</td></tr>
+        <tr><td class="ctl">Developer training</td><td>All four</td><td>Short, in the tools they use, about the mistakes that actually occurred here. Not a yearly slide deck.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Sluit</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Secret scanning + kluis</td><td>Geheimen (01)</td><td>Een scanner blokkeert elke commit met een sleutel erin, en een kluis geeft geheimen pas tijdens het draaien aan de software. Geen geheim staat in code.</td></tr>
+        <tr><td class="ctl">Beschermde pipeline</td><td>Pipeline (02)</td><td>MFA op elk account dat bij de build kan, minimale rechten voor bouwtaken, en elke release ondertekend en geverifieerd voordat ze uitgaat.</td></tr>
+        <tr><td class="ctl">Definition of done</td><td>Testen (03)</td><td>Beveiligingseisen horen bij “klaar”, niet bij een aparte fase. Een functie met een open beveiligingsbevinding is niet klaar.</td></tr>
+        <tr><td class="ctl">Controles in de pipeline</td><td>Testen (03)</td><td>Automatische scans van afhankelijkheden en code bij elke wijziging. Bevindingen boven een afgesproken ernst blokkeren de release.</td></tr>
+        <tr><td class="ctl">Threat modelling</td><td>Testen (03)</td><td>Eén uur met het team vóór het bouwen van een functie die geld of persoonsgegevens verwerkt: wat kan er misgaan, en wat doen we eraan.</td></tr>
+        <tr><td class="ctl">Eigenaar + budget</td><td>Eigenaarschap (04)</td><td>Elke applicatie in productie heeft een persoon en een onderhoudsbudgetpost. Geen eigenaar betekent een uitzetdatum.</td></tr>
+        <tr><td class="ctl">Pentest + disclosure</td><td>Alle vier</td><td>Een onafhankelijke test vóór elke grote release, en een publiek adres waar onderzoekers een fout eerst aan ons kunnen melden.</td></tr>
+        <tr><td class="ctl">Training ontwikkelaars</td><td>Alle vier</td><td>Kort, in de tools die ze gebruiken, over de fouten die hier echt zijn gemaakt. Geen jaarlijkse slidedeck.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> software is not a project that ends, it is a liability that needs an owner and a budget for as long as it runs. Ask for the list of applications in production with neither. That list is the real risk register for this topic.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> software is geen project dat eindigt, maar een verplichting die een eigenaar en een budget nodig heeft zolang ze draait. Vraag om de lijst van productieapplicaties die geen van beide hebben. Die lijst is het echte risicoregister voor dit onderwerp.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Secrets in code and orphaned applications exist in almost every organisation that has ever commissioned software. Bots scan for leaked keys continuously.</span><span class="nl">Geheimen in code en verweesde applicaties bestaan in bijna elke organisatie die ooit software heeft laten bouwen. Bots scannen doorlopend op gelekte sleutels.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Direct access to production data, or a poisoned release delivered to every customer under our signature. Liability follows the software we ship.</span><span class="nl">Directe toegang tot productiedata, of een vergiftigde release die onder onze handtekening bij elke klant belandt. Aansprakelijkheid volgt de software die wij leveren.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Middel</span></span><p><span class="en">Flaws will still ship. Scanning, signed builds and ownership mean they are found early, fixed fast and cannot reach every customer unnoticed.</span><span class="nl">Er zullen nog steeds fouten uitgaan. Scanning, ondertekende builds en eigenaarschap zorgen dat ze vroeg worden gevonden, snel gerepareerd en niet ongemerkt elke klant bereiken.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CTO / CIO</span><span class="nl">CTO / CIO</span></span><p><span class="en">Executes through engineering leads. Each business owner who commissioned an application owns its budget line after launch.</span><span class="nl">Uitvoering via de engineeringleads. Elke opdrachtgever die een applicatie liet bouwen is eigenaar van de budgetpost na oplevering.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">% of repositories with secret scanning enforced · number of production applications without a named owner · days from a critical finding to the fix in production · % of releases that are signed and verified.</span><span class="nl">% repositories met afgedwongen secret scanning · aantal productieapplicaties zonder eigenaar met naam · dagen van kritieke bevinding tot fix in productie · % releases dat ondertekend en geverifieerd is.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Insecure software delivery — secrets in code, an unprotected build pipeline, late testing and applications without an owner — leads to exposure of customer data or a compromised release delivered to customers.”</span><span class="nl">“Onveilige softwarelevering — geheimen in code, een onbeschermde bouwpipeline, te laat testen en applicaties zonder eigenaar — leidt tot blootstelling van klantgegevens of een gecompromitteerde release bij klanten.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Security in the acquisition, development and maintenance of systems is a named measure, including how vulnerabilities are handled and disclosed. Management approves the approach and is accountable.</td><td>Ask the agency or vendor how they handle vulnerabilities in what they built for you, and put maintenance, patching and a disclosure route in the contract. A finished project is not a finished obligation.</td><td>A leaked key or a poisoned release that affects customers is a significant incident: early warning within 24 hours, notification within 72, final report within a month. Customers who received the release must be warned. Confirm with legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities: a policy for acquisition, development and maintenance of ICT systems, testing before deployment, and source-code security for critical functions.</td><td>Outsourced development is an ICT third-party arrangement: it belongs in the register with the prescribed clauses, including access to the code and an exit plan if the developer disappears.</td><td>A compromised release or exposed data in a critical function is a major ICT incident: initial notification within hours of classification, intermediate report within 72 hours, final report within a month. Confirm with legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Change management and the development lifecycle are core: code review, separation between development and production, controlled deployment, and vulnerability management, all tested over the period.</td><td>Read the change-management controls and their exceptions. Emergency changes and access to the pipeline are where deviations hide. The complementary user entity controls tell you what you must approve yourself.</td><td>An unauthorised change or a leaked credential becomes an exception in the next report. Auditors trace how it entered the pipeline, and customers ask for a bridge letter and a root-cause analysis.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant where the software touches financial reporting: program changes must be authorised, tested and approved, and access to production code restricted.</td><td>Check whether program-change controls cover the application you rely on. The report often expects you to approve changes yourself; if nobody does, that is your gap, not theirs.</td><td>An unauthorised or untested change becomes a control deficiency in the period and must be disclosed to the user auditors, who will ask what it did to the numbers.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Beveiliging bij het verwerven, ontwikkelen en onderhouden van systemen is een benoemde maatregel, inclusief hoe kwetsbaarheden worden afgehandeld en gemeld. Het bestuur keurt de aanpak goed en is aansprakelijk.</td><td>Vraag het bureau of de leverancier hoe zij omgaan met kwetsbaarheden in wat zij voor u bouwden, en leg onderhoud, patching en een meldroute vast in het contract. Een afgerond project is geen afgeronde verplichting.</td><td>Een gelekte sleutel of een vergiftigde release die klanten raakt is een significant incident: vroegtijdige waarschuwing binnen 24 uur, melding binnen 72 uur, eindrapport binnen een maand. Klanten die de release ontvingen moeten worden gewaarschuwd. Bevestig met legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: beleid voor het verwerven, ontwikkelen en onderhouden van ICT-systemen, testen vóór ingebruikname, en beveiliging van broncode voor kritieke functies.</td><td>Uitbestede ontwikkeling is een ICT-derdenovereenkomst: die hoort in het register met de voorgeschreven bepalingen, inclusief toegang tot de code en een exitplan als de ontwikkelaar verdwijnt.</td><td>Een gecompromitteerde release of blootgestelde data in een kritieke functie is een ernstig ICT-incident: eerste melding binnen enkele uren na classificatie, tussenrapport binnen 72 uur, eindrapport binnen een maand. Bevestig met legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Wijzigingsbeheer en de ontwikkelcyclus zijn kern: codereview, scheiding tussen ontwikkeling en productie, beheerste uitrol en kwetsbaarheidsbeheer, allemaal over de periode getest.</td><td>Lees de maatregelen voor wijzigingsbeheer en hun afwijkingen. Noodwijzigingen en toegang tot de pipeline zijn waar afwijkingen zich verbergen. De complementary user entity controls zeggen wat u zelf moet goedkeuren.</td><td>Een ongeautoriseerde wijziging of een gelekt wachtwoord wordt een afwijking in het volgende rapport. Auditors volgen hoe het de pipeline binnenkwam, en klanten vragen om een bridge letter en een oorzaakanalyse.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant waar de software de financiële verslaggeving raakt: programmawijzigingen moeten geautoriseerd, getest en goedgekeurd zijn, en toegang tot productiecode beperkt.</td><td>Controleer of de maatregelen voor programmawijzigingen de applicatie dekken waarop u vertrouwt. Het rapport verwacht vaak dat u wijzigingen zelf goedkeurt; doet niemand dat, dan is dat uw gat, niet het hunne.</td><td>Een ongeautoriseerde of ongeteste wijziging wordt een tekortkoming in de periode en moet aan de auditors van de klanten worden gemeld, die vragen wat het met de cijfers heeft gedaan.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">SECURE DEVELOPMENT BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">SECURE DEVELOPMENT BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
