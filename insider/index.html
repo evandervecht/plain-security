@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insider threat // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   INSIDER THREAT // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : the leaver --- */
+.s1 .doc{position:absolute;top:50%;width:44px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--white);border:1px solid #9fb3c0;color:var(--deep);animation:carry 6s linear infinite}
+.s1 .doc.b{animation-delay:2s}.s1 .doc.c{animation-delay:4s}
+@keyframes carry{0%{left:118px;opacity:0}8%{opacity:1}92%{opacity:1}100%{left:calc(100% - 162px);opacity:0}}
+.s1 .leaver{left:50%;margin-left:-31px;top:28px}
+.s1 .cal{position:absolute;right:20px;top:14px;font-size:10px;letter-spacing:.2em;font-weight:700;color:var(--warn);background:rgba(255,200,87,.1);border:1px solid rgba(255,200,87,.45);padding:5px 10px}
+.s1 .banner{animation:fadeIn 6s ease-in-out infinite}
+
+/* --- scene 2 : the honest mistake --- */
+.s2 .env{animation:send 7.5s ease-in-out infinite}
+@keyframes send{0%{left:118px}38%{left:calc(50% - 26px)}58%{left:calc(50% - 26px)}100%{left:calc(100% - 170px)}}
+.val{position:absolute;top:50%;left:50%;transform:translate(-50%,-74px);font-size:13px;font-weight:700;letter-spacing:.08em;padding:8px 14px;white-space:nowrap;font-family:var(--mono)}
+.val.orig{background:rgba(55,211,155,.14);border:1px solid rgba(55,211,155,.45);color:#8ff0cd;animation:showA 7.5s ease-in-out infinite}
+.val.fake{background:rgba(255,93,115,.16);border:1px solid rgba(255,93,115,.5);color:var(--bad-soft);animation:showB 7.5s ease-in-out infinite}
+@keyframes showA{0%,44%{opacity:1}50%,100%{opacity:0}}
+@keyframes showB{0%,46%{opacity:0}54%,100%{opacity:1}}
+.s2 .banner{animation:fadeIn 7.5s ease-in-out infinite}
+
+/* --- scene 3 : the unwatched admin --- */
+.s3 .act{position:absolute;top:50%;margin-top:-16px;z-index:3;font-size:10px;letter-spacing:.16em;font-weight:700;padding:8px 12px;white-space:nowrap;background:var(--bg-lo);border:1px solid rgba(255,200,87,.5);color:var(--warn);opacity:0;animation:act 9s ease-in-out infinite}
+.s3 .act.a{left:24%;animation-delay:0s}.s3 .act.b{left:44%;animation-delay:1.5s}.s3 .act.c{left:63%;animation-delay:3s}
+@keyframes act{0%{opacity:0;transform:translateY(8px)}8%{opacity:1;transform:translateY(0)}75%{opacity:1}85%,100%{opacity:0}}
+.s3 .eye{position:absolute;left:50%;top:26px;transform:translateX(-50%);font-size:30px;filter:grayscale(1);opacity:.35}
+.s3 .eye::after{content:"";position:absolute;left:-6px;top:50%;width:48px;height:3px;background:var(--bad);transform:rotate(-35deg)}
+.s3 .banner{animation:fadeIn 9s ease-in-out infinite}
+
+/* --- scene 4 : the pressured employee --- */
+.s4 .env.a{animation:offer 8s ease-in-out infinite}
+.s4 .env.b{animation:sell 8s ease-in-out infinite;opacity:0}
+@keyframes offer{0%{left:118px;opacity:0}6%{opacity:1}42%{left:calc(100% - 170px);opacity:1}50%,100%{left:calc(100% - 170px);opacity:0}}
+@keyframes sell{0%,52%{left:calc(100% - 170px);opacity:0}58%{opacity:1}94%{left:118px;opacity:1}100%{left:118px;opacity:0}}
+.s4 .node.right .box{animation:turn 8s ease-in-out infinite}
+@keyframes turn{0%,48%{background:var(--surface);border-color:var(--line)}56%,100%{background:#3a1430;border-color:rgba(255,93,115,.55)}}
+.s4 .banner{animation:fadeIn 8s ease-in-out infinite}
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .doc{left:calc(50% - 22px)}.s1 .doc.b,.s1 .doc.c{display:none}
+  .s2 .env{left:calc(50% - 26px)}.val.fake{opacity:1}.val.orig{opacity:0}
+  .s3 .act{opacity:1}
+  .s4 .env.a{display:none}.s4 .env.b{left:calc(50% - 26px);opacity:1}
+  .s4 .node.right .box{background:#3a1430;border-color:rgba(255,93,115,.55)}
+  .banner{opacity:1}
+}
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><i></i> PLAIN SECURITY <span style="color:var(--slate)">//</span> INSIDER</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">LEAVER</span><span class="nl">VERTREKKER</span></a>
+      <a href="#r2"><span class="en">MISTAKE</span><span class="nl">VERGISSING</span></a>
+      <a href="#r3"><span class="en">ADMIN</span><span class="nl">BEHEERDER</span></a>
+      <a href="#r4"><span class="en">PRESSURE</span><span class="nl">DRUK</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Insider threat. <em>Four people who already have the keys.</em></span>
+      <span class="nl">Insider threat. <em>Vier mensen die de sleutels al hebben.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Most insiders are not villains. A leaver, a careless colleague, an unwatched administrator and a pressured employee — in plain language: how each one hurts us, and the one control that limits the damage.</span>
+      <span class="nl">De meeste insiders zijn geen schurken. Een vertrekker, een onzorgvuldige collega, een ongecontroleerde beheerder en een medewerker onder druk — in gewone taal: hoe elk van hen ons raakt, en welke maatregel de schade beperkt.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FOUR</span><span class="nl">BEKIJK DE VIER</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT LIMITS IT</span><span class="nl">WAT HET BEPERKT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">The leaver takes <em>the customer list with them.</em></span>
+      <span class="nl">De vertrekker neemt <em>de klantenlijst mee.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">data theft on departure / “it's my work anyway”</span>
+      <span class="nl">datadiefstal bij vertrek / “het is toch mijn werk”</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">NOTICE PERIOD</span><span class="nl">OPZEGTERMIJN</span></div>
+      <div class="node left"><div class="box">🗄️</div><span class="en">Our CRM</span><span class="nl">Ons CRM</span></div>
+      <div class="node right"><div class="box">🏢</div><span class="en">Next employer</span><span class="nl">Nieuwe werkgever</span></div>
+      <div class="wire"></div>
+      <div class="doc a">📇</div><div class="doc b">📇</div><div class="doc c">📇</div>
+      <div class="actor leaver pulse">👤<span class="tag"><span class="en">STILL HAS FULL ACCESS</span><span class="nl">HEEFT NOG VOLLEDIGE TOEGANG</span></span></div>
+      <div class="cal"><span class="en">LAST DAY: FRIDAY</span><span class="nl">LAATSTE DAG: VRIJDAG</span></div>
+      <div class="banner"><span class="en">EXPORTED TO A PERSONAL DRIVE · NOBODY NOTICED</span><span class="nl">GEËXPORTEERD NAAR PRIVÉ-OPSLAG · NIEMAND ZAG HET</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The most common insider incident is not sabotage. It is a salesperson, engineer or consultant in their notice period who exports the customer list, the price book or the source code because it feels like theirs. Access stays fully open until the last day, often longer. Nothing is broken, nothing is encrypted, and the export looks exactly like normal work.</p>
+      <p class="en"><strong>Business impact:</strong> a competitor with our pricing and pipeline, a lawsuit we have to fund to prove what was taken, and a personal-data breach if the list contains contacts. The damage shows up months later, when deals start going elsewhere. Access that shrinks as soon as notice is given, and logging on the data that matters most, turns this from invisible into obvious.</p>
+      <p class="nl">Het meest voorkomende insiderincident is geen sabotage. Het is een verkoper, engineer of consultant in de opzegtermijn die de klantenlijst, het prijsboek of de broncode exporteert omdat het “toch van hem” voelt. De toegang blijft volledig open tot de laatste dag, vaak langer. Er gaat niets stuk, er wordt niets versleuteld, en de export ziet er precies uit als gewoon werk.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een concurrent met onze prijzen en pijplijn, een rechtszaak die wij moeten betalen om te bewijzen wat er is meegenomen, en een datalek als de lijst contactgegevens bevat. De schade wordt pas maanden later zichtbaar, als deals ergens anders landen. Toegang die krimpt zodra iemand opzegt, en logging op de data die het meest telt, maakt dit van onzichtbaar tot zichtbaar.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">LOOKS LIKE NORMAL WORK · FOUND MONTHS LATER</span><span class="nl">LIJKT GEWOON WERK · MAANDEN LATER ONTDEKT</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: LEAVER PROCESS + LOGGING ON CROWN JEWELS</span><span class="nl">OPLOSSING: VERTREKPROCES + LOGGING OP KROONJUWELEN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">The colleague who <em>meant well.</em></span>
+      <span class="nl">De collega die <em>het goed bedoelde.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">accidental disclosure / wrong recipient, open share</span>
+      <span class="nl">onbedoelde verstrekking / verkeerde ontvanger, open deellink</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">AUTOCOMPLETE</span><span class="nl">AUTOMATISCH AANVULLEN</span></div>
+      <div class="node left"><div class="box">🙂</div><span class="en">HR colleague</span><span class="nl">HR-collega</span></div>
+      <div class="node right"><div class="box">❓</div><span class="en">Wrong recipient</span><span class="nl">Verkeerde ontvanger</span></div>
+      <div class="wire"></div>
+      <div class="val orig">to: j.devries@ons-bedrijf.nl</div>
+      <div class="val fake">to: j.devries@gmail.com</div>
+      <div class="env">✉</div>
+      <div class="banner"><span class="en">SALARY OVERVIEW · SENT · NO RECALL</span><span class="nl">SALARISOVERZICHT · VERZONDEN · NIET TERUG TE HALEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Most data leaves by accident. A salary overview sent to a namesake outside the company because autocomplete picked the wrong address. A project folder shared with “anyone with the link” so a supplier could see one file. A spreadsheet with a hidden tab full of personal data attached to a tender. Nobody wanted harm, and the person involved usually reports it themselves, hours later.</p>
+      <p class="en"><strong>Business impact:</strong> a reportable data breach with the same regulator and the same notification clock as a real attack. Trust damage with the staff or customers whose data went out. And a pattern: if it is easy to share everything with everyone, it will happen weekly. Need-to-know access and a warning when sensitive data is about to leave the company cut most of it off before the send button.</p>
+      <p class="nl">De meeste data verlaat het bedrijf per ongeluk. Een salarisoverzicht naar een naamgenoot buiten de organisatie omdat automatisch aanvullen het verkeerde adres koos. Een projectmap gedeeld met “iedereen met de link” zodat een leverancier één bestand kon zien. Een spreadsheet met een verborgen tabblad vol persoonsgegevens als bijlage bij een aanbesteding. Niemand wilde schade, en de betrokkene meldt het meestal zelf, uren later.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een meldplichtig datalek met dezelfde toezichthouder en dezelfde meldtermijn als bij een echte aanval. Vertrouwensschade bij de medewerkers of klanten van wie de gegevens op straat liggen. En een patroon: als het makkelijk is om alles met iedereen te delen, gebeurt het wekelijks. Toegang op need-to-know-basis en een waarschuwing zodra gevoelige data het bedrijf dreigt te verlaten, vangt het meeste af vóór de verzendknop.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NO INTENT · SAME BREACH · SAME REGULATOR</span><span class="nl">GEEN OPZET · ZELFDE DATALEK · ZELFDE TOEZICHTHOUDER</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: NEED-TO-KNOW ACCESS + WARN BEFORE DATA LEAVES</span><span class="nl">OPLOSSING: NEED-TO-KNOW-TOEGANG + WAARSCHUWEN VÓÓR VERZENDEN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">The administrator <em>nobody reviews.</em></span>
+      <span class="nl">De beheerder <em>die niemand controleert.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">unchecked privilege / one person, every system</span>
+      <span class="nl">ongecontroleerde rechten / één persoon, elk systeem</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">AFTER HOURS</span><span class="nl">BUITEN KANTOORTIJD</span></div>
+      <div class="node left"><div class="box">🛠️</div><span class="en">Administrator</span><span class="nl">Beheerder</span></div>
+      <div class="node right"><div class="box">💎</div><span class="en">Crown jewels</span><span class="nl">Kroonjuwelen</span></div>
+      <div class="wire"></div>
+      <div class="act a"><span class="en">EXPORT DATABASE</span><span class="nl">DATABASE EXPORTEREN</span></div>
+      <div class="act b"><span class="en">NEW HIDDEN ACCOUNT</span><span class="nl">NIEUW VERBORGEN ACCOUNT</span></div>
+      <div class="act c"><span class="en">CLEAR THE LOG</span><span class="nl">LOG WISSEN</span></div>
+      <div class="eye">👁</div>
+      <div class="banner"><span class="en">PRIVILEGED · UNLOGGED · UNREVIEWED</span><span class="nl">BEVOORRECHT · ONGELOGD · ONGECONTROLEERD</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Every organisation has a handful of people who can read every mailbox, open every file and change every setting. That is their job. The question is who watches them. If one administrator can export the customer database, create a spare account and clear the log without a second person ever seeing it, we are relying entirely on that person's character. Usually that works. The one time it does not, there is no evidence left.</p>
+      <p class="en"><strong>Business impact:</strong> unlimited exposure concentrated in a few people, and no way to prove afterwards what happened or that it did not. Auditors and regulators ask this question first. Privileged actions that require a second pair of eyes, and logs an administrator cannot erase, cost little and change the answer from “we trust them” to “we would know”.</p>
+      <p class="nl">Elke organisatie heeft een handvol mensen die elke mailbox kunnen lezen, elk bestand kunnen openen en elke instelling kunnen wijzigen. Dat is hun werk. De vraag is wie hén controleert. Als één beheerder de klantendatabase kan exporteren, een extra account kan aanmaken en het log kan wissen zonder dat een tweede persoon het ooit ziet, leunen we volledig op het karakter van die persoon. Meestal gaat dat goed. De ene keer dat het misgaat, is er geen bewijs meer.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> onbeperkte blootstelling geconcentreerd bij een paar mensen, en geen manier om achteraf te bewijzen wat er gebeurd is — of dat er níets gebeurd is. Accountants en toezichthouders stellen deze vraag als eerste. Bevoorrechte handelingen die een tweede paar ogen vereisen, en logs die een beheerder niet kan wissen, kosten weinig en veranderen het antwoord van “we vertrouwen ze” in “we zouden het weten”.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ALL ACCESS · NO WITNESS · NO EVIDENCE</span><span class="nl">ALLE TOEGANG · GEEN GETUIGE · GEEN BEWIJS</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: FOUR-EYES ON PRIVILEGED ACTIONS + TAMPER-PROOF LOGS</span><span class="nl">OPLOSSING: VIER OGEN OP BEHEERHANDELINGEN + ONWISBARE LOGS</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">The employee <em>under pressure.</em></span>
+      <span class="nl">De medewerker <em>onder druk.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">recruited, bribed or coerced / access for sale</span>
+      <span class="nl">geronseld, omgekocht of gedwongen / toegang te koop</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">A PRIVATE MESSAGE</span><span class="nl">EEN PRIVÉBERICHT</span></div>
+      <div class="node left"><div class="box">🎭</div><span class="en">Outside party</span><span class="nl">Buitenstaander</span></div>
+      <div class="node right"><div class="box">😟</div><span class="en">Employee in debt</span><span class="nl">Medewerker met schulden</span></div>
+      <div class="wire"></div>
+      <div class="env a">💶</div>
+      <div class="env b">🔑</div>
+      <div class="banner"><span class="en">APPROACHED · PRESSURED · PAID FOR A LOGIN</span><span class="nl">BENADERD · ONDER DRUK GEZET · BETAALD VOOR EEN INLOG</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Criminal groups no longer need to break in when they can buy a way in. Employees at banks, telecoms, logistics firms and service desks are approached on social media with an offer: a few thousand for a login, a SIM swap, a customer record. Others are pressured with debt, a grudge or a threat to family abroad. The person who says yes is rarely a hardened criminal. They are someone in a bad month with more access than their job needs.</p>
+      <p class="en"><strong>Business impact:</strong> a trusted account doing untrusted things, which is the hardest attack to detect and the most embarrassing to explain. The control is not surveillance of everyone. It is fewer people with sensitive access, a culture where “I was approached” can be reported without fear, and HR and security talking to each other before someone reaches breaking point.</p>
+      <p class="nl">Criminele groepen hoeven niet meer in te breken als ze een ingang kunnen kopen. Medewerkers bij banken, telecombedrijven, logistieke bedrijven en servicedesks worden via sociale media benaderd met een aanbod: een paar duizend euro voor een inlog, een simkaartwissel, één klantdossier. Anderen worden onder druk gezet met schulden, een wrok of een bedreiging van familie in het buitenland. Wie ja zegt is zelden een doorgewinterde crimineel. Het is iemand met een slechte maand en meer toegang dan het werk vereist.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een vertrouwd account dat onbetrouwbare dingen doet — de moeilijkst te detecteren aanval en de pijnlijkste om uit te leggen. De maatregel is geen toezicht op iedereen. Het is minder mensen met gevoelige toegang, een cultuur waarin “ik ben benaderd” zonder angst gemeld kan worden, en HR en security die met elkaar praten vóórdat iemand het breekpunt bereikt.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">TRUSTED ACCOUNT · HARDEST TO DETECT</span><span class="nl">VERTROUWD ACCOUNT · MOEILIJKST TE DETECTEREN</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: FEWER PEOPLE WITH SENSITIVE ACCESS + SPEAK-UP CULTURE</span><span class="nl">OPLOSSING: MINDER MENSEN MET GEVOELIGE TOEGANG + MELDCULTUUR</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>limits the damage.</em></span>
+      <span class="nl">Wat <em>de schade beperkt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">process and access design, with HR at the table — not surveillance software</span>
+      <span class="nl">proces en toegangsontwerp, met HR aan tafel — geen bewakingssoftware</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">NEED-TO-KNOW</span><span class="nl">NEED-TO-KNOW</span></span>
+        <span class="chip c2"><span class="en">LEAVER PROCESS</span><span class="nl">VERTREKPROCES</span></span>
+        <span class="chip c3"><span class="en">FOUR EYES</span><span class="nl">VIER OGEN</span></span>
+        <span class="chip c4"><span class="en">LOGGING</span><span class="nl">LOGGING</span></span>
+        <span class="chip c5"><span class="en">SPEAK-UP CULTURE</span><span class="nl">MELDCULTUUR</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Limits</th><th>In one line</th></tr>
+        <tr><td class="ctl">Need-to-know</td><td>All four</td><td>People can reach the data their job needs, and nothing else. Reviewed when roles change.</td></tr>
+        <tr><td class="ctl">Joiner-mover-leaver</td><td>Leaver (01)</td><td>Access shrinks the day notice is given and is revoked the day someone leaves — not when IT gets round to it.</td></tr>
+        <tr><td class="ctl">Exit routine</td><td>Leaver (01)</td><td>Devices returned, personal cloud links removed, a conversation about what stays behind. Signed, both sides.</td></tr>
+        <tr><td class="ctl">Logging on crown jewels</td><td>Leaver (01), Admin (03)</td><td>Who opened, exported or shared the five datasets that matter most — kept where an administrator cannot erase it.</td></tr>
+        <tr><td class="ctl">Four-eyes</td><td>Admin (03)</td><td>Bulk exports, new privileged accounts and log changes need a second person to approve. Slower by minutes, safer by years.</td></tr>
+        <tr><td class="ctl">Warn before sending</td><td>Mistake (02)</td><td>A prompt when personal or confidential data is about to go to an external address or an open link. Light, on the crown jewels only.</td></tr>
+        <tr><td class="ctl">Acceptable-use rules</td><td>Mistake (02), Leaver (01)</td><td>One page that says what may be shared, where work data may live, and what happens on departure. Signed at hire.</td></tr>
+        <tr><td class="ctl">Speak-up and HR</td><td>Pressure (04)</td><td>A way to report “I was approached” without punishment, and HR and security who meet regularly about people at risk.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Beperkt</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Need-to-know</td><td>Alle vier</td><td>Mensen kunnen bij de data die hun werk vereist, en bij niets anders. Herzien zodra een rol verandert.</td></tr>
+        <tr><td class="ctl">In-, door- en uitstroom</td><td>Vertrekker (01)</td><td>Toegang krimpt op de dag van opzegging en wordt ingetrokken op de dag van vertrek — niet wanneer IT er tijd voor heeft.</td></tr>
+        <tr><td class="ctl">Vertrekroutine</td><td>Vertrekker (01)</td><td>Apparaten ingeleverd, privé-cloudkoppelingen verwijderd, een gesprek over wat achterblijft. Getekend, door beide kanten.</td></tr>
+        <tr><td class="ctl">Logging op kroonjuwelen</td><td>Vertrekker (01), Beheerder (03)</td><td>Wie de vijf belangrijkste datasets heeft geopend, geëxporteerd of gedeeld — bewaard waar een beheerder het niet kan wissen.</td></tr>
+        <tr><td class="ctl">Vier ogen</td><td>Beheerder (03)</td><td>Bulkexports, nieuwe beheeraccounts en logwijzigingen vereisen goedkeuring van een tweede persoon. Minuten trager, jaren veiliger.</td></tr>
+        <tr><td class="ctl">Waarschuwen vóór verzenden</td><td>Vergissing (02)</td><td>Een melding zodra persoons- of vertrouwelijke gegevens naar een extern adres of open link gaan. Licht, alleen op de kroonjuwelen.</td></tr>
+        <tr><td class="ctl">Gebruiksregels</td><td>Vergissing (02), Vertrekker (01)</td><td>Eén pagina die zegt wat gedeeld mag worden, waar werkdata mag staan, en wat er gebeurt bij vertrek. Getekend bij indiensttreding.</td></tr>
+        <tr><td class="ctl">Meldcultuur en HR</td><td>Druk (04)</td><td>Een manier om “ik ben benaderd” zonder straf te melden, en HR en security die regelmatig overleggen over mensen in de risicozone.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> trust is not a control. Ask two questions: which five datasets would hurt most if one person walked out with them tomorrow — and how many people can reach each of them today? If the second answer is “we don't know” or “most of the company”, that is the whole insider programme in one line.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> vertrouwen is geen maatregel. Stel twee vragen: welke vijf datasets doen het meeste pijn als één persoon er morgen mee naar buiten loopt — en hoeveel mensen kunnen daar vandaag bij? Als het tweede antwoord “weten we niet” of “het grootste deel van het bedrijf” is, dan is dat het hele insiderprogramma in één zin.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">People leave, make mistakes and get approached every year. Most incidents are never recognised as insider incidents.</span><span class="nl">Mensen vertrekken, vergissen zich en worden elk jaar benaderd. De meeste incidenten worden nooit als insiderincident herkend.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v mid"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Lost customers and pricing, a personal-data breach, legal cost to prove what was taken, and reputational damage that is hard to explain.</span><span class="nl">Verloren klanten en prijzen, een datalek, juridische kosten om te bewijzen wat is meegenomen, en reputatieschade die moeilijk uit te leggen is.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low to medium</span><span class="nl">Laag tot middel</span></span><p><span class="en">Intent cannot be removed. Need-to-know, a same-day leaver process and logging make the damage small and the evidence complete.</span><span class="nl">Opzet is niet weg te nemen. Need-to-know, een vertrekproces op de dag zelf en logging maken de schade klein en het bewijs compleet.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CHRO with the CIO</span><span class="nl">CHRO samen met de CIO</span></span><p><span class="en">Half of the controls are HR processes, half are access design. One owner from each, or it falls between them.</span><span class="nl">De helft van de maatregelen zijn HR-processen, de andere helft toegangsontwerp. Eén eigenaar van elk, anders valt het ertussen.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Number of people who can reach each of the five crown-jewel datasets · hours between last working day and full revocation · % of privileged actions covered by four-eyes and tamper-proof logging · date of the last access review per critical system.</span><span class="nl">Aantal mensen dat bij elk van de vijf kroonjuweel-datasets kan · uren tussen laatste werkdag en volledige intrekking van toegang · % beheerhandelingen met vier ogen en onwisbare logging · datum van de laatste toegangsreview per kritiek systeem.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“An employee, leaver or administrator with more access than their role needs takes, exposes or misuses confidential and personal data, unnoticed for months.”</span><span class="nl">“Een medewerker, vertrekker of beheerder met meer toegang dan de rol vereist neemt vertrouwelijke en persoonsgegevens mee, lekt ze of misbruikt ze, maandenlang onopgemerkt.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Access control, human-resources security and asset management are named measures. That means need-to-know, a joiner-mover-leaver process and logging that shows who touched what. Management is accountable for approving them.</td><td>Ask how the supplier controls its own staff: screening, access reviews, leaver revocation and who can reach your data. Put their duty to report insider incidents to you in the contract.</td><td>A data theft or leak that disrupts services or affects many people can be a significant incident: early warning within 24 hours, notification within 72, final report within a month. Confirm with legal whether the threshold is met.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities: identity and access management with least privilege, periodic access reviews, logging of privileged activity and HR-side controls for people with critical access, all inside a board-approved ICT risk framework.</td><td>For critical ICT providers, contracts must cover access to your data, staff controls, audit rights and cooperation on incidents. A report supports that; it does not replace the contractual clauses.</td><td>If classified as a major ICT incident: initial notification within hours, intermediate report within 72 hours, final report within a month. Insider cases often also trigger a personal-data breach notification. Confirm with legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>If you issue one: logical access, onboarding and offboarding, access reviews and monitoring of privileged users are tested over a period (Type II). A leaver kept active for weeks is a printed exception.</td><td>Read the access and HR controls and the exceptions. Check whether background screening, timely revocation and privileged-activity review are actually tested, and read the user entity controls you must perform yourself.</td><td>The incident shows up in the next report as a deviation in access or monitoring controls. Customers will ask for the root cause, the fix and evidence that revocation and reviews now work.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Assurance over outsourced processes relevant to financial reporting. Segregation of duties and access to financial systems are usually in scope; broader insider controls often are not.</td><td>Check whether user access management, leaver revocation and privileged access to your data are among the control objectives. If not, the report is silent on insider risk.</td><td>The service organisation must disclose the incident to the user auditors. If you are the service organisation, expect it in your opinion and in your customers’ audits.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Toegangsbeheer, personeelsbeveiliging en beheer van bedrijfsmiddelen zijn benoemde maatregelen. Dat betekent need-to-know, een in-, door- en uitstroomproces en logging die laat zien wie wat heeft aangeraakt. Het bestuur is verantwoordelijk voor de goedkeuring.</td><td>Vraag hoe de leverancier zijn eigen personeel beheerst: screening, toegangsreviews, intrekking bij vertrek en wie bij uw data kan. Leg zijn plicht om insiderincidenten aan u te melden vast in het contract.</td><td>Datadiefstal of een lek dat diensten verstoort of veel mensen raakt kan een significant incident zijn: vroegtijdige waarschuwing binnen 24 uur, melding binnen 72 uur, eindrapport binnen een maand. Bevestig met legal of de drempel is gehaald.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: identiteits- en toegangsbeheer met minimale rechten, periodieke toegangsreviews, logging van beheerhandelingen en HR-maatregelen voor mensen met kritieke toegang, binnen een ICT-risicokader dat het bestuur goedkeurt.</td><td>Voor kritieke ICT-leveranciers moeten contracten toegang tot uw data, personeelsmaatregelen, auditrechten en samenwerking bij incidenten regelen. Een rapport ondersteunt dat; het vervangt de contractbepalingen niet.</td><td>Bij classificatie als ernstig ICT-incident: eerste melding binnen enkele uren, tussenrapport binnen 72 uur, eindrapport binnen een maand. Insiderzaken leiden vaak ook tot een datalekmelding. Bevestig met legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Als u er zelf een afgeeft: logische toegang, in- en uitdiensttreding, toegangsreviews en monitoring van beheerders worden over een periode getest (Type II). Een vertrekker die weken actief blijft, staat als afwijking in het rapport.</td><td>Lees de toegangs- en HR-maatregelen en de afwijkingen. Controleer of screening, tijdige intrekking en review van beheerhandelingen echt worden getest, en lees de user entity controls die u zelf moet uitvoeren.</td><td>Het incident verschijnt in het volgende rapport als afwijking in toegangs- of monitoringmaatregelen. Klanten vragen om de oorzaak, de oplossing en bewijs dat intrekking en reviews nu werken.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Zekerheid over uitbestede processen die relevant zijn voor de financiële verslaggeving. Functiescheiding en toegang tot financiële systemen vallen meestal binnen scope; bredere insidermaatregelen vaak niet.</td><td>Controleer of gebruikerstoegangsbeheer, intrekking bij vertrek en beheerderstoegang tot uw data tot de beheersdoelstellingen behoren. Zo niet, dan zegt het rapport niets over insiderrisico.</td><td>De serviceorganisatie moet het incident melden aan de auditors van haar klanten. Bent u zelf de serviceorganisatie, verwacht het dan in uw oordeel en in de audits van uw klanten.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">INSIDER THREAT BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">INSIDER THREAT BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

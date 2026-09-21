@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The first 72 hours // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   INCIDENT RESPONSE // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : who decides --- */
+.s1 .seats{position:absolute;left:40px;right:40px;top:70px;display:flex;justify-content:space-between}
+.s1 .seat{position:relative;width:20%;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.s1 .seat .box{position:relative;width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.s1 .seat .box::after{content:"?";position:absolute;top:-10px;right:-10px;width:22px;height:22px;display:grid;place-items:center;font-family:var(--sans);font-weight:800;font-size:14px;background:var(--warn);color:var(--deep);opacity:0;animation:ask 8s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes ask{0%{opacity:0}6%{opacity:1}22%{opacity:1}28%,100%{opacity:0}}
+.s1 .call{position:absolute;top:24px;width:52px;height:34px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--white);border:1px solid #9fb3c0;animation:hop 8s ease-in-out infinite}
+@keyframes hop{
+  0%,22%{left:calc(10% + 7px)}
+  25%,47%{left:calc(30% + 22px)}
+  50%,72%{left:calc(50% + 37px)}
+  75%,97%{left:calc(70% + 52px)}
+  100%{left:calc(10% + 7px)}
+}
+.s1 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 2 : evidence destroyed --- */
+.s2 .env{animation:carry 7s linear infinite;font-size:0}
+.s2 .env::before{content:"LOGS";font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--deep)}
+@keyframes carry{
+  0%{left:118px;opacity:0;transform:scale(1)}
+  8%{opacity:1}
+  42%{left:calc(50% - 26px);opacity:1;transform:scale(1)}
+  52%{left:calc(50% - 26px);opacity:0;transform:scale(1.6)}
+  100%{left:calc(50% - 26px);opacity:0}
+}
+.s2 .reboot{left:50%;margin-left:-31px;top:50%;margin-top:-31px;animation:spin 7s ease-in-out infinite}
+@keyframes spin{0%,38%{transform:rotate(0)}50%{transform:rotate(360deg)}100%{transform:rotate(360deg)}}
+.s2 .banner{animation:fadeIn 7s ease-in-out infinite}
+
+/* --- scene 3 : five stories --- */
+.s3 .hub{position:absolute;left:50%;top:50%;width:66px;height:66px;margin:-33px 0 0 -33px;display:grid;place-items:center;font-size:26px;background:var(--surface);border:1px solid var(--line);z-index:2}
+.s3 .msg{position:absolute;left:50%;top:50%;margin:-14px 0 0 -95px;width:190px;padding:6px 8px;text-align:center;font-size:9.5px;letter-spacing:.14em;font-weight:700;white-space:nowrap;background:var(--bg-lo);border:1px solid var(--line);color:var(--body);opacity:0;animation:fly 9s ease-in-out infinite;animation-delay:var(--d)}
+.s3 .msg b{display:block;font-weight:700;color:var(--muted);font-size:8.5px;letter-spacing:.2em;margin-bottom:2px}
+.s3 .msg.bad{border-color:rgba(255,93,115,.5);color:var(--bad-soft)}
+@keyframes fly{0%{opacity:0;transform:translate(0,0)}10%{opacity:1;transform:translate(var(--x),var(--y))}75%{opacity:1;transform:translate(var(--x),var(--y))}85%,100%{opacity:0;transform:translate(var(--x),var(--y))}}
+.s3 .clock{position:absolute;right:20px;top:14px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--warn);background:rgba(255,200,87,.1);border:1px solid rgba(255,200,87,.45);padding:6px 12px;animation:tick 1s steps(1) infinite}
+@keyframes tick{0%,50%{opacity:1}51%,100%{opacity:.55}}
+.s3 .banner{animation:fadeIn 9s ease-in-out infinite}
+
+/* --- scene 4 : no help on retainer --- */
+.s4 .env{animation:knock 8s ease-in-out infinite;font-size:0}
+.s4 .env::before{content:"HELP?";font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;color:var(--deep)}
+@keyframes knock{
+  0%{left:118px;opacity:0}
+  6%{opacity:1}
+  36%{left:calc(100% - 170px)}
+  46%{left:calc(100% - 170px)}
+  76%{left:118px;opacity:1}
+  82%,100%{left:118px;opacity:0}
+}
+.s4 .busy{position:absolute;right:14px;top:50%;margin-top:-70px;font-size:9.5px;font-weight:700;letter-spacing:.2em;padding:5px 10px;background:var(--bad);color:#33060e;opacity:0;animation:busy 8s ease-in-out infinite;z-index:4}
+@keyframes busy{0%,34%{opacity:0}40%,70%{opacity:1}78%,100%{opacity:0}}
+.s4 .hours{position:absolute;left:50%;transform:translateX(-50%);top:30px;font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--warn);background:rgba(255,200,87,.1);border:1px solid rgba(255,200,87,.45);padding:6px 12px}
+.s4 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .seat .box::after{opacity:1}
+  .s1 .call{left:calc(50% + 37px)}
+  .s2 .env{left:calc(50% - 26px);opacity:.35;transform:scale(1.4)}
+  .s3 .msg{opacity:1;transform:translate(var(--x),var(--y))}
+  .s4 .env{left:calc(100% - 170px)}
+  .s4 .busy{opacity:1}
+  .banner{opacity:1}
+}
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><i></i> PLAIN SECURITY <span style="color:var(--slate)">//</span> INCIDENT</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">WHO DECIDES</span><span class="nl">WIE BESLIST</span></a>
+      <a href="#r2"><span class="en">EVIDENCE</span><span class="nl">BEWIJS</span></a>
+      <a href="#r3"><span class="en">COMMS</span><span class="nl">COMMUNICATIE</span></a>
+      <a href="#r4"><span class="en">HELP</span><span class="nl">HULP</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">The first 72 hours. <em>Four ways they go wrong.</em></span>
+      <span class="nl">De eerste 72 uur. <em>Vier manieren waarop het misgaat.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">The alarm has gone off. What happens next is decided not by technology but by who picks up the phone, what gets switched off, and who says what to whom — in plain language: how the first three days derail, and what has to be ready in advance.</span>
+      <span class="nl">Het alarm is afgegaan. Wat daarna gebeurt wordt niet bepaald door techniek, maar door wie de telefoon opneemt, wat er wordt uitgezet en wie wat tegen wie zegt — in gewone taal: hoe de eerste drie dagen ontsporen, en wat vooraf klaar moet liggen.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE WHAT GOES WRONG</span><span class="nl">BEKIJK WAT MISGAAT</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT HAS TO BE READY</span><span class="nl">WAT KLAAR MOET LIGGEN</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">Nobody knows <em>who decides.</em></span>
+      <span class="nl">Niemand weet <em>wie beslist.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">decision rights / the 03:00 phone call</span>
+      <span class="nl">beslisbevoegdheid / het telefoontje om 03:00</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">SUNDAY 03:00</span><span class="nl">ZONDAG 03:00</span></div>
+      <div class="call">📞</div>
+      <div class="seats">
+        <div class="seat"><div class="box" style="--d:0s">🛠️</div><span class="en">IT</span><span class="nl">IT</span></div>
+        <div class="seat"><div class="box" style="--d:2s">⚖️</div><span class="en">Legal</span><span class="nl">Juridisch</span></div>
+        <div class="seat"><div class="box" style="--d:4s">👔</div><span class="en">CEO</span><span class="nl">CEO</span></div>
+        <div class="seat"><div class="box" style="--d:6s">🏛️</div><span class="en">Board</span><span class="nl">Bestuur</span></div>
+      </div>
+      <div class="banner"><span class="en">FOUR NUMBERS DIALLED · NOBODY MAY DECIDE</span><span class="nl">VIER NUMMERS GEBELD · NIEMAND MAG BESLISSEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The on-call engineer sees the encryption spreading at 03:00 on a Sunday. Switching off the network would stop it — and also stop the factory, the webshop, the hospital ward. Is that the engineer's call? Their manager's? The CIO's, who is on holiday? The CEO's, whose number they do not have? Every minute spent finding out, the incident grows. Most companies discover on the night itself that nobody has ever written down who may pull the plug.</p>
+      <p class="en"><strong>Business impact:</strong> the hours lost here are the most expensive of the whole incident, because the damage is still small and every decision still matters. Indecision is itself a decision: it means the attacker keeps going. And the person who finally acts without a mandate carries the blame for whatever it costs.</p>
+      <p class="nl">De dienstdoende engineer ziet om 03:00 op zondag de versleuteling zich verspreiden. Het netwerk uitzetten zou het stoppen — en ook de fabriek, de webshop, de ziekenhuisafdeling. Mag de engineer dat beslissen? Zijn leidinggevende? De CIO, die op vakantie is? De CEO, van wie hij het nummer niet heeft? Elke minuut die aan uitzoeken opgaat, groeit het incident. De meeste bedrijven ontdekken die nacht zelf dat nooit is opgeschreven wie de stekker eruit mag trekken.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de uren die hier verloren gaan zijn de duurste van het hele incident, omdat de schade nog klein is en elke beslissing nog telt. Niet beslissen is ook een beslissing: de aanvaller gaat door. En degene die uiteindelijk zonder mandaat ingrijpt, draagt de schuld voor wat het kost.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">HOURS LOST · NO MANDATE · BLAME AFTERWARDS</span><span class="nl">UREN VERLOREN · GEEN MANDAAT · SCHULD ACHTERAF</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: WRITTEN DECISION RIGHTS + NAMED DEPUTIES + PRINTED PHONE LIST</span><span class="nl">OPLOSSING: BESLISRECHTEN OP PAPIER + PLAATSVERVANGERS + GEPRINTE BELLIJST</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">The evidence is gone <em>within the hour.</em></span>
+      <span class="nl">Het bewijs is <em>binnen een uur weg.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">evidence preservation / the well-meaning reboot</span>
+      <span class="nl">bewijs bewaren / de goedbedoelde herstart</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">THE FIRST HOUR</span><span class="nl">HET EERSTE UUR</span></div>
+      <div class="node left"><div class="box">🖥️</div><span class="en">Infected server</span><span class="nl">Besmette server</span></div>
+      <div class="node right"><div class="box">🔍</div><span class="en">Forensics</span><span class="nl">Forensisch team</span></div>
+      <div class="wire"></div>
+      <div class="env"></div>
+      <div class="actor reboot pulse">🔄<span class="tag"><span class="en">"JUST REBOOT IT"</span><span class="nl">"START HEM GEWOON OPNIEUW"</span></span></div>
+      <div class="banner"><span class="en">LOGS WIPED · NOBODY CAN SAY WHAT WAS TAKEN</span><span class="nl">LOGS GEWIST · NIEMAND KAN ZEGGEN WAT IS MEEGENOMEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The instinct of every capable engineer is to fix things. Reboot the server, wipe the laptop, restore the image, rotate the passwords, get people working again. Each of those actions destroys something: the memory that held the attacker's tools, the logs that showed which files were opened, the timestamps that prove when it started. By the time a forensics team arrives, the crime scene has been cleaned.</p>
+      <p class="en"><strong>Business impact:</strong> without evidence, we cannot answer the only questions that matter afterwards. Was customer data taken? Which customers? Since when? The regulator, the insurer and our own lawyers will all ask. “We do not know” means notifying everyone, assuming the worst, and paying for it — and the insurer may refuse the claim because we cannot show what happened.</p>
+      <p class="nl">Het instinct van elke goede engineer is dingen repareren. De server herstarten, de laptop wissen, het image terugzetten, de wachtwoorden vervangen, mensen weer aan het werk krijgen. Elk van die handelingen vernietigt iets: het geheugen waarin het gereedschap van de aanvaller stond, de logs die lieten zien welke bestanden zijn geopend, de tijdstempels die bewijzen wanneer het begon. Tegen de tijd dat een forensisch team aankomt, is de plaats delict schoongemaakt.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> zonder bewijs kunnen we de enige vragen die achteraf tellen niet beantwoorden. Zijn er klantgegevens meegenomen? Van welke klanten? Sinds wanneer? De toezichthouder, de verzekeraar en onze eigen advocaten zullen het allemaal vragen. “We weten het niet” betekent iedereen informeren, van het slechtste uitgaan en daarvoor betalen — en de verzekeraar kan de claim weigeren omdat we niet kunnen aantonen wat er is gebeurd.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">CRIME SCENE CLEANED · WORST CASE ASSUMED · CLAIM AT RISK</span><span class="nl">PLAATS DELICT SCHOONGEMAAKT · SLECHTSTE GEVAL AANGENOMEN · CLAIM IN GEVAAR</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: ISOLATE, DON'T WIPE + FORENSICS ON RETAINER FIRST</span><span class="nl">OPLOSSING: ISOLEREN, NIET WISSEN + EERST HET FORENSISCH TEAM</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">Five audiences hear <em>five different stories.</em></span>
+      <span class="nl">Vijf doelgroepen horen <em>vijf verschillende verhalen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">crisis communication / legal deadlines already running</span>
+      <span class="nl">crisiscommunicatie / wettelijke termijnen lopen al</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">DAY ONE</span><span class="nl">DAG EEN</span></div>
+      <div class="clock">⏱ 72:00:00</div>
+      <div class="hub">🏢</div>
+      <div class="msg" style="--d:0s;--x:-330px;--y:-70px"><b><span class="en">TO STAFF</span><span class="nl">AAN PERSONEEL</span></b><span class="en">"IT ISSUE, WORK FROM HOME"</span><span class="nl">"IT-STORING, WERK THUIS"</span></div>
+      <div class="msg bad" style="--d:.8s;--x:330px;--y:-70px"><b><span class="en">TO CUSTOMERS</span><span class="nl">AAN KLANTEN</span></b><span class="en">"YOUR DATA IS SAFE"</span><span class="nl">"UW GEGEVENS ZIJN VEILIG"</span></div>
+      <div class="msg bad" style="--d:1.6s;--x:-330px;--y:50px"><b><span class="en">TO PRESS</span><span class="nl">AAN DE PERS</span></b><span class="en">"NO COMMENT"</span><span class="nl">"GEEN COMMENTAAR"</span></div>
+      <div class="msg" style="--d:2.4s;--x:330px;--y:50px"><b><span class="en">TO REGULATOR</span><span class="nl">AAN TOEZICHTHOUDER</span></b><span class="en">— NOTHING YET —</span><span class="nl">— NOG NIETS —</span></div>
+      <div class="msg bad" style="--d:3.2s;--x:0px;--y:-92px"><b><span class="en">TO INSURER</span><span class="nl">AAN VERZEKERAAR</span></b><span class="en">— FORGOTTEN —</span><span class="nl">— VERGETEN —</span></div>
+      <div class="banner"><span class="en">CONTRADICTIONS ON RECORD · DEADLINES RUNNING</span><span class="nl">TEGENSTRIJDIGHEDEN VASTGELEGD · TERMIJNEN LOPEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">On day one, five groups want answers at once: staff, customers, press, the regulator and the insurer. Without a plan, five different people answer them. Someone reassures customers that “no data was affected” before anyone knows. Someone tells the press “no comment”, which reads as guilt. Nobody calls the regulator, though the legal clocks — 72 hours for a personal-data breach under GDPR, and shorter early-warning duties for organisations under NIS2 — started the moment we became aware. Which of those apply to us is a question for legal, but the answer has to be known before the incident, not looked up during it.</p>
+      <p class="en"><strong>Business impact:</strong> every contradictory statement is on record and will be quoted back to us by journalists, customers and lawyers. A missed statutory deadline is a separate offence on top of the breach. And the insurer's policy almost certainly requires notification within a fixed window; miss it and the cover we paid for may not respond.</p>
+      <p class="nl">Op dag één willen vijf groepen tegelijk antwoord: personeel, klanten, pers, de toezichthouder en de verzekeraar. Zonder plan geven vijf verschillende mensen dat antwoord. Iemand stelt klanten gerust dat “er geen gegevens zijn geraakt” voordat iemand dat weet. Iemand zegt tegen de pers “geen commentaar”, wat als schuldbekentenis wordt gelezen. Niemand belt de toezichthouder, terwijl de wettelijke klokken — 72 uur voor een datalek onder de AVG, en kortere vroegtijdige-waarschuwingsplichten voor organisaties onder NIS2 — begonnen te lopen op het moment dat we het ontdekten. Welke daarvan op ons van toepassing zijn is een vraag voor juridisch, maar het antwoord moet vóór het incident bekend zijn, niet tijdens het incident worden opgezocht.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> elke tegenstrijdige uitspraak ligt vast en wordt ons door journalisten, klanten en advocaten voorgehouden. Een gemiste wettelijke termijn is een aparte overtreding bovenop het lek. En de polis van de verzekeraar eist vrijwel zeker een melding binnen een vaste termijn; mis die, en de dekking waarvoor we betaalden komt misschien niet uit.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">CONTRADICTIONS ON RECORD · MISSED DEADLINES · COVER AT RISK</span><span class="nl">TEGENSTRIJDIGHEDEN VASTGELEGD · GEMISTE TERMIJNEN · DEKKING IN GEVAAR</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: ONE SPOKESPERSON + PRE-APPROVED TEMPLATES + DEADLINE LIST</span><span class="nl">OPLOSSING: ÉÉN WOORDVOERDER + VOORAF GOEDGEKEURDE TEKSTEN + TERMIJNENLIJST</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">Day one is spent <em>looking for help.</em></span>
+      <span class="nl">Dag één gaat op aan <em>hulp zoeken.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">retainer / no one to call</span>
+      <span class="nl">retainer / niemand om te bellen</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">HOUR 14</span><span class="nl">UUR 14</span></div>
+      <div class="hours"><span class="en">STILL NO CONTRACT SIGNED</span><span class="nl">NOG GEEN CONTRACT GETEKEND</span></div>
+      <div class="node left"><div class="box">🏢</div><span class="en">Us</span><span class="nl">Wij</span></div>
+      <div class="node right"><div class="box">🔍</div><span class="en">Forensics firm</span><span class="nl">Forensisch bureau</span></div>
+      <div class="wire"></div>
+      <div class="env"></div>
+      <div class="busy"><span class="en">FULLY BOOKED</span><span class="nl">VOLGEBOEKT</span></div>
+      <div class="banner"><span class="en">PROCUREMENT AT 03:00 · ATTACKER STILL INSIDE</span><span class="nl">INKOOP OM 03:00 · AANVALLER NOG BINNEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Serious incidents need people we do not employ: forensic investigators, a negotiator who has talked to this ransomware group before, lawyers who know the notification rules, a crisis-communication team. Without a retainer, day one becomes a procurement exercise. Firms are fully booked, because attacks come in waves and everyone is calling at once. Contracts need signatures, signatures need approvals, approvals need people who are asleep. Meanwhile the attacker is still inside.</p>
+      <p class="en"><strong>Business impact:</strong> each hour without expert help is an hour of decisions made by people who have never done this before. A retainer costs a fixed, modest fee per year and buys one phone number that answers within the hour, with a team that already knows our systems and our contacts. It is the cheapest line in the entire security budget — and the one most often missing.</p>
+      <p class="nl">Ernstige incidenten vragen om mensen die niet bij ons op de loonlijst staan: forensisch onderzoekers, een onderhandelaar die deze ransomwaregroep al eens aan de lijn had, advocaten die de meldregels kennen, een crisiscommunicatieteam. Zonder retainer wordt dag één een inkooptraject. Bureaus zitten vol, omdat aanvallen in golven komen en iedereen tegelijk belt. Contracten vragen handtekeningen, handtekeningen vragen goedkeuring, goedkeuring vraagt mensen die slapen. Ondertussen zit de aanvaller nog binnen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> elk uur zonder deskundige hulp is een uur aan beslissingen door mensen die dit nog nooit hebben gedaan. Een retainer kost een vast, bescheiden bedrag per jaar en levert één telefoonnummer op dat binnen het uur opneemt, met een team dat onze systemen en onze contactpersonen al kent. Het is de goedkoopste regel in het hele beveiligingsbudget — en degene die het vaakst ontbreekt.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">PROCUREMENT UNDER FIRE · AMATEUR DECISIONS · HOURS LOST</span><span class="nl">INKOOP ONDER VUUR · AMATEURBESLISSINGEN · UREN VERLOREN</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: RESPONSE RETAINER SIGNED IN PEACETIME</span><span class="nl">OPLOSSING: RESPONSRETAINER GETEKEND IN VREDESTIJD</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What has to be <em>ready before the alarm.</em></span>
+      <span class="nl">Wat klaar moet liggen <em>vóór het alarm.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">paper, phone numbers and one rehearsal a year — no technology on this list</span>
+      <span class="nl">papier, telefoonnummers en één oefening per jaar — geen techniek op deze lijst</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">READINESS STACK</span><span class="nl">PARAATHEID</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">PLAN</span><span class="nl">PLAN</span></span>
+        <span class="chip c2"><span class="en">RETAINER</span><span class="nl">RETAINER</span></span>
+        <span class="chip c3"><span class="en">TEMPLATES</span><span class="nl">TEKSTEN</span></span>
+        <span class="chip c4"><span class="en">TABLETOP</span><span class="nl">OEFENING</span></span>
+        <span class="chip c5"><span class="en">OUT-OF-BAND CHANNEL</span><span class="nl">NOODKANAAL</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Fixes</th><th>In one line</th></tr>
+        <tr><td class="ctl">Response plan</td><td>Who decides (01)</td><td>A short written plan with named roles and named deputies for each. Not a binder: a few pages everyone has read.</td></tr>
+        <tr><td class="ctl">Decision rights</td><td>Who decides (01)</td><td>Written in advance: who may take systems offline, who may talk to the attacker, who may spend money, and up to what amount.</td></tr>
+        <tr><td class="ctl">Phone list</td><td>Who decides (01)</td><td>Personal mobile numbers of every role and deputy, printed and at home. The digital copy will be encrypted along with everything else.</td></tr>
+        <tr><td class="ctl">Isolate, don't wipe</td><td>Evidence (02)</td><td>One rule every engineer knows: disconnect a suspicious machine, never reboot or reimage it until forensics says so.</td></tr>
+        <tr><td class="ctl">Communication templates</td><td>Comms (03)</td><td>Holding statements for staff, customers, press and regulator, approved by legal in advance, with one named spokesperson.</td></tr>
+        <tr><td class="ctl">Deadline list</td><td>Comms (03)</td><td>Which notification duties apply to us, to whom, within how many hours — GDPR, NIS2, contracts, the insurer — confirmed by legal, on one page.</td></tr>
+        <tr><td class="ctl">Out-of-band channel</td><td>All four</td><td>A way for the crisis team to talk when email and chat are compromised or down: a separate messaging group, a bridge number.</td></tr>
+        <tr><td class="ctl">Retainer</td><td>Help (04)</td><td>A signed agreement with a forensics and response firm that answers within the hour, and knows our environment before the call.</td></tr>
+        <tr><td class="ctl">Tabletop exercise</td><td>All four</td><td>Once a year, the board and executives walk through a realistic scenario for two hours. Every gap found there is one less gap at 03:00.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Lost op</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Responsplan</td><td>Wie beslist (01)</td><td>Een kort geschreven plan met benoemde rollen en voor elke rol een plaatsvervanger. Geen ordner: een paar pagina's die iedereen heeft gelezen.</td></tr>
+        <tr><td class="ctl">Beslisrechten</td><td>Wie beslist (01)</td><td>Vooraf vastgelegd: wie systemen mag uitzetten, wie met de aanvaller mag praten, wie geld mag uitgeven, en tot welk bedrag.</td></tr>
+        <tr><td class="ctl">Bellijst</td><td>Wie beslist (01)</td><td>Privémobielnummers van elke rol en plaatsvervanger, geprint en thuis. De digitale kopie wordt samen met de rest versleuteld.</td></tr>
+        <tr><td class="ctl">Isoleren, niet wissen</td><td>Bewijs (02)</td><td>Eén regel die elke engineer kent: een verdachte machine loskoppelen, nooit herstarten of opnieuw installeren tot forensisch onderzoek het zegt.</td></tr>
+        <tr><td class="ctl">Communicatieteksten</td><td>Communicatie (03)</td><td>Voorlopige verklaringen voor personeel, klanten, pers en toezichthouder, vooraf goedgekeurd door juridisch, met één benoemde woordvoerder.</td></tr>
+        <tr><td class="ctl">Termijnenlijst</td><td>Communicatie (03)</td><td>Welke meldplichten voor ons gelden, aan wie, binnen hoeveel uur — AVG, NIS2, contracten, de verzekeraar — bevestigd door juridisch, op één pagina.</td></tr>
+        <tr><td class="ctl">Noodkanaal</td><td>Alle vier</td><td>Een manier voor het crisisteam om te overleggen als e-mail en chat gecompromitteerd of uitgevallen zijn: een aparte berichtengroep, een vergadernummer.</td></tr>
+        <tr><td class="ctl">Retainer</td><td>Hulp (04)</td><td>Een getekende overeenkomst met een forensisch en responsbureau dat binnen het uur opneemt en onze omgeving al kent vóór het telefoontje.</td></tr>
+        <tr><td class="ctl">Tabletop-oefening</td><td>Alle vier</td><td>Eén keer per jaar lopen bestuur en directie twee uur lang een realistisch scenario door. Elk gat dat daar wordt gevonden, is één gat minder om 03:00.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> this plan is not for IT. It is for the people in this room — they are the ones who will be woken up and asked to decide. Two questions test whether we are ready: when did this board last rehearse an incident, and is the phone list printed somewhere that is not on the network?</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> dit plan is niet voor IT. Het is voor de mensen in deze kamer — zij worden wakker gebeld en moeten beslissen. Twee vragen toetsen of we er klaar voor zijn: wanneer heeft dit bestuur voor het laatst een incident geoefend, en ligt de bellijst geprint op een plek die niet aan het netwerk hangt?</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">A serious incident is a matter of when. A badly handled one is the default outcome for any organisation that has never rehearsed.</span><span class="nl">Een ernstig incident is een kwestie van wanneer. Een slecht afgehandeld incident is de standaarduitkomst voor elke organisatie die nooit heeft geoefend.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">Critical</span><span class="nl">Kritiek</span></span><p><span class="en">Poor handling multiplies the damage of the incident itself: longer downtime, missed statutory deadlines, refused insurance claims and personal liability for management.</span><span class="nl">Slechte afhandeling vermenigvuldigt de schade van het incident zelf: langere stilstand, gemiste wettelijke termijnen, geweigerde verzekeringsclaims en persoonlijke aansprakelijkheid van het bestuur.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low</span><span class="nl">Laag</span></span><p><span class="en">The incident still happens. A rehearsed plan, a retainer and pre-approved communication turn chaos into a controlled, documented response.</span><span class="nl">Het incident gebeurt nog steeds. Een geoefend plan, een retainer en vooraf goedgekeurde communicatie maken van chaos een beheerste, gedocumenteerde respons.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CEO</span><span class="nl">CEO</span></span><p><span class="en">Not delegable to IT: the plan assigns decisions to executives. Legal owns the deadline list, the CISO owns the technical playbook.</span><span class="nl">Niet te delegeren aan IT: het plan legt beslissingen bij de directie. Legal is eigenaar van de termijnenlijst, de CISO van het technische draaiboek.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">months since the last board tabletop exercise · roles in the plan without a named deputy · hours until the retainer party answers, per contract · notification deadlines on the list not yet confirmed by legal.</span><span class="nl">maanden sinds de laatste tabletop-oefening met het bestuur · rollen in het plan zonder benoemde plaatsvervanger · uren tot de retainerpartij opneemt, volgens contract · meldtermijnen op de lijst die legal nog niet heeft bevestigd.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“An unrehearsed response to a security incident causes prolonged downtime, destroyed evidence, missed statutory notifications and loss of insurance cover.”</span><span class="nl">“Een niet-geoefende respons op een beveiligingsincident veroorzaakt langdurige stilstand, vernietigd bewijs, gemiste wettelijke meldingen en verlies van verzekeringsdekking.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>An incident-handling process as part of the risk management measures, with management accountable. Reporting to the national authority is the organisation's duty, not IT's, and cannot be outsourced.</td><td>There is no NIS2 certificate. Ask how quickly the supplier will warn you of an incident that affects you, in which channel and with what detail, and write those hours into the contract, because your own clock starts when you become aware.</td><td>Three clocks: early warning within 24 hours, full notification within 72 hours, final report within one month. Affected customers must also be informed. Who files, and where, must be on the deadline list. Confirm with legal whether NIS2 applies to you.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities: an ICT incident management process with classification criteria, a communication plan for clients and the public, and management that is trained to decide during a crisis.</td><td>Critical ICT providers must contractually support your incident reporting: notification duties, cooperation with your supervisor, participation in your exercises. Their report tells you whether they have rehearsed it, not whether they will do it for you.</td><td>Once the incident is classified as major: initial notification to the supervisor within hours, intermediate report within 72 hours, final report within one month. Classification itself is a decision someone must be mandated to make. Confirm with legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>If you issue one: incident response controls — detection, escalation, communication, post-incident review — are tested over the period (Type II). A plan nobody follows is an exception in the report.</td><td>Read the incident response controls and their test results, and check the complementary user entity controls: usually they say you must report incidents to the supplier and act on their notifications. Both need a named owner on your side.</td><td>The incident and how it was handled are disclosed in the next report. Customers ask for a bridge letter covering the gap and for the post-incident review. A well-documented response is itself evidence the control works.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Assurance over outsourced processes relevant to financial reporting. Incident response is only in scope if the service organisation chose to include it, so the report can be silent on it.</td><td>Check whether incident handling and client notification are among the control objectives. If not, ask for them in the contract; the report alone gives you no assurance that you will hear about an incident in time.</td><td>The service organisation must disclose the incident to its user auditors. If you are the service organisation, the response, the notifications and their timing will be examined and may qualify the opinion. Confirm with your auditor.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Een proces voor incidentafhandeling als onderdeel van de risicobeheersmaatregelen, met een aansprakelijk bestuur. Melden aan de toezichthouder is een plicht van de organisatie, niet van IT, en kan niet worden uitbesteed.</td><td>Er bestaat geen NIS2-certificaat. Vraag hoe snel de leverancier u waarschuwt bij een incident dat u raakt, via welk kanaal en met welke details, en zet die uren in het contract, want uw eigen klok begint te lopen zodra u het weet.</td><td>Drie klokken: vroegtijdige waarschuwing binnen 24 uur, volledige melding binnen 72 uur, eindrapport binnen een maand. Getroffen klanten moeten ook worden geïnformeerd. Wie meldt, en waar, hoort op de termijnenlijst. Bevestig met legal of NIS2 op u van toepassing is.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: een proces voor ICT-incidentbeheer met classificatiecriteria, een communicatieplan voor klanten en publiek, en een bestuur dat getraind is om tijdens een crisis te beslissen.</td><td>Kritieke ICT-leveranciers moeten uw incidentmelding contractueel ondersteunen: meldplichten, medewerking aan uw toezichthouder, deelname aan uw oefeningen. Hun rapport zegt of zij het geoefend hebben, niet of zij het voor u doen.</td><td>Zodra het incident als ernstig is geclassificeerd: eerste melding aan de toezichthouder binnen enkele uren, tussenrapport binnen 72 uur, eindrapport binnen een maand. De classificatie zelf is een beslissing waarvoor iemand gemandateerd moet zijn. Bevestig met legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Als u er zelf een afgeeft: maatregelen voor incidentrespons — detectie, escalatie, communicatie, evaluatie achteraf — worden over de periode getest (Type II). Een plan dat niemand volgt, staat als afwijking in het rapport.</td><td>Lees de incidentresponsmaatregelen en hun testresultaten, en controleer de complementary user entity controls: meestal staat daar dat u incidenten aan de leverancier moet melden en op zijn meldingen moet handelen. Beide hebben aan uw kant een benoemde eigenaar nodig.</td><td>Het incident en de afhandeling ervan worden in het volgende rapport vermeld. Klanten vragen om een bridge letter voor de tussenliggende periode en om de evaluatie achteraf. Een goed gedocumenteerde respons is zelf het bewijs dat de maatregel werkt.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Zekerheid over uitbestede processen die relevant zijn voor de financiële verslaggeving. Incidentrespons valt alleen binnen scope als de serviceorganisatie dat zelf heeft gekozen, dus het rapport kan erover zwijgen.</td><td>Controleer of incidentafhandeling en het informeren van klanten tot de beheersdoelstellingen behoren. Zo niet, vraag ze in het contract; het rapport alleen geeft u geen zekerheid dat u tijdig van een incident hoort.</td><td>De serviceorganisatie moet het incident melden aan de auditors van haar klanten. Bent u zelf de serviceorganisatie, dan worden de respons, de meldingen en hun tijdigheid onderzocht en kunnen zij het oordeel beïnvloeden. Bevestig met uw auditor.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">INCIDENT RESPONSE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">INCIDENT RESPONSE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

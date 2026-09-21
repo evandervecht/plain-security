@@ -4,27 +4,58 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Plain Security</title>
+<meta name="description" content="Plain-language security briefings for the board. Each topic: how it breaks, what stops it, what it means for your risk register and your audit. English and Dutch.">
 <style>
 body{margin:0;background:#0b1b2b;color:#c8d8e1;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:15px;line-height:1.75}
-.wrap{max-width:900px;margin:0 auto;padding:80px 40px}
+.wrap{max-width:1000px;margin:0 auto;padding:80px 40px}
 h1{font-family:system-ui,sans-serif;font-weight:800;color:#fff;font-size:clamp(28px,4vw,48px);letter-spacing:-.02em;margin:0 0 12px}
 h1 em{font-style:normal;color:#87a2b0}
 .lede{font-family:system-ui,sans-serif;font-size:17px;color:#e6eff5;max-width:62ch;margin:0 0 48px}
-a.card{display:block;background:#2a4858;border:1px solid #335364;padding:28px 32px;margin-bottom:16px;text-decoration:none;color:inherit}
-a.card:hover{border-color:#87a2b0}
-a.card b{display:block;font-family:system-ui,sans-serif;color:#fff;font-size:20px;margin-bottom:6px}
-a.card span{font-family:system-ui,sans-serif;color:#c8d8e1}
 .kicker{font-size:12px;letter-spacing:.34em;color:#87a2b0;text-transform:uppercase;display:block;margin-bottom:20px}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+a.card{display:block;background:#2a4858;border:1px solid #335364;padding:24px 28px;text-decoration:none;color:inherit}
+a.card:hover{border-color:#87a2b0}
+a.card b{display:block;font-family:system-ui,sans-serif;color:#fff;font-size:19px;margin-bottom:6px}
+a.card span{font-family:system-ui,sans-serif;font-size:14.5px;line-height:1.55;color:#c8d8e1}
+.cta{margin-top:56px;padding-top:36px;border-top:1px solid #335364;display:flex;flex-wrap:wrap;gap:16px;align-items:center}
+.cta p{font-family:system-ui,sans-serif;color:#87a2b0;margin:0;flex:1 1 320px}
+.btn{display:inline-block;padding:14px 28px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;border:1px solid #335364;color:#c8d8e1}
+.btn:hover{border-color:#87a2b0;color:#fff}
+.btn.solid{background:#637b88;color:#051324;border-color:#637b88}
+.btn.solid:hover{background:#fff;border-color:#fff}
+footer{margin-top:64px;font-size:11px;letter-spacing:.18em;color:#637b88;text-transform:uppercase}
+@media (max-width:760px){.wrap{padding:56px 22px}.cards{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <span class="kicker">// PLAIN SECURITY</span>
   <h1>Security, <em>explained for the board.</em></h1>
-  <p class="lede">Plain-language briefings on the risks that matter and the single control that stops each one. English and Dutch.</p>
+  <p class="lede">Plain-language briefings on the risks that matter and the single control that stops each one. Every topic ends with what it means for your risk register and for NIS2, DORA, SOC 2 and ISAE 3402. English and Dutch.</p>
 
-  <a class="card" href="email-security/"><b>Email security</b><span>Interception, tampering, spoofing and man-in-the-middle. What each costs, what stops it.</span></a>
-  <a class="card" href="ransomware/"><b>Ransomware</b><span>One stolen login, four steps to a standstill. What happens at each step, what breaks the chain.</span></a>
+  <div class="cards">
+    <a class="card" href="email-security/"><b>Email security</b><span>Interception, tampering, spoofing and man-in-the-middle. What each costs, what stops it.</span></a>
+    <a class="card" href="ransomware/"><b>Ransomware</b><span>One stolen login, four steps to a standstill. What happens at each step, what breaks the chain.</span></a>
+    <a class="card" href="phishing/"><b>Phishing</b><span>Fake login pages, MFA fatigue, CEO fraud and every other channel. What one click can and cannot do.</span></a>
+    <a class="card" href="identity/"><b>Passwords &amp; identity</b><span>Reused passwords, phone-read codes, leavers and standing admins. Who can get in, who can do anything.</span></a>
+    <a class="card" href="supply-chain/"><b>Supply chain attacks</b><span>Breached through someone we trust: vendor updates, supplier logins, open-source code and SaaS leaks.</span></a>
+    <a class="card" href="cloud/"><b>Cloud misconfiguration</b><span>The cloud is secure, our settings are not. Four mistakes behind most cloud breaches, and what prevents each.</span></a>
+    <a class="card" href="insider/"><b>Insider threat</b><span>Four people who already have the keys: leaver, careless colleague, unwatched admin, pressured employee.</span></a>
+    <a class="card" href="ddos/"><b>DDoS &amp; availability</b><span>Offline without a break-in. Floods, fake shoppers, one DNS provider, extortion, what keeps us up.</span></a>
+    <a class="card" href="patching/"><b>The unpatched server</b><span>Known hole, published fix, still open. Four ways patching fails, and the one control that closes each.</span></a>
+    <a class="card" href="shadow-it/"><b>Shadow IT &amp; SaaS sprawl</b><span>Company data in tools nobody approved, accounts nobody manages, apps nobody revoked. How to see it again.</span></a>
+    <a class="card" href="ai-security/"><b>AI at work</b><span>Public chatbots, hijacked assistants, cloned voices and confident nonsense. What each costs, what contains it.</span></a>
+    <a class="card" href="web-security/"><b>Your website is a front door</b><span>Injection, forgotten plugins, account takeover and skimmed checkouts. Four ways in, one control each.</span></a>
+    <a class="card" href="incident-response/"><b>The first 72 hours</b><span>Who decides, what gets wiped, who says what, who to call. How the first three days derail.</span></a>
+    <a class="card" href="nis2-dora/"><b>NIS2 &amp; DORA: what the board must own</b><span>The law now names the board. Four things that changed, and what has to be in place before the audit.</span></a>
+  </div>
+
+  <div class="cta">
+    <p>Missing a topic your board keeps asking about? Request it and it goes on the list.</p>
+    <a class="btn solid" href="https://github.com/evandervecht/plain-security/issues/new?title=Topic%20request%3A%20&amp;body=Which%20topic%2C%20and%20what%20question%20does%20the%20board%20ask%20about%20it%3F">Request a topic</a>
+  </div>
+
+  <footer>PLAIN SECURITY // SINGLE HTML FILES // NO JAVASCRIPT // NO TRACKING</footer>
 </div>
 </body>
 </html>

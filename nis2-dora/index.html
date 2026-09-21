@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NIS2 &amp; DORA // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   NIS2 & DORA // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 8s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : accountability --- */
+.s1 .table{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;gap:18px}
+.s1 .seat{position:relative;width:66px;height:66px;display:grid;place-items:center;font-size:26px;background:var(--surface);border:1px solid var(--line)}
+.s1 .seat .lbl{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}
+.s1 .seat.mgmt{animation:liable 8s ease-in-out infinite}
+@keyframes liable{0%,42%{border-color:var(--line);background:var(--surface);box-shadow:none}50%,100%{border-color:var(--bad);background:rgba(255,93,115,.18);box-shadow:0 0 24px rgba(255,93,115,.25)}}
+.s1 .gavel{position:absolute;left:50%;top:30px;margin-left:-18px;font-size:34px;z-index:4;animation:gavel 8s ease-in-out infinite}
+@keyframes gavel{0%,28%{transform:translateY(-14px) rotate(-40deg);opacity:0}34%{transform:translateY(-14px) rotate(-40deg);opacity:1}44%{transform:translateY(26px) rotate(0)}48%{transform:translateY(18px) rotate(-12deg)}52%,90%{transform:translateY(26px) rotate(0);opacity:1}100%{transform:translateY(26px) rotate(0);opacity:0}}
+
+/* --- scene 2 : the clock --- */
+.s2 .track{position:absolute;left:90px;right:90px;top:50%;height:6px;margin-top:-3px;background:var(--line-soft)}
+.s2 .fill{position:absolute;left:0;top:0;height:100%;width:0;background:var(--bad);animation:fill 9s linear infinite}
+@keyframes fill{0%{width:0}90%,100%{width:100%}}
+.s2 .mark{position:absolute;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;background:var(--surface);border:2px solid var(--line);border-radius:50%;z-index:2}
+.s2 .mark .lbl{position:absolute;top:24px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;letter-spacing:.18em;font-weight:700;color:var(--muted)}
+.s2 .mark .lbl.up{top:auto;bottom:24px}
+.s2 .mark.m0{left:0;border-color:var(--bad);background:var(--bad)}
+.s2 .mark.m1{left:25%;animation:hit1 9s linear infinite}
+.s2 .mark.m2{left:55%;animation:hit2 9s linear infinite}
+.s2 .mark.m3{left:100%;animation:hit3 9s linear infinite}
+@keyframes hit1{0%,22%{border-color:var(--line);background:var(--surface)}25%,100%{border-color:var(--bad);background:var(--bad)}}
+@keyframes hit2{0%,49%{border-color:var(--line);background:var(--surface)}52%,100%{border-color:var(--bad);background:var(--bad)}}
+@keyframes hit3{0%,88%{border-color:var(--line);background:var(--surface)}91%,100%{border-color:var(--bad);background:var(--bad)}}
+.s2 .banner{animation:fadeIn 9s ease-in-out infinite}
+
+/* --- scene 3 : supplier chain --- */
+.s3 .node.mid{left:50%;margin-left:-48px}
+.s3 .wire.a{left:118px;right:calc(50% + 50px)}
+.s3 .wire.b{left:calc(50% + 50px);right:118px}
+.s3 .node.right .box{animation:breach 8s ease-in-out infinite}
+@keyframes breach{0%,18%{border-color:var(--line);background:var(--surface)}26%,100%{border-color:var(--bad);background:rgba(255,93,115,.18)}}
+.s3 .node.left .box{animation:ours 8s ease-in-out infinite}
+@keyframes ours{0%,80%{border-color:var(--line);background:var(--surface)}88%,100%{border-color:var(--bad);background:rgba(255,93,115,.18)}}
+.s3 .resp{position:absolute;top:50%;margin-top:-17px;height:34px;padding:0 14px;display:grid;place-items:center;font-size:9.5px;letter-spacing:.18em;font-weight:700;background:var(--bad);color:var(--white);white-space:nowrap;z-index:3;animation:resp 8s ease-in-out infinite}
+@keyframes resp{0%,30%{right:118px;opacity:0}36%{right:118px;opacity:1}82%{right:calc(100% - 300px);opacity:1}88%,100%{right:calc(100% - 300px);opacity:0}}
+.s3 .breachtag{position:absolute;right:20px;top:calc(50% - 70px);width:96px;text-align:center;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 0;z-index:4;animation:fadeInEarly 8s ease-in-out infinite}
+@keyframes fadeInEarly{0%,20%{opacity:0}28%,100%{opacity:1}}
+
+/* --- scene 4 : prove it --- */
+.s4 .list{position:absolute;left:50%;top:calc(50% - 14px);transform:translate(-50%,-50%);width:min(560px,82%);background:var(--surface);border:1px solid var(--line);padding:14px 24px}
+.s4 .item{display:flex;align-items:center;gap:14px;padding:8px 0;border-bottom:1px solid var(--line-soft);font-size:10.5px;letter-spacing:.16em;font-weight:700;color:var(--body);text-transform:uppercase}
+.s4 .item:last-child{border-bottom:none}
+.s4 .item i{width:20px;height:20px;border:1px solid var(--line);display:grid;place-items:center;font-size:12px;color:var(--good);flex:none;font-style:normal}
+.s4 .item i::after{content:"✔";opacity:0;animation:tick 9s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes tick{0%{opacity:0}5%{opacity:1}80%{opacity:1}86%,100%{opacity:0}}
+.s4 .item .st{margin-left:auto;font-size:9.5px;color:var(--muted)}
+.s4 .banner{animation:fadeIn 9s ease-in-out infinite}
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .seat.mgmt{border-color:var(--bad);background:rgba(255,93,115,.18)}
+  .s1 .gavel{transform:translateY(26px)}
+  .s2 .fill{width:100%}
+  .s2 .mark{border-color:var(--bad);background:var(--bad)}
+  .s3 .node.right .box,.s3 .node.left .box{border-color:var(--bad);background:rgba(255,93,115,.18)}
+  .s3 .resp{right:calc(100% - 300px);opacity:1}
+  .s4 .item i::after{opacity:1}
+  .banner,.s3 .breachtag{opacity:1}
+}
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><i></i> PLAIN SECURITY <span style="color:var(--slate)">//</span> NIS2 · DORA</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">ACCOUNTABLE</span><span class="nl">AANSPRAKELIJK</span></a>
+      <a href="#r2"><span class="en">THE CLOCK</span><span class="nl">DE KLOK</span></a>
+      <a href="#r3"><span class="en">SUPPLIERS</span><span class="nl">LEVERANCIERS</span></a>
+      <a href="#r4"><span class="en">PROVE IT</span><span class="nl">BEWIJS HET</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">NIS2 &amp; DORA. <em>The law now names the board.</em></span>
+      <span class="nl">NIS2 &amp; DORA. <em>De wet noemt nu het bestuur.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Two European rules moved cybersecurity from the IT department to the boardroom — in plain language: what changed, what it means for the people at this table, and what has to be in place.</span>
+      <span class="nl">Twee Europese regels verplaatsten cyberbeveiliging van de IT-afdeling naar de bestuurskamer — in gewone taal: wat er veranderde, wat het betekent voor de mensen aan deze tafel, en wat er moet staan.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE WHAT CHANGED</span><span class="nl">BEKIJK WAT VERANDERDE</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT HAS TO BE IN PLACE</span><span class="nl">WAT ER MOET STAAN</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CHANGE 01</span><span class="nl">VERANDERING 01</span></span>
+    <h2>
+      <span class="en">The board is now <em>personally accountable.</em></span>
+      <span class="nl">Het bestuur is nu <em>persoonlijk aansprakelijk.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">management body liability / in the Netherlands: Cyberbeveiligingswet</span>
+      <span class="nl">aansprakelijkheid bestuursorgaan / in Nederland: Cyberbeveiligingswet</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">THE BOARDROOM</span><span class="nl">DE BESTUURSKAMER</span></div>
+      <div class="gavel">🔨</div>
+      <div class="table">
+        <div class="seat">👔<span class="lbl">CFO</span></div>
+        <div class="seat">👔<span class="lbl">COO</span></div>
+        <div class="seat mgmt">👔<span class="lbl">CEO</span></div>
+        <div class="seat">👔<span class="lbl">CIO</span></div>
+        <div class="seat">👔<span class="lbl"><span class="en">CHAIR</span><span class="nl">VOORZITTER</span></span></div>
+      </div>
+      <div class="banner"><span class="en">MANAGEMENT BODY · APPROVES · OVERSEES · LIABLE</span><span class="nl">BESTUUR · KEURT GOED · ZIET TOE · AANSPRAKELIJK</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Until now, a cyber incident was an IT failure with a business consequence. NIS2 changes the subject of the sentence. The management body must approve the cybersecurity risk measures, oversee their implementation, and can be held liable when it does not. In the Netherlands the directive arrives as the Cyberbeveiligingswet; DORA applies directly to banks, insurers, investment firms and their critical ICT providers. Delegating the work is allowed. Delegating the responsibility is not.</p>
+      <p class="en"><strong>Business impact:</strong> this is a governance question before it is a technical one. Regulators can impose fines that scale with turnover, can order remedies, and for essential entities can temporarily bar individuals from management roles. “We hired a good CISO” is not a defence if the board never saw, questioned or approved what that person did.</p>
+      <p class="nl">Tot nu toe was een cyberincident een IT-storing met een bedrijfsgevolg. NIS2 verandert het onderwerp van de zin. Het bestuur moet de maatregelen voor cyberrisico's goedkeuren, toezien op de uitvoering, en kan aansprakelijk worden gesteld als het dat niet doet. In Nederland komt de richtlijn als de Cyberbeveiligingswet; DORA geldt rechtstreeks voor banken, verzekeraars, beleggingsondernemingen en hun kritieke ICT-leveranciers. Het werk delegeren mag. De verantwoordelijkheid delegeren niet.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> dit is een governancevraag voordat het een technische vraag is. Toezichthouders kunnen boetes opleggen die meeschalen met de omzet, herstelmaatregelen afdwingen, en bij essentiële entiteiten personen tijdelijk uit bestuursfuncties weren. “We hebben een goede CISO aangenomen” is geen verweer als het bestuur nooit heeft gezien, bevraagd of goedgekeurd wat die persoon deed.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NAMED IN LAW · FINES SCALE WITH TURNOVER · PERSONAL</span><span class="nl">GENOEMD IN DE WET · BOETES NAAR OMZET · PERSOONLIJK</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: ONE ACCOUNTABLE EXECUTIVE + BOARD-APPROVED FRAMEWORK</span><span class="nl">OPLOSSING: ÉÉN VERANTWOORDELIJKE BESTUURDER + GOEDGEKEURD KADER</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CHANGE 02</span><span class="nl">VERANDERING 02</span></span>
+    <h2>
+      <span class="en">Reporting runs <em>on a clock.</em></span>
+      <span class="nl">Melden gaat <em>op de klok.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">incident notification deadlines / confirm the exact regime with legal</span>
+      <span class="nl">meldtermijnen incidenten / laat juridische zaken het exacte regime bevestigen</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">FROM THE MOMENT YOU KNOW</span><span class="nl">VANAF HET MOMENT DAT JE HET WEET</span></div>
+      <div class="track">
+        <div class="fill"></div>
+        <div class="mark m0"><span class="lbl up"><span class="en">T=0 · AWARE</span><span class="nl">T=0 · BEKEND</span></span></div>
+        <div class="mark m1"><span class="lbl"><span class="en">~24H · EARLY WARNING</span><span class="nl">~24U · VROEGE WAARSCHUWING</span></span></div>
+        <div class="mark m2"><span class="lbl up"><span class="en">~72H · NOTIFICATION</span><span class="nl">~72U · MELDING</span></span></div>
+        <div class="mark m3"><span class="lbl"><span class="en">~1 MONTH · FINAL REPORT</span><span class="nl">~1 MAAND · EINDRAPPORT</span></span></div>
+      </div>
+      <div class="banner"><span class="en">LATE OR WRONG = A SECOND OFFENCE</span><span class="nl">TE LAAT OF ONJUIST = EEN TWEEDE OVERTREDING</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A significant incident is no longer something you disclose when the dust settles. Under NIS2 the sequence is roughly: an early warning within about 24 hours of becoming aware, a fuller notification within about 72 hours, and a final report within about a month. DORA has its own tight timelines for financial entities. Exact deadlines, thresholds and the regulator you report to depend on which regime you fall under — legal must confirm that in advance, not on the day.</p>
+      <p class="en"><strong>Business impact:</strong> twenty-four hours is shorter than it sounds. It has to cover detecting the incident, deciding it is “significant”, getting the facts straight enough to write down, and finding the person authorised to send it — possibly at night, possibly on a weekend. Companies that have not rehearsed this miss the window or report wrongly, and the late or inaccurate notification becomes a second offence on top of the incident.</p>
+      <p class="nl">Een significant incident is niet langer iets dat je meldt als het stof is neergedaald. Onder NIS2 is de volgorde ongeveer: een vroege waarschuwing binnen circa 24 uur nadat je ervan weet, een uitgebreidere melding binnen circa 72 uur, en een eindrapport binnen ongeveer een maand. DORA kent eigen strakke termijnen voor financiële instellingen. De exacte termijnen, drempels en de toezichthouder aan wie je meldt, hangen af van het regime waaronder je valt — dat moet juridische zaken vooraf bevestigen, niet op de dag zelf.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> vierentwintig uur is korter dan het klinkt. Daarin moet het incident worden ontdekt, worden besloten dat het “significant” is, moeten de feiten voldoende op een rij staan om ze op te schrijven, en moet de persoon worden gevonden die bevoegd is om te melden — mogelijk 's nachts, mogelijk in het weekend. Bedrijven die dit niet hebben geoefend, missen de termijn of melden verkeerd, en de late of onjuiste melding wordt een tweede overtreding bovenop het incident.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">~24H · ~72H · ~1 MONTH · NIGHTS AND WEEKENDS COUNT</span><span class="nl">~24U · ~72U · ~1 MAAND · NACHTEN EN WEEKENDEN TELLEN MEE</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: CLASSIFICATION + REPORTING PROCESS, REHEARSED AGAINST THE CLOCK</span><span class="nl">OPLOSSING: CLASSIFICATIE + MELDPROCES, GEOEFEND OP DE KLOK</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CHANGE 03</span><span class="nl">VERANDERING 03</span></span>
+    <h2>
+      <span class="en">Your suppliers' security is <em>your duty.</em></span>
+      <span class="nl">De beveiliging van je leveranciers is <em>jouw plicht.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">supply chain oversight / ICT third-party risk</span>
+      <span class="nl">toezicht op de keten / ICT-derdenrisico</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">WHO ANSWERS FOR WHOM</span><span class="nl">WIE STAAT VOOR WIE IN</span></div>
+      <div class="node left"><div class="box">🏢</div><span class="en">Us</span><span class="nl">Wij</span></div>
+      <div class="node mid"><div class="box">🏭</div><span class="en">Supplier</span><span class="nl">Leverancier</span></div>
+      <div class="node right"><div class="box">🔧</div><span class="en">Their supplier</span><span class="nl">Hun leverancier</span></div>
+      <div class="wire a"></div>
+      <div class="wire b"></div>
+      <div class="breachtag"><span class="en">BREACHED</span><span class="nl">GEHACKT</span></div>
+      <div class="resp"><span class="en">OUR RESPONSIBILITY</span><span class="nl">ONZE VERANTWOORDELIJKHEID</span></div>
+      <div class="banner"><span class="en">THEIR WEAKNESS · OUR INCIDENT · OUR OBLIGATION</span><span class="nl">HUN ZWAKTE · ONS INCIDENT · ONZE PLICHT</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Both rules make you responsible for the security of the parties you depend on: the software vendor, the hosting provider, the payroll bureau, the managed-service partner. You are expected to know who they are, to assess their risk, to put obligations in the contract, and — under DORA in particular — to have an exit plan for the ones you cannot afford to lose. When their weakness becomes your incident, “it was the supplier” is an explanation, not an excuse.</p>
+      <p class="en"><strong>Business impact:</strong> most organisations cannot produce a complete list of their ICT suppliers today, let alone say which contracts contain security, audit and notification clauses. Building that register is unglamorous procurement and legal work. It is also the first thing a regulator asks for after an incident that started at a third party.</p>
+      <p class="nl">Beide regels maken je verantwoordelijk voor de beveiliging van de partijen waarvan je afhankelijk bent: de softwareleverancier, de hostingpartij, het salarisbureau, de managed-servicepartner. Je wordt geacht te weten wie het zijn, hun risico te beoordelen, verplichtingen in het contract vast te leggen en — vooral onder DORA — een exitplan te hebben voor de partijen die je niet kunt missen. Als hun zwakte jouw incident wordt, is “het lag bij de leverancier” een verklaring, geen excuus.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de meeste organisaties kunnen vandaag geen volledige lijst van hun ICT-leveranciers produceren, laat staan zeggen welke contracten clausules over beveiliging, audit en melding bevatten. Dat register opbouwen is onopvallend inkoop- en juridisch werk. Het is ook het eerste waar een toezichthouder om vraagt na een incident dat bij een derde partij begon.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">UNKNOWN SUPPLIERS · SILENT CONTRACTS · NO EXIT</span><span class="nl">ONBEKENDE LEVERANCIERS · ZWIJGENDE CONTRACTEN · GEEN EXIT</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: SUPPLIER REGISTER + CONTRACT CLAUSES + EXIT PLANS</span><span class="nl">OPLOSSING: LEVERANCIERSREGISTER + CONTRACTCLAUSULES + EXITPLANNEN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CHANGE 04</span><span class="nl">VERANDERING 04</span></span>
+    <h2>
+      <span class="en">You have to <em>prove it, not assume it.</em></span>
+      <span class="nl">Je moet het <em>bewijzen, niet aannemen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">mandatory training and resilience testing</span>
+      <span class="nl">verplichte training en weerbaarheidstesten</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">EVIDENCE, NOT ASSURANCE</span><span class="nl">BEWIJS, GEEN GERUSTSTELLING</span></div>
+      <div class="list">
+        <div class="item"><i style="--d:.6s"></i><span class="en">Board followed cybersecurity training</span><span class="nl">Bestuur volgde cyberbeveiligingstraining</span><span class="st"><span class="en">RECORDED</span><span class="nl">VASTGELEGD</span></span></div>
+        <div class="item"><i style="--d:2.2s"></i><span class="en">Full restore from backup performed</span><span class="nl">Volledig herstel vanaf back-up uitgevoerd</span><span class="st"><span class="en">HOURS MEASURED</span><span class="nl">UREN GEMETEN</span></span></div>
+        <div class="item"><i style="--d:3.8s"></i><span class="en">Incident exercise run against the clock</span><span class="nl">Incidentoefening gedaan op de klok</span><span class="st"><span class="en">GAPS LISTED</span><span class="nl">HIATEN GENOTEERD</span></span></div>
+        <div class="item"><i style="--d:5.4s"></i><span class="en">Threat-led test on the live organisation</span><span class="nl">Dreigingsgestuurde test op de echte organisatie</span><span class="st"><span class="en">FINANCIAL ENTITIES</span><span class="nl">FINANCIËLE INSTELLINGEN</span></span></div>
+      </div>
+      <div class="banner"><span class="en">A POLICY DOCUMENT IS NOT EVIDENCE</span><span class="nl">EEN BELEIDSDOCUMENT IS GEEN BEWIJS</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The rules do not accept a policy document as evidence. Members of the management body must follow cybersecurity training so they can judge the risks they are approving. Measures must be tested: does the backup restore, does the failover work, does the incident process hold under pressure. Financial entities face the strongest version — regular resilience testing, and for the larger ones advanced threat-led testing in which specialists attack the live organisation with the board's knowledge.</p>
+      <p class="en"><strong>Business impact:</strong> this is where the cost sits, and where the value sits. An untested control is a belief. Testing converts beliefs into either confidence or a to-do list, and both are worth more than the belief. For the board the practical change is small: training on the calendar, and test results — not assurances — on the agenda.</p>
+      <p class="nl">De regels accepteren een beleidsdocument niet als bewijs. Leden van het bestuur moeten cyberbeveiligingstraining volgen, zodat ze de risico's die ze goedkeuren kunnen beoordelen. Maatregelen moeten worden getest: herstelt de back-up, werkt de failover, houdt het incidentproces stand onder druk. Financiële instellingen krijgen de zwaarste variant — periodieke weerbaarheidstesten, en voor de grotere partijen geavanceerde dreigingsgestuurde testen waarbij specialisten de echte organisatie aanvallen, met medeweten van het bestuur.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> hier zitten de kosten, en hier zit de waarde. Een ongeteste maatregel is een overtuiging. Testen zet overtuigingen om in vertrouwen of in een actielijst, en beide zijn meer waard dan de overtuiging. Voor het bestuur is de praktische verandering klein: training in de kalender, en testresultaten — geen geruststellingen — op de agenda.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">UNTESTED = UNKNOWN · POLICY IS NOT EVIDENCE</span><span class="nl">ONGETEST = ONBEKEND · BELEID IS GEEN BEWIJS</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: BOARD TRAINING + TESTING PROGRAMME + RESULTS ON THE AGENDA</span><span class="nl">OPLOSSING: BESTUURSTRAINING + TESTPROGRAMMA + RESULTATEN OP DE AGENDA</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What has to <em>be in place.</em></span>
+      <span class="nl">Wat er <em>moet staan.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">governance and paperwork done properly — most of it is not technical</span>
+      <span class="nl">governance en administratie op orde — het meeste is niet technisch</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">GOVERNANCE STACK</span><span class="nl">GOVERNANCELAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">SCOPE</span><span class="nl">REIKWIJDTE</span></span>
+        <span class="chip c2"><span class="en">NAMED OWNER</span><span class="nl">EIGENAAR BIJ NAAM</span></span>
+        <span class="chip c3"><span class="en">RISK FRAMEWORK</span><span class="nl">RISICOKADER</span></span>
+        <span class="chip c4"><span class="en">REPORTING DRILL</span><span class="nl">MELDOEFENING</span></span>
+        <span class="chip c5"><span class="en">SUPPLIER REGISTER</span><span class="nl">LEVERANCIERSREGISTER</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Covers</th><th>In one line</th></tr>
+        <tr><td class="ctl">Scope</td><td>All four</td><td>Confirm with legal which regime applies: essential or important entity under NIS2, financial entity under DORA, or both. Everything else follows from this.</td></tr>
+        <tr><td class="ctl">Named owner</td><td>Accountable (01)</td><td>One executive accountable for cybersecurity by name, reporting to the board on a fixed cadence. Not a committee.</td></tr>
+        <tr><td class="ctl">Risk framework</td><td>Accountable (01)</td><td>The set of measures, the reasoning behind them, and the board's approval — written down and dated.</td></tr>
+        <tr><td class="ctl">Reporting drill</td><td>The clock (02)</td><td>An incident classification, a decision tree for “significant”, pre-drafted notifications, and a rehearsal against the clock at least yearly.</td></tr>
+        <tr><td class="ctl">Supplier register</td><td>Suppliers (03)</td><td>Every ICT supplier, its criticality, its contract clauses on security, audit and notification, and an exit plan for the critical ones.</td></tr>
+        <tr><td class="ctl">Board training</td><td>Prove it (04)</td><td>Cybersecurity training for the management body, recorded and repeated. Also the fastest way to make the other rows land.</td></tr>
+        <tr><td class="ctl">Testing programme</td><td>Prove it (04)</td><td>A schedule of tests — restores, failovers, incident exercises, and for financial entities threat-led testing — with results reported to the board.</td></tr>
+        <tr><td class="ctl">Evidence</td><td>All four</td><td>Minutes, approvals, test reports, training records, supplier assessments. If it is not documented, to a regulator it did not happen.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Dekt</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Reikwijdte</td><td>Alle vier</td><td>Bevestig met juridische zaken welk regime geldt: essentiële of belangrijke entiteit onder NIS2, financiële instelling onder DORA, of beide. Alles volgt hieruit.</td></tr>
+        <tr><td class="ctl">Eigenaar bij naam</td><td>Aansprakelijk (01)</td><td>Eén bestuurder die bij naam verantwoordelijk is voor cyberbeveiliging en op vaste momenten aan het bestuur rapporteert. Geen commissie.</td></tr>
+        <tr><td class="ctl">Risicokader</td><td>Aansprakelijk (01)</td><td>De set maatregelen, de onderbouwing en de goedkeuring van het bestuur — opgeschreven en gedateerd.</td></tr>
+        <tr><td class="ctl">Meldoefening</td><td>De klok (02)</td><td>Een incidentclassificatie, een beslisboom voor “significant”, voorbereide meldingen, en minstens jaarlijks een oefening op de klok.</td></tr>
+        <tr><td class="ctl">Leveranciersregister</td><td>Leveranciers (03)</td><td>Elke ICT-leverancier, de kritikaliteit, de contractclausules over beveiliging, audit en melding, en een exitplan voor de kritieke.</td></tr>
+        <tr><td class="ctl">Bestuurstraining</td><td>Bewijs het (04)</td><td>Cyberbeveiligingstraining voor het bestuur, vastgelegd en herhaald. Ook de snelste manier om de andere rijen te laten landen.</td></tr>
+        <tr><td class="ctl">Testprogramma</td><td>Bewijs het (04)</td><td>Een kalender van testen — herstel, failover, incidentoefeningen, en voor financiële instellingen dreigingsgestuurde testen — met resultaten aan het bestuur.</td></tr>
+        <tr><td class="ctl">Bewijs</td><td>Alle vier</td><td>Notulen, goedkeuringen, testrapporten, trainingsregistraties, leveranciersbeoordelingen. Wat niet is vastgelegd, is voor een toezichthouder niet gebeurd.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> compliance is the floor, not the goal — the rules describe what a well-run organisation already does. The real decision is who in this room owns it by name, and when the board last saw evidence rather than assurances. If nobody can answer either question today, that is the first finding.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> compliance is de ondergrens, niet het doel — de regels beschrijven wat een goed geleide organisatie al doet. De echte beslissing is wie in deze kamer het bij naam bezit, en wanneer het bestuur voor het laatst bewijs zag in plaats van geruststellingen. Als niemand vandaag een van beide vragen kan beantwoorden, is dat de eerste bevinding.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Being in scope is a fact for most mid-sized and large organisations in the covered sectors. The risk is being in scope and not knowing it.</span><span class="nl">Onder de regels vallen is een feit voor de meeste middelgrote en grote organisaties in de betrokken sectoren. Het risico is eronder vallen zonder het te weten.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Fines that scale with turnover, remedial orders, temporary bans on management functions, and a public enforcement decision on top of the incident itself.</span><span class="nl">Boetes die meeschalen met de omzet, herstelmaatregelen, tijdelijke uitsluiting van bestuursfuncties, en een openbaar handhavingsbesluit bovenop het incident zelf.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low</span><span class="nl">Laag</span></span><p><span class="en">With scope confirmed, a named owner, an approved framework and rehearsed reporting, what remains is the incident itself — which the other briefings address.</span><span class="nl">Met bevestigde reikwijdte, een eigenaar bij naam, een goedgekeurd kader en geoefend melden blijft het incident zelf over — en daar gaan de andere briefings over.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CEO / General Counsel</span><span class="nl">CEO / General Counsel</span></span><p><span class="en">The law names the management body. Legal confirms scope and deadlines; the CEO owns that it gets done.</span><span class="nl">De wet noemt het bestuur. Juridische zaken bevestigt reikwijdte en termijnen; de CEO is eigenaar van de uitvoering.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Scope decision dated and signed (yes / no) · months since the last board training · days since the last reporting rehearsal · % of critical ICT suppliers with contract clauses and an exit plan.</span><span class="nl">Reikwijdtebesluit gedateerd en ondertekend (ja / nee) · maanden sinds de laatste bestuurstraining · dagen sinds de laatste meldoefening · % kritieke ICT-leveranciers met contractclausules en exitplan.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Failure to meet NIS2 or DORA obligations leads to fines, remedial orders and personal liability for the management body, and turns any security incident into a compliance breach as well.”</span><span class="nl">“Het niet nakomen van NIS2- of DORA-verplichtingen leidt tot boetes, herstelmaatregelen en persoonlijke aansprakelijkheid van het bestuur, en maakt van elk beveiligingsincident ook een compliance-overtreding.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Risk management measures approved and overseen by the management body, incident reporting on the roughly 24-hour, 72-hour and one-month schedule, supply chain security, and training for management.</td><td>A supplier's own NIS2 status does not discharge your duty. Ask for their measures, their incident notification commitment to you, and who their regulator is.</td><td>The incident and the notification are judged separately. A late or missing notification is its own offence, even if the incident was handled well.</td></tr>
+        <tr><td class="ctl">DORA</td><td>An ICT risk framework, incident classification and reporting, resilience testing including threat-led testing for larger firms, and a register of ICT third-party arrangements with mandatory contract clauses and exit strategies.</td><td>Critical ICT providers fall under direct oversight. Your register of information must list them and the contract must contain the mandatory clauses. A report does not replace the clauses.</td><td>Major ICT incidents go to the financial supervisor on DORA's own timelines. The classification criteria decide what counts, so have them written down before you need them.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Nothing directly — it is an assurance report, not a law. But NIS2 and DORA expect you to assess suppliers, and SOC 2 is the evidence most suppliers offer.</td><td>Read the scope, the period, the exceptions and the complementary user entity controls. A clean SOC 2 covers what was tested, not everything you rely on.</td><td>An incident at a SOC 2 supplier appears as an exception in their next report — long after your notification deadline passed. Contract clauses, not the report, get you told in time.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Nothing directly — same logic as SOC 2, and common in Europe for outsourced financial processes.</td><td>Check that the controls tested are the ones your compliance depends on, and that the period covers your reporting year.</td><td>A control failure at the service organisation is disclosed to user auditors. Your own regulatory notification duty runs regardless, and much sooner.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Risicobeheersmaatregelen die door het bestuur zijn goedgekeurd en worden bewaakt, incidentmelding volgens het schema van circa 24 uur, 72 uur en een maand, ketenbeveiliging, en training voor het bestuur.</td><td>De eigen NIS2-status van een leverancier ontslaat u niet van uw plicht. Vraag naar hun maatregelen, hun meldtoezegging aan u, en wie hun toezichthouder is.</td><td>Het incident en de melding worden apart beoordeeld. Een te late of ontbrekende melding is een eigen overtreding, ook als het incident goed is afgehandeld.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Een ICT-risicokader, incidentclassificatie en -melding, weerbaarheidstesten inclusief dreigingsgestuurde testen voor grotere instellingen, en een register van ICT-derdenovereenkomsten met verplichte contractclausules en exitstrategieën.</td><td>Kritieke ICT-leveranciers vallen onder direct toezicht. Uw informatieregister moet ze vermelden en het contract moet de verplichte clausules bevatten. Een rapport vervangt de clausules niet.</td><td>Ernstige ICT-incidenten gaan naar de financiële toezichthouder volgens de eigen termijnen van DORA. De classificatiecriteria bepalen wat meetelt; leg ze vast voordat u ze nodig hebt.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Niets rechtstreeks — het is een assurancerapport, geen wet. Maar NIS2 en DORA verwachten dat u leveranciers beoordeelt, en SOC 2 is het bewijs dat de meeste leveranciers aanbieden.</td><td>Lees de reikwijdte, de periode, de afwijkingen en de aanvullende maatregelen die van u als gebruiker worden verwacht. Een schoon SOC 2-rapport dekt wat is getest, niet alles waarop u vertrouwt.</td><td>Een incident bij een SOC 2-leverancier verschijnt als afwijking in hun volgende rapport — lang nadat uw meldtermijn is verstreken. Contractclausules, niet het rapport, zorgen dat u tijdig wordt geïnformeerd.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Niets rechtstreeks — dezelfde logica als SOC 2, en in Europa gebruikelijk voor uitbestede financiële processen.</td><td>Controleer of de geteste maatregelen de maatregelen zijn waarvan uw compliance afhangt, en of de periode uw rapportagejaar dekt.</td><td>Een tekortkoming bij de serviceorganisatie wordt aan de auditors van de klanten gemeld. Uw eigen meldplicht aan de toezichthouder loopt onverminderd door, en veel eerder.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">NIS2 &amp; DORA BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">NIS2 &amp; DORA BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Supply chain attacks // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   SUPPLY CHAIN // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : poisoned update --- */
+.s1 .pkg{position:absolute;top:50%;width:58px;height:38px;margin-top:-19px;z-index:3;display:grid;place-items:center;font-size:20px;background:var(--white);border:1px solid #9fb3c0;animation:ship 8s linear infinite}
+.s1 .pkg .ok{position:absolute;top:-9px;right:-9px;font-size:8.5px;font-weight:700;letter-spacing:.14em;padding:2px 6px;background:var(--good);color:#04291d}
+@keyframes ship{0%{left:118px;opacity:0}6%{opacity:1}70%{left:calc(100% - 176px);opacity:1}76%,100%{left:calc(100% - 176px);opacity:0}}
+.s1 .node.right .box{animation:infected 8s ease-in-out infinite}
+@keyframes infected{0%,72%{background:var(--surface);border-color:var(--line)}80%,100%{background:rgba(255,93,115,.22);border-color:var(--bad)}}
+.s1 .skull{position:absolute;right:20px;top:50%;width:96px;text-align:center;margin-top:-86px;font-size:24px;color:var(--bad);opacity:0;animation:skull 8s ease-in-out infinite;z-index:4}
+@keyframes skull{0%,74%{opacity:0;transform:translateY(8px)}82%,100%{opacity:1;transform:translateY(0)}}
+.s1 .spy{left:130px;margin-left:0;bottom:30px}
+.s1 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 2 : supplier access --- */
+.s2 .gate{position:absolute;left:50%;top:50%;width:66px;height:66px;margin:-33px 0 0 -33px;display:grid;place-items:center;font-size:28px;background:var(--surface);border:1px solid var(--line);z-index:2;animation:gate 8s ease-in-out infinite}
+@keyframes gate{0%,44%{border-color:var(--line)}52%,100%{border-color:var(--bad);background:rgba(255,93,115,.22)}}
+.s2 .gatelabel{position:absolute;left:50%;top:calc(50% + 46px);transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--muted);background:var(--deep);border:1px solid var(--line);padding:3px 9px;z-index:4}
+.s2 .badge{position:absolute;top:50%;width:150px;padding:6px 10px;margin-top:-22px;z-index:3;background:var(--white);border:1px solid #9fb3c0;color:var(--deep);font-size:9.5px;letter-spacing:.1em;font-weight:700;line-height:1.5;animation:badge 8s linear infinite}
+.s2 .badge b{display:block;font-size:11px;letter-spacing:.05em}
+@keyframes badge{0%{left:118px;opacity:0}6%{opacity:1}92%{left:calc(100% - 270px);opacity:1}100%{left:calc(100% - 270px);opacity:0}}
+.s2 .spy{left:130px;margin-left:0;bottom:30px}
+.s2 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 3 : poisoned dependency --- */
+.s3 .app{position:absolute;left:50%;top:40px;transform:translateX(-50%);padding:10px 26px;font-family:var(--sans);font-weight:700;font-size:14px;letter-spacing:.06em;color:var(--white);background:var(--surface);border:1px solid var(--line);z-index:2;animation:appbad 9s ease-in-out infinite}
+@keyframes appbad{0%,60%{border-color:var(--line);box-shadow:none}68%,100%{border-color:var(--bad);box-shadow:0 0 28px rgba(255,93,115,.35)}}
+.s3 .bricks{position:absolute;left:50%;top:104px;transform:translateX(-50%);display:grid;grid-template-columns:repeat(6,112px);gap:8px}
+.s3 .brick{position:relative;height:40px;display:grid;place-items:center;font-size:10px;letter-spacing:.14em;font-weight:700;color:var(--body);background:var(--bg-hi);border:1px solid var(--line)}
+.s3 .brick.bad::after{content:"☠";position:absolute;inset:0;display:grid;place-items:center;font-size:20px;color:var(--white);background:rgba(255,93,115,.9);opacity:0;animation:poison 9s ease-in-out infinite}
+@keyframes poison{0%,36%{opacity:0}44%,100%{opacity:1}}
+.s3 .link{position:absolute;left:50%;top:78px;width:1px;height:26px;margin-left:-.5px;background:repeating-linear-gradient(180deg,var(--line) 0 5px,transparent 5px 10px)}
+.s3 .banner{animation:fadeIn 9s ease-in-out infinite}
+
+/* --- scene 4 : saas vendor breach --- */
+.s4 .wire{right:118px}
+.s4 .node.left .box{border-color:rgba(55,211,155,.55);box-shadow:0 0 24px rgba(55,211,155,.12)}
+.s4 .stamp{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:8.5px;font-weight:700;letter-spacing:.14em;padding:2px 7px;background:var(--good);color:#04291d;white-space:nowrap}
+.s4 .doc{position:absolute;right:42px;top:50%;width:44px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--white);border:1px solid #9fb3c0;color:var(--deep);animation:pulled 6s ease-in-out infinite}
+.s4 .doc.b{animation-delay:2s}.s4 .doc.c{animation-delay:4s}
+@keyframes pulled{0%{transform:translate(0,0);opacity:0}10%{opacity:1}85%{transform:translate(-150px,78px);opacity:1}100%{transform:translate(-160px,84px);opacity:0}}
+.s4 .thief{left:calc(100% - 262px);bottom:56px}
+.s4 .banner{left:38%;animation:fadeIn 6s ease-in-out infinite}
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .pkg{display:none}.s1 .node.right .box{background:rgba(255,93,115,.22);border-color:var(--bad)}.s1 .skull{opacity:1}
+  .s2 .badge{left:calc(50% - 75px)}.s2 .gate{border-color:var(--bad);background:rgba(255,93,115,.22)}
+  .s3 .brick.bad::after{opacity:1}.s3 .app{border-color:var(--bad)}
+  .s4 .doc{transform:translate(-75px,39px)}.s4 .doc.b,.s4 .doc.c{display:none}
+  .banner{opacity:1}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><i></i> PLAIN SECURITY <span style="color:var(--slate)">//</span> SUPPLY CHAIN</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">UPDATES</span><span class="nl">UPDATES</span></a>
+      <a href="#r2"><span class="en">ACCESS</span><span class="nl">TOEGANG</span></a>
+      <a href="#r3"><span class="en">CODE</span><span class="nl">CODE</span></a>
+      <a href="#r4"><span class="en">SAAS</span><span class="nl">SAAS</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Supply chain attacks. <em>Breached through someone we trust.</em></span>
+      <span class="nl">Supply chain-aanvallen. <em>Gehackt via iemand die we vertrouwen.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Our security is only as good as that of every vendor, supplier and software component we let in — in plain language: four ways the trust gets abused, and the one control that limits each.</span>
+      <span class="nl">Onze beveiliging is maar zo goed als die van elke leverancier, dienstverlener en softwarecomponent die we binnenlaten — in gewone taal: vier manieren waarop dat vertrouwen wordt misbruikt, en welke maatregel elk ervan beperkt.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE RISKS</span><span class="nl">BEKIJK DE RISICO'S</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT LIMITS IT</span><span class="nl">WAT HET BEPERKT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 01</span><span class="nl">RISICO 01</span></span>
+    <h2>
+      <span class="en">The update we trusted <em>carried the attacker in.</em></span>
+      <span class="nl">De update die we vertrouwden <em>bracht de aanvaller binnen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">compromised software update / trojanised vendor</span>
+      <span class="nl">besmette software-update / gecompromitteerde leverancier</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">TUESDAY PATCH RUN</span><span class="nl">PATCHRONDE OP DINSDAG</span></div>
+      <div class="node left"><div class="box">🏭</div><span class="en">Software vendor</span><span class="nl">Softwareleverancier</span></div>
+      <div class="node right"><div class="box">🏢</div><span class="en">Our servers</span><span class="nl">Onze servers</span></div>
+      <div class="wire"></div>
+      <div class="pkg">📦<span class="ok"><span class="en">SIGNED ✓</span><span class="nl">ONDERTEKEND ✓</span></span></div>
+      <div class="skull">☠</div>
+      <div class="actor spy pulse">🕵️<span class="tag"><span class="en">INSIDE THE VENDOR</span><span class="nl">BINNEN BIJ DE LEVERANCIER</span></span></div>
+      <div class="banner"><span class="en">SIGNED · TRUSTED · AUTO-INSTALLED · MALWARE INSIDE</span><span class="nl">ONDERTEKEND · VERTROUWD · AUTOMATISCH GEÏNSTALLEERD · MALWARE ERIN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">We tell staff to install updates promptly, and rightly so. But an update is code we run with full privileges, on the vendor's word alone. When an attacker gets inside the vendor's build process, the poisoned version is signed with the vendor's real certificate, delivered through the real update channel and installed by our own systems on schedule. Nothing we own was attacked. We invited it in.</p>
+      <p class="en"><strong>Business impact:</strong> one compromised vendor reaches every customer at once, so we become collateral in someone else's breach — yet the clean-up, the downtime and the notifications are ours. The tools most likely to be abused are the ones with the deepest access: monitoring, remote management, backup, security software.</p>
+      <p class="nl">We zeggen tegen medewerkers dat ze updates snel moeten installeren, en terecht. Maar een update is code die we met volledige rechten draaien, alleen op het woord van de leverancier. Als een aanvaller binnenkomt in het bouwproces van die leverancier, wordt de besmette versie ondertekend met het echte certificaat, geleverd via het echte updatekanaal en op schema geïnstalleerd door onze eigen systemen. Niets van ons is aangevallen. We hebben het zelf binnengelaten.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> één gecompromitteerde leverancier raakt al zijn klanten tegelijk, waardoor wij bijvangst worden in het datalek van een ander — maar het opruimen, de stilstand en de meldingen zijn voor ons. De software die het vaakst wordt misbruikt, is juist die met de diepste toegang: monitoring, beheer op afstand, back-up, beveiligingssoftware.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">LOOKS LEGITIMATE · REACHES EVERY CUSTOMER AT ONCE</span><span class="nl">ZIET ER LEGITIEM UIT · RAAKT ALLE KLANTEN TEGELIJK</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: STAGED UPDATES + WATCH WHAT VENDOR TOOLS DO</span><span class="nl">OPLOSSING: GEFASEERD UPDATEN + GEDRAG VAN LEVERANCIERSSOFTWARE BEWAKEN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 02</span><span class="nl">RISICO 02</span></span>
+    <h2>
+      <span class="en">Our supplier's key <em>opens our door.</em></span>
+      <span class="nl">De sleutel van onze leverancier <em>opent onze deur.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">third-party access abuse / managed service provider compromise</span>
+      <span class="nl">misbruik van toegang door derden / gehackte dienstverlener</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">STANDING ACCESS</span><span class="nl">PERMANENTE TOEGANG</span></div>
+      <div class="node left"><div class="box">🛠️</div><span class="en">IT supplier</span><span class="nl">IT-leverancier</span></div>
+      <div class="node right"><div class="box">🏢</div><span class="en">Our systems</span><span class="nl">Onze systemen</span></div>
+      <div class="wire"></div>
+      <div class="gate">🚪</div>
+      <div class="gatelabel"><span class="en">SUPPLIER PORTAL · ALWAYS OPEN</span><span class="nl">LEVERANCIERSPORTAAL · ALTIJD OPEN</span></div>
+      <div class="badge"><b>ADMIN · <span class="en">SUPPLIER</span><span class="nl">LEVERANCIER</span></b><span class="en">SHARED ACCOUNT · ALL CUSTOMERS</span><span class="nl">GEDEELD ACCOUNT · ALLE KLANTEN</span></div>
+      <div class="actor spy pulse">🕵️<span class="tag"><span class="en">STOLE THE SUPPLIER'S LOGIN</span><span class="nl">STAL DE INLOG VAN DE LEVERANCIER</span></span></div>
+      <div class="banner"><span class="en">ONE SUPPLIER ACCOUNT → EVERY CUSTOMER IT SERVES</span><span class="nl">ÉÉN LEVERANCIERSACCOUNT → ELKE KLANT DIE HIJ BEDIENT</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Our IT partner, our payroll provider, the firm that maintains the building systems — each holds a standing login into our environment. Often it is one shared account, used by a rotating team, valid around the clock, with more rights than the job needs. Attackers know this. Breaking into one supplier hands them the front-door keys of dozens of companies, and every login looks like routine maintenance.</p>
+      <p class="en"><strong>Business impact:</strong> we cannot see how that supplier protects our key, and we rarely ask. When it is stolen, the intruder arrives with administrator rights, no alarm, and a perfect excuse in the logs. Every supplier login is an employee we never interviewed.</p>
+      <p class="nl">Onze IT-partner, onze salarisverwerker, het bedrijf dat de gebouwinstallaties onderhoudt — elk heeft een permanente inlog in onze omgeving. Vaak is het één gedeeld account, gebruikt door een wisselend team, dag en nacht geldig, met meer rechten dan het werk vereist. Aanvallers weten dat. Inbreken bij één leverancier levert ze de voordeursleutels van tientallen bedrijven op, en elke inlog lijkt op routineonderhoud.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> we kunnen niet zien hoe die leverancier onze sleutel beschermt, en we vragen het zelden. Wordt hij gestolen, dan komt de indringer binnen met beheerdersrechten, zonder alarm en met een perfect excuus in de logboeken. Elke leveranciersinlog is een medewerker die we nooit hebben gesproken.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">SHARED · ALWAYS ON · OVER-PRIVILEGED · UNSEEN</span><span class="nl">GEDEELD · ALTIJD AAN · TE VEEL RECHTEN · ONZICHTBAAR</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: NAMED ACCOUNTS + MFA + ACCESS THAT EXPIRES</span><span class="nl">OPLOSSING: PERSOONLIJKE ACCOUNTS + MFA + TOEGANG DIE VERLOOPT</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 03</span><span class="nl">RISICO 03</span></span>
+    <h2>
+      <span class="en">Our software is built <em>from strangers' code.</em></span>
+      <span class="nl">Onze software is gebouwd <em>uit code van vreemden.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">open-source dependency poisoning</span>
+      <span class="nl">vergiftigde open-sourcecomponenten</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">INSIDE OUR APP</span><span class="nl">BINNENIN ONZE APP</span></div>
+      <div class="app"><span class="en">OUR CUSTOMER PORTAL</span><span class="nl">ONS KLANTPORTAAL</span></div>
+      <div class="link"></div>
+      <div class="bricks">
+        <div class="brick">LOGIN</div><div class="brick">PAYMENTS</div><div class="brick">PDF</div><div class="brick bad">DATE FORMAT</div><div class="brick">SEARCH</div><div class="brick">UPLOAD</div>
+        <div class="brick">CHARTS</div><div class="brick">EMAIL</div><div class="brick">LOGGING</div><div class="brick">IMAGES</div><div class="brick">CRYPTO</div><div class="brick">TRANSLATE</div>
+      </div>
+      <div class="banner"><span class="en">ONE OF HUNDREDS · MAINTAINED BY A VOLUNTEER · NOW OWNED BY AN ATTACKER</span><span class="nl">ÉÉN VAN HONDERDEN · ONDERHOUDEN DOOR EEN VRIJWILLIGER · NU IN HANDEN VAN EEN AANVALLER</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Modern software is assembled, not written. Our customer portal, our app, our internal tools: each is a thin layer of our own code on top of hundreds of open-source components, written and maintained by people we have never met. When one of those maintainers is tricked, bought or simply hands the project to a stranger, the next version can carry code that steals whatever our application touches. Our developers pull it in with a routine build.</p>
+      <p class="en"><strong>Business impact:</strong> the malicious code runs inside <em>our</em> product, under <em>our</em> name, with access to <em>our</em> customers' data. Contractually and legally it is our breach. And if we cannot list which components are inside our software, we cannot answer the first question a regulator or customer will ask: “are you affected?”</p>
+      <p class="nl">Moderne software wordt samengesteld, niet geschreven. Ons klantportaal, onze app, onze interne tools: elk is een dun laagje eigen code bovenop honderden open-sourcecomponenten, geschreven en onderhouden door mensen die we nooit hebben ontmoet. Wordt zo'n beheerder misleid, omgekocht of geeft hij het project simpelweg aan een vreemde, dan kan de volgende versie code bevatten die steelt wat onze applicatie aanraakt. Onze ontwikkelaars halen die binnen met een routinematige build.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de kwaadaardige code draait in <em>ons</em> product, onder <em>onze</em> naam, met toegang tot de gegevens van <em>onze</em> klanten. Contractueel en juridisch is het ons datalek. En als we niet kunnen opsommen welke componenten in onze software zitten, kunnen we de eerste vraag van een toezichthouder of klant niet beantwoorden: “zijn jullie getroffen?”</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">RUNS UNDER OUR NAME · INVISIBLE WITHOUT AN INVENTORY</span><span class="nl">DRAAIT ONDER ONZE NAAM · ONZICHTBAAR ZONDER INVENTARIS</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: COMPONENT INVENTORY (SBOM) + SAME-DAY ALERTS</span><span class="nl">OPLOSSING: COMPONENTENINVENTARIS (SBOM) + ALARM OP DEZELFDE DAG</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 04</span><span class="nl">RISICO 04</span></span>
+    <h2>
+      <span class="en">Their breach, <em>our data.</em></span>
+      <span class="nl">Hun datalek, <em>onze gegevens.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">SaaS vendor breach / fourth-party exposure</span>
+      <span class="nl">datalek bij een clouddienst / blootstelling via de leverancier van de leverancier</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">SOMEWHERE ELSE ENTIRELY</span><span class="nl">HELEMAAL ERGENS ANDERS</span></div>
+      <div class="node left"><div class="box"><span class="stamp"><span class="en">UNTOUCHED</span><span class="nl">ONAANGERAAKT</span></span>🏢</div><span class="en">Us</span><span class="nl">Wij</span></div>
+      <div class="node right"><div class="box">☁️</div><span class="en">SaaS vendor</span><span class="nl">Clouddienst</span></div>
+      <div class="wire"></div>
+      <div class="doc a">📄</div><div class="doc b">📄</div><div class="doc c">📄</div>
+      <div class="actor thief pulse">🕵️<span class="tag"><span class="en">TAKES OUR CUSTOMER FILE</span><span class="nl">NEEMT ONS KLANTENBESTAND MEE</span></span></div>
+      <div class="banner"><span class="en">THEIR BREACH · OUR DATA · OUR 72-HOUR CLOCK</span><span class="nl">HUN LEK · ONZE GEGEVENS · ONZE 72-UURSKLOK</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Our HR records live with a payroll service. Our customer list lives in a marketing tool. Our contracts live in an e-signing platform. Each of those vendors runs on other vendors in turn. When any of them is breached, our data is exposed without a single packet touching our network — and we may only learn about it from the news, or from a customer.</p>
+      <p class="en"><strong>Business impact:</strong> under GDPR we remain the controller. The 72-hour notification clock, the regulator and the customer communication are ours, regardless of whose servers leaked. The practical questions are simple and usually unanswered: which vendors hold what data, how fast are they obliged to tell us, and how do we get our data back if we walk away?</p>
+      <p class="nl">Onze personeelsdossiers staan bij een salarisdienst. Onze klantenlijst staat in een marketingtool. Onze contracten staan op een platform voor digitaal ondertekenen. Elk van die leveranciers draait op zijn beurt weer op andere leveranciers. Wordt een van hen gehackt, dan liggen onze gegevens op straat zonder dat één pakketje ons netwerk heeft aangeraakt — en soms horen we het pas via het nieuws, of van een klant.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> onder de AVG blijven wij de verwerkingsverantwoordelijke. De 72-uursmelding, de toezichthouder en de communicatie naar klanten zijn voor ons, ongeacht wiens servers lekten. De praktische vragen zijn simpel en meestal onbeantwoord: welke leveranciers hebben welke gegevens, hoe snel moeten ze ons informeren, en hoe krijgen we onze gegevens terug als we weglopen?</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NO CONTROL · FULL LIABILITY · LATE TO KNOW</span><span class="nl">GEEN CONTROLE · VOLLE AANSPRAKELIJKHEID · LAAT OP DE HOOGTE</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: DATA MAP PER VENDOR + NOTIFICATION AND EXIT CLAUSES</span><span class="nl">OPLOSSING: DATAKAART PER LEVERANCIER + MELD- EN EXITCLAUSULES</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>limits the damage.</em></span>
+      <span class="nl">Wat <em>de schade beperkt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">mostly a list, a contract and a habit — not a product</span>
+      <span class="nl">vooral een lijst, een contract en een gewoonte — geen product</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">SUPPLIER TIERING</span><span class="nl">LEVERANCIERSINDELING</span></span>
+        <span class="chip c2"><span class="en">THIRD-PARTY MFA</span><span class="nl">MFA VOOR DERDEN</span></span>
+        <span class="chip c3">SBOM</span>
+        <span class="chip c4"><span class="en">STAGED UPDATES</span><span class="nl">GEFASEERD UPDATEN</span></span>
+        <span class="chip c5"><span class="en">CONTRACT CLAUSES</span><span class="nl">CONTRACTCLAUSULES</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Limits</th><th>In one line</th></tr>
+        <tr><td class="ctl">Supplier inventory</td><td>All four</td><td>One list of every supplier that holds our data or can reach our systems, ranked by what they could break.</td></tr>
+        <tr><td class="ctl">Contract clauses</td><td>All four</td><td>Security requirements, breach notification within a fixed number of hours, and the right to audit. Agreed before signing, not after the incident.</td></tr>
+        <tr><td class="ctl">Third-party access</td><td>Access (02)</td><td>A named account per person, MFA on every login, access that opens on request and closes by itself.</td></tr>
+        <tr><td class="ctl">Staged updates</td><td>Updates (01)</td><td>Updates land on a small test group first. Critical systems never take a new version on day one.</td></tr>
+        <tr><td class="ctl">Vendor behaviour</td><td>Updates (01), Access (02)</td><td>Supplier tools and logins are watched like any user. When they start doing unusual things, they are cut off.</td></tr>
+        <tr><td class="ctl">SBOM</td><td>Code (03)</td><td>A bill of materials for our software: which components are inside, and an alert the day one of them turns bad.</td></tr>
+        <tr><td class="ctl">Exit &amp; notification</td><td>SaaS (04)</td><td>How we get our data back, how fast they tell us, who pays. Settled while we could still walk away.</td></tr>
+        <tr><td class="ctl">Concentration</td><td>All four</td><td>Know which single supplier's outage stops the business, and decide consciously whether that is acceptable.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Beperkt</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Leveranciersinventaris</td><td>Alle vier</td><td>Eén lijst van elke leverancier die onze gegevens heeft of bij onze systemen kan, gerangschikt naar wat ze kunnen breken.</td></tr>
+        <tr><td class="ctl">Contractclausules</td><td>Alle vier</td><td>Beveiligingseisen, melding van een lek binnen een vast aantal uren, en het recht om te auditen. Afgesproken vóór het tekenen, niet na het incident.</td></tr>
+        <tr><td class="ctl">Toegang voor derden</td><td>Toegang (02)</td><td>Een persoonlijk account per persoon, MFA op elke inlog, toegang die op aanvraag opent en vanzelf weer sluit.</td></tr>
+        <tr><td class="ctl">Gefaseerd updaten</td><td>Updates (01)</td><td>Updates landen eerst bij een kleine testgroep. Kritieke systemen krijgen nooit op dag één een nieuwe versie.</td></tr>
+        <tr><td class="ctl">Gedrag van leveranciers</td><td>Updates (01), Toegang (02)</td><td>Leverancierssoftware en -inlogs worden bewaakt als elke gebruiker. Doen ze ongewone dingen, dan worden ze afgesloten.</td></tr>
+        <tr><td class="ctl">SBOM</td><td>Code (03)</td><td>Een stuklijst van onze software: welke componenten erin zitten, en een alarm op de dag dat een ervan besmet raakt.</td></tr>
+        <tr><td class="ctl">Exit &amp; melding</td><td>SaaS (04)</td><td>Hoe we onze gegevens terugkrijgen, hoe snel ze ons informeren, wie betaalt. Geregeld toen we nog konden weglopen.</td></tr>
+        <tr><td class="ctl">Concentratie</td><td>Alle vier</td><td>Weet van welke enkele leverancier een storing het bedrijf stillegt, en beslis bewust of dat acceptabel is.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> we inherit the security of every supplier we let in. The question is not “do we trust them” but “which suppliers can reach what, and who owns that list”. If nobody can produce it within the hour, that is the finding.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> we erven de beveiliging van elke leverancier die we binnenlaten. De vraag is niet “vertrouwen we ze” maar “welke leveranciers kunnen waarbij, en wie is eigenaar van die lijst”. Kan niemand die binnen een uur laten zien, dan is dát de bevinding.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">We depend on dozens of vendors, hundreds of software components and several standing third-party logins. One of them will be breached; the only question is which.</span><span class="nl">We zijn afhankelijk van tientallen leveranciers, honderden softwarecomponenten en meerdere permanente inlogs van derden. Eén ervan wordt gehackt; de vraag is alleen welke.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Administrator-level intrusion, a data breach we must report, and a clean-up we pay for even though the failure was someone else's.</span><span class="nl">Inbraak met beheerdersrechten, een datalek dat wij moeten melden, en een opruimactie die wij betalen terwijl de fout bij een ander lag.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Middel</span></span><p><span class="en">Suppliers will still be breached. Tiering, expiring access, staged updates and an SBOM shrink what any single breach can reach and how long it stays unseen.</span><span class="nl">Leveranciers worden nog steeds gehackt. Indeling, verlopende toegang, gefaseerd updaten en een SBOM beperken wat één lek kan bereiken en hoelang het onzichtbaar blijft.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CFO / CPO</span><span class="nl">CFO / CPO</span></span><p><span class="en">Whoever owns procurement and contracts owns this risk. The CISO advises; the supplier list and its access rights belong to the business.</span><span class="nl">Wie inkoop en contracten bezit, bezit dit risico. De CISO adviseert; de leverancierslijst en de bijbehorende toegang horen bij de business.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Number of suppliers with standing access to our systems · % of those logins with a named account and MFA · % of our applications with a current component inventory · number of critical suppliers without breach-notification and exit clauses.</span><span class="nl">Aantal leveranciers met permanente toegang tot onze systemen · % van die inlogs met een persoonlijk account en MFA · % van onze applicaties met een actuele componenteninventaris · aantal kritieke leveranciers zonder meld- en exitclausules.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“A compromised supplier, software update, open-source component or SaaS provider gives an attacker access to our systems or data without any direct attack on us.”</span><span class="nl">“Een gecompromitteerde leverancier, software-update, open-sourcecomponent of clouddienst geeft een aanvaller toegang tot onze systemen of gegevens zonder dat wij zelf direct worden aangevallen.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Supply chain security is a named risk-management measure: assess the security of direct suppliers and providers, and reflect it in contracts. Management approves the measures and is personally accountable.</td><td>There is no NIS2 certificate. Ask how the supplier covers the same measures, and put their duty to warn you of incidents in the contract.</td><td>A significant incident: early warning to the national authority within 24 hours, full notification within 72, final report within a month. Your suppliers' breaches can trigger your notification.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities: a register of information on all ICT third-party arrangements, pre-contract due diligence, prescribed contract clauses, concentration-risk assessment and an exit strategy for critical providers.</td><td>A report is input, not a substitute. Critical ICT providers still need the DORA contract clauses, including audit and access rights and termination terms.</td><td>A major ICT incident: initial notification to the supervisor within hours of classification, intermediate report within 72 hours, final report within a month. Contract terms decide how fast the provider tells you.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>If you issue one: vendor management is tested as part of the control environment. Auditors ask how you select, monitor and review subservice organisations.</td><td>Check the period, the systems in scope and the exceptions. Read the subservice organisations section: that is their supply chain, and the carve-outs are your blind spots.</td><td>The incident appears as a deviation in the next report, auditors test how you assessed the supplier, and customers ask what you knew and when.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Assurance over outsourced processes relevant to financial reporting. The service organisation defines the scope, so vendor and software security may be outside it.</td><td>Read the control objectives first. If the supplier's own subcontractors are carved out, the report says nothing about them.</td><td>The service organisation must disclose the incident to its user auditors. If a subservice organisation caused it, expect questions about how you monitored them.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Beveiliging van de toeleveringsketen is een benoemde risicobeheersmaatregel: beoordeel de beveiliging van directe leveranciers en dienstverleners en leg dat vast in contracten. Het bestuur keurt de maatregelen goed en is persoonlijk aansprakelijk.</td><td>Er bestaat geen NIS2-certificaat. Vraag hoe de leverancier dezelfde maatregelen invult, en leg zijn plicht om u bij incidenten te waarschuwen vast in het contract.</td><td>Een significant incident: vroegtijdige waarschuwing aan de toezichthouder binnen 24 uur, volledige melding binnen 72 uur, eindrapport binnen een maand. Een lek bij uw leverancier kan uw meldplicht in gang zetten.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: een informatieregister van alle ICT-uitbestedingen, due diligence vóór het contract, voorgeschreven contractbepalingen, beoordeling van concentratierisico en een exitstrategie voor kritieke leveranciers.</td><td>Een rapport is input, geen vervanging. Kritieke ICT-leveranciers vereisen nog steeds de DORA-contractbepalingen, inclusief audit- en toegangsrechten en opzegtermijnen.</td><td>Een ernstig ICT-incident: eerste melding aan de toezichthouder binnen enkele uren na classificatie, tussenrapport binnen 72 uur, eindrapport binnen een maand. Het contract bepaalt hoe snel de leverancier u informeert.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Als u er zelf een afgeeft: leveranciersbeheer wordt getest als onderdeel van de beheersomgeving. Auditors vragen hoe u subserviceorganisaties selecteert, bewaakt en beoordeelt.</td><td>Controleer de periode, de systemen binnen scope en de afwijkingen. Lees de paragraaf over subserviceorganisaties: dat is hún toeleveringsketen, en de uitsluitingen zijn uw blinde vlekken.</td><td>Het incident verschijnt als afwijking in het volgende rapport, auditors testen hoe u de leverancier heeft beoordeeld, en klanten vragen wat u wist en wanneer.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Zekerheid over uitbestede processen die relevant zijn voor de financiële verslaggeving. De serviceorganisatie bepaalt de scope, dus leveranciers- en softwarebeveiliging kunnen erbuiten vallen.</td><td>Lees eerst de beheersdoelstellingen. Zijn de eigen onderaannemers van de leverancier uitgesloten, dan zegt het rapport niets over hen.</td><td>De serviceorganisatie moet het incident melden aan de auditors van haar klanten. Veroorzaakte een subserviceorganisatie het, verwacht dan vragen over hoe u die bewaakte.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">SUPPLY CHAIN BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">SUPPLY CHAIN BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

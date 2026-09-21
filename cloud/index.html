@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cloud misconfiguration // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   CLOUD MISCONFIGURATION // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+.doc{position:absolute;top:50%;width:44px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--white);border:1px solid #9fb3c0;color:var(--deep)}
+
+/* --- scene 1 : open bucket --- */
+.s1 .doc{animation:leakOut 6s linear infinite}
+.s1 .doc.b{animation-delay:2s}.s1 .doc.c{animation-delay:4s}
+@keyframes leakOut{0%{left:118px;opacity:0}8%{opacity:1}92%{opacity:1}100%{left:calc(100% - 162px);opacity:0}}
+.s1 .toggle{position:absolute;left:0;top:calc(50% + 62px);width:136px;white-space:nowrap;text-align:center;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.5);padding:3px 0;animation:blink 1.8s steps(1) infinite}
+@keyframes blink{0%,62%{opacity:1}63%,100%{opacity:.25}}
+.s1 .scan{left:50%;margin-left:-31px;top:28px}
+.s1 .banner{animation:fadeIn 6s ease-in-out infinite}
+
+/* --- scene 2 : leaked key --- */
+.s2 .key{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:20px;background:var(--white);border:1px solid #9fb3c0;animation:keyLeak 7s linear infinite}
+@keyframes keyLeak{0%{left:118px;opacity:0}6%{opacity:1}44%{left:calc(50% - 26px);opacity:1}56%{left:calc(50% - 26px);opacity:1}94%{left:calc(100% - 170px);opacity:1}100%{left:calc(100% - 170px);opacity:0}}
+.s2 .bot{left:50%;margin-left:-31px;top:28px}
+.s2 .clock{position:absolute;left:50%;transform:translateX(-50%);top:calc(50% + 34px);font-family:var(--mono);font-size:13px;font-weight:700;letter-spacing:.08em;padding:8px 14px;white-space:nowrap;background:rgba(255,200,87,.12);border:1px solid rgba(255,200,87,.45);color:var(--warn)}
+.s2 .banner{animation:fadeIn 7s ease-in-out infinite}
+
+/* --- scene 3 : one role to rule them all --- */
+.s3 .role{position:absolute;left:50%;top:30px;width:66px;height:66px;margin-left:-33px;display:grid;place-items:center;font-size:28px;background:var(--surface);border:1px solid var(--line);z-index:2;animation:roleHit 8s ease-in-out infinite}
+@keyframes roleHit{0%,38%{border-color:var(--line);background:var(--surface)}46%,100%{border-color:var(--bad);background:rgba(255,93,115,.22)}}
+.s3 .role .tag{position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--muted);background:var(--deep);border:1px solid var(--line);padding:3px 9px}
+.s3 .accounts{position:absolute;left:140px;right:140px;top:172px;height:54px;display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.s3 .acct{position:relative;display:grid;place-items:center;font-size:20px;background:var(--surface);border:1px solid var(--line)}
+.s3 .acct::after{content:"🔓";position:absolute;inset:0;display:grid;place-items:center;font-size:20px;background:rgba(255,93,115,.85);opacity:0;animation:allHit 8s ease-in-out infinite}
+@keyframes allHit{0%,48%{opacity:0}54%,84%{opacity:1}90%,100%{opacity:0}}
+.s3 .key{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:20px;background:var(--white);border:1px solid #9fb3c0;animation:keyUp 8s linear infinite}
+@keyframes keyUp{0%{left:118px;top:50%;opacity:0}6%{opacity:1}36%{left:calc(50% - 26px);top:50%;opacity:1}42%,100%{left:calc(50% - 26px);top:50%;opacity:0}}
+.s3 .wire{right:50%}
+.s3 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 4 : nobody is watching --- */
+.s4 .region{position:absolute;top:44px;bottom:60px;width:calc(50% - 40px);border:1px solid var(--line);background:rgba(42,72,88,.25)}
+.s4 .region.a{left:20px}.s4 .region.b{right:20px;border-style:dashed}
+.s4 .region .name{position:absolute;top:0;left:0;font-size:9.5px;letter-spacing:.2em;font-weight:700;padding:4px 10px}
+.s4 .region.a .name{background:var(--good);color:#04291d}
+.s4 .region.b .name{background:var(--bad);color:#33060e}
+.s4 .region .row{position:absolute;left:16px;right:16px;top:50%;transform:translateY(-50%);display:flex;gap:10px;justify-content:center}
+.s4 .srv{width:44px;height:44px;display:grid;place-items:center;font-size:20px;background:var(--surface);border:1px solid var(--line)}
+.s4 .region.b .srv{border-color:rgba(255,93,115,.55);background:rgba(255,93,115,.14);opacity:0;animation:spawn 9s ease-in-out infinite}
+.s4 .region.b .srv:nth-child(2){animation-delay:1.2s}.s4 .region.b .srv:nth-child(3){animation-delay:2.4s}.s4 .region.b .srv:nth-child(4){animation-delay:3.6s}
+@keyframes spawn{0%,20%{opacity:0;transform:scale(.6)}28%,80%{opacity:1;transform:scale(1)}88%,100%{opacity:0}}
+.s4 .eye{position:absolute;left:0;right:0;bottom:8px;text-align:center;font-size:9.5px;letter-spacing:.2em;font-weight:700}
+.s4 .region.a .eye{color:#8ff0cd}.s4 .region.b .eye{color:var(--bad-soft)}
+.s4 .ghost{right:84px;top:48px}
+.s4 .banner{animation:fadeIn 9s ease-in-out infinite}
+
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .doc{left:calc(50% - 22px)}.s1 .doc.b,.s1 .doc.c{display:none}
+  .s2 .key{left:calc(100% - 170px)}
+  .s3 .role{border-color:var(--bad);background:rgba(255,93,115,.22)}
+  .s3 .acct::after{opacity:1}.s3 .key{display:none}
+  .s4 .region.b .srv{opacity:1;transform:none}
+  .banner{opacity:1}
+}
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><i></i> PLAIN SECURITY <span style="color:var(--slate)">//</span> CLOUD</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">OPEN</span><span class="nl">OPEN</span></a>
+      <a href="#r2"><span class="en">LEAKED KEY</span><span class="nl">GELEKTE SLEUTEL</span></a>
+      <a href="#r3"><span class="en">ONE ROLE</span><span class="nl">ÉÉN ROL</span></a>
+      <a href="#r4"><span class="en">UNWATCHED</span><span class="nl">ONBEWAAKT</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Cloud misconfiguration. <em>The cloud is secure. Our settings are not.</em></span>
+      <span class="nl">Cloudmisconfiguratie. <em>De cloud is veilig. Onze instellingen niet.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Nobody breaks into the data centre. They walk in through a setting we left wrong — in plain language: the four mistakes that cause most cloud breaches, and the one control that prevents each.</span>
+      <span class="nl">Niemand breekt in bij het datacenter. Ze komen binnen via een instelling die wij verkeerd lieten staan — in gewone taal: de vier fouten achter de meeste cloudincidenten, en welke maatregel elke fout voorkomt.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE MISTAKES</span><span class="nl">BEKIJK DE FOUTEN</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT PREVENTS THEM</span><span class="nl">WAT ZE VOORKOMT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">A storage bucket <em>open to the whole internet.</em></span>
+      <span class="nl">Een opslagbucket <em>open voor het hele internet.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">public storage / “anyone with the link”</span>
+      <span class="nl">publieke opslag / “iedereen met de link”</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">ONE CHECKBOX</span><span class="nl">ÉÉN VINKJE</span></div>
+      <div class="node left"><div class="box">🪣</div><span class="en">Our storage</span><span class="nl">Onze opslag</span></div>
+      <div class="toggle"><span class="en">ACCESS: PUBLIC</span><span class="nl">TOEGANG: PUBLIEK</span></div>
+      <div class="node right"><div class="box">🌐</div><span class="en">The internet</span><span class="nl">Het internet</span></div>
+      <div class="wire"></div>
+      <div class="doc a">📄</div><div class="doc b">📄</div><div class="doc c">📄</div>
+      <div class="actor scan pulse">🔎<span class="tag"><span class="en">SCANNERS FIND IT IN HOURS</span><span class="nl">SCANNERS VINDEN HET BINNEN UREN</span></span></div>
+      <div class="banner"><span class="en">CUSTOMER FILES · INDEXED · DOWNLOADED</span><span class="nl">KLANTBESTANDEN · GEÏNDEXEERD · GEDOWNLOAD</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Cloud storage is private by default. Then someone needs to share a file with a supplier, a deadline is close, and the quickest fix is one setting: make the bucket public. It works, nobody is hurt, and the setting is never changed back. Automated scanners run by criminals and researchers sweep the entire internet for exactly this, continuously. An open bucket is typically found within hours, not months.</p>
+      <p class="en"><strong>Business impact:</strong> whatever was in that bucket is now public — customer records, backups, contracts, scanned passports from onboarding. This is a reportable data breach on the day it happened, not the day we noticed. Nobody attacked us. We published it ourselves.</p>
+      <p class="nl">Cloudopslag is standaard privé. Dan moet iemand een bestand delen met een leverancier, de deadline nadert, en de snelste oplossing is één instelling: maak de bucket publiek. Het werkt, niemand heeft er last van, en de instelling wordt nooit teruggezet. Geautomatiseerde scanners van criminelen en onderzoekers doorzoeken voortdurend het hele internet naar precies dit. Een open bucket wordt doorgaans binnen uren gevonden, niet binnen maanden.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> alles wat in die bucket stond is nu openbaar — klantgegevens, back-ups, contracten, gescande paspoorten uit het onboardingproces. Dit is een meldplichtig datalek vanaf de dag dat het gebeurde, niet vanaf de dag dat wij het merkten. Niemand heeft ons aangevallen. We hebben het zelf gepubliceerd.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">SELF-INFLICTED · FOUND IN HOURS · REPORTABLE</span><span class="nl">EIGEN SCHULD · BINNEN UREN GEVONDEN · MELDPLICHTIG</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: POLICY THAT BLOCKS PUBLIC STORAGE, ORGANISATION-WIDE</span><span class="nl">OPLOSSING: BELEID DAT PUBLIEKE OPSLAG BLOKKEERT, ORGANISATIEBREED</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">An access key <em>in the source code.</em></span>
+      <span class="nl">Een toegangssleutel <em>in de broncode.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">leaked credentials / secrets in code</span>
+      <span class="nl">gelekte inloggegevens / geheimen in code</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">MINUTES, NOT DAYS</span><span class="nl">MINUTEN, GEEN DAGEN</span></div>
+      <div class="node left"><div class="box">📦</div><span class="en">Code repository</span><span class="nl">Coderepository</span></div>
+      <div class="node right"><div class="box">🕵️</div><span class="en">Attacker</span><span class="nl">Aanvaller</span></div>
+      <div class="wire"></div>
+      <div class="key">🔑</div>
+      <div class="actor bot pulse">🤖<span class="tag"><span class="en">BOTS WATCH EVERY PUBLIC COMMIT</span><span class="nl">BOTS VOLGEN ELKE PUBLIEKE COMMIT</span></span></div>
+      <div class="clock"><span class="en">KEY USED: T + 6 MIN</span><span class="nl">SLEUTEL GEBRUIKT: T + 6 MIN</span></div>
+      <div class="banner"><span class="en">HUNDREDS OF SERVERS SPUN UP ON OUR BILL</span><span class="nl">HONDERDEN SERVERS GESTART OP ONZE REKENING</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Every cloud account is operated with keys — long random strings that grant access without a person, a password or a second factor. Developers need them to make things work, so they end up in configuration files, scripts and, sooner or later, in a code repository. If that repository is public for even a few minutes, automated bots harvest the key and use it before anyone can remove it. Deleting the commit does not help; the key has already been copied.</p>
+      <p class="en"><strong>Business impact:</strong> the fastest version is a cloud bill for thousands of servers mining cryptocurrency over a weekend. The slower version is worse — the key is used quietly to read our databases for months. Either way the intruder has exactly the rights that key had, and keys that were created “to get it working” usually have far more rights than the job required.</p>
+      <p class="nl">Elk cloudaccount wordt bediend met sleutels — lange willekeurige tekenreeksen die toegang geven zonder persoon, wachtwoord of tweede factor. Ontwikkelaars hebben ze nodig om dingen werkend te krijgen, dus belanden ze in configuratiebestanden, scripts en vroeg of laat in een coderepository. Is die repository ook maar een paar minuten publiek, dan oogsten bots de sleutel en gebruiken ze hem voordat iemand hem kan verwijderen. De commit weghalen helpt niet; de sleutel is al gekopieerd.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de snelle variant is een cloudfactuur voor duizenden servers die een weekend lang cryptovaluta delven. De langzame variant is erger — de sleutel wordt maandenlang stil gebruikt om onze databases te lezen. In beide gevallen heeft de indringer precies de rechten van die sleutel, en sleutels die zijn aangemaakt “om het werkend te krijgen” hebben meestal veel meer rechten dan nodig was.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NO PASSWORD · NO MFA · USED WITHIN MINUTES</span><span class="nl">GEEN WACHTWOORD · GEEN MFA · BINNEN MINUTEN GEBRUIKT</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: SECRETS VAULT + SHORT-LIVED KEYS + REPOSITORY SCANNING</span><span class="nl">OPLOSSING: GEHEIMENKLUIS + KORTLEVENDE SLEUTELS + REPOSITORYSCANNING</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">One role that <em>can do everything, everywhere.</em></span>
+      <span class="nl">Eén rol die <em>alles kan, overal.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">over-privileged identities / no blast-radius limit</span>
+      <span class="nl">te ruime rechten / geen begrenzing van de schade</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">ONE CREDENTIAL</span><span class="nl">ÉÉN INLOG</span></div>
+      <div class="node left"><div class="box">🕵️</div><span class="en">Attacker</span><span class="nl">Aanvaller</span></div>
+      <div class="wire"></div>
+      <div class="key">🔑</div>
+      <div class="role">👑<span class="tag"><span class="en">ADMIN · ALL ACCOUNTS</span><span class="nl">BEHEERDER · ALLE ACCOUNTS</span></span></div>
+      <div class="accounts">
+        <div class="acct">🏭</div><div class="acct">🧪</div><div class="acct">🛒</div><div class="acct">💳</div><div class="acct">👥</div><div class="acct">💾</div>
+      </div>
+      <div class="banner"><span class="en">PRODUCTION · TEST · FINANCE · HR · BACKUPS — ALL AT ONCE</span><span class="nl">PRODUCTIE · TEST · FINANCE · HR · BACK-UPS — ALLES TEGELIJK</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Cloud platforms let us split our estate into many separate accounts: production, test, finance, each department, each product. That separation is the cheapest security we will ever buy — but only if nothing bridges it. In practice there is almost always one role that does: the platform team's administrator, a monitoring tool, a deployment pipeline that “needs access to everything”. Whoever holds that one credential holds the entire company.</p>
+      <p class="en"><strong>Business impact:</strong> the difference between losing one test environment and losing everything, including the backups, is entirely decided by how that one role was set up. This is the same lesson as the domain administrator on-premises, and the same failure: convenience for the few people who run the platform, at the price of a single point of total compromise.</p>
+      <p class="nl">Cloudplatforms laten ons onze omgeving opdelen in veel losse accounts: productie, test, finance, elke afdeling, elk product. Die scheiding is de goedkoopste beveiliging die we ooit zullen kopen — maar alleen als niets haar overbrugt. In de praktijk is er bijna altijd één rol die dat wel doet: de beheerder van het platformteam, een monitoringtool, een uitrolpijplijn die “toegang tot alles nodig heeft”. Wie die ene inlog heeft, heeft het hele bedrijf.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> het verschil tussen één testomgeving kwijtraken en álles kwijtraken, inclusief de back-ups, wordt volledig bepaald door hoe die ene rol is ingericht. Dit is dezelfde les als de domeinbeheerder in het eigen datacenter, en dezelfde fout: gemak voor de paar mensen die het platform beheren, tegen de prijs van één punt van totale compromittering.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ONE CREDENTIAL · EVERY ACCOUNT · BACKUPS INCLUDED</span><span class="nl">ÉÉN INLOG · ELK ACCOUNT · INCLUSIEF BACK-UPS</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: LEAST PRIVILEGE PER WORKLOAD + BREAK-GLASS ADMIN ONLY</span><span class="nl">OPLOSSING: MINIMALE RECHTEN PER WORKLOAD + BEHEER ALLEEN VIA NOODPROCEDURE</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">A region <em>where nobody is watching.</em></span>
+      <span class="nl">Een regio <em>waar niemand kijkt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">unmonitored accounts and regions / no central logging</span>
+      <span class="nl">onbewaakte accounts en regio's / geen centrale logging</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">SAME COMPANY, TWO REGIONS</span><span class="nl">ZELFDE BEDRIJF, TWEE REGIO'S</span></div>
+      <div class="region a">
+        <span class="name"><span class="en">EU-WEST · LOGGED</span><span class="nl">EU-WEST · GELOGD</span></span>
+        <div class="row"><div class="srv">🗄️</div><div class="srv">🖥️</div><div class="srv">🗄️</div></div>
+        <span class="eye"><span class="en">ALERTS ON · SOMEONE LOOKS DAILY</span><span class="nl">ALARMEN AAN · DAGELIJKS BEKEKEN</span></span>
+      </div>
+      <div class="region b">
+        <span class="name"><span class="en">AP-SOUTH · NO LOGS</span><span class="nl">AP-SOUTH · GEEN LOGS</span></span>
+        <div class="row"><div class="srv">⚙️</div><div class="srv">⚙️</div><div class="srv">⚙️</div><div class="srv">⚙️</div></div>
+        <span class="eye"><span class="en">NOBODY HAS EVER OPENED THIS</span><span class="nl">NIEMAND HEEFT DIT OOIT GEOPEND</span></span>
+      </div>
+      <div class="actor ghost pulse">👻<span class="tag"><span class="en">RUNNING FOR MONTHS</span><span class="nl">DRAAIT AL MAANDEN</span></span></div>
+      <div class="banner"><span class="en">DISCOVERED BY THE INVOICE, NOT THE SECURITY TEAM</span><span class="nl">ONTDEKT VIA DE FACTUUR, NIET DOOR SECURITY</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A cloud account exists in every region of the world at once, whether we use them or not. An intruder with a key does not set up shop where we work; they pick the region we never open, in the account nobody owns any more — the proof-of-concept from two years ago, the sandbox of a team that was reorganised away. Logging there was never switched on. Nothing they do generates an alert, because there is nothing to generate it.</p>
+      <p class="en"><strong>Business impact:</strong> the intruder stays for as long as they like. Typically the finance department finds them first, when the monthly invoice doubles. By then the same key has usually been tried against the accounts we do watch. An estate we do not log is an estate we cannot say anything about to a regulator, an insurer or a customer — not even “we checked and nothing happened”.</p>
+      <p class="nl">Een cloudaccount bestaat in elke regio van de wereld tegelijk, of we die nu gebruiken of niet. Een indringer met een sleutel vestigt zich niet waar wij werken; hij kiest de regio die wij nooit openen, in het account waar niemand meer eigenaar van is — het proefproject van twee jaar geleden, de zandbak van een team dat is wegereorganiseerd. Logging is daar nooit aangezet. Niets van wat hij doet levert een alarm op, omdat er niets is dat alarm kan slaan.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de indringer blijft zo lang hij wil. Meestal vindt de financiële afdeling hem als eerste, wanneer de maandfactuur verdubbelt. Tegen die tijd is dezelfde sleutel doorgaans al geprobeerd op de accounts die we wél bewaken. Een omgeving die we niet loggen, is een omgeving waarover we niets kunnen zeggen tegen een toezichthouder, verzekeraar of klant — niet eens “we hebben gekeken en er is niets gebeurd”.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">INVISIBLE · UNLIMITED DWELL TIME · NO EVIDENCE</span><span class="nl">ONZICHTBAAR · ONBEPERKTE VERBLIJFSTIJD · GEEN BEWIJS</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: CENTRAL LOGGING ON EVERY ACCOUNT AND REGION + COST ALERTS</span><span class="nl">OPLOSSING: CENTRALE LOGGING OP ELK ACCOUNT EN ELKE REGIO + KOSTENALARMEN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>prevents all four.</em></span>
+      <span class="nl">Wat <em>alle vier voorkomt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">settings, not products — most of it is already included in the platform</span>
+      <span class="nl">instellingen, geen producten — het meeste zit al in het platform</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">GUARDRAILS</span><span class="nl">VANGRAILS</span></span>
+        <span class="chip c2"><span class="en">POLICY-AS-CODE</span><span class="nl">BELEID ALS CODE</span></span>
+        <span class="chip c3"><span class="en">SECRETS VAULT</span><span class="nl">GEHEIMENKLUIS</span></span>
+        <span class="chip c4"><span class="en">LEAST PRIVILEGE</span><span class="nl">MINIMALE RECHTEN</span></span>
+        <span class="chip c5"><span class="en">CENTRAL LOGGING</span><span class="nl">CENTRALE LOGGING</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Prevents</th><th>In one line</th></tr>
+        <tr><td class="ctl">Landing zone</td><td>All four</td><td>Every new account is created from one template with logging, guardrails and ownership already in place. No account exists outside it.</td></tr>
+        <tr><td class="ctl">Policy-as-code</td><td>Open (01)</td><td>A rule at organisation level that makes public storage impossible to save, not merely discouraged. Exceptions are explicit and time-limited.</td></tr>
+        <tr><td class="ctl">Secrets vault</td><td>Leaked key (02)</td><td>Keys live in a vault, are issued for hours not years, and rotate automatically. Code fetches them; code never contains them.</td></tr>
+        <tr><td class="ctl">Repository scanning</td><td>Leaked key (02)</td><td>Every commit is checked for anything that looks like a credential before it is accepted. A leaked key is revoked within minutes, automatically.</td></tr>
+        <tr><td class="ctl">Least privilege</td><td>One role (03)</td><td>Each workload gets a role that can do only its own job in its own account. Organisation-wide administration is a break-glass procedure, logged and alerted.</td></tr>
+        <tr><td class="ctl">Posture scanning</td><td>01 · 03</td><td>A continuous check of every setting against a baseline, with a dashboard the board can actually read: how many public buckets, how many admin roles, trend over time.</td></tr>
+        <tr><td class="ctl">Central logging</td><td>Unwatched (04)</td><td>Every account and every region sends its logs to one place we cannot switch off from inside that account. Alerts fire on new regions and new admin roles.</td></tr>
+        <tr><td class="ctl">Cost alerts</td><td>Unwatched (04)</td><td>A spend anomaly is often the first sign of an intruder. Finance and security receive the same alert on the same day.</td></tr>
+        <tr><td class="ctl">Shared responsibility</td><td>All four</td><td>Written down, per service: what the provider secures and what we must. Reviewed when we adopt a new service, not after an incident.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Voorkomt</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Landingszone</td><td>Alle vier</td><td>Elk nieuw account ontstaat uit één sjabloon met logging, vangrails en eigenaarschap al ingericht. Buiten dat sjabloon bestaat geen account.</td></tr>
+        <tr><td class="ctl">Beleid als code</td><td>Open (01)</td><td>Een regel op organisatieniveau die publieke opslag onmogelijk maakt om op te slaan, niet slechts ontmoedigt. Uitzonderingen zijn expliciet en tijdelijk.</td></tr>
+        <tr><td class="ctl">Geheimenkluis</td><td>Gelekte sleutel (02)</td><td>Sleutels leven in een kluis, gelden uren in plaats van jaren en roteren automatisch. Code haalt ze op; code bevat ze nooit.</td></tr>
+        <tr><td class="ctl">Repositoryscanning</td><td>Gelekte sleutel (02)</td><td>Elke commit wordt gecontroleerd op alles wat op een inloggegeven lijkt vóór hij wordt geaccepteerd. Een gelekte sleutel wordt binnen minuten automatisch ingetrokken.</td></tr>
+        <tr><td class="ctl">Minimale rechten</td><td>Één rol (03)</td><td>Elke workload krijgt een rol die alleen het eigen werk in het eigen account kan doen. Organisatiebreed beheer is een noodprocedure, gelogd en gealarmeerd.</td></tr>
+        <tr><td class="ctl">Configuratiescan</td><td>01 · 03</td><td>Een doorlopende controle van elke instelling tegen een basislijn, met een dashboard dat de directie echt kan lezen: aantal publieke buckets, aantal beheerrollen, trend in de tijd.</td></tr>
+        <tr><td class="ctl">Centrale logging</td><td>Onbewaakt (04)</td><td>Elk account en elke regio stuurt zijn logs naar één plek die vanuit dat account niet is uit te zetten. Alarmen bij nieuwe regio's en nieuwe beheerrollen.</td></tr>
+        <tr><td class="ctl">Kostenalarmen</td><td>Onbewaakt (04)</td><td>Een afwijking in de uitgaven is vaak het eerste teken van een indringer. Finance en security krijgen hetzelfde alarm op dezelfde dag.</td></tr>
+        <tr><td class="ctl">Gedeelde verantwoordelijkheid</td><td>Alle vier</td><td>Opgeschreven, per dienst: wat de leverancier beveiligt en wat wij moeten doen. Herzien bij elke nieuwe dienst, niet na een incident.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> the provider secures the building; we lock our own doors. Two questions for the next meeting: who in our organisation can change a setting that makes customer data public, and would anyone notice the same day? If the answer to the first is “several dozen people” and to the second “probably not”, that is the risk — not the cloud.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> de leverancier beveiligt het gebouw; wij doen onze eigen deuren op slot. Twee vragen voor de volgende vergadering: wie in onze organisatie kan een instelling wijzigen waardoor klantgegevens publiek worden, en zou iemand dat dezelfde dag merken? Is het antwoord op de eerste “enkele tientallen mensen” en op de tweede “waarschijnlijk niet”, dan is dát het risico — niet de cloud.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Every cloud estate has hundreds of settings changed by dozens of people. Scanners test them all, continuously, for free.</span><span class="nl">Elke cloudomgeving heeft honderden instellingen die door tientallen mensen worden gewijzigd. Scanners testen ze allemaal, doorlopend, gratis.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">A reportable data breach without an attacker, a runaway cloud bill, or an intruder with months of unobserved access.</span><span class="nl">Een meldplichtig datalek zonder aanvaller, een ontspoorde cloudfactuur, of een indringer met maandenlange onbespiede toegang.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low</span><span class="nl">Laag</span></span><p><span class="en">Guardrails make the worst settings impossible to save; logging and cost alerts make the rest visible within a day.</span><span class="nl">Vangrails maken de ergste instellingen onmogelijk op te slaan; logging en kostenalarmen maken de rest binnen een dag zichtbaar.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CTO / CIO</span><span class="nl">CTO / CIO</span></span><p><span class="en">Executes through the platform team. The board owns the answer to “who can make our data public, and who would notice”.</span><span class="nl">Uitvoering via het platformteam. De directie is eigenaar van het antwoord op “wie kan onze data publiek maken, en wie zou het merken”.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Number of public storage locations today · number of identities with organisation-wide admin rights · % of accounts and regions sending logs centrally · age of the oldest long-lived access key.</span><span class="nl">Aantal publieke opslaglocaties vandaag · aantal identiteiten met organisatiebrede beheerrechten · % accounts en regio's dat centraal logt · leeftijd van de oudste langlevende toegangssleutel.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“A misconfigured cloud setting — public storage, a leaked key, an over-privileged role or an unmonitored account — exposes customer data or hands an intruder control of our cloud estate.”</span><span class="nl">“Een verkeerde cloudinstelling — publieke opslag, een gelekte sleutel, een te ruime rol of een onbewaakt account — legt klantgegevens bloot of geeft een indringer controle over onze cloudomgeving.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Risk management measures including access control, encryption, asset management and supply-chain security. Cloud providers are in scope as a critical sector; you remain responsible for your own configuration.</td><td>The provider's compliance covers their half of the shared-responsibility model only. Ask for the written split per service, and for the security features they enable by default.</td><td>A public bucket with personal data is a significant incident: early warning within 24 hours, notification within 72, final report within a month. Affected customers must be informed.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities: a register of all ICT third-party arrangements, including cloud services, with concentration risk assessed. Critical providers require prescribed contract clauses and exit plans.</td><td>The provider's report is one input to your own risk assessment. You must still show the supervisor how you configure, monitor and could leave the service.</td><td>A major ICT incident triggers notification within hours of classification, an intermediate report within 72 hours and a final report within a month — including root cause, which here is your own setting.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>If you issue one: logical access, change management and monitoring controls over your cloud accounts are tested over the period. Public storage and unrotated keys are exactly what auditors sample.</td><td>Every major provider publishes a SOC 2. It says nothing about how you use the service — read their complementary user entity controls: that list is your job.</td><td>A misconfiguration incident becomes an exception in your next report. Customers will ask for a root-cause analysis and evidence that the guardrail now exists.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Assurance over outsourced processes relevant to financial reporting. If your financial systems run in the cloud, the provider's report covers infrastructure; the application and its settings are yours to evidence.</td><td>Check the sub-service organisations named in the report. Your provider's report may itself rely on the cloud platform's, with the carve-out method — meaning a gap nobody has tested.</td><td>Exposed financial data or an intruder with write access to financial systems must be disclosed to the user auditors, and may affect the opinion on your customers' financial statements.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Risicobeheersmaatregelen waaronder toegangsbeheer, versleuteling, assetbeheer en beveiliging van de toeleveringsketen. Cloudleveranciers vallen als kritieke sector onder de wet; u blijft verantwoordelijk voor uw eigen configuratie.</td><td>De compliance van de leverancier dekt alleen zijn helft van het gedeelde-verantwoordelijkheidsmodel. Vraag om de schriftelijke verdeling per dienst, en om de beveiligingsfuncties die standaard aan staan.</td><td>Een publieke bucket met persoonsgegevens is een significant incident: vroegtijdige waarschuwing binnen 24 uur, melding binnen 72 uur, eindrapport binnen een maand. Getroffen klanten moeten worden geïnformeerd.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: een register van alle ICT-uitbestedingen, inclusief clouddiensten, met beoordeling van concentratierisico. Kritieke leveranciers vereisen voorgeschreven contractbepalingen en exitplannen.</td><td>Het rapport van de leverancier is één input voor uw eigen risicobeoordeling. U moet de toezichthouder nog steeds laten zien hoe u de dienst configureert, bewaakt en zou kunnen verlaten.</td><td>Een ernstig ICT-incident vereist melding binnen enkele uren na classificatie, een tussenrapport binnen 72 uur en een eindrapport binnen een maand — inclusief oorzaak, en die is hier uw eigen instelling.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Als u er zelf een afgeeft: logische toegang, wijzigingsbeheer en monitoring van uw cloudaccounts worden over de periode getest. Publieke opslag en niet-geroteerde sleutels zijn precies wat auditors steekproefsgewijs controleren.</td><td>Elke grote leverancier publiceert een SOC 2. Die zegt niets over hoe ú de dienst gebruikt — lees hun complementary user entity controls: die lijst is uw werk.</td><td>Een misconfiguratie-incident wordt een afwijking in uw volgende rapport. Klanten vragen om een oorzaakanalyse en bewijs dat de vangrail er nu is.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Zekerheid over uitbestede processen die relevant zijn voor de financiële verslaggeving. Draaien uw financiële systemen in de cloud, dan dekt het rapport van de leverancier de infrastructuur; de applicatie en haar instellingen moet u zelf aantonen.</td><td>Controleer welke subserviceorganisaties in het rapport staan. Het rapport van uw leverancier kan zelf leunen op dat van het cloudplatform via de carve-outmethode — een gat dat niemand heeft getest.</td><td>Blootgestelde financiële gegevens of een indringer met schrijfrechten op financiële systemen moeten aan de auditors van uw klanten worden gemeld en kunnen het oordeel over hun jaarrekening raken.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">CLOUD MISCONFIGURATION BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">CLOUDMISCONFIGURATIE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

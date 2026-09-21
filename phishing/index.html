@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phishing // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   PHISHING // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 8s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : fake login page --- */
+.s1 .login{position:absolute;left:50%;top:50%;width:210px;margin:-62px 0 0 -105px;padding:14px 16px;background:var(--surface);border:1px solid rgba(255,93,115,.55);z-index:2;text-align:left}
+.s1 .login .url{font-family:var(--mono);font-size:10.5px;color:var(--muted);word-break:break-all}
+.s1 .login .url b{color:var(--bad-soft)}
+.s1 .login .who{font-family:var(--sans);font-weight:700;font-size:14px;color:var(--white);margin-top:6px}
+.s1 .login .field{margin-top:8px;height:22px;background:var(--bg-lo);border:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--white);padding:2px 8px;overflow:hidden;white-space:nowrap}
+.s1 .login .field.pw{animation:typing 8s steps(10) infinite}
+@keyframes typing{0%,10%{width:0;padding-right:0}40%,100%{width:100%}}
+.s1 .login .stamp{position:absolute;top:-1px;right:-1px;font-size:9.5px;font-weight:700;letter-spacing:.2em;padding:5px 10px;background:var(--bad);color:#33060e;animation:blink 1.8s steps(1) infinite}
+@keyframes blink{0%,62%{opacity:1}63%,100%{opacity:.2}}
+.s1 .key{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:20px;background:var(--white);border:1px solid #9fb3c0;animation:keyout 8s linear infinite}
+@keyframes keyout{0%,44%{left:calc(50% + 112px);opacity:0}50%{opacity:1}92%{left:calc(100% - 170px);opacity:1}100%{left:calc(100% - 170px);opacity:0}}
+
+/* --- scene 2 : MFA fatigue --- */
+.s2{height:380px}
+.s2 .push{position:absolute;left:50%;width:250px;margin-left:-125px;padding:10px 14px;background:var(--surface);border:1px solid var(--line);font-family:var(--read);font-size:12.5px;color:var(--prose);opacity:0;z-index:2}
+.s2 .push small{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--muted);margin-bottom:3px}
+.s2 .push .btn2{display:inline-block;margin-top:6px;margin-right:8px;padding:3px 10px;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;font-weight:700;border:1px solid var(--line);color:var(--muted)}
+.s2 .push.p1{top:24px;animation:push1 9s ease-in-out infinite}
+.s2 .push.p2{top:114px;animation:push2 9s ease-in-out infinite}
+.s2 .push.p3{top:204px;animation:push3 9s ease-in-out infinite}
+@keyframes push1{0%,6%{opacity:0;transform:translateY(-8px)}10%,100%{opacity:1;transform:none}}
+@keyframes push2{0%,22%{opacity:0;transform:translateY(-8px)}26%,100%{opacity:1;transform:none}}
+@keyframes push3{0%,38%{opacity:0;transform:translateY(-8px)}42%,100%{opacity:1;transform:none}}
+.s2 .push.p3 .btn2.yes{animation:approve 9s ease-in-out infinite}
+@keyframes approve{0%,58%{background:transparent;color:var(--muted);border-color:var(--line)}64%,100%{background:var(--good);color:#04291d;border-color:var(--good)}}
+.s2 .banner{animation:fadeIn2 9s ease-in-out infinite}
+@keyframes fadeIn2{0%,66%{opacity:0}72%,100%{opacity:1}}
+
+/* --- scene 3 : CEO fraud --- */
+.s3 .env{animation:ask 9s ease-in-out infinite;font-size:0}
+@keyframes ask{0%{left:118px;opacity:0}5%{opacity:1}40%{left:calc(100% - 170px);opacity:1}46%,100%{left:calc(100% - 170px);opacity:0}}
+.s3 .val{position:absolute;top:50%;left:50%;transform:translate(-50%,-74px);font-size:12px;font-weight:700;letter-spacing:.08em;padding:8px 14px;white-space:nowrap;background:rgba(255,200,87,.12);border:1px solid rgba(255,200,87,.5);color:var(--warn);animation:showAsk 9s ease-in-out infinite}
+@keyframes showAsk{0%,4%{opacity:0}10%,44%{opacity:1}50%,100%{opacity:0}}
+.s3 .cash{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:20px;background:var(--good);animation:pay 9s ease-in-out infinite}
+@keyframes pay{0%,50%{left:calc(100% - 170px);opacity:0}56%{opacity:1}92%{left:118px;opacity:1}100%{left:118px;opacity:0}}
+.s3 .banner{animation:fadeIn2 9s ease-in-out infinite}
+
+/* --- scene 4 : every channel --- */
+.s4 .target{position:absolute;left:50%;top:50%;width:66px;height:66px;margin:-33px 0 0 -33px;display:grid;place-items:center;font-size:28px;background:var(--surface);border:1px solid var(--line);z-index:2}
+.s4 .chan{position:absolute;width:96px;text-align:center;font-size:9.5px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;z-index:2}
+.s4 .chan .box{width:54px;height:54px;margin:0 auto 8px;display:grid;place-items:center;font-size:22px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.s4 .chan.c1{left:12%;top:24px}.s4 .chan.c2{right:12%;top:24px}.s4 .chan.c3{left:12%;bottom:44px}.s4 .chan.c4{right:12%;bottom:44px}
+.s4 .hook{position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;display:grid;place-items:center;font-size:18px;z-index:3;opacity:0}
+.s4 .hook.h1{animation:h1 8s ease-in-out infinite}.s4 .hook.h2{animation:h2 8s ease-in-out infinite}.s4 .hook.h3{animation:h3 8s ease-in-out infinite}.s4 .hook.h4{animation:h4 8s ease-in-out infinite}
+@keyframes h1{0%{transform:translate(-330px,-85px);opacity:0}4%{opacity:1}22%{transform:translate(0,0);opacity:1}26%,100%{opacity:0}}
+@keyframes h2{0%,24%{transform:translate(330px,-85px);opacity:0}28%{opacity:1}46%{transform:translate(0,0);opacity:1}50%,100%{opacity:0}}
+@keyframes h3{0%,48%{transform:translate(-330px,85px);opacity:0}52%{opacity:1}70%{transform:translate(0,0);opacity:1}74%,100%{opacity:0}}
+@keyframes h4{0%,72%{transform:translate(330px,85px);opacity:0}76%{opacity:1}94%{transform:translate(0,0);opacity:1}98%,100%{opacity:0}}
+.s4 .target{animation:hit 8s ease-in-out infinite}
+@keyframes hit{0%,20%,44%,68%,92%{border-color:var(--line);box-shadow:none}22%,46%,70%,94%{border-color:var(--bad);box-shadow:0 0 0 10px rgba(255,93,115,.18)}30%,54%,78%,100%{border-color:var(--line);box-shadow:none}}
+.s4 .banner{bottom:12px;animation:none;opacity:1}
+
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .login .field.pw{width:100%}
+  .s1 .key{left:calc(100% - 170px);opacity:1}
+  .s2 .push{opacity:1;transform:none}
+  .s2 .push.p3 .btn2.yes{background:var(--good);color:#04291d;border-color:var(--good)}
+  .s3 .env{display:none}.s3 .val{opacity:1}
+  .s3 .cash{left:calc(50% - 26px);opacity:1}
+  .s4 .hook{opacity:1;transform:translate(0,0)}
+  .s4 .hook.h1{transform:translate(-160px,-50px)}.s4 .hook.h2{transform:translate(160px,-50px)}.s4 .hook.h3{transform:translate(-160px,50px)}.s4 .hook.h4{transform:translate(160px,50px)}
+  .banner{opacity:1}
+}
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><i></i> PLAIN SECURITY <span style="color:var(--slate)">//</span> PHISHING</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">THE PAGE</span><span class="nl">DE PAGINA</span></a>
+      <a href="#r2"><span class="en">THE CODE</span><span class="nl">DE CODE</span></a>
+      <a href="#r3"><span class="en">THE REQUEST</span><span class="nl">HET VERZOEK</span></a>
+      <a href="#r4"><span class="en">THE CHANNELS</span><span class="nl">DE KANALEN</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Phishing. <em>Four ways a person gets played.</em></span>
+      <span class="nl">Phishing. <em>Vier manieren waarop een mens wordt bespeeld.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">No malware, no exploit — just a convincing message and a moment of trust. In plain language: how each trick works, what it costs us, and the single control that takes the sting out of the click.</span>
+      <span class="nl">Geen malware, geen exploit — alleen een overtuigend bericht en een moment van vertrouwen. In gewone taal: hoe elke truc werkt, wat het ons kost, en welke maatregel de klik onschadelijk maakt.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE TRICKS</span><span class="nl">BEKIJK DE TRUCS</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT TAKES THE STING OUT</span><span class="nl">WAT DE ANGEL ERUIT HAALT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">A login page <em>that isn't ours.</em></span>
+      <span class="nl">Een inlogpagina <em>die niet van ons is.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">credential phishing / the fake sign-in</span>
+      <span class="nl">credential phishing / de nagemaakte inlogpagina</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">TUESDAY 08:12</span><span class="nl">DINSDAG 08:12</span></div>
+      <div class="node left"><div class="box">👤</div><span class="en">Employee</span><span class="nl">Medewerker</span></div>
+      <div class="node right"><div class="box">🕵️</div><span class="en">Attacker</span><span class="nl">Aanvaller</span></div>
+      <div class="wire"></div>
+      <div class="login">
+        <span class="stamp"><span class="en">FAKE</span><span class="nl">NEP</span></span>
+        <div class="url">login.our-c<b>0</b>mpany.com</div>
+        <div class="who"><span class="en">Sign in</span><span class="nl">Inloggen</span></div>
+        <div class="field">j.devries@our-company.com</div>
+        <div class="field pw">••••••••••</div>
+      </div>
+      <div class="key">🔑</div>
+      <div class="banner"><span class="en">PASSWORD CAPTURED · REAL SITE LOADS NEXT</span><span class="nl">WACHTWOORD ONDERSCHEPT · ECHTE SITE VOLGT</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The message says a document is waiting, a password is expiring, or a parcel could not be delivered. The link opens a page that looks exactly like ours — same logo, same colours, a web address one letter off. The employee types their password. The page quietly forwards them to the real site, so nothing looks wrong. The attacker now has a working login, and the employee has no idea anything happened.</p>
+      <p class="en"><strong>Business impact:</strong> a stolen password is the starting point for almost every serious incident, from mailbox takeover to the <a href="../ransomware/" style="color:var(--white)">ransomware chain</a>. The employee cannot spot a good fake — nobody can, reliably. A control that works must not depend on the person noticing.</p>
+      <p class="nl">Het bericht meldt dat er een document klaarstaat, een wachtwoord verloopt of een pakket niet bezorgd kon worden. De link opent een pagina die er precies uitziet als de onze — hetzelfde logo, dezelfde kleuren, een webadres met één letter verschil. De medewerker typt zijn wachtwoord. De pagina stuurt hem stilletjes door naar de echte site, dus niets lijkt mis. De aanvaller heeft nu een werkende inlog, en de medewerker heeft niets gemerkt.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een gestolen wachtwoord is het startpunt van bijna elk ernstig incident, van een overgenomen mailbox tot de <a href="../ransomware/" style="color:var(--white)">ransomwareketen</a>. De medewerker kan een goede vervalsing niet herkennen — niemand kan dat betrouwbaar. Een maatregel die werkt, mag niet afhangen van iemand die het opmerkt.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">LOOKS REAL · NOTHING BREAKS · NOBODY NOTICES</span><span class="nl">ZIET ER ECHT UIT · NIETS GAAT STUK · NIEMAND MERKT HET</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: PASSKEYS OR HARDWARE KEYS — THEY REFUSE THE WRONG SITE</span><span class="nl">OPLOSSING: PASSKEYS OF HARDWARESLEUTELS — DIE WEIGEREN DE VERKEERDE SITE</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">The second factor <em>gets talked out of the door.</em></span>
+      <span class="nl">De tweede factor <em>wordt naar buiten gepraat.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">MFA fatigue / real-time relay of the code</span>
+      <span class="nl">MFA-vermoeidheid / live doorspelen van de code</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">22:40 — THE PHONE</span><span class="nl">22:40 — DE TELEFOON</span></div>
+      <div class="node left"><div class="box">📱</div><span class="en">Employee's phone</span><span class="nl">Telefoon medewerker</span></div>
+      <div class="node right"><div class="box">🕵️</div><span class="en">Attacker</span><span class="nl">Aanvaller</span></div>
+      <div class="push p1"><small>22:40</small><span class="en">Approve sign-in from Amsterdam?</span><span class="nl">Inloggen vanuit Amsterdam goedkeuren?</span><br><span class="btn2"><span class="en">DENY</span><span class="nl">WEIGER</span></span><span class="btn2"><span class="en">APPROVE</span><span class="nl">KEUR GOED</span></span></div>
+      <div class="push p2"><small>22:41</small><span class="en">Approve sign-in from Amsterdam?</span><span class="nl">Inloggen vanuit Amsterdam goedkeuren?</span><br><span class="btn2"><span class="en">DENY</span><span class="nl">WEIGER</span></span><span class="btn2"><span class="en">APPROVE</span><span class="nl">KEUR GOED</span></span></div>
+      <div class="push p3"><small>22:43</small><span class="en">Approve sign-in from Amsterdam?</span><span class="nl">Inloggen vanuit Amsterdam goedkeuren?</span><br><span class="btn2"><span class="en">DENY</span><span class="nl">WEIGER</span></span><span class="btn2 yes"><span class="en">APPROVE</span><span class="nl">KEUR GOED</span></span></div>
+      <div class="banner"><span class="en">THIRD PROMPT APPROVED · MFA DEFEATED</span><span class="nl">DERDE MELDING GOEDGEKEURD · MFA OMZEILD</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">“We have MFA” is where most boards stop worrying. Attackers did not. With the stolen password they trigger a login, and the employee's phone buzzes: approve? They decline. It buzzes again. And again, late in the evening, until one tap makes it stop. The other route is faster still: the fake page from step 01 simply asks for the six-digit code too, and relays it to the real site within the thirty seconds it stays valid.</p>
+      <p class="en"><strong>Business impact:</strong> a code that a person can read out or type in is a code a person can be tricked into handing over. Codes by text message and app prompts stop the casual attacker, not the one who has already chosen us. Passkeys and hardware keys cannot be relayed — they only answer to the genuine site — which is why they are the fix for steps 01 and 02 at once.</p>
+      <p class="nl">“Wij hebben MFA” is waar de meeste directies stoppen met zorgen maken. Aanvallers niet. Met het gestolen wachtwoord starten ze een inlog, en de telefoon van de medewerker trilt: goedkeuren? Hij weigert. Hij trilt opnieuw. En opnieuw, laat op de avond, tot één tik het laat ophouden. De andere route is nog sneller: de nagemaakte pagina uit stap 01 vraagt gewoon ook om de zescijferige code, en speelt die binnen de dertig seconden dat hij geldig is door naar de echte site.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een code die een mens kan voorlezen of intypen, is een code die een mens kan worden afgetroggeld. Sms-codes en app-meldingen stoppen de toevallige aanvaller, niet degene die ons al heeft uitgekozen. Passkeys en hardwaresleutels zijn niet door te spelen — ze antwoorden alleen de echte site — en daarom zijn ze de oplossing voor stap 01 en 02 tegelijk.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">“WE HAVE MFA” IS NOT ENOUGH · ONE TAP AT 22:43</span><span class="nl">“WIJ HEBBEN MFA” IS NIET GENOEG · ÉÉN TIK OM 22:43</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: PHISHING-RESISTANT MFA + NUMBER MATCHING + LIMIT PROMPTS</span><span class="nl">OPLOSSING: PHISHINGBESTENDIGE MFA + CIJFERCONTROLE + MELDINGEN BEGRENZEN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">A request from the CEO <em>that moves the money.</em></span>
+      <span class="nl">Een verzoek van de CEO <em>dat het geld verplaatst.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">CEO fraud / payment redirection / business email compromise</span>
+      <span class="nl">CEO-fraude / factuuromleiding / zakelijke e-mailfraude</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">FRIDAY 16:50</span><span class="nl">VRIJDAG 16:50</span></div>
+      <div class="node left"><div class="box">🎭</div><span class="en">“The CEO”</span><span class="nl">“De CEO”</span></div>
+      <div class="node right"><div class="box">💳</div><span class="en">Finance</span><span class="nl">Finance</span></div>
+      <div class="wire"></div>
+      <div class="val"><span class="en">“Confidential deal. Pay € 240.000 today. Can't talk — in a meeting.”</span><span class="nl">“Vertrouwelijke deal. Vandaag € 240.000 betalen. Kan niet bellen — zit in overleg.”</span></div>
+      <div class="env">✉</div>
+      <div class="cash">💶</div>
+      <div class="banner"><span class="en">PAID TO THE ATTACKER'S ACCOUNT · GONE IN HOURS</span><span class="nl">BETAALD AAN DE REKENING VAN DE AANVALLER · IN UREN WEG</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Nothing technical happens here at all. A message arrives from the CEO — or from a supplier the company has paid for years — asking for an urgent transfer, or announcing “new bank details”. It is well written, it knows the names, it arrives late on a Friday, and it discourages a phone call. Sometimes it comes from a mailbox taken over in step 01, which makes it genuinely from the right address. Finance does what Finance is asked to do.</p>
+      <p class="en"><strong>Business impact:</strong> direct, uninsured, unrecoverable loss — the money is moved on within hours. No filter catches it, because there is nothing malicious to catch. The only defence is procedural: every payment instruction, and every change of bank details, is confirmed through a second channel using a number we already had. Not the number in the email. And “the CEO said urgent” never overrides that step.</p>
+      <p class="nl">Hier gebeurt technisch helemaal niets. Er komt een bericht van de CEO — of van een leverancier die het bedrijf al jaren betaalt — met een dringend betaalverzoek, of met “nieuwe bankgegevens”. Het is goed geschreven, het kent de namen, het komt laat op vrijdag, en het ontmoedigt een telefoontje. Soms komt het uit een mailbox die in stap 01 is overgenomen, waardoor het écht van het juiste adres komt. Finance doet wat Finance gevraagd wordt.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> direct, onverzekerd, onherstelbaar verlies — het geld is binnen uren doorgesluisd. Geen filter vangt dit, want er valt niets kwaadaardigs te vangen. De enige verdediging is procedureel: elke betaalinstructie, en elke wijziging van bankgegevens, wordt bevestigd via een tweede kanaal met een nummer dat we al hadden. Niet het nummer uit de e-mail. En “de CEO zei dat het dringend was” zet die stap nooit opzij.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">DIRECT LOSS · NOTHING FOR A FILTER TO CATCH</span><span class="nl">DIRECT VERLIES · NIETS VOOR EEN FILTER OM TE VANGEN</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: CALL-BACK ON A KNOWN NUMBER + FOUR EYES ON EVERY BANK CHANGE</span><span class="nl">OPLOSSING: TERUGBELLEN OP EEN BEKEND NUMMER + VIER OGEN OP ELKE BANKWIJZIGING</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">Not just email <em>any more.</em></span>
+      <span class="nl">Al lang niet meer <em>alleen e-mail.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">smishing / vishing / quishing / messaging apps</span>
+      <span class="nl">smishing / vishing / quishing / chat-apps</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">ANY CHANNEL</span><span class="nl">ELK KANAAL</span></div>
+      <div class="chan c1"><div class="box">📱</div><span class="en">Text message</span><span class="nl">Sms</span></div>
+      <div class="chan c2"><div class="box">📞</div><span class="en">Phone call</span><span class="nl">Telefoontje</span></div>
+      <div class="chan c3"><div class="box">▦</div><span class="en">QR code</span><span class="nl">QR-code</span></div>
+      <div class="chan c4"><div class="box">💬</div><span class="en">Chat app</span><span class="nl">Chat-app</span></div>
+      <div class="target">👤</div>
+      <div class="hook h1">🎣</div><div class="hook h2">🎣</div><div class="hook h3">🎣</div><div class="hook h4">🎣</div>
+      <div class="banner"><span class="en">SAME TRICK · DIFFERENT CHANNEL · NO MAIL FILTER IN BETWEEN</span><span class="nl">DEZELFDE TRUC · ANDER KANAAL · GEEN MAILFILTER ERTUSSEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Everything we built to inspect email is bypassed by simply not using email. A text about a missed delivery. A phone call from “the IT helpdesk” asking the employee to read out the code that just arrived. A QR code on a poster, or inside a PDF, that the mail filter cannot follow. A message on a chat app from a colleague's cloned account. The device is often the employee's own phone — outside our network, outside our filters, and outside our visibility.</p>
+      <p class="en"><strong>Business impact:</strong> the attack surface is every channel a person can be reached on, not the ones we monitor. The controls that still work here are the ones that do not depend on the channel at all: a login that refuses the wrong site, a payment procedure that insists on a call-back, and staff who know that a report is always welcome and never punished — even when they already clicked.</p>
+      <p class="nl">Alles wat we bouwden om e-mail te controleren, wordt omzeild door simpelweg geen e-mail te gebruiken. Een sms over een gemiste bezorging. Een telefoontje van “de IT-helpdesk” met het verzoek de zojuist ontvangen code voor te lezen. Een QR-code op een poster, of in een pdf, die het mailfilter niet kan volgen. Een bericht in een chat-app vanaf het gekloonde account van een collega. Het apparaat is vaak de eigen telefoon van de medewerker — buiten ons netwerk, buiten onze filters, buiten ons zicht.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> het aanvalsoppervlak is elk kanaal waarop een mens bereikbaar is, niet alleen de kanalen die wij bewaken. De maatregelen die hier nog werken, zijn die welke niet van het kanaal afhangen: een inlog die de verkeerde site weigert, een betaalprocedure die om terugbellen vraagt, en medewerkers die weten dat melden altijd welkom is en nooit bestraft wordt — ook als ze al geklikt hebben.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">OUTSIDE OUR FILTERS · OFTEN ON A PRIVATE PHONE</span><span class="nl">BUITEN ONZE FILTERS · VAAK OP EEN PRIVÉTELEFOON</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: CHANNEL-INDEPENDENT CONTROLS + A REPORT BUTTON THAT IS USED</span><span class="nl">OPLOSSING: KANAALONAFHANKELIJKE MAATREGELEN + EEN MELDKNOP DIE GEBRUIKT WORDT</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>takes the sting out of the click.</em></span>
+      <span class="nl">Wat <em>de angel uit de klik haalt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">assume the click happens — design so it cannot hurt</span>
+      <span class="nl">ga ervan uit dat er geklikt wordt — richt het zo in dat het geen pijn doet</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1">PASSKEYS</span>
+        <span class="chip c2"><span class="en">REPORT BUTTON</span><span class="nl">MELDKNOP</span></span>
+        <span class="chip c3"><span class="en">CALL-BACK CHECK</span><span class="nl">TERUGBELCONTROLE</span></span>
+        <span class="chip c4"><span class="en">MAIL FILTERING</span><span class="nl">MAILFILTERING</span></span>
+        <span class="chip c5"><span class="en">SIMULATIONS</span><span class="nl">OEFENINGEN</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Takes the sting out of</th><th>In one line</th></tr>
+        <tr><td class="ctl">Passkeys / hardware keys</td><td>The page (01), the code (02)</td><td>A login bound to the real website. A fake page gets nothing, a relayed code does not exist. Start with administrators and Finance.</td></tr>
+        <tr><td class="ctl">Number matching</td><td>The code (02)</td><td>Until passkeys are everywhere: the app shows a number the employee must type, so a random late-night tap approves nothing. Cap the number of prompts.</td></tr>
+        <tr><td class="ctl">Call-back procedure</td><td>The request (03)</td><td>Every payment instruction and every bank-detail change is confirmed by phone, on a number we already had on file. No exceptions for urgency or seniority.</td></tr>
+        <tr><td class="ctl">Four eyes on payments</td><td>The request (03)</td><td>Above a threshold, two people release a transfer. One of them is allowed to say no to the CEO.</td></tr>
+        <tr><td class="ctl">Mail filtering + banners</td><td>The page (01)</td><td>Block known-bad links and attachments; mark external senders and look-alike names visibly. Lowers the volume, never to zero.</td></tr>
+        <tr><td class="ctl">Browser protection</td><td>The page (01), the channels (04)</td><td>The browser and phone warn on or block known phishing sites, whatever channel delivered the link.</td></tr>
+        <tr><td class="ctl">Report button</td><td>All four</td><td>One click to report, a thank-you back within the hour, and never a reprimand — including for people who already clicked. Fast reports are how we catch the campaign.</td></tr>
+        <tr><td class="ctl">Simulations</td><td>All four</td><td>Run to measure how fast people report, not to shame the ones who click. Publish the report rate, not the names.</td></tr>
+        <tr><td class="ctl">Fast reset</td><td>The page (01)</td><td>A reported click leads to a password reset and session sign-out within minutes, not a ticket that waits until Monday.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Haalt de angel uit</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Passkeys / hardwaresleutels</td><td>De pagina (01), de code (02)</td><td>Een inlog die vastzit aan de echte website. Een nagemaakte pagina krijgt niets, een door te spelen code bestaat niet. Begin bij beheerders en Finance.</td></tr>
+        <tr><td class="ctl">Cijfercontrole</td><td>De code (02)</td><td>Tot passkeys overal zijn: de app toont een getal dat de medewerker moet intypen, zodat een willekeurige tik 's avonds laat niets goedkeurt. Begrens het aantal meldingen.</td></tr>
+        <tr><td class="ctl">Terugbelprocedure</td><td>Het verzoek (03)</td><td>Elke betaalinstructie en elke wijziging van bankgegevens wordt telefonisch bevestigd, op een nummer dat we al hadden. Geen uitzondering voor haast of rang.</td></tr>
+        <tr><td class="ctl">Vier ogen op betalingen</td><td>Het verzoek (03)</td><td>Boven een grens geven twee mensen een overboeking vrij. Een van hen mag nee zeggen tegen de CEO.</td></tr>
+        <tr><td class="ctl">Mailfiltering + markering</td><td>De pagina (01)</td><td>Blokkeer bekende kwaadaardige links en bijlagen; markeer externe afzenders en lookalike-namen zichtbaar. Verlaagt het volume, nooit tot nul.</td></tr>
+        <tr><td class="ctl">Browserbescherming</td><td>De pagina (01), de kanalen (04)</td><td>Browser en telefoon waarschuwen bij of blokkeren bekende phishingsites, via welk kanaal de link ook binnenkwam.</td></tr>
+        <tr><td class="ctl">Meldknop</td><td>Alle vier</td><td>Eén klik om te melden, binnen het uur een bedankje terug, en nooit een reprimande — ook niet voor wie al geklikt heeft. Snelle meldingen zijn hoe we de campagne vangen.</td></tr>
+        <tr><td class="ctl">Oefeningen</td><td>Alle vier</td><td>Om te meten hoe snel mensen melden, niet om klikkers aan de schandpaal te nagelen. Publiceer het meldpercentage, niet de namen.</td></tr>
+        <tr><td class="ctl">Snelle reset</td><td>De pagina (01)</td><td>Een gemelde klik leidt binnen minuten tot een wachtwoordreset en uitloggen van alle sessies, niet tot een ticket dat wacht tot maandag.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> someone in this company will click. This year, probably this month. That is not a training failure; it is arithmetic. The question to ask is not “how do we stop people clicking” but “can one click move our money or open our network?” If the answer is yes, the fix is a passkey and a call-back procedure — not another awareness poster.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> iemand in dit bedrijf gaat klikken. Dit jaar, waarschijnlijk deze maand. Dat is geen falen van training; dat is rekenen. De vraag is niet “hoe zorgen we dat mensen niet klikken”, maar “kan één klik ons geld verplaatsen of ons netwerk openen?” Is het antwoord ja, dan is de oplossing een passkey en een terugbelprocedure — niet nog een bewustwordingsposter.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">Certain</span><span class="nl">Zeker</span></span><p><span class="en">Every employee with an inbox or a phone is a target, every week. Someone will click; the only question is what happens next.</span><span class="nl">Elke medewerker met een mailbox of telefoon is doelwit, elke week. Iemand gaat klikken; de enige vraag is wat er dan gebeurt.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Direct, unrecoverable payment loss; a taken-over mailbox used against customers and staff; the first step of a larger intrusion.</span><span class="nl">Direct, onherstelbaar betaalverlies; een overgenomen mailbox die tegen klanten en medewerkers wordt ingezet; de eerste stap van een grotere inbraak.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low</span><span class="nl">Laag</span></span><p><span class="en">Clicks continue. With passkeys a stolen password is worthless and with a call-back procedure a fake request moves no money.</span><span class="nl">Er wordt nog steeds geklikt. Met passkeys is een gestolen wachtwoord waardeloos en met een terugbelprocedure verplaatst een vals verzoek geen geld.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CFO + CIO</span><span class="nl">CFO + CIO</span></span><p><span class="en">The CFO owns the payment procedure, the CIO the login. HR owns the no-blame reporting culture. Nobody owns “people should know better”.</span><span class="nl">De CFO is eigenaar van de betaalprocedure, de CIO van de inlog. HR van de meldcultuur zonder schuld. Niemand is eigenaar van “mensen moeten beter weten”.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Report rate within one hour of a simulation · click rate, as a trend not a verdict · % of staff and administrators on phishing-resistant MFA · % of payments and bank-detail changes verified out-of-band.</span><span class="nl">Meldpercentage binnen een uur na een oefening · klikpercentage, als trend en niet als oordeel · % medewerkers en beheerders met phishingbestendige MFA · % betalingen en bankwijzigingen die via een tweede kanaal zijn geverifieerd.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“A phishing message on any channel leads to a stolen login, an approved MFA prompt or a fraudulent payment, causing direct financial loss, account takeover and a route into the network.”</span><span class="nl">“Een phishingbericht via welk kanaal ook leidt tot een gestolen inlog, een goedgekeurde MFA-melding of een frauduleuze betaling, met direct financieel verlies, accountovername en een toegangsweg tot het netwerk als gevolg.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Basic cyber hygiene and security awareness training are named among the required measures, as is multi-factor authentication. Management must follow training itself and approve the measures. Confirm scope with legal.</td><td>There is no NIS2 certificate. Ask how the supplier trains its staff, whether its logins are phishing-resistant, and how it verifies instructions that appear to come from you.</td><td>A large-scale account compromise or fraud can be a significant incident: early warning within 24 hours, full notification within 72 hours, final report within a month. Confirm thresholds with legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities: an ICT security awareness programme and digital resilience training for all staff, including management, plus strong authentication for access to ICT systems.</td><td>Ask what their report says about staff phishing results and about how they authenticate a payment or change instruction from you before acting on it.</td><td>Payment fraud through compromised accounts can qualify as a major ICT incident: initial notification within hours of classification, intermediate report within 72 hours, final report within a month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>If you issue one: security awareness training, logical access and MFA are tested over a period (Type II). A failed simulation trend or an admin without MFA becomes an exception in print.</td><td>Read the exceptions on awareness and access first. CEO fraud at a supplier can redirect your payments too: check how they verify changed payment details.</td><td>A takeover or fraud appears in the next report as a deviation, the auditors test the response, and customers ask for a bridge letter and root-cause analysis.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Assurance over outsourced processes relevant to financial reporting, with a focus on authorisation of instructions. Awareness controls are only present if the service organisation put them in scope.</td><td>Ask one question: how do they verify a changed bank account or an urgent payment instruction that arrives by email? If the answer is not in the report, ask for it in writing.</td><td>A payment made on a forged instruction is a control failure that the service organisation must disclose to the user auditors, and that appears in its opinion.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Basale cyberhygiëne en bewustwordingstraining staan expliciet tussen de vereiste maatregelen, net als multifactorauthenticatie. Het bestuur moet zelf training volgen en de maatregelen goedkeuren. Bevestig de reikwijdte met legal.</td><td>Er bestaat geen NIS2-certificaat. Vraag hoe de leverancier zijn medewerkers traint, of zijn inlogs phishingbestendig zijn, en hoe hij instructies verifieert die van u lijken te komen.</td><td>Een grootschalige accountovername of fraude kan een significant incident zijn: vroegtijdige waarschuwing binnen 24 uur, volledige melding binnen 72 uur, eindrapport binnen een maand. Bevestig de drempels met legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: een ICT-bewustwordingsprogramma en weerbaarheidstraining voor alle medewerkers, inclusief het bestuur, plus sterke authenticatie voor toegang tot ICT-systemen.</td><td>Vraag wat hun rapport zegt over phishingresultaten van hun medewerkers en over hoe zij een betaal- of wijzigingsinstructie van u verifiëren voordat ze die uitvoeren.</td><td>Betaalfraude via overgenomen accounts kan een ernstig ICT-incident zijn: eerste melding binnen enkele uren na classificatie, tussenrapport binnen 72 uur, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Als u er zelf een afgeeft: bewustwordingstraining, logische toegang en MFA worden over een periode getest (Type II). Een slechte oefentrend of een beheerder zonder MFA wordt een afwijking op papier.</td><td>Lees eerst de afwijkingen op bewustwording en toegang. CEO-fraude bij een leverancier kan ook uw betalingen omleiden: controleer hoe zij gewijzigde betaalgegevens verifiëren.</td><td>Een overname of fraude verschijnt in het volgende rapport als afwijking, de auditors testen de respons, en klanten vragen om een bridge letter en een oorzaakanalyse.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Zekerheid over uitbestede processen die relevant zijn voor de financiële verslaggeving, met nadruk op autorisatie van instructies. Bewustwordingsmaatregelen staan er alleen in als de serviceorganisatie ze in scope heeft gezet.</td><td>Stel één vraag: hoe verifiëren zij een gewijzigd bankrekeningnummer of een dringende betaalinstructie die per e-mail binnenkomt? Staat het antwoord niet in het rapport, vraag het dan schriftelijk.</td><td>Een betaling op een vervalste instructie is een falende beheersmaatregel die de serviceorganisatie moet melden aan de auditors van haar klanten, en die in haar oordeel terechtkomt.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">PHISHING BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">PHISHING BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your website is a front door // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   WEB SECURITY // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : injection --- */
+.s1 .field{position:absolute;left:50%;top:calc(50% - 58px);transform:translate(-50%,0);width:330px;height:40px;overflow:hidden;z-index:2;background:var(--white);border:1px solid #9fb3c0;display:flex;align-items:center;padding:0 12px;font-family:var(--mono);font-size:12px;color:var(--deep);font-weight:700;letter-spacing:.04em}
+.s1 .field > span{position:absolute;left:12px;white-space:nowrap}
+.s1 .field .orig{animation:showA 8s ease-in-out infinite}
+.s1 .field .fake{color:var(--bad);animation:showB 8s ease-in-out infinite}
+@keyframes showA{0%,34%{opacity:1}40%,100%{opacity:0}}
+@keyframes showB{0%,36%{opacity:0}42%,100%{opacity:1}}
+.s1 .field .cur{position:absolute;right:10px;width:2px;height:18px;background:var(--deep);animation:blink 1s steps(1) infinite}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:0}}
+.s1 .rec{position:absolute;top:50%;width:44px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--white);border:1px solid #9fb3c0;color:var(--deep);animation:dump 8s linear infinite}
+.s1 .rec.b{animation-delay:.5s}.s1 .rec.c{animation-delay:1s}.s1 .rec.d{animation-delay:1.5s}
+@keyframes dump{0%,48%{left:calc(100% - 162px);opacity:0}52%{opacity:1}92%{left:118px;opacity:1}100%{left:118px;opacity:0}}
+.s1 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 2 : forgotten plugin --- */
+.s2 .stack{position:absolute;left:50%;top:30px;transform:translateX(-50%);display:flex;gap:14px}
+.s2 .part{position:relative;width:118px;padding:14px 10px;background:var(--surface);border:1px solid var(--line);text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.s2 .part b{display:block;font-family:var(--sans);font-size:13px;color:var(--white);letter-spacing:.02em;margin-bottom:6px}
+.s2 .part i{display:block;font-style:normal;font-family:var(--mono);font-size:10px;color:#8ff0cd}
+.s2 .part.old{animation:rot 8s ease-in-out infinite}
+.s2 .part.old i{color:var(--warn)}
+@keyframes rot{0%,40%{border-color:var(--line);background:var(--surface)}48%,100%{border-color:var(--bad);background:rgba(255,93,115,.18)}}
+.s2 .part.old .stamp{position:absolute;top:-26px;right:-1px;font-size:9.5px;font-weight:700;letter-spacing:.2em;padding:5px 10px;background:var(--bad);color:#33060e;opacity:0;animation:fadeIn 8s ease-in-out infinite}
+.s2 .hole{left:50%;margin-left:-31px;bottom:78px;animation:appear 8s ease-in-out infinite}
+@keyframes appear{0%,44%{opacity:0;transform:translateY(20px)}52%,100%{opacity:1;transform:translateY(0)}}
+.s2 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 3 : account takeover --- */
+.s3 .try{position:absolute;top:50%;width:40px;height:26px;margin-top:-13px;z-index:3;display:grid;place-items:center;font-size:14px;background:var(--white);border:1px solid #9fb3c0;animation:spray 2.4s linear infinite}
+.s3 .try.b{animation-delay:.6s}.s3 .try.c{animation-delay:1.2s}.s3 .try.d{animation-delay:1.8s}
+@keyframes spray{0%{left:118px;opacity:0}10%{opacity:1}90%{opacity:1}100%{left:calc(100% - 158px);opacity:0}}
+.s3 .hits{position:absolute;left:50%;transform:translateX(-50%);top:32px;display:flex;gap:10px;z-index:4}
+.s3 .hit{font-size:10px;letter-spacing:.14em;font-weight:700;padding:6px 10px;background:rgba(255,93,115,.16);border:1px solid rgba(255,93,115,.5);color:var(--bad-soft);white-space:nowrap;opacity:0;animation:land 9.6s ease-in-out infinite}
+.s3 .hit.b{animation-delay:2.4s}.s3 .hit.c{animation-delay:4.8s}
+@keyframes land{0%,8%{opacity:0;transform:translateY(-8px)}14%,88%{opacity:1;transform:translateY(0)}94%,100%{opacity:0}}
+.s3 .bot{left:50%;margin-left:-31px;bottom:52px}
+.s3 .banner{opacity:1}
+
+/* --- scene 4 : swapped script --- */
+.s4 .scripts{position:absolute;left:50%;transform:translateX(-50%);top:34px;display:flex;gap:10px;z-index:4}
+.s4 .js{font-size:10px;letter-spacing:.14em;font-weight:700;padding:6px 12px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7;white-space:nowrap}
+.s4 .js.swap{animation:swap 8s ease-in-out infinite}
+@keyframes swap{0%,40%{border-color:rgba(90,200,250,.35);color:#cfe6f7;background:var(--bg-lo)}48%,100%{border-color:var(--bad);color:var(--bad-soft);background:rgba(255,93,115,.16)}}
+.s4 .card{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;display:grid;place-items:center;font-size:18px;background:var(--white);border:1px solid #9fb3c0;animation:pay 8s linear infinite}
+@keyframes pay{0%{left:118px;opacity:0}7%{opacity:1}93%{opacity:1}100%{left:calc(100% - 170px);opacity:0}}
+.s4 .copy{position:absolute;left:50%;margin-left:-26px;top:50%;margin-top:-17px;width:52px;height:34px;background:rgba(255,93,115,.85);opacity:0;z-index:2;animation:skim 8s linear infinite}
+@keyframes skim{0%,50%{opacity:0;transform:translateY(0)}56%{opacity:1;transform:translateY(0)}78%{opacity:.8;transform:translateY(46px)}86%,100%{opacity:0;transform:translateY(52px)}}
+.s4 .thief{left:50%;margin-left:-31px;bottom:76px}
+.s4 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .field .orig{opacity:0}.s1 .field .fake{opacity:1}
+  .s1 .rec{left:calc(50% + 60px)}.s1 .rec.b,.s1 .rec.c,.s1 .rec.d{display:none}
+  .s2 .part.old{border-color:var(--bad);background:rgba(255,93,115,.18)}
+  .s2 .part.old .stamp{opacity:1}.s2 .hole{opacity:1;transform:none}
+  .s3 .try{left:calc(50% - 20px)}.s3 .try.b,.s3 .try.c,.s3 .try.d{display:none}
+  .s3 .hit{opacity:1}
+  .s4 .js.swap{border-color:var(--bad);color:var(--bad-soft);background:rgba(255,93,115,.16)}
+  .s4 .card{left:calc(50% - 26px)}.s4 .copy{opacity:.8;transform:translateY(46px)}
+  .banner{opacity:1}
+}
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><i></i> PLAIN SECURITY <span style="color:var(--slate)">//</span> WEB</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">INJECTION</span><span class="nl">INJECTIE</span></a>
+      <a href="#r2"><span class="en">UNPATCHED</span><span class="nl">VEROUDERD</span></a>
+      <a href="#r3"><span class="en">TAKEOVER</span><span class="nl">OVERNAME</span></a>
+      <a href="#r4"><span class="en">SKIMMING</span><span class="nl">SKIMMING</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Your website is <em>a front door.</em></span>
+      <span class="nl">Je website is <em>een voordeur.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">The public website and the customer portal are the most exposed systems we own. Anyone on earth can knock, day and night — in plain language: four ways they get in, and the single control that stops each one.</span>
+      <span class="nl">De publieke website en het klantportaal zijn de meest blootgestelde systemen die we hebben. Iedereen ter wereld kan aankloppen, dag en nacht — in gewone taal: vier manieren waarop ze binnenkomen, en welke maatregel elk daarvan stopt.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE RISKS</span><span class="nl">BEKIJK DE RISICO'S</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT STOPS IT</span><span class="nl">WAT HET STOPT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">A search box that <em>talks straight to the database.</em></span>
+      <span class="nl">Een zoekvak dat <em>rechtstreeks met de database praat.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">injection / untrusted input treated as a command</span>
+      <span class="nl">injectie / invoer van buiten uitgevoerd als opdracht</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">SEARCH FIELD</span><span class="nl">ZOEKVELD</span></div>
+      <div class="node left"><div class="box">🧑‍💻</div><span class="en">Anyone online</span><span class="nl">Iedereen online</span></div>
+      <div class="node right"><div class="box">🗄️</div><span class="en">Customer database</span><span class="nl">Klantendatabase</span></div>
+      <div class="wire"></div>
+      <div class="field">
+        <span class="orig"><span class="en">search: winter shoes</span><span class="nl">zoek: winterschoenen</span></span>
+        <span class="fake"><span class="en">search: ' GIVE ME EVERYTHING --</span><span class="nl">zoek: ' GEEF ME ALLES --</span></span>
+        <i class="cur"></i>
+      </div>
+      <div class="rec a">📄</div><div class="rec b">📄</div><div class="rec c">📄</div><div class="rec d">📄</div>
+      <div class="banner"><span class="en">EVERY CUSTOMER RECORD RETURNED · NO LOGIN NEEDED</span><span class="nl">ELK KLANTRECORD TERUGGEGEVEN · GEEN INLOG NODIG</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Every form on our website — search, login, contact, order tracking — takes text from a stranger and hands it to our systems. If the code behind the form does not strictly separate <em>what the visitor typed</em> from <em>what the system should do</em>, the visitor can type instructions. A crafted search term becomes “show me every customer”. A crafted username becomes “make me an administrator”. No password is guessed, no server is hacked; the website simply does what it was asked.</p>
+      <p class="en"><strong>Business impact:</strong> the entire customer database leaves through the front page, often in one request. This is a personal-data breach under GDPR with a 72-hour notification clock, plus the customer letters, the press questions, and the brand damage of “they left the door open”. The defect is decades old and completely preventable; finding it in our own code costs a fraction of finding it in the news.</p>
+      <p class="nl">Elk formulier op onze website — zoeken, inloggen, contact, orderstatus — neemt tekst aan van een vreemde en geeft die door aan onze systemen. Als de code achter het formulier niet strikt scheidt <em>wat de bezoeker typte</em> van <em>wat het systeem moet doen</em>, kan de bezoeker opdrachten typen. Een slim gekozen zoekterm wordt “laat me alle klanten zien”. Een slim gekozen gebruikersnaam wordt “maak mij beheerder”. Er wordt geen wachtwoord geraden, geen server gehackt; de website doet gewoon wat hem gevraagd wordt.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de volledige klantendatabase vertrekt via de voorpagina, vaak in één verzoek. Dit is een datalek onder de AVG met een meldtermijn van 72 uur, plus de brieven aan klanten, de vragen van de pers en de reputatieschade van “ze hadden de deur open laten staan”. De fout is decennia oud en volledig te voorkomen; hem vinden in onze eigen code kost een fractie van hem terugvinden in het nieuws.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">WHOLE DATABASE · ONE REQUEST · NO LOGIN</span><span class="nl">HELE DATABASE · ÉÉN VERZOEK · GEEN INLOG</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: SECURITY TESTING BEFORE RELEASE + WEB APPLICATION FIREWALL</span><span class="nl">OPLOSSING: BEVEILIGINGSTESTS VÓÓR RELEASE + WEBAPPLICATIEFIREWALL</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">The plugin <em>everyone forgot.</em></span>
+      <span class="nl">De plug-in <em>die iedereen vergat.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">outdated web software / known holes, public instructions</span>
+      <span class="nl">verouderde websoftware / bekende gaten, openbare handleiding</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">WHAT THE SITE IS MADE OF</span><span class="nl">WAAR DE SITE VAN GEMAAKT IS</span></div>
+      <div class="stack">
+        <div class="part"><b>CMS</b><span class="en">core</span><span class="nl">kern</span><i>2026.3</i></div>
+        <div class="part"><b><span class="en">Forms</span><span class="nl">Formulieren</span></b><span class="en">plugin</span><span class="nl">plug-in</span><i>8.1</i></div>
+        <div class="part old"><span class="stamp"><span class="en">3 YEARS OLD</span><span class="nl">3 JAAR OUD</span></span><b><span class="en">Gallery</span><span class="nl">Galerij</span></b><span class="en">plugin</span><span class="nl">plug-in</span><i>2.4</i></div>
+        <div class="part"><b><span class="en">Theme</span><span class="nl">Thema</span></b><span class="en">design</span><span class="nl">ontwerp</span><i>5.0</i></div>
+        <div class="part"><b>Server</b><span class="en">web stack</span><span class="nl">webstack</span><i>LTS</i></div>
+      </div>
+      <div class="actor hole pulse">🕳️<span class="tag"><span class="en">HOLE PUBLISHED · SCANNERS FIND IT IN HOURS</span><span class="nl">GAT GEPUBLICEERD · SCANNERS VINDEN HET IN UREN</span></span></div>
+      <div class="banner"><span class="en">ONE FORGOTTEN PLUGIN → FULL CONTROL OF THE SITE</span><span class="nl">ÉÉN VERGETEN PLUG-IN → VOLLEDIGE CONTROLE OVER DE SITE</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A website is not one thing. It is a content system, a dozen plugins, a theme, a web server and the libraries underneath — each written by someone else, each with its own release schedule. When a hole is found in any of them, the fix and the description of the hole are published together. From that moment, automated scanners sweep the entire internet for sites still running the old version. The gallery plugin an agency installed years ago, for a campaign nobody remembers, is exactly what they find.</p>
+      <p class="en"><strong>Business impact:</strong> full control of the website — defacement, a fake login page under our own domain, malware served to every visitor, or a quiet foothold from which the attacker looks for a path inward. The uncomfortable truth is that nobody had to be clever. The instructions were public, and the fix had been available for months.</p>
+      <p class="nl">Een website is niet één ding. Het is een contentsysteem, een dozijn plug-ins, een thema, een webserver en de bibliotheken daaronder — elk door iemand anders geschreven, elk met een eigen releaseritme. Wordt er in één van die onderdelen een gat gevonden, dan worden de reparatie en de beschrijving van het gat samen gepubliceerd. Vanaf dat moment doorzoeken automatische scanners het hele internet naar sites die nog op de oude versie draaien. De galerij-plug-in die een bureau jaren geleden installeerde, voor een campagne die niemand meer kent, is precies wat ze vinden.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> volledige controle over de website — bekladding, een nep-inlogpagina onder ons eigen domein, malware voor elke bezoeker, of een stil bruggenhoofd van waaruit de aanvaller een weg naar binnen zoekt. De ongemakkelijke waarheid: niemand hoefde slim te zijn. De handleiding was openbaar, en de reparatie was al maanden beschikbaar.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">PUBLIC RECIPE · AUTOMATED · FOUND IN HOURS</span><span class="nl">OPENBAAR RECEPT · GEAUTOMATISEERD · IN UREN GEVONDEN</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: INVENTORY + PATCH THE WEB STACK IN DAYS</span><span class="nl">OPLOSSING: INVENTARIS + WEBSTACK BINNEN DAGEN PATCHEN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">Our customers' accounts, <em>opened with someone else's leak.</em></span>
+      <span class="nl">De accounts van onze klanten, <em>geopend met het lek van een ander.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">account takeover / credential stuffing</span>
+      <span class="nl">accountovername / credential stuffing</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">LOGIN PAGE · 03:00</span><span class="nl">INLOGPAGINA · 03:00</span></div>
+      <div class="node left"><div class="box">🤖</div><span class="en">Bot network</span><span class="nl">Botnetwerk</span></div>
+      <div class="node right"><div class="box">🔐</div><span class="en">Customer portal</span><span class="nl">Klantportaal</span></div>
+      <div class="wire"></div>
+      <div class="hits">
+        <span class="hit a">anna@… ✔</span>
+        <span class="hit b">j.deVries@… ✔</span>
+        <span class="hit c">m.bakker@… ✔</span>
+      </div>
+      <div class="try a">🔑</div><div class="try b">🔑</div><div class="try c">🔑</div><div class="try d">🔑</div>
+      <div class="banner"><span class="en">SAME PASSWORD AS ANOTHER SITE · IT SIMPLY WORKS</span><span class="nl">ZELFDE WACHTWOORD ALS ELDERS · HET WERKT GEWOON</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Billions of e-mail and password pairs from other companies' breaches circulate freely. People reuse passwords, so a bot network tries those pairs against our login page — millions of attempts a night, spread across thousands of addresses so no single one looks suspicious. A small share works. The attacker is now inside real customer accounts: order history, saved addresses, stored payment methods, loyalty balances, and the ability to change the delivery address on the next order.</p>
+      <p class="en"><strong>Business impact:</strong> fraud that we refund, loyalty points that vanish, customers who blame us — correctly, from their point of view, because it happened on our site. Support costs spike, chargebacks follow, and “was your account hacked?” becomes a headline about us, not about the site where the password actually leaked. A login page that only checks the password is a login page that checks nothing the attacker does not already have.</p>
+      <p class="nl">Miljarden combinaties van e-mailadres en wachtwoord uit lekken bij andere bedrijven circuleren vrij. Mensen hergebruiken wachtwoorden, dus een botnetwerk probeert die combinaties op onze inlogpagina — miljoenen pogingen per nacht, verspreid over duizenden adressen zodat geen enkel adres opvalt. Een klein deel werkt. De aanvaller zit nu in echte klantaccounts: bestelhistorie, opgeslagen adressen, bewaarde betaalmethoden, spaarsaldo's, en de mogelijkheid om het bezorgadres van de volgende bestelling te wijzigen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> fraude die wij terugbetalen, spaarpunten die verdwijnen, klanten die ons de schuld geven — terecht, vanuit hun perspectief, want het gebeurde op onze site. Supportkosten schieten omhoog, chargebacks volgen, en “is uw account gehackt?” wordt een kop over ons, niet over de site waar het wachtwoord werkelijk lekte. Een inlogpagina die alleen het wachtwoord controleert, controleert niets wat de aanvaller niet al heeft.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">FRAUD ON OUR SITE · OUR REFUNDS · OUR HEADLINE</span><span class="nl">FRAUDE OP ONZE SITE · ONZE TERUGBETALINGEN · ONZE KRANTENKOP</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: PASSKEYS OR MFA FOR CUSTOMERS + RATE LIMITS + BOT MANAGEMENT</span><span class="nl">OPLOSSING: PASSKEYS OF MFA VOOR KLANTEN + LIMIETEN + BOTBEHEER</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">Our page, <em>their code.</em></span>
+      <span class="nl">Onze pagina, <em>hun code.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">web skimming / third-party scripts on checkout and login</span>
+      <span class="nl">web skimming / scripts van derden op afreken- en inlogpagina</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">CHECKOUT PAGE</span><span class="nl">AFREKENPAGINA</span></div>
+      <div class="scripts">
+        <span class="js">analytics.js</span>
+        <span class="js">chat-widget.js</span>
+        <span class="js swap">fonts-cdn.js</span>
+        <span class="js">cookie-banner.js</span>
+      </div>
+      <div class="node left"><div class="box">💳</div><span class="en">Customer</span><span class="nl">Klant</span></div>
+      <div class="node right"><div class="box">🛒</div><span class="en">Our checkout</span><span class="nl">Onze kassa</span></div>
+      <div class="wire"></div>
+      <div class="card">💳</div>
+      <div class="copy"></div>
+      <div class="actor thief pulse">🕵️<span class="tag"><span class="en">COPY OF EVERY CARD</span><span class="nl">KOPIE VAN ELKE KAART</span></span></div>
+      <div class="banner"><span class="en">PAYMENT SUCCEEDS · CARD NUMBER ALSO GOES ELSEWHERE</span><span class="nl">BETALING SLAAGT · KAARTNUMMER GAAT OOK ELDERS HEEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Our checkout and login pages load code from other companies: analytics, a chat widget, fonts, a cookie banner, a review badge. That code runs in the customer's browser with the same rights as our own — it can read every field on the page. When one of those suppliers is compromised, or a domain they used expires and is bought by someone else, the script is quietly swapped. Payments still succeed. The customer sees nothing. But every card number and password typed on our page is also sent to a third party.</p>
+      <p class="en"><strong>Business impact:</strong> card-brand fines and forced re-certification, the cost of reissuing thousands of cards, a mandatory breach notification, and a story in which our name is on the page where the theft happened — even though the code was not ours. Every script we allow on a payment or login page is a supplier we have handed the keys to. Most companies cannot list them.</p>
+      <p class="nl">Onze afreken- en inlogpagina's laden code van andere bedrijven: analytics, een chatwidget, lettertypen, een cookiebanner, een reviewbadge. Die code draait in de browser van de klant met dezelfde rechten als onze eigen code — ze kan elk veld op de pagina lezen. Wordt één van die leveranciers gehackt, of verloopt een domein dat zij gebruikten en koopt iemand anders het, dan wordt het script stilletjes vervangen. Betalingen slagen gewoon. De klant ziet niets. Maar elk kaartnummer en wachtwoord dat op onze pagina wordt getypt, gaat óók naar een derde.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> boetes van de kaartmaatschappijen en verplichte hercertificering, de kosten van duizenden nieuwe kaarten, een verplichte datalekmelding, en een verhaal waarin onze naam op de pagina staat waar de diefstal plaatsvond — ook al was de code niet van ons. Elk script dat we toelaten op een betaal- of inlogpagina is een leverancier aan wie we de sleutels hebben gegeven. De meeste bedrijven kunnen ze niet opsommen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">INVISIBLE TO CUSTOMER · INVISIBLE TO US · CARD-BRAND FINES</span><span class="nl">ONZICHTBAAR VOOR KLANT · ONZICHTBAAR VOOR ONS · BOETES KAARTMAATSCHAPPIJEN</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: SCRIPT INVENTORY + INTEGRITY CHECKS + CONTENT SECURITY POLICY</span><span class="nl">OPLOSSING: SCRIPTINVENTARIS + INTEGRITEITSCONTROLE + CONTENT SECURITY POLICY</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>actually stops this.</em></span>
+      <span class="nl">Wat dit <em>daadwerkelijk stopt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">a short list — most of it is discipline around what we already run</span>
+      <span class="nl">een korte lijst — het meeste is discipline rond wat we al draaien</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1">WAF + BOTS</span>
+        <span class="chip c2"><span class="en">PATCH CLOCK</span><span class="nl">PATCHKLOK</span></span>
+        <span class="chip c3"><span class="en">PENTEST</span><span class="nl">PENTEST</span></span>
+        <span class="chip c4">PASSKEYS</span>
+        <span class="chip c5"><span class="en">SCRIPT CONTROL</span><span class="nl">SCRIPTCONTROLE</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Stops</th><th>In one line</th></tr>
+        <tr><td class="ctl">WAF + bot management</td><td>Injection (01), Takeover (03)</td><td>A filter in front of the site that blocks known attack patterns and tells human visitors from bot floods.</td></tr>
+        <tr><td class="ctl">Patch clock</td><td>Unpatched (02)</td><td>An inventory of every component the site runs, and a rule that web-facing holes are closed within days, not quarters.</td></tr>
+        <tr><td class="ctl">Testing before release</td><td>Injection (01)</td><td>Automated security checks in the build, so a dangerous form never reaches production.</td></tr>
+        <tr><td class="ctl">Yearly pentest</td><td>All four</td><td>Someone paid to break in, once a year and after every major change, reporting to us before anyone else finds it.</td></tr>
+        <tr><td class="ctl">Passkeys / MFA</td><td>Takeover (03)</td><td>Customer logins that a leaked password alone cannot open, plus limits on how many attempts one address may make.</td></tr>
+        <tr><td class="ctl">Script control</td><td>Skimming (04)</td><td>A named list of every third-party script on payment and login pages, integrity checks so a swapped file is refused, and a content security policy so data can only go where we say.</td></tr>
+        <tr><td class="ctl">Separation</td><td>Unpatched (02)</td><td>The website lives in its own zone: a compromised page cannot reach the office network or internal systems.</td></tr>
+        <tr><td class="ctl">Admin logging</td><td>All four</td><td>Every login and change in the site's admin panel recorded and reviewed — the difference between “we were breached” and “we know what they did”.</td></tr>
+        <tr><td class="ctl">Disclosure page</td><td>Blind spots</td><td>A public address where security researchers can report a hole, so we hear it from them first, not from a leak site.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Stopt</th><th>In één zin</th></tr>
+        <tr><td class="ctl">WAF + botbeheer</td><td>Injectie (01), Overname (03)</td><td>Een filter vóór de site die bekende aanvalspatronen blokkeert en menselijke bezoekers onderscheidt van botstromen.</td></tr>
+        <tr><td class="ctl">Patchklok</td><td>Verouderd (02)</td><td>Een inventaris van elk onderdeel dat de site draait, en de regel dat gaten aan de internetkant binnen dagen dicht zijn, niet binnen kwartalen.</td></tr>
+        <tr><td class="ctl">Testen vóór release</td><td>Injectie (01)</td><td>Automatische beveiligingscontroles in de build, zodat een gevaarlijk formulier nooit in productie komt.</td></tr>
+        <tr><td class="ctl">Jaarlijkse pentest</td><td>Alle vier</td><td>Iemand die betaald wordt om in te breken, jaarlijks en na elke grote wijziging, en aan ons rapporteert voordat een ander het vindt.</td></tr>
+        <tr><td class="ctl">Passkeys / MFA</td><td>Overname (03)</td><td>Klantinlogs die met alleen een gelekt wachtwoord niet opengaan, plus een limiet op het aantal pogingen per adres.</td></tr>
+        <tr><td class="ctl">Scriptcontrole</td><td>Skimming (04)</td><td>Een lijst met elk script van derden op betaal- en inlogpagina's, integriteitscontrole zodat een vervangen bestand wordt geweigerd, en een content security policy zodat gegevens alleen gaan waar wij dat zeggen.</td></tr>
+        <tr><td class="ctl">Scheiding</td><td>Verouderd (02)</td><td>De website staat in een eigen zone: een gehackte pagina kan niet bij het kantoornetwerk of interne systemen.</td></tr>
+        <tr><td class="ctl">Beheerlogging</td><td>Alle vier</td><td>Elke inlog en wijziging in het beheerpaneel vastgelegd en bekeken — het verschil tussen “we zijn gehackt” en “we weten wat ze deden”.</td></tr>
+        <tr><td class="ctl">Meldpagina</td><td>Blinde vlekken</td><td>Een openbaar adres waar beveiligingsonderzoekers een gat kunnen melden, zodat wij het eerst van hen horen en niet van een leksite.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> the website carries our brand and our customer data at the same time, and it is the one system every attacker on earth can reach without asking. Two questions settle whether we are in control: when did someone last try to break it on our behalf, and who is paged — by name — when it breaks for real?</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> de website draagt ons merk en onze klantgegevens tegelijk, en het is het ene systeem dat elke aanvaller ter wereld kan bereiken zonder te vragen. Twee vragen bepalen of we in controle zijn: wanneer heeft iemand er voor het laatst namens ons op ingebroken, en wie wordt er — bij naam — gebeld als het echt misgaat?</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">The website is reachable by everyone, scanned by bots around the clock, and rebuilt by agencies more often than it is tested.</span><span class="nl">De website is voor iedereen bereikbaar, wordt dag en nacht door bots gescand en wordt vaker door bureaus verbouwd dan getest.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Customer data or card numbers leaked under our own brand: notification duties, refunds and card-brand fines, and a defaced or weaponised site in the meantime.</span><span class="nl">Klantgegevens of kaartnummers gelekt onder ons eigen merk: meldplichten, terugbetalingen en boetes van kaartmaatschappijen, en ondertussen een bekladde of misbruikte site.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Middel</span></span><p><span class="en">New flaws keep appearing. A patch clock, testing before release, passkeys and script control turn a breach into a blocked attempt or a contained incident.</span><span class="nl">Nieuwe fouten blijven komen. Een patchklok, testen vóór release, passkeys en scriptcontrole maken van een lek een geblokkeerde poging of een beheersbaar incident.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CMO / CDO</span><span class="nl">CMO / CDO</span></span><p><span class="en">Whoever owns the website and the portal owns this risk, with the CISO as second line. Not the agency, not the hosting provider.</span><span class="nl">Wie eigenaar is van de website en het portaal, is eigenaar van dit risico, met de CISO als tweede lijn. Niet het bureau, niet de hostingpartij.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Days since the last penetration test of the site and portal · days to patch a critical flaw in the web stack · % of customer logins protected by passkeys or MFA · number of third-party scripts on payment and login pages, and how many have an integrity check.</span><span class="nl">Dagen sinds de laatste pentest van site en portaal · dagen tot een kritieke fout in de webstack is gepatcht · % klantinlogs beschermd met passkeys of MFA · aantal scripts van derden op betaal- en inlogpagina's, en hoeveel daarvan een integriteitscontrole hebben.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“A flaw in the public website or customer portal — in our code, an outdated component, weak customer logins or a third-party script — exposes customer and payment data and hands an attacker control of our brand's front door.”</span><span class="nl">“Een fout in de publieke website of het klantportaal — in onze code, een verouderd onderdeel, zwakke klantinlogs of een script van derden — legt klant- en betaalgegevens bloot en geeft een aanvaller de controle over de voordeur van ons merk.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">GDPR · PCI</td><td>Customer data leaking through the website is a personal-data breach: notify the authority within 72 hours and affected customers when the risk to them is high. If cards are skimmed on our page, the card brands' PCI DSS rules apply to us as the merchant, with forensic investigation, fines and possible re-certification.</td><td>The agency, hosting provider and SaaS platform behind the site are processors. Their data-processing agreement must oblige them to report a breach to us without undue delay; check that the clause exists and that a phone number is behind it.</td><td>Start the 72-hour clock at the moment we became aware, not when we finished investigating. Card skimming triggers a separate notification to the acquirer and card brands. Confirm scope and wording with legal.</td></tr>
+        <tr><td class="ctl">NIS2</td><td>If we fall under NIS2, the website and portal are part of the network and information systems we must protect: vulnerability handling, secure development, supply-chain security and MFA are named measures, and management is accountable for them.</td><td>There is no NIS2 certificate. Ask the agency and hosting provider how they patch, test and separate our site from others, and put their duty to warn us of incidents in the contract.</td><td>A significant incident — a public service outage or a large customer-data leak — means early warning to the national authority within 24 hours, full notification within 72 hours, and a final report within a month.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities: if the customer portal supports a critical or important function, it falls under the ICT risk framework, its providers go in the register of ICT third parties, and it is in scope for resilience testing including threat-led penetration tests.</td><td>The report is input, not a substitute. Critical ICT providers behind the portal need the contractual clauses DORA prescribes, including audit rights, incident reporting and an exit strategy.</td><td>A major ICT incident on the portal: initial notification to the supervisor within hours of classification, intermediate report within 72 hours, final report within a month. Clients must be informed when the incident affects them.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>If the platform behind our site is ours to certify: change management, vulnerability management and logical access are the controls an auditor will test against this scenario. Every exception, including a missed patch window, is printed.</td><td>Read the system description first: is our website's platform even in scope? Then check the period and the exceptions, and read the complementary user entity controls — the plugins, scripts and customer login settings are usually ours to manage.</td><td>The incident appears in the platform provider's next report as a deviation, and our customers will ask for a bridge letter and our root-cause analysis, whether the flaw was in their platform or in our plugin.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Assurance over outsourced processes relevant to financial reporting. The web layer is rarely in scope unless the portal itself processes transactions such as payments or orders that feed the books.</td><td>Read the control objectives. If the website and portal are not among them, the report says nothing about injection, patching of the web stack or customer logins, however reassuring the opinion looks.</td><td>The service organisation must disclose the incident to the user auditors if it touched a process in scope. If we are the service organisation, expect it in our opinion and in our customers' audits.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">AVG · PCI</td><td>Klantgegevens die via de website lekken zijn een datalek: melden bij de Autoriteit Persoonsgegevens binnen 72 uur, en aan de getroffen klanten als het risico voor hen hoog is. Worden kaarten op onze pagina geskimd, dan gelden de PCI DSS-regels van de kaartmaatschappijen voor ons als handelaar, met forensisch onderzoek, boetes en mogelijk hercertificering.</td><td>Het bureau, de hostingpartij en het SaaS-platform achter de site zijn verwerkers. Hun verwerkersovereenkomst moet hen verplichten een lek onverwijld aan ons te melden; controleer of die bepaling er staat en of er een telefoonnummer achter zit.</td><td>De 72 uur beginnen op het moment dat wij ervan wisten, niet wanneer het onderzoek klaar was. Skimming van kaarten vraagt een aparte melding aan de acquirer en de kaartmaatschappijen. Bevestig reikwijdte en formulering met legal.</td></tr>
+        <tr><td class="ctl">NIS2</td><td>Vallen wij onder NIS2, dan horen website en portaal bij de netwerk- en informatiesystemen die we moeten beschermen: kwetsbaarheidsbeheer, veilige ontwikkeling, ketenbeveiliging en MFA zijn benoemde maatregelen, en het bestuur is daarvoor aansprakelijk.</td><td>Er bestaat geen NIS2-certificaat. Vraag het bureau en de hostingpartij hoe zij patchen, testen en onze site scheiden van andere, en leg hun plicht om ons bij incidenten te waarschuwen vast in het contract.</td><td>Een significant incident — een publieke dienst die uitvalt of een groot lek van klantgegevens — betekent vroegtijdige waarschuwing aan de toezichthouder binnen 24 uur, volledige melding binnen 72 uur en een eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: ondersteunt het klantportaal een kritieke of belangrijke functie, dan valt het onder het ICT-risicokader, gaan de leveranciers ervan in het register van ICT-derden, en is het in scope voor weerbaarheidstesten, inclusief dreigingsgestuurde penetratietests.</td><td>Het rapport is input, geen vervanging. Kritieke ICT-leveranciers achter het portaal vereisen de contractbepalingen die DORA voorschrijft, inclusief auditrechten, incidentmelding en een exitstrategie.</td><td>Een ernstig ICT-incident op het portaal: eerste melding aan de toezichthouder binnen enkele uren na classificatie, tussenrapport binnen 72 uur, eindrapport binnen een maand. Klanten moeten worden geïnformeerd als het incident hen raakt.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Is het platform achter onze site het onze om te certificeren, dan zijn wijzigingsbeheer, kwetsbaarheidsbeheer en logische toegang de maatregelen die een auditor tegen dit scenario toetst. Elke afwijking, ook een gemiste patchtermijn, staat in het rapport.</td><td>Lees eerst de systeembeschrijving: valt het platform van onze website überhaupt binnen de scope? Controleer daarna de periode en de afwijkingen, en lees de complementary user entity controls — de plug-ins, scripts en instellingen voor klantinlogs zijn meestal onze verantwoordelijkheid.</td><td>Het incident verschijnt in het volgende rapport van de platformleverancier als afwijking, en onze klanten vragen om een bridge letter en onze oorzaakanalyse, of de fout nu in hun platform zat of in onze plug-in.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Zekerheid over uitbestede processen die relevant zijn voor de financiële verslaggeving. De weblaag valt zelden binnen de scope, tenzij het portaal zelf transacties verwerkt, zoals betalingen of bestellingen die in de boeken landen.</td><td>Lees de beheersdoelstellingen. Staan website en portaal er niet bij, dan zegt het rapport niets over injectie, patchen van de webstack of klantinlogs, hoe geruststellend het oordeel ook leest.</td><td>De serviceorganisatie moet het incident melden aan de auditors van haar klanten als het een proces binnen de scope raakte. Zijn wij zelf de serviceorganisatie, verwacht het dan in ons oordeel en in de audits van onze klanten.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">WEB SECURITY BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO JAVASCRIPT</span>
+      <span class="nl">WEBBEVEILIGING BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN JAVASCRIPT</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
