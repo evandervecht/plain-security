@@ -21,6 +21,8 @@ sponsor:
   - '(tls|ssl|cipher|ciphersuite|handshake|certificate|certificaat|downgrade)'
 'page: ransomware':
   - '(ransomware|losgeld|gijzelsoftware)'
+'page: blast-radius':
+  - '(blast radius|schadevergroting|segmentatie|segmentation|network isolation|isolatie|lateral movement|tiered admin|least privilege)'
 'page: phishing':
   - '(phishing|ceo.?fraud|smishing|vishing)'
 'page: identity':
