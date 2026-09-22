@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>SSL/TLS cipher suites // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   TLS CIPHER SUITES // BRIEFING
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   STAGE
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.cipher-box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:240px;padding:24px;background:var(--surface);border:2px solid var(--line);text-align:center;z-index:3}
+.cipher-box .title{font-size:13px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin-bottom:12px;font-weight:700}
+.cipher-box .value{font-family:var(--sans);font-weight:700;font-size:24px;color:var(--white);margin-bottom:8px}
+.cipher-box .desc{font-size:12px;color:var(--muted);line-height:1.4}
+.cipher-box.weak{border-color:var(--bad);background:rgba(255,93,115,.08)}
+.cipher-box.weak .title{color:var(--bad-soft)}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> PLAIN SECURITY <span style="color:var(--slate)">//</span> TLS</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">WEAK</span><span class="nl">ZWAK</span></a>
+      <a href="#r2"><span class="en">DOWNGRADE</span><span class="nl">DOWNGRADE</span></a>
+      <a href="#r3"><span class="en">KEY EXCHANGE</span><span class="nl">SLEUTELUITWISSELING</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">SSL and TLS cipher suites. <em>A layer deeper into encryption in transit.</em></span>
+      <span class="nl">SSL- en TLS-ciphersuites. <em>Een laag dieper in versleuteling onderweg.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">The protocol handles the handshake, but cipher suites decide what actually gets encrypted and how strong it is. Wrong choices leave data readable by design, and downgrade attacks undo every other precaution we take.</span>
+      <span class="nl">Het protocol voert de handshake uit, maar ciphersuites bepalen wat echt wordt versleuteld en hoe sterk dat is. Verkeerde keuzes laten data per ontwerp leesbaar, en downgrade-aanvallen maken elke andere voorzorgsmaatregel ongedaan.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE RISKS</span><span class="nl">BEKIJK DE RISICO'S</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT CONTAINS IT</span><span class="nl">WAT HET BEHEERST</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 01</span><span class="nl">RISICO 01</span></span>
+    <h2>
+      <span class="en">We agreed on TLS 1.3. <em>We're using RC4.</em></span>
+      <span class="nl">We spraken af over TLS 1.3. <em>We gebruiken RC4.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">weak cipher suites / legacy cryptography</span>
+      <span class="nl">zwakke ciphersuites / verouderde cryptografie</span>
+    </span>
+
+    <div class="stage">
+      <div class="stage-label"><span class="en">CONNECTION NEGOTIATION</span><span class="nl">VERBINDINGSONDERHANDELING</span></div>
+      <div class="cipher-box weak">
+        <div class="title"><span class="en">What Gets Used</span><span class="nl">Wat Wordt Gebruikt</span></div>
+        <div class="value">DES / RC4</div>
+        <div class="desc"><span class="en">256-bit symmetric encryption that was fast in 1985</span><span class="nl">256-bits symmetrische versleuteling die in 1985 snel was</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A webserver offers TLS 1.3 with AES-GCM in the certificate, and the organisation paid auditors to verify the configuration. But the server still supports SSL 2.0, DES and RC4 for "compatibility" with old clients that nobody uses anymore. The browser picks the best it understands — which is RC4 in that list. The data is encrypted, a padlock appears, and the transfer looks secure. It is not. RC4 can be broken in minutes on a laptop, and DES-ciphered traffic is routinely cracked in the wild. Worse: we often don't know these are enabled. The last scan was six months ago, and someone disabled the weak ciphers for staging but not for production.</p>
+      <p class="en"><strong>Business impact:</strong> an attacker on the network path (compromised ISP, rogue WiFi, intercepted BGP route) reads the traffic in real-time without touching the client or server. The padlock is trusted. The encryption is trusted. The payload is compromised. Compliance frameworks mandate strong cipher suites and deprecated cryptography is a common audit finding that is not remediated.</p>
+      <p class="nl">Een webserver biedt TLS 1.3 met AES-GCM in het certificaat aan, en de organisatie betaalde auditors om de configuratie te verifiëren. Maar de server ondersteunt nog steeds SSL 2.0, DES en RC4 voor "compatibiliteit" met oude clients die niemand meer gebruikt. De browser kiest het beste wat hij begrijpt — in die lijst is dat RC4. De data is versleuteld, er verschijnt een hangslot, en de overdracht ziet er veilig uit. Dat is het niet. RC4 kan in minuten op een laptop worden gebroken, en DES-versleuteld verkeer wordt routinematig in het wild gekraakt. Nog erger: we weten vaak niet dat deze zijn ingeschakeld. De laatste scan was zes maanden geleden, en iemand schakelde de zwakke ciphers voor staging uit maar niet voor productie.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een aanvaller op het netwerkpad (compromised ISP, rogue WiFi, geïntercepteerde BGP-route) leest het verkeer in real-time zonder client of server aan te raken. Het hangslot wordt vertrouwd. De versleuteling wordt vertrouwd. De payload is gecompromitteerd. Compliance-kaders schrijven sterke ciphersuites voor en verouderde cryptografie is een veel voorkomende auditvinding die niet wordt verholpen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">WEAK BY DEFAULT · INVISIBLE IN LOGS · FULL DATA EXPOSURE</span><span class="nl">STANDAARD ZWAK · ONZICHTBAAR IN LOGS · VOLLEDIGE GEGEVENSBLOOTSTELLING</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: ENFORCE STRONG SUITES ONLY, DISABLE LEGACY ENTIRELY</span><span class="nl">OPLOSSING: ALLEEN STERKE SUITES AFDWINGEN, LEGACY VOLLEDIG UITSCHAKELEN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 02</span><span class="nl">RISICO 02</span></span>
+    <h2>
+      <span class="en">Both sides agreed on TLS 1.3. <em>They negotiated TLS 1.0 instead.</em></span>
+      <span class="nl">Beide kanten spraken af over TLS 1.3. <em>Ze onderhandelden TLS 1.0.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">downgrade attacks / protocol version fallback</span>
+      <span class="nl">downgrade-aanvallen / terugval protocolversie</span>
+    </span>
+
+    <div class="stage">
+      <div class="stage-label"><span class="en">ATTACKER POSITION</span><span class="nl">AANVALLERSPOSITIE</span></div>
+      <div class="cipher-box weak">
+        <div class="title"><span class="en">Negotiated Version</span><span class="nl">Onderhandelde Versie</span></div>
+        <div class="value">TLS 1.0</div>
+        <div class="desc"><span class="en">Both sides support TLS 1.3, but attacker forced fallback</span><span class="nl">Beide zijden ondersteunen TLS 1.3, maar aanvaller dwong terugval af</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Client and server both support TLS 1.2 and 1.3. An attacker on the network sends a reset packet that looks like it came from the server: "I don't understand your TLS 1.3 handshake." The client retries with TLS 1.2. The attacker resets again. TLS 1.1. Resets again. TLS 1.0. Now the attacker and server complete a TLS 1.0 handshake — which has known weaknesses a modern computer can exploit. Both sides had TLS 1.3 capable certificates and support in the stack, but neither side verified that the negotiated version was actually what both wanted. This is not a bug in one TLS implementation. This is how clients and servers still behave when they encounter connection problems. In some VPN products and edge cases, the attacker can downgrade even further.</p>
+      <p class="en"><strong>Business impact:</strong> the handshake encryption is weaker, the cipher suite options are fewer and include deprecated choices, and the cryptographic guarantees made by the protocol are reduced. An attacker who can force a downgrade can often crack the resulting traffic. Many compliance frameworks explicitly forbid downgrade fallback and require the connection to fail rather than drop to a weak version.</p>
+      <p class="nl">Client en server ondersteunen beide TLS 1.2 en 1.3. Een aanvaller in het netwerk stuurt een resetpakket dat lijkt van de server: "Ik begrijp uw TLS 1.3-handshake niet." De client probeert het opnieuw met TLS 1.2. De aanvaller reset opnieuw. TLS 1.1. Reset opnieuw. TLS 1.0. Nu voltooien de aanvaller en server een TLS 1.0-handshake — die bekende zwaktes heeft die een moderne computer kan misbruiken. Beide zijden hadden TLS 1.3-capabele certificaten en ondersteuning in de stack, maar geen van beide zijden controleerde of de onderhandelde versie werkelijk wat beide wilden. Dit is geen fout in één TLS-implementatie. Dit is hoe clients en servers zich nog steeds gedragen wanneer ze verbindingsproblemen tegenkomen. In sommige VPN-producten en grensgevallen kan de aanvaller nog verder downgraden.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de handshake-versleuteling is zwakker, de ciphersuite-opties zijn minder en omvatten verouderde keuzes, en de cryptografische garanties van het protocol zijn verminderd. Een aanvaller die een downgrade kan afdwingen, kan het resulterende verkeer vaak kraken. Veel compliance-kaders verbieden downgrade-terugval expliciet en vereisen dat de verbinding niet wordt verbroken in plaats van terug te vallen naar een zwakke versie.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">SILENT NEGOTIATION · FORCES WEAK PROTOCOL · REPLAY ATTACKS</span><span class="nl">STILLE ONDERHANDELING · DWINGT ZWAK PROTOCOL · HERHAALINGSAANVALLEN</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: FAIL ON WEAK VERSION, NO FALLBACK BELOW TLS 1.2</span><span class="nl">OPLOSSING: MISLUKKING BIJ ZWAKKE VERSIE, GEEN TERUGVAL ONDER TLS 1.2</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 03</span><span class="nl">RISICO 03</span></span>
+    <h2>
+      <span class="en">The key exchange worked. <em>So did the eavesdropper.</em></span>
+      <span class="nl">De sleuteluitwisseling werkte. <em>De afluisteraar ook.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">weak key exchange algorithms / lack of forward secrecy</span>
+      <span class="nl">zwakke sleuteluitwisselings-algoritmes / gebrek aan forward secrecy</span>
+    </span>
+
+    <div class="stage">
+      <div class="stage-label"><span class="en">SESSION KEYS</span><span class="nl">SESSIESLEUTEN</span></div>
+      <div class="cipher-box weak">
+        <div class="title"><span class="en">Key Exchange</span><span class="nl">Sleuteluitwisseling</span></div>
+        <div class="value">RSA / DH</div>
+        <div class="desc"><span class="en">Static key derivable from server's private key</span><span class="nl">Statische sleutel afleidt van privésleutel server</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A bank's TLS certificate uses an RSA key to authenticate the server, and the key exchange is RSA-based: the client encrypts a random session key to the server's public key, and the server decrypts it with the private key. Secure? In the moment, yes. But an attacker records every SSL/TLS handshake, and a year later finds the server's private key (unpatched OpenSSL, storage breach, or a departed employee with a copy). The attacker can now decrypt every past session, because the session keys were always derivable from the server's static key. They have years of decrypted banking traffic. This is called a retrospective decryption attack, and it is cheap to execute once a key is compromised. Modern TLS versions use ephemeral Diffie-Hellman or ECDH, where the session key is not dependent on the server's long-term key — but many systems still support the old RSA key exchange, and a weak "export-grade" version can be forced by the attacker.</p>
+      <p class="en"><strong>Business impact:</strong> if the server's private key is ever compromised, all past traffic is compromised retroactively. Not just tomorrow's clients, but every past session can be decrypted. For financial services and government, this is a critical requirement: Perfect Forward Secrecy (PFS), where each session's key is independent of the server's long-term key. Without it, decryption is not a future risk — it is a certainty if the key is lost.</p>
+      <p class="nl">Het TLS-certificaat van een bank gebruikt een RSA-sleutel om de server te verifiëren, en de sleuteluitwisseling is op RSA gebaseerd: de client versleutelt een willekeurige sessiesleutel naar de openbare sleutel van de server, en de server ontcijfert deze met de privésleutel. Veilig? Op het moment, ja. Maar een aanvaller registreert elke SSL/TLS-handshake, en een jaar later vindt die de privésleutel van de server (ongepatcht OpenSSL, opslagbreuk, of een vertrokken werknemer met een kopie). De aanvaller kan nu elke voorbije sessie ontcijferen, omdat de sessiesleuten altijd afleidt konden worden van de statische sleutel van de server. Ze hebben jarenlang ontcijferd bankverkeer. Dit wordt een retrospectief ontcijfering-aanval genoemd, en het is goedkoop om uit te voeren als een sleutel is gecompromitteerd. Moderne TLS-versies gebruiken ephemeral Diffie-Hellman of ECDH, waarbij de sessiesleutel niet afhankelijk is van de lange-termijnsleutel van de server — maar veel systemen ondersteunen nog steeds de oude RSA-sleuteluitwisseling, en een zwakke "export-grade"-versie kan door de aanvaller worden afgedwongen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> als de privésleutel van de server ooit gecompromitteerd is, is al het voorbije verkeer terugwerkend gecompromitteerd. Niet alleen de clients van morgen, maar elke voorbije sessie kan worden ontcijferd. Voor financiële diensten en overheid is dit een kritieke vereiste: Perfect Forward Secrecy (PFS), waarbij de sleutel van elke sessie onafhankelijk is van de lange-termijnsleutel van de server. Zonder het is ontcijfering geen toekomstig risico — het is zekerheid als de sleutel verloren gaat.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NO FORWARD SECRECY · RETROACTIVE DECRYPTION · YEARS OF HISTORY AT RISK</span><span class="nl">GEEN FORWARD SECRECY · RETROACTIEVE ONTCIJFERING · JAREN GESCHIEDENIS OP RISICO</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: EPHEMERAL KEY EXCHANGE ONLY, PFS-MANDATORY CIPHERS</span><span class="nl">OPLOSSING: ALLEEN EPHEMERAL SLEUTELUITWISSELING, PFS-VERPLICHTE CIPHERS</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>keeps it contained.</em></span>
+      <span class="nl">Wat het <em>beheersbaar houdt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">audit, policy, and automation — cipher suite hardening and monitoring</span>
+      <span class="nl">audit, beleid en automatisering — ciphersuite-hardening en monitoring</span>
+    </span>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Contains</th><th>In one line</th></tr>
+        <tr><td class="ctl">Cipher audit</td><td>Weak ciphers (01)</td><td>Scan every server and client annually, with fixes for failed findings before the next scan. Automation beats manual review.</td></tr>
+        <tr><td class="ctl">Disable legacy</td><td>Weak ciphers (01)</td><td>SSL 2.0, 3.0, TLS 1.0 and 1.1 off everywhere. If a client cannot connect, upgrade the client or isolate it on a separate network segment.</td></tr>
+        <tr><td class="ctl">Minimum TLS</td><td>Downgrade (02)</td><td>Require TLS 1.2 minimum, TLS 1.3 preferred. Set it in the web server, VPN, database drivers, and API clients — not just the browser.</td></tr>
+        <tr><td class="ctl">No fallback</td><td>Downgrade (02)</td><td>If negotiation fails, close the connection. Never retry with an older version. The protocol behavior matters as much as the version number.</td></tr>
+        <tr><td class="ctl">PFS mandatory</td><td>Key exchange (03)</td><td>Cipher suites must use ephemeral key exchange (ECDHE or DHE), never static RSA or Diffie-Hellman. This is non-negotiable.</td></tr>
+        <tr><td class="ctl">Strong cipher only</td><td>Key exchange (03)</td><td>AES-GCM, ChaCha20-Poly1305 — no NULL, no EXPORT, no 40-bit or 56-bit encryption. Disable anything weaker than 128 bits symmetric.</td></tr>
+        <tr><td class="ctl">HSTS header</td><td>Downgrade (02)</td><td>Send <code>Strict-Transport-Security: max-age=31536000; includeSubDomains</code> to force HTTPS and prevent downgrade attacks on HTTP.</td></tr>
+        <tr><td class="ctl">Configuration as code</td><td>All three</td><td>Cipher configuration in git, reviewed, tested and deployed the same way as application code. Manual server tuning drifts and breaks audit trails.</td></tr>
+        <tr><td class="ctl">Monitoring</td><td>All three</td><td>Alert on any connection using legacy protocols or weak ciphers. If it happens, investigate why before the next scan confirms it twice.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Beheerst</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Cipher-audit</td><td>Zwakke ciphers (01)</td><td>Scan elk servercipher en client jaarlijks, met fixes voor mislukte bevindingen vóór de volgende scan. Automatisering wint van handmatige controle.</td></tr>
+        <tr><td class="ctl">Legacy uitschakelen</td><td>Zwakke ciphers (01)</td><td>SSL 2.0, 3.0, TLS 1.0 en 1.1 uit overal. Als een client niet kan verbinden, upgrade de client of isoleer deze op een apart netwerksegment.</td></tr>
+        <tr><td class="ctl">Minimum TLS</td><td>Downgrade (02)</td><td>TLS 1.2 minimum vereisen, TLS 1.3 voorkeur. Stel het in op de webserver, VPN, databasestuurprogramma's en API-clients — niet alleen de browser.</td></tr>
+        <tr><td class="ctl">Geen terugval</td><td>Downgrade (02)</td><td>Als onderhandeling mislukt, sluit de verbinding. Probeer nooit opnieuw met een oudere versie. Het protocolgedrag is net zo belangrijk als het versienummer.</td></tr>
+        <tr><td class="ctl">PFS verplicht</td><td>Sleuteluitwisseling (03)</td><td>Ciphersuites moeten ephemeral sleuteluitwisseling gebruiken (ECDHE of DHE), nooit statische RSA of Diffie-Hellman. Dit is niet-onderhandelbaar.</td></tr>
+        <tr><td class="ctl">Alleen sterke cipher</td><td>Sleuteluitwisseling (03)</td><td>AES-GCM, ChaCha20-Poly1305 — geen NULL, geen EXPORT, geen 40-bits of 56-bits versleuteling. Schakel alles zwakker dan 128 bits symmetrisch uit.</td></tr>
+        <tr><td class="ctl">HSTS-kop</td><td>Downgrade (02)</td><td>Stuur <code>Strict-Transport-Security: max-age=31536000; includeSubDomains</code> om HTTPS af te dwingen en downgrade-aanvallen op HTTP te voorkomen.</td></tr>
+        <tr><td class="ctl">Configuratie als code</td><td>Alle drie</td><td>Cipherconfiguratie in git, gereviewd, getest en geïmplementeerd op dezelfde manier als toepassingscode. Handmatig servertunen drifts en breekt audit trails.</td></tr>
+        <tr><td class="ctl">Monitoring</td><td>Alle drie</td><td>Waarschuw bij elke verbinding met legacy-protocollen of zwakke ciphers. Als het gebeurt, onderzoek waarom vóór de volgende scan het twee keer bevestigt.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> cipher suite hardening is not a one-time checklist. Cryptography is being actively broken in labs and conferences, support for old versions is a default in most systems, and configurations drift when teams change. Build it into your annual audit cycle, add it to the hardening playbook and treat failed findings as a red item until fixed.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> cipher suite-hardening is geen eenmalige checklist. Cryptografie wordt actief gebroken in labs en conferenties, ondersteuning voor oude versies is een standaard in de meeste systemen, en configuraties driften wanneer teams veranderen. Voeg het in uw jaarlijkse auditcyclus in, voeg het toe aan het hardening-playbook en behandel mislukte bevindingen als een rode item totdat het is opgelost.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Weak cipher suites are often enabled for backward compatibility, undetected in configurations that change between deployments, or left in place after migrations.</span><span class="nl">Zwakke ciphersuites zijn vaak ingeschakeld voor achterwaartse compatibiliteit, ongedetecteerd in configuraties die tussen implementaties veranderen, of achtergelaten na migraties.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Decryption of traffic in transit, theft of session keys, compromise of data confidentiality, and loss of regulatory compliance standing.</span><span class="nl">Ontcijfering van verkeer onderweg, diefstal van sessiesleuten, compromis van gegevensvertrouwelijkheid en verlies van regelgevingscompliance.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Middel</span></span><p><span class="en">Regular cipher audits and configuration-as-code reduce likelihood. Impact remains if an old server is brought online from an unchecked backup or a third-party supplier's weak cipher is required for integration.</span><span class="nl">Regelmatige cipher-audits en configuratie-als-code verminderen de kans. Impact blijft als een oude server online gaat vanuit een ongecontroleerde back-up of een zwakke cipher van een derde partij nodig is voor integratie.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CIO / CISO</span><span class="nl">CIO / CISO</span></span><p><span class="en">CIO for infrastructure and cipher configuration; CISO for policy and compliance monitoring.</span><span class="nl">CIO voor infrastructuur en cipherconfiguratie; CISO voor beleid en compliancemonitoring.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Three numbers to ask for</span><span class="nl">Drie getallen om naar te vragen</span></span><p><span class="en">% of systems supporting only TLS 1.2+ and strong ciphers · number of systems still supporting legacy versions (SSL 3.0, TLS 1.0/1.1) · % of key exchanges using ephemeral algorithms (ECDHE, DHE).</span><span class="nl">% systemen die alleen TLS 1.2+ en sterke ciphers ondersteunen · aantal systemen dat nog steeds legacy-versies ondersteunt (SSL 3.0, TLS 1.0/1.1) · % sleuteluitwisselingen met ephemeral-algoritmes (ECDHE, DHE).</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">"Misconfiguration or support for weak SSL/TLS cipher suites and protocols enables decryption of encrypted traffic and compromises the confidentiality of data in transit."</span><span class="nl">"Misconfiguratie of ondersteuning voor zwakke SSL/TLS-ciphersuites en -protocollen maakt ontcijfering van versleuteld verkeer mogelijk en compromitteert de vertrouwelijkheid van gegevens onderweg."</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Cryptographic controls including management of deprecated cryptography, version management of protocols, and monitoring of configuration drift. Incident response for significant ICT incidents triggered by cryptographic weaknesses.</td><td>Ask the supplier for cipher suite and protocol version documentation, and evidence of testing for weak algorithms. A configuration screenshot is not audit evidence; ask for repeatable testing results.</td><td>If weak ciphers enabled a breach or compromise, this is a significant ICT incident: early warning within about 24 hours. Confirm with legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities: encryption of data in transit is a mandatory ICT control; weak cipher suites represent failure of that control. Audit this as part of ICT governance and third-party management.</td><td>Read the cryptography section, not the executive summary. The report must state which protocols and cipher suites are in use, not just that encryption is present.</td><td>A compromise enabled by weak ciphers can be a major ICT incident, triggering notification to the supervisor within hours and documented root-cause analysis.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Encryption of data in transit, cryptographic key management, and change management of encryption configuration all fall under CC6 and CC7 controls. Weak ciphers represent a deviation.</td><td>The report should document the algorithm, key length and key management. If it does not, the control is not fully tested. Ask for detail or a separate cryptographic assessment.</td><td>The deviation is disclosed in the next report. Customers will ask for remediation timeline and evidence that the issue was not present in prior periods.</td></tr>
+        <tr><td class="ctl">PCI-DSS</td><td>Requirement 4 (encrypt cardholder data in transit) and Requirement 2 (secure configuration defaults). Weak cipher suites are a common fail. Protocol versions, algorithms and key lengths are all in scope.</td><td>Insist on a full cipher suite inventory for the specific systems handling cardholder data, not a general claim that "encryption is used".</td><td>If card data was exposed via weak ciphers, this is a breach requiring notification to card brands and customers, plus forensic proof of the mechanism.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Cryptografische maatregelen met inbegrip van beheer van verouderde cryptografie, versiebeheer van protocollen en monitoring van configuratiedrift. Incidentrespons voor significante ICT-incidenten veroorzaakt door cryptografische zwaktes.</td><td>Vraag de leverancier om ciphersuite- en protocolversiedocumentatie en bewijs van tests voor zwakke algoritmes. Een schermafdruk van de configuratie is geen auditbewijs; vraag om herhaalbare testresultaten.</td><td>Als zwakke ciphers een breuk of compromis mogelijk maakten, is dit een significant ICT-incident: vroegtijdige waarschuwing binnen ongeveer 24 uur. Bevestig met legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: versleuteling van gegevens onderweg is een verplichte ICT-controle; zwakke ciphersuites vertegenwoordigen falen van die controle. Controleer dit als onderdeel van ICT-bestuur en beheer van derden.</td><td>Lees de cryptografiesectie, niet de samenvatting voor leidinggevenden. Het rapport moet aangeven welke protocollen en ciphersuites in gebruik zijn, niet alleen dat versleuteling aanwezig is.</td><td>Een compromis mogelijk gemaakt door zwakke ciphers kan een groot ICT-incident zijn, wat melding aan de toezichthouder binnen enkele uren triggert en gedocumenteerde root-cause-analyse.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Versleuteling van gegevens onderweg, beheer van cryptografische sleutels en wijzigingsbeheer van versleutelingsconfiguratie vallen allemaal onder CC6- en CC7-maatregelen. Zwakke ciphers vertegenwoordigen een afwijking.</td><td>Het rapport moet het algoritme, de sleutellengte en het sleutelbeheer documenteren. Als dat niet het geval is, is de controle niet volledig getest. Vraag om detail of een aparte cryptografische beoordeling.</td><td>De afwijking wordt in het volgende rapport openbaar gemaakt. Klanten vragen naar herstelschema en bewijs dat de kwestie niet in vorige periodes voorkwam.</td></tr>
+        <tr><td class="ctl">PCI-DSS</td><td>Vereiste 4 (gegevens van kaarthouders versleutelen onderweg) en Vereiste 2 (standaardinstellingen voor veilige configuratie). Zwakke ciphersuites zijn een veelvoorkomende fout. Protocolversies, algoritmes en sleutellengte zijn allemaal in scope.</td><td>Sta erop dat een volledige ciphersuitevoorraad voor de specifieke systemen die kaartgegevens verwerken, geen algemene bewering dat "versleuteling wordt gebruikt".</td><td>Als kaartgegevens via zwakke ciphers werden blootgesteld, is dit een breuk die melding aan merkkaarten en klanten vereist, plus forensisch bewijs van het mechanisme.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">SSL/TLS CIPHER SUITES BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">SSL/TLS CIPHERSUITES BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
