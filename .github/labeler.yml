@@ -33,6 +33,8 @@ sponsor:
   - '(supply.?chain|toeleveringsketen|vendor|leverancier|third.?party)'
 'page: cloud':
   - '(\bcloud\b|\baws\b|azure|gcp|bucket|misconfig)'
+'page: shared-responsibility':
+  - '(shared responsibility|gedeelde verantwoordelijkheid|iaas|paas|saas model|responsibility matrix|verantwoordelijkheidsmatrix|cuec)'
 'page: insider':
   - '(insider|binnenuit|leaver|vertrekker)'
 'page: ddos':
