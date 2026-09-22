@@ -24,6 +24,7 @@ body:
     attributes:
       label: Who is asking
       options:
+        - All audiences (full briefing, default)
         - Board or C-level
         - Risk or compliance
         - IT or security team

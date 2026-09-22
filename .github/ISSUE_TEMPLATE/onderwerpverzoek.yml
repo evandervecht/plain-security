@@ -24,6 +24,7 @@ body:
     attributes:
       label: Wie vraagt het
       options:
+        - Alle doelgroepen (volledige briefing, standaard)
         - Directie of C-level
         - Risk of compliance
         - IT- of securityteam
