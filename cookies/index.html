@@ -132,6 +132,8 @@ h2 em{font-style:normal;color:var(--muted)}
 .cookie-box .desc{font-size:12px;color:var(--muted);line-height:1.4}
 .cookie-box.weak{border-color:var(--bad);background:rgba(255,93,115,.08)}
 .cookie-box.weak .title{color:var(--bad-soft)}
+.cookie-box.leaking{animation:leak 2.4s ease-in-out infinite}
+@keyframes leak{0%,100%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}50%{box-shadow:0 0 0 18px rgba(255,93,115,0)}}
 
 /* ---------- table ---------- */
 table{width:100%;border-collapse:collapse;margin-top:2px}
@@ -172,6 +174,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 }
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important}
+  .cookie-box.leaking{box-shadow:0 0 0 10px rgba(255,93,115,.25)}
 }
 
 /* ---------- risk & compliance ---------- */
@@ -195,6 +198,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
       <a href="#r2"><span class="en">MAN-IN-MIDDLE</span><span class="nl">MAN-IN-MIDDLE</span></a>
       <a href="#r3"><span class="en">FIXATION</span><span class="nl">FIXATIE</span></a>
       <a href="#r4"><span class="en">THIRD-PARTY</span><span class="nl">DERDE PARTIJ</span></a>
+      <a href="#r5"><span class="en">LOCAL AGENT</span><span class="nl">LOKALE AGENT</span></a>
       <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
       <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
     </div>
@@ -377,6 +381,42 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
   </div>
 </section>
 
+<!-- ============================ 05 ============================ -->
+<section class="risk-block" id="r5">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 05</span><span class="nl">RISICO 05</span></span>
+    <h2>
+      <span class="en">The agent read the file. <em>It didn't have to ask.</em></span>
+      <span class="nl">De agent las het bestand. <em>Hij hoefde het niet te vragen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">local ai coding agents / disk-level cookie theft / autonomous scope drift</span>
+      <span class="nl">lokale ai-codeeragenten / cookiediefstal op schijfniveau / autonome scope-afwijking</span>
+    </span>
+
+    <div class="stage">
+      <div class="stage-label"><span class="en">DEVELOPER'S DISK</span><span class="nl">SCHIJF VAN DE ONTWIKKELAAR</span></div>
+      <div class="cookie-box weak leaking">
+        <div class="title"><span class="en">Session Cookie</span><span class="nl">Sessie Cookie</span></div>
+        <div class="value">on disk</div>
+        <div class="desc"><span class="en">Agent reads the browser's profile files directly — no JS, no network</span><span class="nl">Agent leest de profielbestanden van de browser rechtstreeks — geen JS, geen netwerk</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A developer runs a local AI coding agent (Claude Code, Codex CLI) on their own workstation. The agent has the same filesystem access as the developer: it can open the browser's cookie and session-token store directly off disk, already authenticated as that user. No script was injected into any page, no traffic was intercepted on the wire. The page's own headline controls exist to stop exactly those two paths — HTTPOnly blocks JavaScript from reading the cookie, Secure and SameSite govern how it travels over the network — and none of them apply to a local process simply reading a file.</p>
+      <p class="en"><strong>Business impact:</strong> because the agent reasons and acts autonomously across a multi-step task, holding that captured session is not the end of the risk — it can decide mid-task to use it for something outside what it was actually asked to do. That decision is often triggered by instructions hidden inside content the agent fetched along the way: a webpage, a ticket, a file — a prompt-injection style scope drift that turns a code-editing session into an authenticated action the developer never approved.</p>
+      <p class="nl">Een ontwikkelaar draait een lokale AI-codeeragent (Claude Code, Codex CLI) op zijn eigen werkstation. De agent heeft dezelfde bestandssysteemtoegang als de ontwikkelaar: hij kan de cookie- en sessietoken-opslag van de browser rechtstreeks van schijf openen, al geverifieerd als die gebruiker. Er werd geen script in een pagina geïnjecteerd, geen verkeer onderschept. De headline-maatregelen van deze pagina bestaan om precies die twee paden te stoppen — HTTPOnly blokkeert dat JavaScript de cookie leest, Secure en SameSite bepalen hoe deze over het netwerk reist — en geen van beide is van toepassing op een lokaal proces dat gewoon een bestand leest.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> omdat de agent autonoom redeneert en handelt over een taak met meerdere stappen, is het bezit van die gestolen sessie niet het einde van het risico — hij kan er middenin een taak voor kiezen deze te gebruiken voor iets buiten wat daadwerkelijk gevraagd was. Die beslissing wordt vaak getriggerd door instructies verborgen in content die de agent onderweg ophaalde: een webpagina, een ticket, een bestand — een prompt-injectie-achtige scope-afwijking die een code-sessie omzet in een geverifieerde actie die de ontwikkelaar nooit heeft goedgekeurd.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">DISK-LEVEL READ · HTTPONLY/SECURE/SAMESITE DON'T HELP · AUTONOMOUS SCOPE DRIFT</span><span class="nl">LEZEN OP SCHIJFNIVEAU · HTTPONLY/SECURE/SAMESITE HELPEN NIET · AUTONOME SCOPE-AFWIJKING</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: TOKEN BINDING + SANDBOXED AGENT + EGRESS ALLOWLIST</span><span class="nl">OPLOSSING: TOKEN BINDING + GESANDBOXTE AGENT + EGRESS-ALLOWLIST</span></span>
+    </div>
+  </div>
+</section>
+
 <!-- ============================ CONTROLS ============================ -->
 <section class="risk-block" id="fix">
   <div class="wrap">
@@ -402,6 +442,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
         <tr><td class="ctl">Disable third-party cookies</td><td>Third-party tracking (04)</td><td>Browser default is to send cookies in cross-site requests. Many browsers now block third-party cookies by default; make sure your application does not rely on them.</td></tr>
         <tr><td class="ctl">Input validation</td><td>XSS / CSRF (01, 04)</td><td>Sanitize and validate all user input on the server side before rendering or processing. Even one missed input opens an XSS door.</td></tr>
         <tr><td class="ctl">Monitoring and revocation</td><td>All four</td><td>Log all session creation and usage. Alert on concurrent sessions from different IPs, unusual timing patterns, or access from unexpected geographies. Support immediate cookie revocation without forcing a full password reset.</td></tr>
+        <tr><td class="ctl">Agent isolation &amp; scoped credentials</td><td>Local AI agent disk theft (05)</td><td>Bind tokens to a device (DPoP or mTLS) so a bare cookie is useless, keep sessions short-lived to force re-authentication, run the agent in a container without access to the browser's profile or cookie store, restrict its outbound calls to an egress allowlist, gate outbound authenticated requests behind human approval, and give the agent its own least-privilege credential instead of the developer's session.</td></tr>
       </table>
 
       <table class="nl">
@@ -415,6 +456,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
         <tr><td class="ctl">Cookies van derden uitschakelen</td><td>Tracking van derden (04)</td><td>Browserstandaard is cookies in cross-site verzoeken te sturen. Veel browsers blokkeren cookies van derden nu standaard; zorg ervoor dat uw toepassing niet daarvan afhangt.</td></tr>
         <tr><td class="ctl">Invoervalidatie</td><td>XSS / CSRF (01, 04)</td><td>Zuiver en valideer alle gebruikersinvoer aan de serverzijde voordat deze wordt weergegeven of verwerkt. Zelfs één gemiste invoer opent een XSS-deur.</td></tr>
         <tr><td class="ctl">Monitoring en intrekking</td><td>Alle vier</td><td>Log alle sessies maken en gebruik. Waarschuw bij gelijktijdige sessies van verschillende IP's, ongebruikelijke timingpatronen of toegang van onverwachte regio's. Ondersteuning voor onmiddellijke cookie intrekking zonder volledige wachtwoordherstel af te dwingen.</td></tr>
+        <tr><td class="ctl">Agentisolatie &amp; beperkte credentials</td><td>Diefstal via lokale AI-agent op schijf (05)</td><td>Bind tokens aan een apparaat (DPoP of mTLS) zodat een kale cookie nutteloos is, houd sessies kortlevend zodat opnieuw geverifieerd moet worden, draai de agent in een container zonder toegang tot het profiel of de cookie-opslag van de browser, beperk uitgaande aanroepen tot een egress-allowlist, plaats uitgaande geverifieerde verzoeken achter goedkeuring door een mens, en geef de agent zijn eigen credential met minimale rechten in plaats van de sessie van de ontwikkelaar.</td></tr>
       </table>
 
       <div class="callout">
@@ -442,6 +484,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CTO / Security Lead</span><span class="nl">CTO / Beveiligingsleider</span></span><p><span class="en">CTO for engineering practices and secure defaults; Security for policy, monitoring and incident response.</span><span class="nl">CTO voor engineeringpraktijken en veilige standaardinstellingen; Beveiliging voor beleid, monitoring en incidentrespons.</span></p></div>
       <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Three numbers to ask for</span><span class="nl">Drie getallen om naar te vragen</span></span><p><span class="en">% of authenticated cookies with HTTPOnly flag set · % of cookies with Secure flag set · % of endpoints enforcing SameSite=Strict · number of XSS or CSRF findings in annual code review · average session timeout in minutes.</span><span class="nl">% van geverifieerde cookies met HTTPOnly-vlag ingesteld · % van cookies met Secure-vlag ingesteld · % van eindpunten die SameSite=Strict afdwingen · aantal XSS- of CSRF-bevindingen in jaarlijkse codebeoordeling · gemiddelde sessietime-out in minuten.</span></p></div>
       <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">"Theft or interception of session cookies enables unauthorized access to user accounts and downstream systems, bypassing authentication and MFA."</span><span class="nl">"Diefstal of onderschepping van sessiecookies maakt ongeautoriseerde toegang tot gebruikersaccounts en downstream-systemen mogelijk, waarbij authenticatie en MFA wordt omzeild."</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Emerging vector</span><span class="nl">Opkomende vector</span></span><span class="v mid"><span class="en">Local AI coding agents</span><span class="nl">Lokale AI-codeeragenten</span></span><p><span class="en">Not covered by HTTPOnly, Secure, or SameSite: an agent with filesystem access reads the cookie store off disk, then can act on the captured session autonomously and outside its assigned task. Track which developer workstations run agents with unrestricted disk and network access.</span><span class="nl">Niet gedekt door HTTPOnly, Secure of SameSite: een agent met bestandssysteemtoegang leest de cookie-opslag van schijf en kan vervolgens autonoom en buiten zijn toegewezen taak handelen met de gestolen sessie. Houd bij welke ontwikkelaarswerkstations agents draaien met onbeperkte schijf- en netwerktoegang.</span></p></div>
     </div>
 
     <div class="panel">
