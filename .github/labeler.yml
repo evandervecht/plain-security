@@ -19,6 +19,8 @@ sponsor:
   - '(email.?security|e-?mail|spf|dkim|dmarc|mta-sts)'
 'page: tls-cipher-suites':
   - '(tls|ssl|cipher|ciphersuite|handshake|certificate|certificaat|downgrade)'
+'page: cookies':
+  - '(cookie|hijacking|session.?fixation|xss|csrf|samesite|httponly|secure flag)'
 'page: ransomware':
   - '(ransomware|losgeld|gijzelsoftware)'
 'page: blast-radius':
