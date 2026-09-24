@@ -241,7 +241,9 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
   .chip{display:none}
   .panel{padding:24px 22px}
   table{font-size:12.5px}
-  .brand{font-size:11px;letter-spacing:.14em}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
   .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
   body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
   .panel tr:first-child{display:none}
@@ -282,7 +284,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 
 <nav>
   <div class="nav-in">
-    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> PLAIN SECURITY <span style="color:var(--slate)">//</span> INSIDER</a>
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> INSIDER</a>
     <div class="nav-links">
       <a href="#r1"><span class="en">LEAVER</span><span class="nl">VERTREKKER</span></a>
       <a href="#r2"><span class="en">MISTAKE</span><span class="nl">VERGISSING</span></a>

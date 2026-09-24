@@ -252,7 +252,9 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
   .chip{display:none}
   .panel{padding:24px 22px}
   table{font-size:12.5px}
-  .brand{font-size:11px;letter-spacing:.14em}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
   .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
   body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
   .panel tr:first-child{display:none}
@@ -277,6 +279,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 .risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
 .risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
 .risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important}
   .s1 .code .sec{background:rgba(255,93,115,.22)}
@@ -294,7 +297,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 
 <nav>
   <div class="nav-in">
-    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> PLAIN SECURITY <span style="color:var(--slate)">//</span> DEV</a>
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> DEV</a>
     <div class="nav-links">
       <a href="#r1"><span class="en">SECRETS</span><span class="nl">GEHEIMEN</span></a>
       <a href="#r2"><span class="en">PIPELINE</span><span class="nl">PIPELINE</span></a>

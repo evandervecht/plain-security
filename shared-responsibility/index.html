@@ -263,7 +263,9 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
   .chip{display:none}
   .panel{padding:24px 22px}
   table{font-size:12.5px}
-  .brand{font-size:11px;letter-spacing:.14em}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
   .s1 .cols{left:14px;right:14px;gap:8px}.s1 .col{padding:6px 4px 6px}.s1 .lay{font-size:6.5px;letter-spacing:.04em;padding:0 4px;overflow:hidden;white-space:nowrap}.s1 .cursor{display:none}.s1 .legend{right:14px}.s1 .banner{left:14px;font-size:8px}
   .stage .banner{font-size:8px;letter-spacing:.14em;padding:5px 10px}
   .s1 .legend{top:8px;bottom:auto}
@@ -316,7 +318,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 
 <nav>
   <div class="nav-in">
-    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> PLAIN SECURITY <span style="color:var(--slate)">//</span> SHARED RESPONSIBILITY</a>
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> SHARED RESPONSIBILITY</a>
     <div class="nav-links">
       <a href="#r1"><span class="en">CERTIFIED</span><span class="nl">GECERTIFICEERD</span></a>
       <a href="#r2">IAAS · PAAS</a>
