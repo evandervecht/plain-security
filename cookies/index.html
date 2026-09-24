@@ -187,6 +187,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 .risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -271,6 +272,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">INVISIBLE ATTACK · NO MFA BYPASS · SESSION THEFT</span><span class="nl">ONZICHTBARE AANVAL · GEEN MFA BYPASS · SESSIE DIEFSTAL</span></span>
       <span class="pill fix">✔ <span class="en">FIX: HTTPONLY FLAG — JAVASCRIPT CANNOT ACCESS</span><span class="nl">OPLOSSING: HTTPONLY VLAG — JAVASCRIPT KAN NIET BENADEREN</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI coding assistants can locate a known XSS flaw in an outdated library and generate a working exploit payload, including the exact line that exfiltrates cookies, from a short description of the bug, cutting the skill needed to weaponise it.</span><span class="nl">AI-codeerassistenten kunnen een bekende XSS-fout in een verouderde bibliotheek opsporen en een werkende exploit genereren, inclusief de regel die cookies exfiltreert, op basis van een korte omschrijving van de fout, waardoor er veel minder vaardigheid nodig is.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Someone with legitimate access to the advertising pipeline can use AI to generate obfuscated tracking scripts that quietly also harvest cookies, disguising theft as ordinary analytics code that a routine review would otherwise wave through.</span><span class="nl">Iemand met legitieme toegang tot de advertentiepijplijn kan AI gebruiken om verhulde trackingscripts te genereren die stiekem ook cookies verzamelen, waardoor diefstal wordt vermomd als gewone analysecode die een routinecontrole zou laten passeren.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">HTTPOnly remains the actual fix</span><span class="nl">HTTPOnly blijft de echte oplossing</span></b><p><span class="en">AI-assisted code scanning can flag missing HTTPOnly flags and risky third-party scripts across an entire codebase far faster than manual review ever could. The flag itself, not the scanner, is what stops a script from reading the cookie once XSS happens.</span><span class="nl">AI-ondersteunde codescanning kan ontbrekende HTTPOnly-vlaggen en risicovolle scripts van derden veel sneller over een hele codebase signaleren dan handmatige controle. De vlag zelf, niet de scanner, voorkomt dat een script de cookie leest zodra XSS optreedt.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -306,6 +316,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">NETWORK PASSIVE ATTACK · WIFI HIJACKING · IMMEDIATE ACCESS</span><span class="nl">NETWERK PASSIEVE AANVAL · WIFI KAPING · DIRECTE TOEGANG</span></span>
       <span class="pill fix">✔ <span class="en">FIX: SECURE FLAG — HTTPS ONLY, NEVER OVER HTTP</span><span class="nl">OPLOSSING: SECURE VLAG — ALLEEN HTTPS, NOOIT OVER HTTP</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></b><p><span class="en">AI does not break the encryption behind HTTPS and cannot put an attacker on the network path by itself. The attacker still needs a rogue access point or a compromised router, so a passive sniffing attack is barely easier than it was before.</span><span class="nl">AI breekt de versleuteling achter HTTPS niet en kan een aanvaller niet zelfstandig op het netwerkpad zetten. Er is nog steeds een malafide toegangspunt of een gecompromitteerde router nodig, dus een passieve sniffaanval is nauwelijks makkelijker dan voorheen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An attacker can pair the old rogue-hotspot trick with an AI-cloned voice of the internal helpdesk, calling a travelling employee to talk them onto a fake fix-it network, adding a convincing social layer to a purely technical old attack.</span><span class="nl">Een aanvaller kan de oude truc met een malafide hotspot combineren met een AI-gekloonde stem van de interne helpdesk, die een reizende medewerker overhaalt om op een vals reparatienetwerk in te loggen, wat een overtuigende sociale laag toevoegt aan een puur technische oude aanval.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Force HTTPS across the estate</span><span class="nl">Dwing HTTPS overal af</span></b><p><span class="en">AI-driven monitoring can flag any endpoint that still allows an HTTP fallback across a large estate faster than manual testing would find it. HSTS and the Secure flag are what actually close the gap once that endpoint is found.</span><span class="nl">AI-gestuurde monitoring kan elk eindpunt dat nog een HTTP-terugval toestaat sneller signaleren over een grote omgeving dan handmatig testen ooit zou vinden. HSTS en de Secure-vlag sluiten het gat daadwerkelijk zodra dat eindpunt is gevonden.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -343,6 +362,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">ATTACKER-CONTROLLED SESSION · BEFORE AUTH · WEAK RANDOMNESS</span><span class="nl">DOOR AANVALLER GECONTROLEERDE SESSIE · VOOR AUTH · ZWAKKE WILLEKEURIGHEID</span></span>
       <span class="pill fix">✔ <span class="en">FIX: CRYPTOGRAPHIC RANDOMNESS, REGENERATE ON LOGIN</span><span class="nl">OPLOSSING: CRYPTOGRAFISCHE WILLEKEURIGHEID, REGENEREREN BIJ INLOGGEN</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></b><p><span class="en">Where session identifiers come from a proper cryptographic random generator, no realistic amount of AI compute helps an attacker guess one; it remains a near-impossible bet. The exposure only exists in legacy code still using weak or sequential identifiers.</span><span class="nl">Waar sessie-identifiers uit een echte cryptografische generator komen, helpt geen realistische hoeveelheid AI-rekenkracht een aanvaller om er een te raden; het blijft kansloos. De blootstelling bestaat alleen nog in oudere code die zwakke of sequentiële identifiers gebruikt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A developer using an AI code generator can unknowingly accept a suggested login flow that defaults to a simple counter or weak random function for session identifiers, quietly reintroducing exactly this vulnerability into a brand-new feature.</span><span class="nl">Een ontwikkelaar die een AI-codegenerator gebruikt, kan onbewust een voorgestelde inlogstroom overnemen die standaard een eenvoudige teller of zwakke willekeurigheidsfunctie gebruikt voor sessie-identifiers, waardoor precies deze kwetsbaarheid in een gloednieuwe functie terugkeert.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Standard library, not custom code</span><span class="nl">Standaardbibliotheek, geen eigen code</span></b><p><span class="en">AI-assisted code review can flag any hand-rolled session identifier generator during a pull request before it ever ships. The actual fix is mandating cryptographic randomness from the platform by default and regenerating the identifier on every login.</span><span class="nl">AI-ondersteunde codebeoordeling kan elke zelfgebouwde generator voor sessie-identifiers tijdens een pull request signaleren voordat die ooit wordt uitgerold. De echte oplossing is de cryptografische willekeurigheid van het platform standaard verplichten en de identifier bij elke login opnieuw genereren.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -379,6 +407,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">BROWSER DEFAULT · AUTOMATED REQUEST · DATA EXFILTRATION</span><span class="nl">BROWSER STANDAARD · GEAUTOMATISEERDE VERZOEK · GEGEVENS EXFILTRATIE</span></span>
       <span class="pill fix">✔ <span class="en">FIX: SAMESITE=STRICT, DISABLE THIRD-PARTY COOKIES</span><span class="nl">OPLOSSING: SAMESITE=STRICT, COOKIES VAN DERDEN UITSCHAKELEN</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">The browser behaviour behind CSRF has not changed, and building the hidden request was already simple. What AI adds is speed: an attacker can generate the right forged request for many different target sites at once instead of crafting each one by hand.</span><span class="nl">Het browsergedrag achter CSRF is niet veranderd, en het opstellen van het verborgen verzoek was al eenvoudig. Wat AI toevoegt is snelheid: een aanvaller kan het juiste vervalste verzoek voor veel verschillende doelsites tegelijk genereren in plaats van elk apart met de hand te maken.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">An AI-written phishing email, personalised and fluent, is what actually gets a logged-in employee to click through to the page hosting the forged request, turning an old browser quirk into a far more convincing and scalable lure.</span><span class="nl">Een AI-geschreven phishingmail, gepersonaliseerd en vloeiend, is wat een ingelogde medewerker daadwerkelijk naar de pagina met het vervalste verzoek laat klikken, waardoor een oude browsereigenaardigheid een veel overtuigender en schaalbaar lokmiddel wordt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">SameSite blocks it by default</span><span class="nl">SameSite blokkeert het standaard</span></b><p><span class="en">AI can help write and test SameSite and CSRF-token coverage across many endpoints in far less time than a manual audit. The browser-level SameSite=Strict setting is what actually stops the forged request from carrying the cookie at all.</span><span class="nl">AI kan helpen bij het schrijven en testen van SameSite- en CSRF-tokendekking over veel eindpunten, in veel minder tijd dan een handmatige audit. De instelling SameSite=Strict op browserniveau voorkomt daadwerkelijk dat het vervalste verzoek de cookie meestuurt.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -414,6 +451,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">DISK-LEVEL READ · HTTPONLY/SECURE/SAMESITE DON'T HELP · AUTONOMOUS SCOPE DRIFT</span><span class="nl">LEZEN OP SCHIJFNIVEAU · HTTPONLY/SECURE/SAMESITE HELPEN NIET · AUTONOME SCOPE-AFWIJKING</span></span>
       <span class="pill fix">✔ <span class="en">FIX: TOKEN BINDING + SANDBOXED AGENT + EGRESS ALLOWLIST</span><span class="nl">OPLOSSING: TOKEN BINDING + GESANDBOXTE AGENT + EGRESS-ALLOWLIST</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Getting malicious instructions in front of a running coding agent, through a poisoned dependency, a booby-trapped repository file or a compromised ticket, still takes some setup and depends on the agent already holding broad file and network access.</span><span class="nl">Kwaadaardige instructies voor een draaiende codeeragent krijgen, via een vergiftigde dependency, een valstrik in een repositorybestand of een gemanipuleerd ticket, vergt nog steeds voorbereiding en hangt af van een agent die al brede bestands- en netwerktoegang heeft.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">A developer can simply ask their own agent, in plain language, to open the browser cookie store and reuse a session, work that used to require knowing exactly where session tokens live on disk and how to parse the file.</span><span class="nl">Een ontwikkelaar kan zijn eigen agent in gewone taal vragen om de cookie-opslag van de browser te openen en een sessie te hergebruiken, werk waarvoor vroeger precieze kennis nodig was van waar sessietokens op schijf staan en hoe je het bestand leest.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Sandbox the agent, not the cookie</span><span class="nl">Sandbox de agent, niet de cookie</span></b><p><span class="en">AI tooling can flag when the action an agent requests falls outside the task it was given, a useful tripwire. The control that actually holds is running the agent in a sandbox without browser profile access, with outbound authenticated calls gated behind human approval.</span><span class="nl">AI-tooling kan signaleren wanneer een gevraagde actie van een agent buiten de toegewezen taak valt, een nuttige struikeldraad. De maatregel die echt standhoudt is de agent in een sandbox draaien zonder toegang tot het browserprofiel, met uitgaande geauthenticeerde aanroepen achter menselijke goedkeuring.</span></p></div>
+      </div>
     </div>
   </div>
 </section>

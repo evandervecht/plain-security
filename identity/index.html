@@ -271,6 +271,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
   .banner{opacity:1}
 }
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -355,6 +356,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">VALID LOGIN · LOOKS LIKE A COLLEAGUE · NO ALARM</span><span class="nl">GELDIGE INLOG · LIJKT EEN COLLEGA · GEEN ALARM</span></span>
       <span class="pill fix">✔ <span class="en">FIX: SINGLE SIGN-ON + PASSKEYS</span><span class="nl">OPLOSSING: SINGLE SIGN-ON + PASSKEYS</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI-assisted tools clean and rank leaked password lists, predict likely variations a person reused, and mimic human timing to slip past basic rate-limiting, making credential stuffing faster and harder to spot than before.</span><span class="nl">AI-tools ontdoen gelekte wachtwoordlijsten van ruis, voorspellen waarschijnlijke varianten die iemand hergebruikte en bootsen menselijk tempo na om basale snelheidslimieten te omzeilen, waardoor credential stuffing sneller en lastiger te herkennen is dan voorheen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Browser-based AI agents that log in on someone's behalf using saved passwords multiply the reach of one reused password: a single leak now unlocks every service the agent was told to access.</span><span class="nl">AI-agents in de browser die namens iemand inloggen met opgeslagen wachtwoorden vergroten het bereik van één hergebruikt wachtwoord: één lek ontsluit nu elke dienst waarvoor de agent toegang kreeg.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Passwordless removes the target</span><span class="nl">Wachtwoordloos verwijdert het doelwit</span></b><p><span class="en">AI-based risk scoring can catch some stuffing attempts through unusual velocity or location, but the actual fix is passkeys behind single sign-on: with nothing to type, there is nothing left for a leaked list to match.</span><span class="nl">AI-gebaseerde risicoscoring kan sommige stuffingpogingen opvangen via ongebruikelijke snelheid of locatie, maar de echte oplossing is passkeys achter single sign-on: zonder iets om in te typen, is er niets meer waarmee een gelekte lijst kan overeenkomen.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -391,6 +401,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">READ OUT IN ONE CALL · “MFA WAS ON”</span><span class="nl">IN ÉÉN TELEFOONTJE VOORGELEZEN · “MFA STOND AAN”</span></span>
       <span class="pill fix">✔ <span class="en">FIX: PASSKEYS OR HARDWARE KEYS · NO SMS · NO SHARED LOGINS</span><span class="nl">OPLOSSING: PASSKEYS OF HARDWARESLEUTELS · GEEN SMS · GEEN GEDEELDE INLOGS</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Voice-cloning and text-generation tools let an attacker sound exactly like a stressed colleague or a convincing IT caller within seconds, making the phone-based trick that reads out a code far more convincing than before.</span><span class="nl">Stemklonen en tekstgeneratie laten een aanvaller binnen seconden precies klinken als een gehaaste collega of een overtuigende IT-medewerker, waardoor de telefoontruc om een code te laten voorlezen veel geloofwaardiger wordt dan voorheen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Helpdesk staff who use AI chat tools to speed up password or MFA resets can be talked into skipping verification steps by a caller who feeds them the same convincing pretext the AI would also fall for.</span><span class="nl">Helpdeskmedewerkers die AI-chattools gebruiken om wachtwoord- of MFA-resets te versnellen, kunnen door een beller worden overgehaald verificatiestappen over te slaan met hetzelfde overtuigende verhaal waar de AI zelf ook intrapt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Flag the reset, not the caller</span><span class="nl">De reset signaleren, niet de beller</span></b><p><span class="en">AI can flag unusual patterns in helpdesk reset requests, such as timing or repeated attempts, but passkeys and hardware keys are the actual fix: nothing about them can be read out over a phone call.</span><span class="nl">AI kan ongebruikelijke patronen in helpdeskresetverzoeken signaleren, zoals tijdstip of herhaalde pogingen, maar passkeys en hardwaresleutels zijn de echte oplossing: daar valt niets van voor te lezen door de telefoon.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -442,6 +461,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">STILL WORKING MONTHS LATER · NOBODY OWNS IT</span><span class="nl">MAANDEN LATER NOG ACTIEF · NIEMAND IS EIGENAAR</span></span>
       <span class="pill fix">✔ <span class="en">FIX: HR-DRIVEN JOINER-MOVER-LEAVER</span><span class="nl">OPLOSSING: IN-, DOOR- EN UITSTROOM VANUIT HR</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI-assisted searching of public profiles quickly flags who recently left a company, but actually using their account still needs a working credential or another foothold, which AI does not hand an attacker for free.</span><span class="nl">AI-ondersteund zoeken in openbare profielen laat snel zien wie een bedrijf recent heeft verlaten, maar het account daadwerkelijk gebruiken vraagt nog steeds werkende inloggegevens of een andere ingang, die AI een aanvaller niet gratis geeft.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">A leaver's OAuth grant to a personal AI assistant or copilot integration often survives account deactivation, so the AI tool keeps pulling company data on a schedule long after nobody remembers it was ever connected.</span><span class="nl">De OAuth-toestemming van een vertrekker aan een persoonlijke AI-assistent of copilot-integratie overleeft vaak de deactivering van het account, waardoor de AI-tool volgens schema bedrijfsdata blijft ophalen lang nadat iedereen is vergeten dat hij ooit gekoppeld was.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Flag dormant identities early</span><span class="nl">Slapende identiteiten vroeg signaleren</span></b><p><span class="en">AI can flag accounts with no activity linked to an active HR record and score the risk of leftover app connections, but HR-driven joiner-mover-leaver automation is what actually closes the account the same day.</span><span class="nl">AI kan accounts signaleren zonder activiteit gekoppeld aan een actief HR-dossier en het risico van achtergebleven app-koppelingen inschatten, maar automatisering van in-, door- en uitstroom vanuit HR sluit het account daadwerkelijk dezelfde dag.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -491,6 +519,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">ALWAYS ON · NEVER REVIEWED · ONE HOP FROM STEP 01</span><span class="nl">ALTIJD AAN · NOOIT HERZIEN · ÉÉN STAP VAN STAP 01</span></span>
       <span class="pill fix">✔ <span class="en">FIX: JUST-IN-TIME ADMIN + QUARTERLY ACCESS REVIEW</span><span class="nl">OPLOSSING: JUST-IN-TIME BEHEER + KWARTAALREVIEW VAN RECHTEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Once inside on any account, automated privilege-mapping tools quickly show which of the many standing administrators is easiest to become, but landing that first account still takes a real foothold, not just AI.</span><span class="nl">Eenmaal binnen op een willekeurig account tonen geautomatiseerde tools voor rechtenanalyse snel welke van de vele permanente beheerders het makkelijkst te worden is, maar dat eerste account veroveren vraagt nog steeds een echte ingang, niet alleen AI.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An automation script or AI agent quietly running with standing admin rights for efficiency becomes an unmonitored super-user itself, and a document or input that manipulates it can trigger admin-level actions no human decided on.</span><span class="nl">Een automatiseringsscript of AI-agent die stilletjes met permanente beheerrechten draait voor de efficiëntie wordt zelf een ongecontroleerde superuser, en een document of invoer die hem manipuleert kan beheerhandelingen triggeren die geen mens heeft besloten.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Spot the unused admin rights</span><span class="nl">Ongebruikte beheerrechten opsporen</span></b><p><span class="en">AI can flag administrators who never actually use their standing rights, giving reviewers a shorter, better-targeted list to check each quarter, but just-in-time elevation is what shrinks the list of who can act at all.</span><span class="nl">AI kan beheerders signaleren die hun permanente rechten nooit echt gebruiken, wat reviewers een kortere, gerichtere lijst geeft om elk kwartaal te controleren, maar just-in-time-activering verkleint pas echt de lijst van wie überhaupt kan handelen.</span></p></div>
+      </div>
     </div>
   </div>
 </section>

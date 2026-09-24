@@ -281,6 +281,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
   .banner{opacity:1}
 }
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -366,6 +367,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">LOOKS LEGITIMATE · REACHES EVERY CUSTOMER AT ONCE</span><span class="nl">ZIET ER LEGITIEM UIT · RAAKT ALLE KLANTEN TEGELIJK</span></span>
       <span class="pill fix">✔ <span class="en">FIX: STAGED UPDATES + WATCH WHAT VENDOR TOOLS DO</span><span class="nl">OPLOSSING: GEFASEERD UPDATEN + GEDRAG VAN LEVERANCIERSSOFTWARE BEWAKEN</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI helps an attacker phish or socially engineer a way into a vendor's build process and then write malware that blends into the vendor's normal code style, but breaching that process at all is still the hard part.</span><span class="nl">AI helpt een aanvaller een leverancier te phishen of te misleiden om in het bouwproces te komen en malware te schrijven die opgaat in de normale codestijl van de leverancier, maar dat proces binnendringen blijft het moeilijke deel.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI-driven operations agents increasingly auto-approve and roll out vendor updates across the whole fleet to save time, removing the staged rollout that used to catch a poisoned update before it reached every server.</span><span class="nl">AI-gestuurde operationele agents keuren updates van leveranciers steeds vaker automatisch goed en rollen ze in één keer over het hele park uit om tijd te besparen, waardoor de gefaseerde uitrol wegvalt die een besmette update eerder opving.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Watch vendor tools' behaviour</span><span class="nl">Gedrag van leveranciers bewaken</span></b><p><span class="en">AI-based behaviour monitoring learns what a vendor's update normally does on our systems and flags it the moment it does something new, such as reaching an unfamiliar server. Staged rollout still limits the actual damage.</span><span class="nl">AI-gebaseerde gedragsmonitoring leert wat een update van een leverancier normaal op onze systemen doet en signaleert het zodra er iets nieuws gebeurt, zoals een onbekende server benaderen. Gefaseerd uitrollen blijft de maatregel die de schade beperkt.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -405,6 +415,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">SHARED · ALWAYS ON · OVER-PRIVILEGED · UNSEEN</span><span class="nl">GEDEELD · ALTIJD AAN · TE VEEL RECHTEN · ONZICHTBAAR</span></span>
       <span class="pill fix">✔ <span class="en">FIX: NAMED ACCOUNTS + MFA + ACCESS THAT EXPIRES</span><span class="nl">OPLOSSING: PERSOONLIJKE ACCOUNTS + MFA + TOEGANG DIE VERLOOPT</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Attackers use an AI-generated voice or video call impersonating a known supplier contact to talk a helpdesk into resetting the shared login, arriving afterwards with real administrator rights and a plausible story in the logs.</span><span class="nl">Aanvallers gebruiken een AI-gegenereerde stem of video die een bekende leverancierscontact nabootst, om een helpdesk het gedeelde account te laten resetten, en komen daarna binnen met echte beheerdersrechten en een geloofwaardig verhaal in de logboeken.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Once a shared supplier account is stolen, AI helps the attacker act like routine maintenance across dozens of customers at once, writing plausible change tickets and timing actions to match the supplier's normal working pattern.</span><span class="nl">Is een gedeeld leveranciersaccount eenmaal gestolen, dan helpt AI de aanvaller om zich bij tientallen klanten tegelijk als routineonderhoud voor te doen, met geloofwaardige wijzigingstickets en timing die past bij het normale werkpatroon van de leverancier.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Flag odd supplier logins</span><span class="nl">Vreemde leveranciersinlogs signaleren</span></b><p><span class="en">AI can spot a supplier login that suddenly acts outside its usual hours, scope or pattern, even when the credentials themselves are valid. Named accounts, MFA and access that expires remain the actual fix behind the alert.</span><span class="nl">AI kan een leveranciersinlog signaleren die plotseling buiten de gebruikelijke tijden, reikwijdte of patroon handelt, ook als de inloggegevens zelf geldig zijn. Persoonlijke accounts, MFA en verlopende toegang blijven de echte oplossing.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -443,6 +462,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">RUNS UNDER OUR NAME · INVISIBLE WITHOUT AN INVENTORY</span><span class="nl">DRAAIT ONDER ONZE NAAM · ONZICHTBAAR ZONDER INVENTARIS</span></span>
       <span class="pill fix">✔ <span class="en">FIX: COMPONENT INVENTORY (SBOM) + SAME-DAY ALERTS</span><span class="nl">OPLOSSING: COMPONENTENINVENTARIS (SBOM) + ALARM OP DEZELFDE DAG</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI coding assistants sometimes suggest a package name that does not exist, and attackers register that exact name with malicious code inside it, knowing developers will install whatever the assistant confidently recommended.</span><span class="nl">AI-codeerassistenten stellen soms een pakketnaam voor die niet bestaat, en aanvallers registreren precies die naam met kwaadaardige code erin, wetend dat ontwikkelaars installeren wat de assistent zelfverzekerd aanraadde.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Developers now add dependencies an AI assistant suggested mid-task, often without checking who maintains them or how recently, so unvetted code enters the build faster than any review process was ever built to handle.</span><span class="nl">Ontwikkelaars voegen nu afhankelijkheden toe die een AI-assistent tijdens het werk voorstelde, vaak zonder te checken wie ze onderhoudt of hoe recent, waardoor ongecontroleerde code sneller de build binnenkomt dan enig reviewproces aankan.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Let AI watch the SBOM</span><span class="nl">AI laat de SBOM bewaken</span></b><p><span class="en">AI tools can cross-check our component inventory against new vulnerability and takeover reports the moment they are published, alerting the same day a maintainer account changes hands, instead of whenever someone happens to notice.</span><span class="nl">AI-tools kunnen onze componenteninventaris direct vergelijken met nieuwe kwetsbaarheids- en overnamemeldingen zodra die worden gepubliceerd, en dezelfde dag waarschuwen dat een beheerdersaccount van eigenaar wisselt, in plaats van wanneer iemand het toevallig opmerkt.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -479,6 +507,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">NO CONTROL · FULL LIABILITY · LATE TO KNOW</span><span class="nl">GEEN CONTROLE · VOLLE AANSPRAKELIJKHEID · LAAT OP DE HOOGTE</span></span>
       <span class="pill fix">✔ <span class="en">FIX: DATA MAP PER VENDOR + NOTIFICATION AND EXIT CLAUSES</span><span class="nl">OPLOSSING: DATAKAART PER LEVERANCIER + MELD- EN EXITCLAUSULES</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Once a vendor holding our data is breached, AI helps an attacker sift through the stolen records at scale, matching names, roles and contract details to build convincing follow-on attacks against our own staff and customers.</span><span class="nl">Is een leverancier met onze data eenmaal gehackt, dan helpt AI een aanvaller om de gestolen gegevens op schaal te doorzoeken, en namen, functies en contractdetails te koppelen voor overtuigende vervolgaanvallen op onze eigen medewerkers en klanten.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A vendor's own AI features, such as a support chatbot trained on customer data, can be tricked or misconfigured into answering with information from a different customer's account, a new kind of exposure we cannot audit.</span><span class="nl">De eigen AI-functies van een leverancier, zoals een supportchatbot getraind op klantdata, kunnen door misleiding of misconfiguratie antwoorden met informatie uit het account van een andere klant, een nieuwe vorm van blootstelling die wij niet kunnen controleren.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Map data before it moves</span><span class="nl">Data in kaart brengen vooraf</span></b><p><span class="en">AI can help build and keep current the map of which vendor holds what data, faster than a manual survey. The notification and exit clauses that decide how fast we hear about a breach still need negotiating up front.</span><span class="nl">AI kan helpen de kaart van welke leverancier welke data heeft actueel te houden, sneller dan een handmatige inventarisatie. De meld- en exitclausules die bepalen hoe snel wij van een lek horen, moeten nog steeds vooraf worden afgesproken.</span></p></div>
+      </div>
     </div>
   </div>
 </section>

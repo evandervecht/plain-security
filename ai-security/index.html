@@ -292,6 +292,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 .risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -376,6 +377,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">NO LOG · NO RECALL · BREACH OF CUSTOMER TERMS</span><span class="nl">GEEN LOG · NIET TERUG TE HALEN · KLANTAFSPRAKEN GESCHONDEN</span></span>
       <span class="pill fix">✔ <span class="en">FIX: ONE APPROVED TOOL, NO TRAINING ON OUR DATA</span><span class="nl">OPLOSSING: ÉÉN GOEDGEKEURDE TOOL, GEEN TRAINING OP ONZE DATA</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Pulling a specific pasted secret back out of a trained public model is unreliable and rare in practice. The real exposure comes from a hijacked personal account or a breach at the AI vendor, not from someone querying the model directly.</span><span class="nl">Een specifiek geplakt geheim later terugvinden in een getraind publiek model is onbetrouwbaar en komt zelden voor. De echte blootstelling ontstaat door een overgenomen persoonlijk account of een lek bij de AI-leverancier, niet door iemand die het model bevraagt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">An employee with normal access can quietly move far more data through a personal AI account than a single paste would ever reveal, framing bulk exfiltration as an ordinary summarisation or cleanup request that raises no alarm.</span><span class="nl">Een medewerker met gewone toegang kan via een persoonlijk AI-account veel meer data wegsluizen dan een enkele geplakte tekst ooit zou tonen, verpakt als een gewoon verzoek om samen te vatten of op te schonen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Flag the paste, not the model</span><span class="nl">Signaleer het plakken, niet het model</span></b><p><span class="en">Data-loss tools can flag a large or sensitive paste heading to an unapproved AI domain in real time, before it leaves the browser. The actual control is still the approved tool and its no-training contract, not the alert.</span><span class="nl">Tools voor gegevensverliespreventie kunnen grote of gevoelige geplakte tekst naar een niet-goedgekeurd AI-domein direct signaleren, voordat die de browser verlaat. De echte maatregel blijft de goedgekeurde tool met een contract zonder training, niet het alarm.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -415,6 +425,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">ONE EMAIL · FULL ACCESS OF THE ASSISTANT · NO EXPLOIT NEEDED</span><span class="nl">ÉÉN E-MAIL · ALLE RECHTEN VAN DE ASSISTENT · GEEN EXPLOIT NODIG</span></span>
       <span class="pill fix">✔ <span class="en">FIX: LEAST PRIVILEGE + HUMAN APPROVAL FOR ACTIONS</span><span class="nl">OPLOSSING: MINIMALE RECHTEN + MENSELIJKE GOEDKEURING VOOR ACTIES</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Writing convincing hidden instructions used to take careful trial and error. AI now drafts, translates and disguises dozens of injection variants in seconds, so an attacker can test which phrasing an assistant obeys without ever touching our systems.</span><span class="nl">Overtuigende verborgen instructies schrijven kostte vroeger veel uitproberen. AI stelt nu tientallen varianten in seconden op, vertaalt en verhult ze, zodat een aanvaller kan testen welke formulering een assistent gehoorzaamt zonder ooit onze systemen aan te raken.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An employee who knows how the assistant is configured can nudge it past an approval step with carefully worded requests, using a personal workaround rather than reporting the gap it exposes in the workflow.</span><span class="nl">Een medewerker die weet hoe de assistent is ingesteld, kan hem met slim geformuleerde verzoeken langs een goedkeuringsstap loodsen en dat gebruiken als persoonlijke omweg, in plaats van het gat te melden.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Filter input, do not trust it</span><span class="nl">Filter invoer, vertrouw het niet</span></b><p><span class="en">Classifiers can flag text that looks like a hidden command inside an email, page or document before an agent acts on it. That filter catches known patterns, not every attempt, so least privilege and a human check on real actions remain the actual fix.</span><span class="nl">Classificatiemodellen kunnen tekst signaleren die lijkt op een verborgen opdracht in een e-mail, pagina of document voordat een agent erop reageert. Dat filter herkent bekende patronen, niet elke poging, dus minimale rechten en menselijke controle op echte acties blijven de eigenlijke oplossing.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -459,6 +478,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">VOICE IS NO LONGER PROOF · URGENCY IS THE WEAPON</span><span class="nl">STEM IS GEEN BEWIJS MEER · HAAST IS HET WAPEN</span></span>
       <span class="pill fix">✔ <span class="en">FIX: CALL BACK ON A KNOWN NUMBER + FOUR-EYES ON PAYMENTS</span><span class="nl">OPLOSSING: TERUGBELLEN OP BEKEND NUMMER + VIER OGEN OP BETALINGEN</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">A voice clone once took specialist skill; free tools now build a convincing one from a couple of minutes of public audio. Live video deepfakes on a call are close to real time, so the fraud call itself needs almost no preparation.</span><span class="nl">Een stemkloon vereiste ooit gespecialiseerde vaardigheden; gratis tools bouwen er nu een overtuigende van een paar minuten publieke audio. Live videodeepfakes tijdens een gesprek lopen bijna in real time, dus het frauduleuze gesprek zelf vraagt bijna geen voorbereiding.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A recording from an internal town hall or a training video gives a colleague enough material to clone another colleague and push through an internal request, using shared access and familiarity rather than a stranger on the phone.</span><span class="nl">Een opname van een interne bijeenkomst of trainingsvideo geeft een collega genoeg materiaal om een andere collega te klonen en een intern verzoek erdoor te krijgen, met gedeelde toegang en herkenning in plaats van een onbekende aan de lijn.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Detection lags, verify differently</span><span class="nl">Detectie hinkt achter, controleer anders</span></b><p><span class="en">Deepfake-detection tools exist but lag behind generation quality and give false confidence at the exact moment someone needs certainty. The call-back rule on a number we already trust, plus four-eyes on payments, works whether or not the voice is real.</span><span class="nl">Detectietools voor deepfakes bestaan, maar lopen achter op de kwaliteit van de generatie en geven vals vertrouwen op precies het moment dat iemand zekerheid nodig heeft. De terugbelregel op een bekend nummer, plus vier ogen op betalingen, werkt of de stem echt is of niet.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -497,6 +525,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">CONFIDENT · FLUENT · WRONG · NOBODY ACCOUNTABLE</span><span class="nl">ZELFVERZEKERD · VLOEIEND · FOUT · NIEMAND VERANTWOORDELIJK</span></span>
       <span class="pill fix">✔ <span class="en">FIX: AI OUTPUT IS A DRAFT, A NAMED PERSON CHECKS SOURCES</span><span class="nl">OPLOSSING: AI-UITVOER IS EEN CONCEPT, EEN GENOEMDE PERSOON CONTROLEERT BRONNEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Coding assistants regularly invent plausible package names that do not yet exist. Attackers watch for exactly those names and register them, so a hallucinated import turns into a real download the moment a developer accepts the suggestion.</span><span class="nl">Codeerassistenten verzinnen regelmatig aannemelijke pakketnamen die nog niet bestaan. Aanvallers letten precies op die namen en registreren ze, zodat een verzonnen import een echte download wordt zodra een ontwikkelaar de suggestie overneemt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Someone drafting an expense claim or a status report can ask AI for confident, detailed wording around a weak justification, producing a document that reads as thoroughly researched even though nobody checked whether the details are true.</span><span class="nl">Iemand die een onkostendeclaratie of statusrapport opstelt, kan AI om zelfverzekerde, gedetailleerde formuleringen vragen bij een zwakke onderbouwing, waardoor het document grondig onderzocht lijkt terwijl niemand heeft gecontroleerd of de details kloppen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">A named person checks sources</span><span class="nl">Een genoemde persoon controleert bronnen</span></b><p><span class="en">Citation-checking tools can flag a reference that does not resolve to a real source, but confident wording still slips fabricated rulings, statistics and libraries past a quick read. The rule that holds is a named, accountable person checking sources before anything leaves the building.</span><span class="nl">Tools die bronvermeldingen controleren kunnen signaleren dat een verwijzing niet naar een echte bron leidt, maar zelfverzekerde taal laat verzonnen uitspraken, cijfers en bibliotheken door een snelle lezing glippen. De regel is een genoemde, verantwoordelijke persoon die bronnen controleert voordat iets de deur uitgaat.</span></p></div>
+      </div>
     </div>
   </div>
 </section>

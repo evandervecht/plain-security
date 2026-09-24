@@ -327,6 +327,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 .risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -412,6 +413,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">SILENT · UNDETECTABLE · RETROACTIVE</span><span class="nl">STIL · ONOPGEMERKT · TERUGWERKEND</span></span>
       <span class="pill fix">✔ <span class="en">FIX: ENFORCED TLS + MTA-STS + DANE</span><span class="nl">OPLOSSING: AFGEDWONGEN TLS + MTA-STS + DANE</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></b><p><span class="en">Eavesdropping requires a position on the mail path itself, a hostile network, a compromised router, a transit tap. AI does not manufacture that access; it only helps once traffic is already being captured.</span><span class="nl">Afluisteren vraagt een positie op het mailpad zelf, een vijandig netwerk, een gehackte router, een tap bij een transitprovider. AI creëert die toegang niet; het helpt pas zodra het verkeer al wordt opgevangen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Once an account or archive is already reachable, AI-assisted search instantly pulls the exploitable invoices, contracts and passwords out of months of plaintext correspondence, work that used to take a team of analysts.</span><span class="nl">Zodra een account of archief al bereikbaar is, haalt AI-ondersteund zoeken in een oogwenk de bruikbare facturen, contracten en wachtwoorden uit maanden platte-tekst-correspondentie, werk dat vroeger een team analisten kostte.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Spot the silent fallback</span><span class="nl">Stille terugval opsporen</span></b><p><span class="en">AI-based anomaly detection can flag a mail server that suddenly negotiates plaintext where it always used TLS, catching a downgrade after the fact. Actual prevention is still enforcing TLS so the connection fails instead of falling back.</span><span class="nl">AI-gebaseerde anomaliedetectie kan een mailserver signaleren die plots platte tekst onderhandelt waar hij altijd TLS gebruikte, en zo een downgrade achteraf ontdekken. Echte preventie blijft afgedwongen TLS, zodat de verbinding faalt in plaats van terug te vallen.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -449,6 +459,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">DIRECT FINANCIAL LOSS · NO EVIDENCE TRAIL</span><span class="nl">DIRECT GELDVERLIES · GEEN BEWIJSSPOOR</span></span>
       <span class="pill fix">✔ <span class="en">FIX: DKIM SIGNING + S/MIME ON KEY FLOWS</span><span class="nl">OPLOSSING: DKIM + S/MIME OP KRITIEKE STROMEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Altering a message still requires the same path position as eavesdropping, but generative AI removes the skill barrier of matching tone, formatting and context so precisely that neither sender nor recipient notices the swapped IBAN.</span><span class="nl">Een bericht wijzigen vraagt nog steeds dezelfde positie op het pad als afluisteren, maar generatieve AI haalt de vaardigheidsdrempel weg om toon, opmaak en context zo precies na te bootsen dat niemand het verwisselde IBAN opmerkt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Most invoice fraud today needs no interception at all: AI clones the finance team's writing style from earlier mail and sends a payment-instruction change from a lookalike or compromised address that reads as completely normal.</span><span class="nl">De meeste factuurfraude vandaag vraagt geen onderschepping: AI kloont de schrijfstijl van finance op basis van eerdere mail en stuurt een gewijzigde betaalinstructie vanaf een lookalike- of gehackt adres dat volkomen normaal overkomt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">The signature catches the edit</span><span class="nl">De handtekening ontmaskert de wijziging</span></b><p><span class="en">DKIM breaks the moment a single character changes, however convincing the AI-written edit is. AI can also flag payment mail whose tone or IBAN deviates from the historical pattern, but the signature is the actual proof.</span><span class="nl">DKIM breekt zodra ook maar één teken wijzigt, hoe overtuigend de AI-geschreven aanpassing ook is. AI kan ook betaalmail signaleren waarvan de toon of het IBAN afwijkt van het historische patroon, maar de handtekening is het echte bewijs.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -495,6 +514,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">CEO FRAUD · BRAND ABUSE · DELIVERABILITY</span><span class="nl">CEO-FRAUDE · MERKMISBRUIK · BEZORGBAARHEID</span></span>
       <span class="pill fix">✔ <span class="en">FIX: SPF + DKIM + DMARC AT P=REJECT</span><span class="nl">OPLOSSING: SPF + DKIM + DMARC OP P=REJECT</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI writes flawless, context-perfect CEO-fraud mail in seconds, pulling real detail from professional profiles and press coverage, at a scale and speed no human fraudster typing by hand could ever match.</span><span class="nl">AI schrijft in seconden foutloze, contextueel kloppende CEO-fraudemail, met echte details uit openbare profielen en persberichten, op een schaal en snelheid die geen mens die handmatig typt ooit zou evenaren.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI mass-personalises phishing sent under our spoofed domain to thousands of customers at once, each referencing real order or account details scraped from earlier breaches, at a volume that would otherwise take a whole marketing team to write.</span><span class="nl">AI personaliseert massaal phishingmail die onder ons nagebootste domein naar duizenden klanten tegelijk gaat, elk met echte bestel- of accountgegevens uit eerdere datalekken, in een omvang waarvoor anders een heel marketingteam nodig zou zijn.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Faster domain-abuse detection</span><span class="nl">Snellere detectie van misbruik</span></b><p><span class="en">AI can process DMARC aggregate reports and spot new abuse of our domain within hours instead of weeks. Only enforcement at p=reject actually blocks the spoofed mail from ever being delivered.</span><span class="nl">AI kan DMARC-verzamelrapporten verwerken en nieuw misbruik van ons domein binnen uren signaleren in plaats van weken. Alleen handhaving op p=reject blokkeert de nagebootste mail daadwerkelijk voordat die wordt afgeleverd.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -533,6 +561,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">READ + REWRITE + IMPERSONATE, AT ONCE</span><span class="nl">MEELEZEN + WIJZIGEN + NABOOTSEN TEGELIJK</span></span>
       <span class="pill fix">✔ <span class="en">FIX: MTA-STS ENFORCE + DANE + TLS-RPT</span><span class="nl">OPLOSSING: MTA-STS ENFORCE + DANE + TLS-RPT</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></b><p><span class="en">Sitting between two mail servers is a positioning problem, not a skill problem. AI does not create that vantage point, and stripping an opportunistic STARTTLS offer is the same trivial trick it always was.</span><span class="nl">Tussen twee mailservers gaan zitten is een positioneringsprobleem, geen vaardigheidsprobleem. AI creëert dat uitkijkpunt niet, en het strippen van een opportunistisch STARTTLS-aanbod is dezelfde simpele truc die het altijd al was.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Once in that position, AI-driven conversational agents can sustain a convincing, months-long impersonation of both parties in a negotiation thread, generating contextually perfect replies on each side so neither notices the puppeteering.</span><span class="nl">Vanuit die positie kunnen AI-gestuurde gespreksagents een overtuigende, maandenlange imitatie van beide partijen in een onderhandeling volhouden, met contextueel perfecte antwoorden aan elke kant, zonder dat iemand de poppenspeler opmerkt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">TLS failures become signals</span><span class="nl">TLS-fouten worden signalen</span></b><p><span class="en">TLS-RPT produces a report for every failed handshake; AI-based analysis turns that raw feed into a handful of flagged incidents instead of a spreadsheet nobody reads. The control that stops the attack is DANE and enforced MTA-STS.</span><span class="nl">TLS-RPT levert een rapport op bij elke mislukte handshake; AI-analyse maakt van die ruwe stroom een handvol gesignaleerde incidenten in plaats van een spreadsheet die niemand leest. De maatregel die de aanval stopt is DANE en afgedwongen MTA-STS.</span></p></div>
+      </div>
     </div>
   </div>
 </section>

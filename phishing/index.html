@@ -298,6 +298,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 .risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -388,6 +389,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">LOOKS REAL · NOTHING BREAKS · NOBODY NOTICES</span><span class="nl">ZIET ER ECHT UIT · NIETS GAAT STUK · NIEMAND MERKT HET</span></span>
       <span class="pill fix">✔ <span class="en">FIX: PASSKEYS OR HARDWARE KEYS — THEY REFUSE THE WRONG SITE</span><span class="nl">OPLOSSING: PASSKEYS OF HARDWARESLEUTELS — DIE WEIGEREN DE VERKEERDE SITE</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Cloning a login page and relaying a password was already a commodity phishing-kit trick. What AI adds is the lure: personalised, error-free text written in seconds per target, pulling real names from public profiles, slipping past filters trained on generic templates.</span><span class="nl">Een inlogpagina klonen en een wachtwoord doorspelen was al een standaardtruc uit phishingkits. Wat AI toevoegt is de lokzin: persoonlijke, foutloze tekst in seconden per doelwit, met echte namen uit openbare profielen, die filters omzeilt die getraind zijn op standaardteksten.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An email writing assistant plugged into an employee's own mailbox to save time can be steered off course by hidden instructions buried in an incoming message, quietly auto-forwarding a login session and handing an attacker access without a single click from the employee.</span><span class="nl">Een e-mailassistent die in de mailbox van een medewerker is geplaatst om tijd te besparen, kan door verborgen instructies in een binnenkomend bericht van koers worden gebracht, en stuurt dan stilletjes een inlogsessie door, waarmee een aanvaller toegang krijgt zonder dat er geklikt wordt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Passkeys refuse the fake site</span><span class="nl">Passkeys weigeren de nepsite</span></b><p><span class="en">AI can flag look-alike domains and unusual sign-in patterns faster than a manual blocklist ever could, but the control that actually stops this is phishing-resistant authentication that refuses to send a credential to the wrong site, however good the fake looks.</span><span class="nl">AI kan nagemaakte domeinen en vreemde inlogpatronen sneller signaleren dan een handmatige blokkeerlijst, maar wat dit echt stopt is phishingbestendige authenticatie die weigert een wachtwoord naar de verkeerde site te sturen, hoe goed de vervalsing er ook uitziet.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -424,6 +434,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">“WE HAVE MFA” IS NOT ENOUGH · ONE TAP AT 22:43</span><span class="nl">“WIJ HEBBEN MFA” IS NIET GENOEG · ÉÉN TIK OM 22:43</span></span>
       <span class="pill fix">✔ <span class="en">FIX: PHISHING-RESISTANT MFA + NUMBER MATCHING + LIMIT PROMPTS</span><span class="nl">OPLOSSING: PHISHINGBESTENDIGE MFA + CIJFERCONTROLE + MELDINGEN BEGRENZEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Push-bombing and real-time code relay were already scripted years before AI. What AI adds is context: a wave of AI-written follow-up messages, made to look like real IT alerts, that explain away the repeated prompts and raise the odds someone finally taps approve.</span><span class="nl">Push-bombing en het live doorspelen van codes waren al jaren voor AI gescript. Wat AI toevoegt is context: een golf van AI-geschreven vervolgberichten die op echte IT-meldingen lijken, de herhaalde meldingen verklaren, en de kans vergroten dat iemand uiteindelijk toch goedkeurt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">An AI-cloned voice posing as the IT helpdesk can call the employee directly, sounding exactly like a real colleague, and calmly talk them through approving the prompt or reading out the code while it is still valid.</span><span class="nl">Een met AI nagemaakte stem die zich voordoet als de IT-helpdesk kan de medewerker rechtstreeks bellen, precies klinkend als een echte collega, en hem rustig overhalen de melding goed te keuren of de code voor te lezen terwijl die nog geldig is.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Cap the approval prompts</span><span class="nl">Aantal meldingen begrenzen</span></b><p><span class="en">AI can detect a burst of repeated push prompts and lock the account after a few, cutting off the fatigue tactic automatically, but the control that actually holds is phishing-resistant MFA, which cannot be relayed, read out, or approved by mistake.</span><span class="nl">AI kan een reeks herhaalde inlogmeldingen herkennen en het account na een paar keer automatisch blokkeren, maar wat echt standhoudt is phishingbestendige MFA, die niet kan worden doorgespeeld, voorgelezen of per ongeluk goedgekeurd.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -463,6 +482,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">DIRECT LOSS · NOTHING FOR A FILTER TO CATCH</span><span class="nl">DIRECT VERLIES · NIETS VOOR EEN FILTER OM TE VANGEN</span></span>
       <span class="pill fix">✔ <span class="en">FIX: CALL-BACK ON A KNOWN NUMBER + FOUR EYES ON EVERY BANK CHANGE</span><span class="nl">OPLOSSING: TERUGBELLEN OP EEN BEKEND NUMMER + VIER OGEN OP ELKE BANKWIJZIGING</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI voice cloning and text generation trained on a CEO's public speeches and old emails can produce an urgent payment request that matches their tone exactly, making the fake far harder to spot than the clumsy version of a few years ago.</span><span class="nl">AI-stemklonen en teksten die getraind zijn op openbare speeches en oude e-mails van de CEO kunnen een dringend betaalverzoek maken dat precies de juiste toon raakt, veel moeilijker te herkennen dan de onhandige versie van een paar jaar terug.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A writing assistant trusted to triage urgent finance email can be led, through a convincing thread, to auto-draft a reply confirming new bank details, skipping the human check the message was designed to bypass in the first place.</span><span class="nl">Een schrijfassistent die dringende financemail moet voorsorteren, kan door een overtuigende mailwisseling worden verleid tot het automatisch bevestigen van nieuwe bankgegevens, en slaat zo precies de menselijke controle over die het bericht probeerde te omzeilen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Call back, always</span><span class="nl">Altijd zelf terugbellen</span></b><p><span class="en">AI can flag payment requests using urgent language, an unfamiliar style or a first-time bank account, prioritising them for review, but what actually holds is the mandatory call-back on a number we already had, which no fake voice or email passes.</span><span class="nl">AI kan betaalverzoeken met dringende taal, een ongebruikelijke schrijfstijl of een nieuwe bankrekening markeren voor extra controle, maar wat echt standhoudt is het verplichte terugbellen op een bekend nummer, wat geen nagemaakte stem of e-mail passeert.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -500,6 +528,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">OUTSIDE OUR FILTERS · OFTEN ON A PRIVATE PHONE</span><span class="nl">BUITEN ONZE FILTERS · VAAK OP EEN PRIVÉTELEFOON</span></span>
       <span class="pill fix">✔ <span class="en">FIX: CHANNEL-INDEPENDENT CONTROLS + A REPORT BUTTON THAT IS USED</span><span class="nl">OPLOSSING: KANAALONAFHANKELIJKE MAATREGELEN + EEN MELDKNOP DIE GEBRUIKT WORDT</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI lets attackers generate large volumes of convincing texts, calls and QR-coded lures in any language at once, each personalised with names and details scraped from public profiles, so one campaign reaches staff on every channel and every private phone simultaneously.</span><span class="nl">AI laat aanvallers grote hoeveelheden overtuigende sms'jes, telefoontjes en misleidende QR-codes in elke taal tegelijk maken, elk gepersonaliseerd met namen en details van openbare profielen, zodat één campagne personeel raakt op elk kanaal en elke privételefoon tegelijk.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">A cloned voice or chat persona copied from a colleague's public posts can carry on a natural back-and-forth conversation on a messaging app, walking an employee through the trick step by step in a way a scripted message never could.</span><span class="nl">Een gekloonde stem of chatpersoonlijkheid, gekopieerd van de openbare berichten van een collega, kan op een chat-app een natuurlijk gesprek voeren en een medewerker stap voor stap door de truc heen praten, iets wat een vast script nooit kon.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Reward the report, not the click</span><span class="nl">Het melden belonen, niet de klik</span></b><p><span class="en">AI can triage a reported message fast and warn everyone about the same lure the moment one person flags it, but that only works if staff actually report it, which needs a culture that welcomes every report and never punishes a click.</span><span class="nl">AI kan een gemelde boodschap snel beoordelen en iedereen waarschuwen zodra één persoon meldt, maar dat werkt alleen als medewerkers ook echt melden, en dat vraagt een cultuur die elke melding verwelkomt en een klik nooit bestraft.</span></p></div>
+      </div>
     </div>
   </div>
 </section>

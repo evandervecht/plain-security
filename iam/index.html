@@ -286,6 +286,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 .risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -370,6 +371,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">NO OWNER · NEVER ROTATED · MORE OF THEM THAN PEOPLE</span><span class="nl">GEEN EIGENAAR · NOOIT GEWIJZIGD · MEER DAN ER MENSEN ZIJN</span></span>
       <span class="pill fix">✔ <span class="en">FIX: IDENTITY INVENTORY + OWNER PER ACCOUNT + SECRETS VAULT</span><span class="nl">OPLOSSING: IDENTITEITENREGISTER + EIGENAAR PER ACCOUNT + SECRETS VAULT</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI-powered code and file scanning finds hardcoded passwords, forgotten API keys and old service-account secrets across shared drives and repositories in minutes, work that used to take a determined attacker days of manual searching.</span><span class="nl">AI-gestuurd scannen van code en bestanden vindt hardgecodeerde wachtwoorden, vergeten API-sleutels en oude serviceaccountgeheimen op gedeelde schijven en in repositories binnen minuten, werk dat een vastberaden aanvaller vroeger dagen handmatig zoeken kostte.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI coding assistants often suggest or reuse hardcoded credentials from examples they were trained on, and automation pipelines built around an AI agent's own API key create one more non-human identity nobody is watching.</span><span class="nl">AI-codeerassistenten stellen vaak hardgecodeerde inloggegevens voor uit voorbeelden waarop ze getraind zijn, en automatiseringspijplijnen rond de eigen API-sleutel van een AI-agent creëren weer een non-human identity waar niemand naar omkijkt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Surface forgotten secrets</span><span class="nl">Vergeten geheimen blootleggen</span></b><p><span class="en">AI-driven identity and secret-scanning tools can list every hardcoded credential, dormant service account and unused API key across the estate in one pass, but someone still has to assign an owner and put it in a vault.</span><span class="nl">AI-gestuurde identiteits- en secret-scanningtools kunnen elk hardgecodeerd wachtwoord, slapend serviceaccount en ongebruikte API-sleutel in één keer in kaart brengen, maar iemand moet nog steeds een eigenaar aanwijzen en het in een vault zetten.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -409,6 +419,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">WILDCARD RIGHTS · COPIED ROLES · WHOLE ESTATE EXPOSED</span><span class="nl">WILDCARD-RECHTEN · GEKOPIEERDE ROLLEN · ALLES BLOOTGESTELD</span></span>
       <span class="pill fix">✔ <span class="en">FIX: LEAST-PRIVILEGE ROLE DESIGN + REVIEW ON EVERY CHANGE</span><span class="nl">OPLOSSING: ROLLEN OP LEAST PRIVILEGE + REVIEW BIJ ELKE WIJZIGING</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Once an attacker lands on any account, automated cloud-permission mapping tools instantly reveal every wildcard role and every database it reaches, turning one phished laptop into a map of the entire estate within minutes.</span><span class="nl">Zodra een aanvaller op een willekeurig account landt, onthullen geautomatiseerde tools voor cloudrechten direct elke wildcard-rol en elke database die daarmee te bereiken is, waardoor één gephishte laptop binnen minuten een kaart van het hele bestand oplevert.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI coding assistants routinely suggest a broad wildcard policy as the quick working example, and a developer under deadline pressure accepts it, quietly adding one more overly wide role to the estate.</span><span class="nl">AI-codeerassistenten stellen standaard een ruime wildcard-policy voor als het snelle werkende voorbeeld, en een developer onder tijdsdruk neemt dat over, waardoor er stilletjes weer een te ruime rol bijkomt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Right-size roles from usage</span><span class="nl">Rollen afstemmen op gebruik</span></b><p><span class="en">AI can compare what a role actually uses against what it is allowed to do and propose a narrower policy automatically, but a person still has to approve the change before the wildcard is removed.</span><span class="nl">AI kan vergelijken wat een rol daadwerkelijk gebruikt met wat hij mag doen en automatisch een smallere policy voorstellen, maar iemand moet de wijziging nog steeds goedkeuren voordat de wildcard verdwijnt.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -447,6 +466,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">CONFLICTING RIGHTS · ONE ACCOUNT MOVES MONEY</span><span class="nl">CONFLICTERENDE RECHTEN · ÉÉN ACCOUNT VERPLAATST GELD</span></span>
       <span class="pill fix">✔ <span class="en">FIX: SOD MATRIX ENFORCED IN THE ERP + FOUR EYES ON PAYMENTS</span><span class="nl">OPLOSSING: FUNCTIESCHEIDINGSMATRIX AFGEDWONGEN IN HET ERP + VIER OGEN OP BETALINGEN</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></b><p><span class="en">AI does not create the segregation-of-duties gap itself; whoever holds the combined create-vendor and release-payment rights can already invent and pay a fake vendor by hand, exactly as before AI existed.</span><span class="nl">AI creëert het functiescheidingsprobleem niet zelf; wie de gecombineerde rechten leverancier-aanmaken en betaling-vrijgeven al heeft, kon een nepleverancier al met de hand verzinnen en betalen, precies zoals vóór AI.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Once one account can both create a vendor and release payment, AI can write a convincing invoice, a plausible vendor name and matching bank details in minutes, turning a rights gap into finished fraud almost instantly.</span><span class="nl">Zodra één account zowel een leverancier kan aanmaken als een betaling kan vrijgeven, schrijft AI in enkele minuten een overtuigende factuur, een geloofwaardige leveranciersnaam en bijpassende bankgegevens, en verandert een rechtenprobleem bijna meteen in afgeronde fraude.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Flag conflicting actions</span><span class="nl">Conflicterende handelingen signaleren</span></b><p><span class="en">AI scanning ERP transaction logs can flag the same user creating a vendor and releasing a payment far faster than a periodic manual audit would, but the SoD matrix still has to say that combination is forbidden.</span><span class="nl">AI die ERP-transactielogs doorzoekt, kan sneller dan een periodieke handmatige audit signaleren dat dezelfde gebruiker een leverancier aanmaakt én een betaling vrijgeeft, maar de functiescheidingsmatrix moet nog steeds vastleggen dat die combinatie verboden is.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -483,6 +511,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">NO ATTRIBUTION · PASSWORD NEVER CHANGES · LEAVERS KEEP ACCESS</span><span class="nl">GEEN TOEREKENING · WACHTWOORD WIJZIGT NOOIT · VERTREKKERS HOUDEN TOEGANG</span></span>
       <span class="pill fix">✔ <span class="en">FIX: NAMED ACCOUNTS ONLY + PRIVILEGED ACCESS MANAGEMENT</span><span class="nl">OPLOSSING: ALLEEN PERSOONLIJKE ACCOUNTS + PRIVILEGED ACCESS MANAGEMENT</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Whoever holds the shared password can use AI to write messages in a plausible house style from admin@, so nothing about the wording gives away that someone new is now behind the account.</span><span class="nl">Wie het gedeelde wachtwoord heeft, kan AI gebruiken om berichten in een geloofwaardige huisstijl vanaf admin@ te schrijven, zodat niets aan de tekst verraadt dat er nu iemand anders achter het account zit.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Because nobody owns the account, there is no personal baseline of normal behaviour to compare against, so an AI-assisted impersonator calling the shared phone for the MFA code has an easier, less suspicious target.</span><span class="nl">Omdat niemand eigenaar is van het account, is er geen persoonlijke gedragsbasislijn om mee te vergelijken, waardoor een met AI ondersteunde oplichter die naar de gedeelde telefoon belt voor de MFA-code een makkelijker, minder verdacht doelwit heeft.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Watch behaviour, not the name</span><span class="nl">Gedrag volgen, niet de naam</span></b><p><span class="en">User-behaviour analytics can flag an unusual action inside a shared account, such as an odd hour or a new pattern, even without knowing who is behind it, but named accounts with PAM remain the real fix.</span><span class="nl">Gedragsanalyse kan een ongebruikelijke handeling binnen een gedeeld account signaleren, zoals een vreemd tijdstip of een nieuw patroon, ook zonder te weten wie erachter zit, maar persoonlijke accounts met PAM blijven de echte oplossing.</span></p></div>
+      </div>
     </div>
   </div>
 </section>

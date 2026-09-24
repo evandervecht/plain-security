@@ -184,6 +184,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 .risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -266,6 +267,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">WEAK BY DEFAULT · INVISIBLE IN LOGS · FULL DATA EXPOSURE</span><span class="nl">STANDAARD ZWAK · ONZICHTBAAR IN LOGS · VOLLEDIGE GEGEVENSBLOOTSTELLING</span></span>
       <span class="pill fix">✔ <span class="en">FIX: ENFORCE STRONG SUITES ONLY, DISABLE LEGACY ENTIRELY</span><span class="nl">OPLOSSING: ALLEEN STERKE SUITES AFDWINGEN, LEGACY VOLLEDIG UITSCHAKELEN</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></b><p><span class="en">AI does not make RC4 or DES any weaker than they already are; these ciphers were breakable on ordinary hardware years before AI tools existed. The exposure comes from a configuration nobody disabled, not smarter attackers.</span><span class="nl">AI maakt RC4 of DES niet zwakker dan ze al waren; deze ciphers waren al jaren vóór AI-tools te kraken op gewone hardware. De blootstelling komt door een configuratie die niemand uitschakelde, niet door slimmere aanvallers.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Asked to fix a connection problem, an AI assistant will often reproduce an old configuration snippet that re-enables legacy ciphers for compatibility, quietly undoing a hardening effort a previous team already completed.</span><span class="nl">Gevraagd om een verbindingsprobleem op te lossen, geeft een AI-assistent vaak een oude configuratie terug die legacy-ciphers voor compatibiliteit weer inschakelt, en ontdoet zo stilletjes een eerdere hardeningsinspanning.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Scan continuously, not yearly</span><span class="nl">Continu scannen, niet jaarlijks</span></b><p><span class="en">AI-assisted scanning can check every server and client for weak ciphers continuously instead of once a year, and flag the exact configuration line to remove. Disabling legacy suites everywhere remains the only fix that holds.</span><span class="nl">AI-ondersteunde scans kunnen elke server en client continu controleren op zwakke ciphers in plaats van eenmaal per jaar, en de exacte configuratieregel aanwijzen om te verwijderen. Legacy suites overal uitschakelen blijft de enige oplossing die standhoudt.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -302,6 +312,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">SILENT NEGOTIATION · FORCES WEAK PROTOCOL · REPLAY ATTACKS</span><span class="nl">STILLE ONDERHANDELING · DWINGT ZWAK PROTOCOL · HERHAALINGSAANVALLEN</span></span>
       <span class="pill fix">✔ <span class="en">FIX: FAIL ON WEAK VERSION, NO FALLBACK BELOW TLS 1.2</span><span class="nl">OPLOSSING: MISLUKKING BIJ ZWAKKE VERSIE, GEEN TERUGVAL ONDER TLS 1.2</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></b><p><span class="en">A downgrade attack works by forging reset packets, a network trick that predates AI by decades. AI gives an attacker no shortcut to the network position needed, or to the protocol behaviour that makes it work.</span><span class="nl">Een downgrade-aanval werkt door resetpakketten te vervalsen, een netwerktruc die AI decennia voorafgaat. AI geeft een aanvaller geen kortere weg naar de netwerkpositie die nodig is, of naar het protocolgedrag dat de terugval mogelijk maakt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Asked why a connection fails, an AI assistant often suggests lowering the minimum TLS version as the quickest fix, and an administrator under pressure applies it fleet-wide, reopening the exact fallback path meant to be closed.</span><span class="nl">Gevraagd waarom een verbinding faalt, stelt een AI-assistent vaak voor de minimale TLS-versie te verlagen als snelste oplossing, en een beheerder onder druk past dit op het hele park toe, waardoor precies het terugvalpad heropent dat gesloten moest blijven.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Flag the silent fallback</span><span class="nl">De stille terugval signaleren</span></b><p><span class="en">AI-based monitoring can spot a connection that quietly negotiated an older protocol version than both sides support, something a log file alone rarely surfaces. The fix stays strict: fail rather than retry with a weaker version.</span><span class="nl">AI-gebaseerde monitoring kan een verbinding signaleren die stilletjes een oudere protocolversie onderhandelde dan beide zijden ondersteunen, iets wat een logbestand alleen zelden laat zien. De oplossing blijft strikt: afbreken in plaats van terugvallen op een zwakkere versie.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -337,6 +356,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">NO FORWARD SECRECY · RETROACTIVE DECRYPTION · YEARS OF HISTORY AT RISK</span><span class="nl">GEEN FORWARD SECRECY · RETROACTIEVE ONTCIJFERING · JAREN GESCHIEDENIS OP RISICO</span></span>
       <span class="pill fix">✔ <span class="en">FIX: EPHEMERAL KEY EXCHANGE ONLY, PFS-MANDATORY CIPHERS</span><span class="nl">OPLOSSING: ALLEEN EPHEMERAL SLEUTELUITWISSELING, PFS-VERPLICHTE CIPHERS</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></b><p><span class="en">Retrospective decryption depends on physically obtaining the server's private key, through theft, an unpatched system or an insider; AI offers no shortcut to breaking the underlying RSA or Diffie-Hellman mathematics itself.</span><span class="nl">Retrospectieve ontcijfering hangt af van het fysiek bemachtigen van de privésleutel van de server, via diefstal, een ongepatcht systeem of een insider; AI biedt geen kortere weg om de onderliggende RSA- of Diffie-Hellman-wiskunde te breken.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></b><p><span class="en">An insider or attacker with existing access can use AI tools to search file shares and backups faster for an exposed private key, but the underlying weakness, no forward secrecy, is a design choice, not something AI causes.</span><span class="nl">Een insider of aanvaller met bestaande toegang kan AI-tools gebruiken om sneller bestandsshares en back-ups te doorzoeken naar een blootgestelde privésleutel, maar de onderliggende zwakte, geen forward secrecy, is een ontwerpkeuze, geen gevolg van AI.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Find every static key exchange</span><span class="nl">Elke statische sleuteluitwisseling vinden</span></b><p><span class="en">AI-assisted configuration scanning can find every system still offering static RSA or Diffie-Hellman key exchange across an entire estate in one pass. Moving to ephemeral, PFS-mandatory ciphers still removes the risk itself.</span><span class="nl">AI-ondersteunde configuratiescans kunnen in één keer elk systeem vinden dat nog statische RSA- of Diffie-Hellman-sleuteluitwisseling aanbiedt, over het hele park. Overstappen op ephemeral, PFS-verplichte ciphers blijft de enige oplossing die het risico wegneemt.</span></p></div>
+      </div>
     </div>
   </div>
 </section>

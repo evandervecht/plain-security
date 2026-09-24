@@ -288,6 +288,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 .risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -373,6 +374,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">SELF-INFLICTED · FOUND IN HOURS · REPORTABLE</span><span class="nl">EIGEN SCHULD · BINNEN UREN GEVONDEN · MELDPLICHTIG</span></span>
       <span class="pill fix">✔ <span class="en">FIX: POLICY THAT BLOCKS PUBLIC STORAGE, ORGANISATION-WIDE</span><span class="nl">OPLOSSING: BELEID DAT PUBLIEKE OPSLAG BLOKKEERT, ORGANISATIEBREED</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Automated scanners already sweep the internet for public buckets without any AI. What AI adds is speed of triage afterward: sorting thousands of exposed files by sensitivity so an attacker finds the passports and contracts first instead of wading through routine data.</span><span class="nl">Geautomatiseerde scanners doorzoeken het internet al zonder AI op publieke buckets. Wat AI toevoegt is snellere triage achteraf: duizenden blootgestelde bestanden sorteren op gevoeligheid, zodat een aanvaller eerst de paspoorten en contracten vindt in plaats van zich door routinegegevens heen te werken.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A deployment pipeline connected to an AI coding assistant can follow an outdated example it was trained on and publish a bucket as public by default, turning a routine automated task into an exposure nobody reviewed before it went live.</span><span class="nl">Een implementatiepijplijn gekoppeld aan een AI-codeerassistent kan een verouderd voorbeeld uit de trainingsdata volgen en een bucket standaard publiek maken, waardoor een routinematige geautomatiseerde taak een blootstelling wordt die niemand vooraf heeft beoordeeld.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Rank leaks by sensitivity</span><span class="nl">Rangschik lekken op gevoeligheid</span></b><p><span class="en">AI can scan what is inside an exposed bucket and rank findings by how sensitive the content actually is, so the worst leaks get fixed first. Prevention still comes from policy-as-code that makes saving a public bucket impossible in the first place.</span><span class="nl">AI kan de inhoud van een blootgestelde bucket scannen en bevindingen rangschikken naar hoe gevoelig die inhoud werkelijk is, zodat de ergste lekken het eerst worden opgelost. Preventie komt nog steeds van beleid als code dat het opslaan van een publieke bucket onmogelijk maakt.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -410,6 +420,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">NO PASSWORD · NO MFA · USED WITHIN MINUTES</span><span class="nl">GEEN WACHTWOORD · GEEN MFA · BINNEN MINUTEN GEBRUIKT</span></span>
       <span class="pill fix">✔ <span class="en">FIX: SECRETS VAULT + SHORT-LIVED KEYS + REPOSITORY SCANNING</span><span class="nl">OPLOSSING: GEHEIMENKLUIS + KORTLEVENDE SLEUTELS + REPOSITORYSCANNING</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Bots that watch every public commit for credentials existed long before AI. What has changed is how cheaply anyone can build one: a short AI-written script now recognises dozens of key formats across providers, putting that capability within reach of far more actors.</span><span class="nl">Bots die elke publieke commit op inloggegevens controleren, bestonden al ruim voor AI. Wat is veranderd, is hoe goedkoop iemand er nu een kan bouwen: een kort, door AI geschreven script herkent tientallen sleutelformaten bij verschillende leveranciers, waardoor veel meer partijen dit kunnen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A developer using an AI coding assistant may paste a live key into the chat for help debugging, or let the assistant read a local configuration file it should never touch, so the leak now starts inside a tool rather than a public repository.</span><span class="nl">Een ontwikkelaar die een AI-codeerassistent gebruikt, kan een actieve sleutel in de chat plakken om hulp te vragen bij het debuggen, of de assistent een configuratiebestand laten lezen dat hij nooit had mogen aanraken, waardoor het lek in een tool ontstaat, niet in een repository.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Catch the secret before commit</span><span class="nl">Vang het geheim voor de commit</span></b><p><span class="en">AI-based scanning classifies commit content and recognises a likely credential with far fewer false positives than plain pattern matching. Catching it faster only limits the damage if keys already live in a vault and expire in hours rather than years.</span><span class="nl">AI-gebaseerde scanning classificeert commitinhoud en herkent een waarschijnlijk inloggegeven met veel minder valse meldingen dan eenvoudige patroonherkenning. Sneller vinden beperkt de schade alleen als sleutels al in een kluis leven en binnen uren verlopen in plaats van jaren.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -449,6 +468,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">ONE CREDENTIAL · EVERY ACCOUNT · BACKUPS INCLUDED</span><span class="nl">ÉÉN INLOG · ELK ACCOUNT · INCLUSIEF BACK-UPS</span></span>
       <span class="pill fix">✔ <span class="en">FIX: LEAST PRIVILEGE PER WORKLOAD + BREAK-GLASS ADMIN ONLY</span><span class="nl">OPLOSSING: MINIMALE RECHTEN PER WORKLOAD + BEHEER ALLEEN VIA NOODPROCEDURE</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Holding the one credential that reaches every account is unchanged by AI; getting there still takes the same phishing or leak. Once inside, though, AI can map every downstream system that role can touch and rank which to hit first, in minutes instead of hours.</span><span class="nl">Het bezit van de ene inlog die elk account bereikt, verandert niet door AI; die bemachtigen vraagt nog dezelfde phishing of hetzelfde lek. Eenmaal binnen brengt AI elk bereikbaar systeem in kaart en bepaalt wat het eerst wordt aangevallen, in minuten in plaats van uren.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A platform team gives its own AI assistant the same broad administrative role it uses daily, so a manipulated instruction hidden in a ticket or document the assistant reads can trigger an action across every connected account without anyone approving it directly.</span><span class="nl">Een platformteam geeft zijn eigen AI-assistent dezelfde brede beheerdersrol die het dagelijks gebruikt, zodat een verborgen, gemanipuleerde instructie in een ticket of document die de assistent leest een actie kan triggeren over elk gekoppeld account, zonder dat iemand dit rechtstreeks goedkeurt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Flag identities that reach everything</span><span class="nl">Signaleer identiteiten met toegang tot alles</span></b><p><span class="en">Posture tools can automatically detect which single identity can reach every account, a bridge manual audits routinely miss between reviews. The fix is removing that bridge itself: least privilege per workload, with organisation-wide admin only as a logged, break-glass exception.</span><span class="nl">Configuratietools kunnen automatisch detecteren welke ene identiteit elk account kan bereiken, een brug die handmatige audits tussen controles vaak missen. De oplossing is die brug zelf weghalen: minimale rechten per workload, met organisatiebreed beheer alleen als gelogde noodprocedure.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -492,6 +520,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">INVISIBLE · UNLIMITED DWELL TIME · NO EVIDENCE</span><span class="nl">ONZICHTBAAR · ONBEPERKTE VERBLIJFSTIJD · GEEN BEWIJS</span></span>
       <span class="pill fix">✔ <span class="en">FIX: CENTRAL LOGGING ON EVERY ACCOUNT AND REGION + COST ALERTS</span><span class="nl">OPLOSSING: CENTRALE LOGGING OP ELK ACCOUNT EN ELKE REGIO + KOSTENALARMEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></b><p><span class="en">Inside a region with no logging at all, AI gives an attacker almost nothing extra to exploit, because there is no monitoring to evade in the first place. The advantage here was already total before any AI tool entered the picture.</span><span class="nl">Binnen een regio zonder enige logging biedt AI een aanvaller bijna niets extra om te benutten, omdat er sowieso niets te omzeilen valt. Het voordeel was hier al volledig, ver voordat er een AI-tool aan te pas kwam.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An employee with legitimate cloud access can use an AI-written automation script to spin up resources in a forgotten region nobody watches, turning routine self-service convenience into a hiding place that looks like ordinary infrastructure work to anyone glancing at logs.</span><span class="nl">Een medewerker met legitieme cloudtoegang kan een door AI geschreven automatiseringsscript gebruiken om resources op te zetten in een vergeten regio die niemand bewaakt, waardoor gewoon zelfbedieningsgemak een schuilplaats wordt die op gewoon infrastructuurwerk lijkt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Find the forgotten region</span><span class="nl">Vind de vergeten regio</span></b><p><span class="en">Anomaly detection on billing and account inventories can surface a region nobody is watching far faster than a manual sweep across every account. Someone still has to switch on logging for that region and act on the alert before it becomes a discovery by invoice.</span><span class="nl">Anomaliedetectie op facturen en accountoverzichten kan een regio die niemand bewaakt veel sneller aan het licht brengen dan een handmatige controle van elk account. Iemand moet nog steeds logging voor die regio aanzetten en op het alarm reageren voordat de factuur het ontdekt.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
