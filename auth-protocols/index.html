@@ -129,23 +129,13 @@ h2 em{font-style:normal;color:var(--muted)}
 
 /* OAuth2 flow animation */
 .oauth-flow{position:absolute;width:100%;height:100%;display:flex;align-items:center;justify-content:space-around;z-index:3}
-.flow-actor{text-align:center;font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.flow-actor{flex:1;text-align:center;font-size:11px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
 .flow-actor .icon{font-size:28px;margin-bottom:12px;display:block}
-.arrow{position:absolute;font-size:18px;color:var(--brand);opacity:0}
-.arrow-label{font-size:9px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;margin-top:6px;white-space:nowrap;opacity:0}
-
-@keyframes arrow-send{0%{opacity:0;transform:translateX(0)}20%{opacity:1}80%{opacity:1}100%{opacity:0;transform:translateX(1)}}
-@keyframes arrow-return{0%{opacity:0;transform:translateX(0)}35%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translateX(-1)}}
-@keyframes highlight-open{0%,25%{background:var(--bg-lo);border-color:var(--line)}35%,65%{background:rgba(90,200,250,.15);border-color:var(--brand)}75%,100%{background:var(--bg-lo);border-color:var(--line)}}
-@keyframes highlight-close{0%,45%{background:var(--bg-lo);border-color:var(--line)}55%,85%{background:rgba(90,200,250,.15);border-color:var(--brand)}95%,100%{background:var(--bg-lo);border-color:var(--line)}}
-
-.actor-box{width:68px;height:68px;border:1px solid var(--line);background:var(--bg-lo);display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-size:22px}
-.actor-box.resource{animation:highlight-open 6s infinite}
-.actor-box.client{animation:highlight-close 6s infinite}
-
-.flow-arrow{position:absolute;width:8px;height:60px;display:flex;align-items:center;justify-content:center;font-size:16px;z-index:2}
-.flow-arrow.right{animation:arrow-send 6s infinite}
-.flow-arrow.left{animation:arrow-return 6s infinite}
+.lane{position:absolute;left:6%;right:6%;top:calc(50% + 59px);border-top:1px dashed var(--line);z-index:2}
+.hop{position:absolute;top:calc(50% + 48px);left:var(--a);transform:translateX(-50%);z-index:4;font-size:9px;letter-spacing:.12em;font-weight:700;color:var(--deep);background:var(--brand);padding:4px 8px;white-space:nowrap;opacity:0;animation:hop 10s var(--d,0s) infinite}
+.hop.ok{background:var(--good)}
+/* five 2s slots per 10s loop: each hop travels from --a to --b in its slot */
+@keyframes hop{0%{left:var(--a);opacity:0}3%{opacity:1}16%{left:var(--b);opacity:1}19%,100%{left:var(--b);opacity:0}}
 
 /* ---------- comparison table ---------- */
 .protocol-table{width:100%;border-collapse:collapse;margin-top:20px}
@@ -182,6 +172,7 @@ h2 em{font-style:normal;color:var(--muted)}
   .wrap{padding:0 24px}
   .nav-in{padding:0 24px}
   .stage{height:240px}
+  .hop{font-size:8px;letter-spacing:.06em;padding:4px 6px}
   .protocol-table td,.protocol-table th{padding:12px 8px;font-size:12px}
   .risk-grid{grid-template-columns:1fr}
   .risk-item.w2{grid-column:span 1}
@@ -280,6 +271,12 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
           <span class="icon">📊</span>
           <span class="en">Your Data</span><span class="nl">Jouw Data</span>
         </div>
+        <div class="lane"></div>
+        <span class="hop" style="--a:37.5%;--b:62.5%;--d:0s"><span class="en">REDIRECT</span><span class="nl">OMLEIDING</span></span>
+        <span class="hop" style="--a:12.5%;--b:62.5%;--d:2s"><span class="en">LOGIN + OK</span><span class="nl">INLOG + OK</span></span>
+        <span class="hop ok" style="--a:62.5%;--b:37.5%;--d:4s"><span class="en">TOKEN</span><span class="nl">TOKEN</span></span>
+        <span class="hop ok" style="--a:37.5%;--b:87.5%;--d:6s"><span class="en">TOKEN</span><span class="nl">TOKEN</span></span>
+        <span class="hop" style="--a:87.5%;--b:37.5%;--d:8s"><span class="en">FILES</span><span class="nl">BESTANDEN</span></span>
       </div>
     </div>
 
@@ -327,6 +324,12 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
           <span class="icon">🏢</span>
           <span class="en">Corporate ID</span><span class="nl">Bedrijfs-ID</span>
         </div>
+        <div class="lane"></div>
+        <span class="hop" style="--a:16.67%;--b:50%;--d:0s"><span class="en">OPEN APP</span><span class="nl">OPEN APP</span></span>
+        <span class="hop" style="--a:50%;--b:83.33%;--d:2s"><span class="en">REDIRECT</span><span class="nl">OMLEIDING</span></span>
+        <span class="hop" style="--a:16.67%;--b:83.33%;--d:4s"><span class="en">LOGIN</span><span class="nl">INLOGGEN</span></span>
+        <span class="hop ok" style="--a:83.33%;--b:50%;--d:6s"><span class="en">ASSERTION</span><span class="nl">ASSERTIE</span></span>
+        <span class="hop ok" style="--a:50%;--b:16.67%;--d:8s"><span class="en">SESSION</span><span class="nl">SESSIE</span></span>
       </div>
     </div>
 
@@ -374,6 +377,12 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
           <span class="icon">🆔</span>
           <span class="en">Auth Provider</span><span class="nl">Auth Provider</span>
         </div>
+        <div class="lane"></div>
+        <span class="hop" style="--a:16.67%;--b:50%;--d:0s"><span class="en">SIGN IN</span><span class="nl">INLOGGEN</span></span>
+        <span class="hop" style="--a:50%;--b:83.33%;--d:2s"><span class="en">REDIRECT</span><span class="nl">OMLEIDING</span></span>
+        <span class="hop" style="--a:16.67%;--b:83.33%;--d:4s"><span class="en">LOGIN</span><span class="nl">INLOGGEN</span></span>
+        <span class="hop ok" style="--a:83.33%;--b:50%;--d:6s"><span class="en">ID TOKEN</span><span class="nl">ID-TOKEN</span></span>
+        <span class="hop ok" style="--a:50%;--b:16.67%;--d:8s"><span class="en">HI ALICE</span><span class="nl">HOI ALICE</span></span>
       </div>
     </div>
 
@@ -421,6 +430,11 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
           <span class="icon">⚙️</span>
           <span class="en">Service B</span><span class="nl">Service B</span>
         </div>
+        <div class="lane"></div>
+        <span class="hop" style="--a:16.67%;--b:83.33%;--d:0s"><span class="en">HELLO</span><span class="nl">HALLO</span></span>
+        <span class="hop" style="--a:83.33%;--b:16.67%;--d:2s"><span class="en">CERT B</span><span class="nl">CERT B</span></span>
+        <span class="hop" style="--a:16.67%;--b:83.33%;--d:4s"><span class="en">CERT A</span><span class="nl">CERT A</span></span>
+        <span class="hop ok" style="--a:16.67%;--b:83.33%;--d:6s"><span class="en">API CALL</span><span class="nl">API-CALL</span></span>
       </div>
     </div>
 
