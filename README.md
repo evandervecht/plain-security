@@ -21,6 +21,7 @@ Everything is bilingual. The EN/NL toggle is CSS radio buttons; one small script
 ```
 index.html              landing page: search, cards, topic request, sponsor
 <slug>/index.html       one folder per briefing
+sponsors/index.html     sponsors page ($100/month tier)
 logo.svg  logo-nl.svg   wordmark, English and Dutch tagline
 favicon.svg
 CNAME                   custom domain for GitHub Pages
@@ -52,6 +53,13 @@ Headless Edge notes: the host may report `prefers-reduced-motion`, and `--virtua
 ## Requesting a topic
 
 Use the issue forms: **Topic request** (English) or **Onderwerpverzoek** (Dutch). They ask for a topic name, the board's question, the audience and the language, in fixed fields so a request can be picked up mechanically. The auto-labeler adds category labels (`topic-request`, `bug`, `mobile`, `translation`, `compliance`, `region`, `sponsor`) and a `page: <slug>` label when an issue concerns an existing briefing.
+
+## Sponsors
+
+Sponsoring keeps the briefings free, ad-free and untracked: [github.com/sponsors/evandervecht](https://github.com/sponsors/evandervecht). Sponsors at $15 a month are listed here; sponsors at $100 a month also get their logo on [plain-security.fyi/sponsors](https://plain-security.fyi/sponsors/).
+
+<!-- One line per $15+/month sponsor: [Name](https://example.com) -->
+No sponsors yet. [Be the first.](https://github.com/sponsors/evandervecht)
 
 ## Content notes
 
