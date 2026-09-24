@@ -660,5 +660,12 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
   </div>
 </footer>
 
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
 </body>
 </html>
