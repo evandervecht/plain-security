@@ -67,3 +67,5 @@ sponsor:
   - '(insurance|verzekering|polis|policy exclusion|premium)'
 'page: nis2-dora':
   - '(nis ?2|dora|cyberbeveiligingswet|board liability|bestuurdersaansprakelijkheid)'
+'page: auth-protocols':
+  - '(oauth2?|oauth|saml|oidc|openid connect|mtls|mTLS|authentication|authenticatie|autorisatie|sso|single sign-on|enterprise)'
