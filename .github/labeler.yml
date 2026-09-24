@@ -68,4 +68,4 @@ sponsor:
 'page: nis2-dora':
   - '(nis ?2|dora|cyberbeveiligingswet|board liability|bestuurdersaansprakelijkheid)'
 'page: auth-protocols':
-  - '(oauth2?|oauth|saml|oidc|openid connect|mtls|mTLS|authentication|authenticatie|autorisatie|sso|single sign-on|enterprise)'
+  - '(oauth2?|oauth|saml|oidc|openid connect|mtls|mTLS|authentication|authenticatie|autorisatie|sso|single sign-on|enterprise|passkeys?|fido2|webauthn|kerberos|ntlm|ldap|radius|api.?keys?|mcp)'

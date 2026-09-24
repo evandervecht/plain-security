@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<title>OAuth2, SAML, OIDC, mTLS // Plain Security</title>
+<title>Authentication protocols: OAuth2, SAML, OIDC, mTLS, passkeys and more // Plain Security</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 /* ===============================================================
    AUTH PROTOCOLS // BRIEFING
-   OAuth2, SAML, OIDC, mTLS
+   OAuth2, SAML, OIDC, mTLS, passkeys, Kerberos/NTLM, LDAP/RADIUS, API keys, AI agents
    =============================================================== */
 
 :root{
@@ -134,6 +134,7 @@ h2 em{font-style:normal;color:var(--muted)}
 .lane{position:absolute;left:6%;right:6%;top:calc(50% + 59px);border-top:1px dashed var(--line);z-index:2}
 .hop{position:absolute;top:calc(50% + 48px);left:var(--a);transform:translateX(-50%);z-index:4;font-size:9px;letter-spacing:.12em;font-weight:700;color:var(--deep);background:var(--brand);padding:4px 8px;white-space:nowrap;opacity:0;animation:hop 10s var(--d,0s) infinite}
 .hop.ok{background:var(--good)}
+.hop.bad{background:var(--bad)}
 /* five 2s slots per 10s loop: each hop travels from --a to --b in its slot */
 @keyframes hop{0%{left:var(--a);opacity:0}3%{opacity:1}16%{left:var(--b);opacity:1}19%,100%{left:var(--b);opacity:0}}
 
@@ -153,6 +154,10 @@ h2 em{font-style:normal;color:var(--muted)}
 .risk-item .v{display:block;font-family:var(--sans);font-size:18px;font-weight:700;color:var(--white);margin-bottom:12px}
 .risk-item .v.hi{color:var(--bad)}
 .risk-item .v.mid{color:var(--warn)}
+.risk-item .v.lo{color:var(--good)}
+.protocol-table td.r.hi{color:var(--bad)}
+.protocol-table td.r.mid{color:var(--warn)}
+.protocol-table td.r.lo{color:var(--good)}
 .risk-item p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose);margin:0}
 
 /* ---------- compliance table ---------- */
@@ -171,15 +176,33 @@ h2 em{font-style:normal;color:var(--muted)}
 @media(max-width:820px){
   .wrap{padding:0 24px}
   .nav-in{padding:0 24px}
+  .nav-links{display:none}
   .stage{height:240px}
   .hop{font-size:8px;letter-spacing:.06em;padding:4px 6px}
-  .protocol-table td,.protocol-table th{padding:12px 8px;font-size:12px}
+  .protocol-table tr:first-child{display:none}
+  .protocol-table tr{display:block;border-bottom:1px solid var(--line);padding:10px 0}
+  .protocol-table td{display:block;border:0;padding:4px 0;font-size:13px}
+  .protocol-table td.label{width:auto;color:var(--white);font-size:14px}
+  .protocol-table td[data-l]::before{content:attr(data-l) ": ";color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
+  .protocol-table tr:nth-child(even) td{background:none}
   .risk-grid{grid-template-columns:1fr}
   .risk-item.w2{grid-column:span 1}
   .risk-item.wide{grid-column:1}
   .panel table{font-size:11px}
   .panel table th,.panel table td{padding:8px 6px}
   .panel table td.ctl{width:22%}
+  #risk .panel tbody,#risk .panel tr,#risk .panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) #risk .panel table.en,body:has(#lang-nl:checked) #risk .panel table.nl{display:block;width:100%}
+  #risk .panel tr:first-child{display:none}
+  #risk .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  #risk .panel td{padding:3px 0;border-bottom:none;background:none!important}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat is vereist van u"}
+  #risk table.nl td:nth-child(3)::before{content:"Wanneer een leverancier hun rapport overhandigt"}
+  #risk table.nl td:nth-child(4)::before{content:"Wanneer dit incident plaatsvindt"}
   h1{font-size:28px}
   h2{font-size:21px}
   section.risk-block{padding:50px 0 54px}
@@ -197,10 +220,8 @@ h2 em{font-style:normal;color:var(--muted)}
   <div class="nav-in">
     <a class="brand" href="../"><i></i><span class="en">PLAIN<br>SECURITY</span><span class="nl">PLAIN<br>SECURITY</span></a>
     <div class="nav-links">
-      <a href="#oauth2"><span class="en">OAUTH2</span><span class="nl">OAUTH2</span></a>
-      <a href="#saml"><span class="en">SAML</span><span class="nl">SAML</span></a>
-      <a href="#oidc"><span class="en">OIDC</span><span class="nl">OIDC</span></a>
-      <a href="#mtls"><span class="en">MTLS</span><span class="nl">MTLS</span></a>
+      <a href="#oauth2"><span class="en">PROTOCOLS</span><span class="nl">PROTOCOLLEN</span></a>
+      <a href="#ai"><span class="en">AI</span><span class="nl">AI</span></a>
       <a href="#compare"><span class="en">COMPARE</span><span class="nl">VERGELIJKEN</span></a>
       <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
     </div>
@@ -223,12 +244,12 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
   <div class="wrap">
     <span class="kicker"><b>//</b> BRIEFING</span>
     <h1>
-      <span class="en">OAuth2, SAML, OIDC, mTLS. <em>When to use each, and why.</em></span>
-      <span class="nl">OAuth2, SAML, OIDC, mTLS. <em>Wanneer elk gebruiken, en waarom.</em></span>
+      <span class="en">Eight ways to prove who you are. <em>When to use each, and how AI breaks it.</em></span>
+      <span class="nl">Acht manieren om te bewijzen wie je bent. <em>Wanneer je welke gebruikt, en hoe AI ze breekt.</em></span>
     </h1>
     <p class="lede">
-      <span class="en">Every protocol solves a different authentication problem. OAuth2 delegates authorization. SAML federates enterprise identity. OIDC adds login on top of OAuth2. mTLS binds machine trust to certificates. Pick the wrong one and you solve nothing; pick the right one and the rest of the architecture follows.</span>
-      <span class="nl">Elk protocol lost een ander verificatieprobleem op. OAuth2 delegeert autorisatie. SAML federateert bedrijfsidentiteit. OIDC voegt login toe bovenop OAuth2. mTLS bindt machinebetrouwbaarheid aan certificaten. Kies de verkeerde en je lost niets op; kies de juiste en de rest van de architectuur volgt.</span>
+      <span class="en">Every protocol solves a different authentication problem. OAuth2 delegates access. SAML federates enterprise identity. OIDC adds login on top of OAuth2. mTLS binds machine trust to certificates. Passkeys make login phishing-proof. Kerberos, NTLM, LDAP and RADIUS keep the legacy estate running, and API keys fill the gaps. For each: its strength, its weakness, and how easily AI helps break it, abuse it or enforce it. AI agents now hold credentials too.</span>
+      <span class="nl">Elk protocol lost een ander authenticatieprobleem op. OAuth2 delegeert toegang. SAML federeert bedrijfsidentiteit. OIDC voegt inloggen toe bovenop OAuth2. mTLS bindt machinevertrouwen aan certificaten. Passkeys maken inloggen phishingbestendig. Kerberos, NTLM, LDAP en RADIUS houden de oude omgeving draaiend, en API-sleutels vullen de gaten. Per protocol: de sterkte, de zwakte, en hoe makkelijk AI helpt het te breken, te misbruiken of af te dwingen. AI-agents hebben nu ook inloggegevens.</span>
     </p>
     <div class="btns">
       <a class="btn solid" href="#oauth2"><span class="en">SEE THE PROTOCOLS</span><span class="nl">BEKIJK DE PROTOCOLLEN</span></a>
@@ -291,6 +312,14 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill use">→ <span class="en">USE FOR: Third-party integrations, mobile apps accessing user data</span><span class="nl">GEBRUIKEN VOOR: Integraties met derden, mobiele apps die gebruikersgegevens benaderen</span></span>
       <span class="pill fix">✔ <span class="en">CONTROL: Token expiration, token revocation, scope limitation</span><span class="nl">CONTROLE: Token verlopen, token intrekking, scopebeperking</span></span>
     </div>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Strength</span><span class="nl">Sterkte</span></span><span class="v"><span class="en">The password never leaves home</span><span class="nl">Het wachtwoord blijft thuis</span></span><p><span class="en">The app gets a scoped, expiring token instead of your password. Revoke the token and the app is out, without a password reset.</span><span class="nl">De app krijgt een beperkt, verlopend token in plaats van je wachtwoord. Trek het token in en de app is eruit, zonder wachtwoordreset.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Weakness</span><span class="nl">Zwakte</span></span><span class="v hi"><span class="en">Consent is the attack surface</span><span class="nl">Toestemming is het aanvalsoppervlak</span></span><p><span class="en">Consent phishing: a malicious app asks for broad scopes and the user clicks Allow. Access tokens are bearer tokens: they work for whoever holds them, and a stolen refresh token keeps working for weeks.</span><span class="nl">Consent-phishing: een kwaadaardige app vraagt brede rechten en de gebruiker klikt op Toestaan. Toegangstokens zijn bearer-tokens: ze werken voor wie ze heeft, en een gestolen refresh-token blijft wekenlang werken.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">The protocol itself holds. AI-driven adversary-in-the-middle kits proxy the real login page and grab the tokens after MFA, so the weak point is the login in front of it.</span><span class="nl">Het protocol zelf houdt stand. AI-gestuurde adversary-in-the-middle-kits zetten de echte inlogpagina ertussen en pakken de tokens na MFA. Het zwakke punt is de login ervoor.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><span class="v hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></span><p><span class="en">AI writes a convincing consent lure in any language in seconds. And an AI agent with a valid token does what injected text tells it to: the token is legitimate, the intent is not. Its scopes are its blast radius.</span><span class="nl">AI schrijft in seconden een overtuigend consent-verzoek in elke taal. En een AI-agent met een geldig token doet wat geïnjecteerde tekst hem opdraagt: het token is echt, de bedoeling niet. De rechten van het token bepalen de schade.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><span class="v lo"><span class="en">Spot odd consents and token use</span><span class="nl">Vreemde toestemmingen en tokengebruik opsporen</span></span><p><span class="en">AI-assisted monitoring flags new apps asking for mail or file scopes, tokens used from new countries, and agents calling APIs they never used before. Pair it with an admin-approval rule for high-risk scopes.</span><span class="nl">AI-ondersteunde monitoring signaleert nieuwe apps die om mail- of bestandsrechten vragen, tokens vanuit nieuwe landen en agents die API's aanroepen die ze nooit gebruikten. Combineer dat met beheerdersgoedkeuring voor risicovolle rechten.</span></p></div>
+    </div>
   </div>
 </section>
 
@@ -343,6 +372,14 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill use">→ <span class="en">USE FOR: Enterprise SSO, employee access to cloud and on-prem apps</span><span class="nl">GEBRUIKEN VOOR: Enterprise SSO, werkneemerstoegang tot cloud- en on-prem apps</span></span>
       <span class="pill fix">✔ <span class="en">CONTROL: Signed assertions, centralized user directories, revocation on termination</span><span class="nl">CONTROLE: Ondertekende asserties, gecentraliseerde gebruikersdirectories, intrekking bij beëindiging</span></span>
+    </div>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Strength</span><span class="nl">Sterkte</span></span><span class="v"><span class="en">One off-switch for every app</span><span class="nl">Eén uitknop voor elke app</span></span><p><span class="en">Disable the account in the corporate directory and access to every federated app ends at the next login. Mature and supported by almost every enterprise SaaS product.</span><span class="nl">Schakel het account uit in de bedrijfsdirectory en de toegang tot elke gefedereerde app stopt bij de volgende login. Volwassen en ondersteund door vrijwel elk zakelijk SaaS-product.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Weakness</span><span class="nl">Zwakte</span></span><span class="v hi"><span class="en">XML signatures are hard to verify</span><span class="nl">XML-handtekeningen zijn lastig te controleren</span></span><p><span class="en">Signature-wrapping and parser bugs have repeatedly let attackers forge assertions. A stolen signing key at the identity provider (Golden SAML) lets an attacker mint a login for anyone, MFA included.</span><span class="nl">Signature-wrapping en parserfouten lieten aanvallers herhaaldelijk asserties vervalsen. Met een gestolen ondertekeningssleutel van de identity provider (Golden SAML) maakt een aanvaller een login voor iedereen aan, MFA inbegrepen.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">Session theft through AI phishing kits works as well as against OIDC. Finding signature bugs still takes skill, but AI-assisted fuzzing and code reading shorten the search.</span><span class="nl">Sessiediefstal via AI-phishingkits werkt net zo goed als bij OIDC. Handtekeningfouten vinden vraagt nog vakmanschap, maar AI-ondersteund fuzzen en code lezen verkorten de zoektocht.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">Golden SAML needs the identity provider compromised first. Once it is, AI does not matter: every app trusts the forged assertions.</span><span class="nl">Golden SAML vereist eerst een gecompromitteerde identity provider. Is dat gebeurd, dan maakt AI niet meer uit: elke app vertrouwt de vervalste asserties.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><span class="v lo"><span class="en">Correlate logins across apps</span><span class="nl">Logins over apps heen koppelen</span></span><p><span class="en">AI-based identity threat detection matches identity-provider sign-ins with SaaS sessions and flags sessions with no matching login: the signature of a forged assertion or a replayed session.</span><span class="nl">AI-gebaseerde identiteitsdetectie koppelt aanmeldingen bij de identity provider aan SaaS-sessies en signaleert sessies zonder bijbehorende login: het kenmerk van een vervalste assertie of een hergebruikte sessie.</span></p></div>
     </div>
   </div>
 </section>
@@ -397,6 +434,14 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill use">→ <span class="en">USE FOR: User login, modern web apps, consumer identity platforms</span><span class="nl">GEBRUIKEN VOOR: Gebruikersinloggen, moderne web-apps, consumentenidentiteitsplatforms</span></span>
       <span class="pill fix">✔ <span class="en">CONTROL: ID token validation, token signature verification, claim validation</span><span class="nl">CONTROLE: ID-tokenvalidatie, tokentekening verificatie, claimvalidatie</span></span>
     </div>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Strength</span><span class="nl">Sterkte</span></span><span class="v"><span class="en">Standard login, less custom code</span><span class="nl">Standaard inloggen, minder maatwerk</span></span><p><span class="en">A signed ID token with standard claims, libraries in every language, and one flow for web, mobile and APIs together with OAuth2.</span><span class="nl">Een ondertekend ID-token met standaardclaims, bibliotheken in elke taal en één stroom voor web, mobiel en API's, samen met OAuth2.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Weakness</span><span class="nl">Zwakte</span></span><span class="v hi"><span class="en">Validation is on the app</span><span class="nl">De app moet zelf valideren</span></span><p><span class="en">Apps that skip checking signature, audience, issuer or expiry accept forged or replayed tokens. Tokens kept in browser storage can be read by any cross-site scripting flaw.</span><span class="nl">Apps die handtekening, audience, issuer of vervaldatum niet controleren, accepteren vervalste of hergebruikte tokens. Tokens in browseropslag zijn leesbaar voor elke cross-site-scriptingfout.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">Same adversary-in-the-middle session theft as SAML. Easy if the app was written with AI help and nobody reviewed it: generated token checks often "work" while skipping the audience check.</span><span class="nl">Dezelfde adversary-in-the-middle-sessiediefstal als bij SAML. Makkelijk als de app met AI-hulp is geschreven en niemand het controleerde: gegenereerde tokencontroles "werken" vaak terwijl de audiencecheck ontbreekt.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">A stolen session or ID token is a full login until it expires. AI makes the phishing that steals it cheaper and better targeted.</span><span class="nl">Een gestolen sessie of ID-token is een volledige login tot het verloopt. AI maakt de phishing die het steelt goedkoper en gerichter.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><span class="v lo"><span class="en">Review the auth code</span><span class="nl">De authenticatiecode laten reviewen</span></span><p><span class="en">AI code review reliably catches missing issuer, audience and expiry checks. Treat it as a second reader, not the only one, for anything that touches login.</span><span class="nl">AI-codereview vindt ontbrekende issuer-, audience- en vervalcontroles betrouwbaar. Gebruik het als tweede lezer, niet als enige, voor alles wat met inloggen te maken heeft.</span></p></div>
+    </div>
   </div>
 </section>
 
@@ -449,6 +494,349 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill use">→ <span class="en">USE FOR: Service-to-service, microservices, Zero Trust architecture</span><span class="nl">GEBRUIKEN VOOR: Service-naar-service, microservices, Zero Trust-architectuur</span></span>
       <span class="pill fix">✔ <span class="en">CONTROL: Certificate rotation, CN/SAN validation, certificate pinning, revocation checking</span><span class="nl">CONTROLE: Certificaatrotatie, CN/SAN-validatie, certificaatfixering, intrekkingscontrole</span></span>
     </div>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Strength</span><span class="nl">Sterkte</span></span><span class="v"><span class="en">No shared secret on the wire</span><span class="nl">Geen gedeeld geheim over de lijn</span></span><p><span class="en">Both sides prove they hold a private key; nothing replayable crosses the network. A strong fit for zero-trust networks between services.</span><span class="nl">Beide kanten bewijzen dat ze een privésleutel hebben; er gaat niets over het netwerk dat hergebruikt kan worden. Past sterk bij zero trust tussen services.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Weakness</span><span class="nl">Zwakte</span></span><span class="v hi"><span class="en">Certificates expire, keys leak</span><span class="nl">Certificaten verlopen, sleutels lekken</span></span><p><span class="en">Expired certificates cause outages. Private keys copied into disk images, containers or repositories let an attacker impersonate the service. Revocation checking is often switched off.</span><span class="nl">Verlopen certificaten veroorzaken storingen. Privésleutels die in images, containers of repositories belanden, laten een aanvaller de service nabootsen. Intrekkingscontrole staat vaak uit.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><span class="v lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></span><p><span class="en">AI does not break the cryptography. The attacker has to steal a private key first.</span><span class="nl">AI breekt de cryptografie niet. De aanvaller moet eerst een privésleutel stelen.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">AI speeds up hunting for keys in leaked code, container images and backups. A found key is the service's identity until someone revokes it.</span><span class="nl">AI versnelt het zoeken naar sleutels in gelekte code, containerimages en back-ups. Een gevonden sleutel is de identiteit van de service tot iemand hem intrekt.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><span class="v lo"><span class="en">Inventory and rotate</span><span class="nl">Inventariseren en roteren</span></span><p><span class="en">AI-assisted tooling keeps the certificate inventory, predicts expiries and finds private keys where they should not be. Short-lived workload certificates give AI agents an identity without long-lived API keys.</span><span class="nl">AI-ondersteunde tooling houdt de certificateninventaris bij, voorspelt verlopen en vindt privésleutels waar ze niet horen. Kortlevende workloadcertificaten geven AI-agents een identiteit zonder langlevende API-sleutels.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ PASSKEYS ============================ -->
+<section class="risk-block" id="passkeys">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">PROTOCOL 05</span><span class="nl">PROTOCOL 05</span></span>
+    <h2>
+      <span class="en">Passkeys. <em>Nothing left to phish.</em></span>
+      <span class="nl">Passkeys. <em>Niets meer om te phishen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">FIDO2, WebAuthn, public-key login, device-bound and synced passkeys</span>
+      <span class="nl">FIDO2, WebAuthn, inloggen met publieke sleutels, apparaatgebonden en gesynchroniseerde passkeys</span>
+    </span>
+
+    <div class="stage">
+      <div class="stage-label"><span class="en">PROTOCOL FLOW</span><span class="nl">PROTOCOLSTROOM</span></div>
+      <div class="oauth-flow">
+        <div class="flow-actor">
+          <span class="icon">👤</span>
+          <span class="en">You</span><span class="nl">Jij</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">📱</span>
+          <span class="en">Your device</span><span class="nl">Je apparaat</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">🌐</span>
+          <span class="en">Real site</span><span class="nl">Echte site</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">🎣</span>
+          <span class="en">Fake site</span><span class="nl">Nepsite</span>
+        </div>
+        <div class="lane"></div>
+        <span class="hop" style="--a:62.5%;--b:37.5%;--d:0s"><span class="en">CHALLENGE</span><span class="nl">UITDAGING</span></span>
+        <span class="hop" style="--a:12.5%;--b:37.5%;--d:2s"><span class="en">FACE/PIN</span><span class="nl">FACE/PIN</span></span>
+        <span class="hop ok" style="--a:37.5%;--b:62.5%;--d:4s"><span class="en">SIGNED</span><span class="nl">GETEKEND</span></span>
+        <span class="hop bad" style="--a:87.5%;--b:37.5%;--d:6s"><span class="en">PHISH</span><span class="nl">PHISH</span></span>
+        <span class="hop bad" style="--a:37.5%;--b:87.5%;--d:8s"><span class="en">NOTHING</span><span class="nl">NIETS</span></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="en">You open a website and choose "sign in with a passkey". The site sends a random challenge. Your phone or laptop asks for your face, fingerprint or PIN, which never leaves the device, and signs the challenge with a private key that was created for that one website. The site checks the signature with the public key it stored when you registered. No password is typed, sent or stored anywhere.</p>
+      <p class="en">The key is tied to the website's real domain. A pixel-perfect fake site on a look-alike domain gets no signature it can use, because your device will not sign for the wrong domain. That is what "phishing-resistant" means, and why passkeys hold up against AI-generated phishing that fools people.</p>
+      <p class="en"><strong>Use when:</strong> People log in: staff, admins, customers. Start with administrators and anyone who can move money.</p>
+      <p class="nl">Je opent een website en kiest "inloggen met een passkey". De site stuurt een willekeurige uitdaging. Je telefoon of laptop vraagt om je gezicht, vingerafdruk of pincode, die het apparaat nooit verlaten, en ondertekent de uitdaging met een privésleutel die voor die ene website is aangemaakt. De site controleert de handtekening met de publieke sleutel die hij bij registratie heeft opgeslagen. Er wordt nergens een wachtwoord getypt, verstuurd of opgeslagen.</p>
+      <p class="nl">De sleutel is gekoppeld aan het echte domein van de website. Een perfecte nepsite op een lijkend domein krijgt geen bruikbare handtekening, omdat je apparaat niet ondertekent voor het verkeerde domein. Dat is wat "phishingbestendig" betekent, en waarom passkeys standhouden tegen AI-phishing die mensen wel voor de gek houdt.</p>
+      <p class="nl"><strong>Gebruik wanneer:</strong> Mensen inloggen: medewerkers, beheerders, klanten. Begin bij beheerders en iedereen die geld kan overmaken.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill use">→ <span class="en">USE FOR: Staff, admin and customer login</span><span class="nl">GEBRUIKEN VOOR: Inloggen door medewerkers, beheerders en klanten</span></span>
+      <span class="pill fix">✔ <span class="en">CONTROL: Phishing-resistant recovery, device-bound keys for admins</span><span class="nl">CONTROLE: Phishingbestendig herstel, apparaatgebonden sleutels voor beheerders</span></span>
+    </div>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Strength</span><span class="nl">Sterkte</span></span><span class="v"><span class="en">Phishing-proof by design</span><span class="nl">Phishingbestendig door ontwerp</span></span><p><span class="en">The key is bound to the real website's domain. A fake site gets nothing it can replay. No password to reuse, leak or spray.</span><span class="nl">De sleutel is gebonden aan het domein van de echte website. Een nepsite krijgt niets wat hij kan hergebruiken. Geen wachtwoord om te hergebruiken, te lekken of te raden.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Weakness</span><span class="nl">Zwakte</span></span><span class="v hi"><span class="en">Recovery is the back door</span><span class="nl">Herstel is de achterdeur</span></span><p><span class="en">If lost-device recovery falls back to SMS, email or a helpdesk call, attackers use that path instead. Synced passkeys are only as safe as the Apple, Google or Microsoft account they sync through.</span><span class="nl">Als herstel bij een verloren apparaat terugvalt op sms, e-mail of een telefoontje naar de helpdesk, nemen aanvallers die route. Gesynchroniseerde passkeys zijn zo veilig als het Apple-, Google- of Microsoft-account waarmee ze synchroniseren.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><span class="v lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></span><p><span class="en">AI makes phishing emails and cloned login pages perfect, but it cannot make a fake domain match the real one. There is no secret to phish.</span><span class="nl">AI maakt phishingmails en nagemaakte inlogpagina's perfect, maar kan een nepdomein niet laten overeenkomen met het echte. Er is geen geheim om te phishen.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">Attackers skip the passkey and target recovery: a deepfaked voice on the helpdesk line asking to reset a lost phone.</span><span class="nl">Aanvallers slaan de passkey over en richten zich op herstel: een deepfake-stem aan de helpdesk die vraagt een verloren telefoon te resetten.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><span class="v lo"><span class="en">Guard the recovery path</span><span class="nl">Het herstelpad bewaken</span></span><p><span class="en">Risk-based checks and AI anomaly detection on recovery requests flag bursts and odd timing. Require in-person or verified-video identity checks for admin resets; do not trust a voice.</span><span class="nl">Risicogebaseerde controles en AI-anomaliedetectie op herstelverzoeken signaleren pieken en vreemde tijdstippen. Eis identiteitscontrole in persoon of via geverifieerde video voor resets van beheerders; vertrouw geen stem.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ KERBEROS ============================ -->
+<section class="risk-block" id="kerberos">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">PROTOCOL 06</span><span class="nl">PROTOCOL 06</span></span>
+    <h2>
+      <span class="en">Kerberos &amp; NTLM. <em>The domain you still run.</em></span>
+      <span class="nl">Kerberos &amp; NTLM. <em>Het domein dat je nog draait.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">Active Directory, tickets, KDC, service accounts, Kerberoasting, pass-the-hash</span>
+      <span class="nl">Active Directory, tickets, KDC, serviceaccounts, Kerberoasting, pass-the-hash</span>
+    </span>
+
+    <div class="stage">
+      <div class="stage-label"><span class="en">PROTOCOL FLOW</span><span class="nl">PROTOCOLSTROOM</span></div>
+      <div class="oauth-flow">
+        <div class="flow-actor">
+          <span class="icon">💻</span>
+          <span class="en">Your PC</span><span class="nl">Je pc</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">🏛️</span>
+          <span class="en">Domain controller</span><span class="nl">Domeincontroller</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">🗄️</span>
+          <span class="en">File server</span><span class="nl">Fileserver</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">🕵️</span>
+          <span class="en">Attacker</span><span class="nl">Aanvaller</span>
+        </div>
+        <div class="lane"></div>
+        <span class="hop" style="--a:12.5%;--b:37.5%;--d:0s"><span class="en">LOGIN</span><span class="nl">INLOG</span></span>
+        <span class="hop ok" style="--a:37.5%;--b:12.5%;--d:2s"><span class="en">TICKET</span><span class="nl">TICKET</span></span>
+        <span class="hop ok" style="--a:12.5%;--b:62.5%;--d:4s"><span class="en">TICKET</span><span class="nl">TICKET</span></span>
+        <span class="hop bad" style="--a:87.5%;--b:37.5%;--d:6s"><span class="en">ROAST</span><span class="nl">ROAST</span></span>
+        <span class="hop bad" style="--a:37.5%;--b:87.5%;--d:8s"><span class="en">HASH</span><span class="nl">HASH</span></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="en">You log on to a Windows PC in the office. The PC proves your password to the domain controller once, and gets a ticket back. From then on, every file share, printer and intranet app asks for a ticket, not your password. That is Kerberos: single sign-on for everything in the Windows domain. NTLM is its older predecessor, still used as a fallback whenever Kerberos can't be.</p>
+      <p class="en">The weakness is that any domain user can request a ticket for any service account, and part of that ticket is encrypted with the service account's password. Attackers take it offline and crack it (Kerberoasting). NTLM hashes can be replayed or relayed without ever cracking them. Whoever steals the domain's master key can forge tickets for anyone.</p>
+      <p class="en"><strong>Use when:</strong> You run on-premises Active Directory. Harden it; don't build new systems on it.</p>
+      <p class="nl">Je meldt je aan op een Windows-pc op kantoor. De pc bewijst je wachtwoord één keer aan de domeincontroller en krijgt een ticket terug. Daarna vraagt elke netwerkschijf, printer en intranet-app om een ticket, niet om je wachtwoord. Dat is Kerberos: single sign-on voor alles in het Windows-domein. NTLM is de oudere voorganger, nog steeds gebruikt als terugvaloptie wanneer Kerberos niet kan.</p>
+      <p class="nl">De zwakte: elke domeingebruiker kan een ticket aanvragen voor elk serviceaccount, en een deel van dat ticket is versleuteld met het wachtwoord van dat account. Aanvallers nemen het mee en kraken het offline (Kerberoasting). NTLM-hashes kunnen worden hergebruikt of doorgestuurd zonder ze te kraken. Wie de hoofdsleutel van het domein steelt, kan tickets vervalsen voor iedereen.</p>
+      <p class="nl"><strong>Gebruik wanneer:</strong> Je on-premises Active Directory draait. Versterk het; bouw er geen nieuwe systemen op.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill use">→ <span class="en">USE FOR: On-premises Windows domains</span><span class="nl">GEBRUIKEN VOOR: On-premises Windows-domeinen</span></span>
+      <span class="pill fix">✔ <span class="en">CONTROL: Managed service accounts, NTLM off, tiered admin</span><span class="nl">CONTROLE: Beheerde serviceaccounts, NTLM uit, gelaagd beheer</span></span>
+    </div>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Strength</span><span class="nl">Sterkte</span></span><span class="v"><span class="en">Built into every Windows domain</span><span class="nl">Ingebouwd in elk Windows-domein</span></span><p><span class="en">Single sign-on across the domain with tickets instead of passwords on the wire, and mutual authentication between user and server.</span><span class="nl">Single sign-on in het hele domein met tickets in plaats van wachtwoorden over de lijn, en wederzijdse authenticatie tussen gebruiker en server.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Weakness</span><span class="nl">Zwakte</span></span><span class="v hi"><span class="en">Tickets and hashes can be stolen</span><span class="nl">Tickets en hashes zijn te stelen</span></span><p><span class="en">Kerberoasting cracks service-account passwords offline. Pass-the-hash and NTLM relay reuse credentials without knowing the password. A stolen KRBTGT key (golden ticket) forges access to everything. Microsoft has deprecated NTLM, but it is still enabled in most domains.</span><span class="nl">Kerberoasting kraakt wachtwoorden van serviceaccounts offline. Pass-the-hash en NTLM-relay hergebruiken inloggegevens zonder het wachtwoord te kennen. Een gestolen KRBTGT-sleutel (golden ticket) vervalst toegang tot alles. Microsoft heeft NTLM uitgefaseerd, maar in de meeste domeinen staat het nog aan.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><span class="v hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></span><p><span class="en">Weak service-account passwords fall quickly to GPU cracking with AI-generated guess lists, and automated tooling maps attack paths through Active Directory in minutes.</span><span class="nl">Zwakke serviceaccountwachtwoorden vallen snel door GPU-kraken met door AI gegenereerde raadlijsten, en geautomatiseerde tooling brengt aanvalspaden door Active Directory in minuten in kaart.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><span class="v hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></span><p><span class="en">Pass-the-hash and relay are fully scripted. An AI assistant can walk a less skilled attacker through every step.</span><span class="nl">Pass-the-hash en relay zijn volledig gescript. Een AI-assistent loodst een minder ervaren aanvaller door elke stap.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><span class="v lo"><span class="en">Detect the ticket patterns</span><span class="nl">De ticketpatronen detecteren</span></span><p><span class="en">Identity threat detection with machine learning spots Kerberoasting bursts, forged-ticket anomalies and relay attempts. The real fix is boring: managed service accounts with long random passwords, and NTLM switched off.</span><span class="nl">Identiteitsdetectie met machine learning signaleert Kerberoasting-pieken, afwijkingen van vervalste tickets en relaypogingen. De echte oplossing is saai: beheerde serviceaccounts met lange willekeurige wachtwoorden, en NTLM uit.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ LDAP-RADIUS ============================ -->
+<section class="risk-block" id="ldap-radius">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">PROTOCOL 07</span><span class="nl">PROTOCOL 07</span></span>
+    <h2>
+      <span class="en">LDAP &amp; RADIUS. <em>The VPN's front door.</em></span>
+      <span class="nl">LDAP &amp; RADIUS. <em>De voordeur van de VPN.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">Directory bind, LDAPS, RADIUS, VPN and Wi-Fi authentication, shared secret</span>
+      <span class="nl">Directory-bind, LDAPS, RADIUS, VPN- en wifi-authenticatie, gedeeld geheim</span>
+    </span>
+
+    <div class="stage">
+      <div class="stage-label"><span class="en">PROTOCOL FLOW</span><span class="nl">PROTOCOLSTROOM</span></div>
+      <div class="oauth-flow">
+        <div class="flow-actor">
+          <span class="icon">👤</span>
+          <span class="en">You</span><span class="nl">Jij</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">🛡️</span>
+          <span class="en">VPN / Wi-Fi</span><span class="nl">VPN / wifi</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">📡</span>
+          <span class="en">RADIUS</span><span class="nl">RADIUS</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">📒</span>
+          <span class="en">Directory</span><span class="nl">Directory</span>
+        </div>
+        <div class="lane"></div>
+        <span class="hop" style="--a:12.5%;--b:37.5%;--d:0s"><span class="en">PASSWORD</span><span class="nl">WACHTWOORD</span></span>
+        <span class="hop" style="--a:37.5%;--b:62.5%;--d:2s"><span class="en">REQUEST</span><span class="nl">VERZOEK</span></span>
+        <span class="hop" style="--a:62.5%;--b:87.5%;--d:4s"><span class="en">BIND</span><span class="nl">BIND</span></span>
+        <span class="hop ok" style="--a:87.5%;--b:62.5%;--d:6s"><span class="en">OK</span><span class="nl">OK</span></span>
+        <span class="hop ok" style="--a:62.5%;--b:37.5%;--d:8s"><span class="en">ACCEPT</span><span class="nl">TOEGANG</span></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="en">You connect to the company VPN or Wi-Fi and type your username and password. The VPN box doesn't know you; it asks a RADIUS server. RADIUS in turn checks your password against the directory, usually over LDAP, and answers "accept" or "reject". The same pattern sits behind firewalls, switches, printers and many older business applications.</p>
+      <p class="en">It is the oldest layer on this page. LDAP without TLS sends passwords in cleartext across the network, RADIUS protects its messages with MD5 and a shared secret, and a password is all it takes unless MFA is bolted on. That makes internet-facing VPNs a top target.</p>
+      <p class="en"><strong>Use when:</strong> Devices or legacy apps can't do SAML or OIDC. Put MFA in front, and plan to move the VPN to identity-aware access.</p>
+      <p class="nl">Je maakt verbinding met de bedrijfs-VPN of -wifi en typt je gebruikersnaam en wachtwoord. Het VPN-apparaat kent je niet; het vraagt het aan een RADIUS-server. RADIUS controleert je wachtwoord op zijn beurt in de directory, meestal via LDAP, en antwoordt "accept" of "reject". Hetzelfde patroon zit achter firewalls, switches, printers en veel oudere bedrijfsapplicaties.</p>
+      <p class="nl">Dit is de oudste laag op deze pagina. LDAP zonder TLS stuurt wachtwoorden onversleuteld over het netwerk, RADIUS beschermt zijn berichten met MD5 en een gedeeld geheim, en een wachtwoord is genoeg tenzij er MFA bij is gezet. Daarom zijn VPN's aan het internet een topdoelwit.</p>
+      <p class="nl"><strong>Gebruik wanneer:</strong> Apparaten of oude applicaties geen SAML of OIDC kunnen. Zet MFA ervoor en plan de overstap van VPN naar identiteitsgebaseerde toegang.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill use">→ <span class="en">USE FOR: VPN, Wi-Fi, network devices, legacy apps</span><span class="nl">GEBRUIKEN VOOR: VPN, wifi, netwerkapparatuur, oude applicaties</span></span>
+      <span class="pill fix">✔ <span class="en">CONTROL: MFA in front, LDAPS, RADIUS over TLS</span><span class="nl">CONTROLE: MFA ervoor, LDAPS, RADIUS over TLS</span></span>
+    </div>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Strength</span><span class="nl">Sterkte</span></span><span class="v"><span class="en">Works with everything</span><span class="nl">Werkt met alles</span></span><p><span class="en">Network gear, VPNs, Wi-Fi, printers and old applications all speak it, and it reuses the directory you already have.</span><span class="nl">Netwerkapparatuur, VPN's, wifi, printers en oude applicaties spreken het allemaal, en het gebruikt de directory die je al hebt.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Weakness</span><span class="nl">Zwakte</span></span><span class="v hi"><span class="en">Old, and often in cleartext</span><span class="nl">Oud, en vaak onversleuteld</span></span><p><span class="en">Plain LDAP binds send passwords unencrypted. RADIUS relies on MD5 and a shared secret: the Blast-RADIUS flaw (2024) showed an attacker on the network path can forge an "accept". Often there is no MFA.</span><span class="nl">Gewone LDAP-binds sturen wachtwoorden onversleuteld. RADIUS leunt op MD5 en een gedeeld geheim: de Blast-RADIUS-kwetsbaarheid (2024) liet zien dat een aanvaller op het netwerkpad een "accept" kan vervalsen. Vaak is er geen MFA.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><span class="v hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></span><p><span class="en">VPN and Wi-Fi logins backed by LDAP or RADIUS are a favourite target for password spraying with AI-generated, company-specific password lists.</span><span class="nl">VPN- en wifi-logins op LDAP of RADIUS zijn een favoriet doelwit voor password spraying met door AI gegenereerde, bedrijfsspecifieke wachtwoordlijsten.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><span class="v hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></span><p><span class="en">Passwords bought from infostealer logs open the VPN directly. Nothing in the protocol tells a real employee from someone with their password.</span><span class="nl">Wachtwoorden uit infostealer-logs openen de VPN direct. Niets in het protocol onderscheidt een echte medewerker van iemand met zijn wachtwoord.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><span class="v lo"><span class="en">Spot the spraying</span><span class="nl">Het raden opsporen</span></span><p><span class="en">AI-based detection on VPN and directory logs spots spraying, impossible travel and logins at odd hours. Put phishing-resistant MFA in front, and use LDAPS and RADIUS over TLS.</span><span class="nl">AI-gebaseerde detectie op VPN- en directorylogs signaleert raadpogingen, onmogelijke reizen en logins op vreemde tijden. Zet phishingbestendige MFA ervoor en gebruik LDAPS en RADIUS over TLS.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ API-KEYS ============================ -->
+<section class="risk-block" id="api-keys">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">PROTOCOL 08</span><span class="nl">PROTOCOL 08</span></span>
+    <h2>
+      <span class="en">API keys. <em>A password with no owner.</em></span>
+      <span class="nl">API-sleutels. <em>Een wachtwoord zonder eigenaar.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">Static secrets, bearer keys, service credentials, secret scanning, rotation</span>
+      <span class="nl">Statische geheimen, bearer-sleutels, service-inloggegevens, secret-scanning, rotatie</span>
+    </span>
+
+    <div class="stage">
+      <div class="stage-label"><span class="en">PROTOCOL FLOW</span><span class="nl">PROTOCOLSTROOM</span></div>
+      <div class="oauth-flow">
+        <div class="flow-actor">
+          <span class="icon">🧑‍💻</span>
+          <span class="en">Developer</span><span class="nl">Ontwikkelaar</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">🔌</span>
+          <span class="en">API</span><span class="nl">API</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">📁</span>
+          <span class="en">Code repo</span><span class="nl">Coderepo</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">🕵️</span>
+          <span class="en">Attacker</span><span class="nl">Aanvaller</span>
+        </div>
+        <div class="lane"></div>
+        <span class="hop" style="--a:12.5%;--b:37.5%;--d:0s"><span class="en">API KEY</span><span class="nl">SLEUTEL</span></span>
+        <span class="hop ok" style="--a:37.5%;--b:12.5%;--d:2s"><span class="en">DATA</span><span class="nl">DATA</span></span>
+        <span class="hop bad" style="--a:12.5%;--b:62.5%;--d:4s"><span class="en">COMMIT</span><span class="nl">COMMIT</span></span>
+        <span class="hop bad" style="--a:62.5%;--b:87.5%;--d:6s"><span class="en">LEAKED</span><span class="nl">GELEKT</span></span>
+        <span class="hop bad" style="--a:87.5%;--b:37.5%;--d:8s"><span class="en">API KEY</span><span class="nl">SLEUTEL</span></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="en">An API key is a long random string that a script, integration or AI tool sends with every request. The API checks the string and answers. There is no login, no user and no MFA: the key is the identity. That makes it the easiest credential to set up and the most common one in practice.</p>
+      <p class="en">It is also the one that leaks most. Keys get pasted into code, config files, tickets, chat and prompts, and they rarely expire. Whoever finds a key can do everything it allows, from anywhere, until someone notices and rotates it.</p>
+      <p class="en"><strong>Use when:</strong> Low-risk, internal, read-only access where nothing better is available. Otherwise use OAuth client credentials, mTLS or workload identity.</p>
+      <p class="nl">Een API-sleutel is een lange willekeurige tekenreeks die een script, koppeling of AI-tool bij elk verzoek meestuurt. De API controleert de reeks en antwoordt. Er is geen login, geen gebruiker en geen MFA: de sleutel is de identiteit. Daardoor is het de makkelijkste inloggegevens om op te zetten en in de praktijk de meest gebruikte.</p>
+      <p class="nl">Het is ook de vorm die het vaakst lekt. Sleutels worden in code, configbestanden, tickets, chat en prompts geplakt, en verlopen zelden. Wie een sleutel vindt, kan alles wat die toestaat, van overal, tot iemand het merkt en hem vervangt.</p>
+      <p class="nl"><strong>Gebruik wanneer:</strong> Interne toegang met weinig risico en alleen-lezen, waar niets beters beschikbaar is. Gebruik anders OAuth client credentials, mTLS of workloadidentiteit.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill use">→ <span class="en">USE FOR: Low-risk scripts and internal tools only</span><span class="nl">GEBRUIKEN VOOR: Alleen scripts en interne tools met weinig risico</span></span>
+      <span class="pill fix">✔ <span class="en">CONTROL: Secret scanning, least privilege, rotation, expiry</span><span class="nl">CONTROLE: Secret-scanning, minimale rechten, rotatie, vervaldatum</span></span>
+    </div>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Strength</span><span class="nl">Sterkte</span></span><span class="v"><span class="en">Simple</span><span class="nl">Eenvoudig</span></span><p><span class="en">One string that works from any tool or script. Acceptable for low-risk, read-only, internal use with regular rotation.</span><span class="nl">Eén tekenreeks die vanuit elke tool of elk script werkt. Acceptabel voor intern gebruik met weinig risico, alleen-lezen en regelmatige rotatie.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Weakness</span><span class="nl">Zwakte</span></span><span class="v hi"><span class="en">A password that never expires</span><span class="nl">Een wachtwoord dat nooit verloopt</span></span><p><span class="en">No user, no MFA, rarely rotated, usually over-privileged. Keys end up in code, logs, tickets and chat, and whoever finds one becomes the service.</span><span class="nl">Geen gebruiker, geen MFA, zelden geroteerd, meestal te veel rechten. Sleutels belanden in code, logs, tickets en chat, en wie er een vindt, wordt de service.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><span class="v hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></span><p><span class="en">Attackers use automated and AI-assisted scanners on public repositories, leaked code and container images; a pushed key can be found within minutes. AI-generated code hardcodes keys by default.</span><span class="nl">Aanvallers scannen publieke repositories, gelekte code en containerimages geautomatiseerd en met AI-hulp; een gepushte sleutel kan binnen minuten gevonden zijn. Door AI gegenereerde code zet sleutels standaard hard in de code.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><span class="v hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></span><p><span class="en">AI agents and local MCP servers usually read keys from environment variables or config files. Prompt injection can make an agent reveal or misuse the key it holds.</span><span class="nl">AI-agents en lokale MCP-servers lezen sleutels meestal uit omgevingsvariabelen of configuratiebestanden. Promptinjectie kan een agent de sleutel laten prijsgeven of misbruiken.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><span class="v lo"><span class="en">Scan, revoke, replace</span><span class="nl">Scannen, intrekken, vervangen</span></span><p><span class="en">AI-assisted secret scanning in commits, tickets and chat catches keys before or right after they leak, and can trigger automatic revocation. Replace keys with OAuth or workload identity where possible.</span><span class="nl">AI-ondersteunde secret-scanning in commits, tickets en chat vangt sleutels voor of direct na een lek, en kan automatisch intrekken. Vervang sleutels waar mogelijk door OAuth of workloadidentiteit.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ AI ============================ -->
+<section class="risk-block" id="ai">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">AI</span><span class="nl">AI</span></span>
+    <h2>
+      <span class="en">AI agents. <em>A new kind of user.</em></span>
+      <span class="nl">AI-agents. <em>Een nieuw soort gebruiker.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">Non-human identity, MCP, agent credentials, prompt injection, confused deputy</span>
+      <span class="nl">Niet-menselijke identiteit, MCP, inloggegevens van agents, promptinjectie, confused deputy</span>
+    </span>
+
+    <div class="stage">
+      <div class="stage-label"><span class="en">PROTOCOL FLOW</span><span class="nl">PROTOCOLSTROOM</span></div>
+      <div class="oauth-flow">
+        <div class="flow-actor">
+          <span class="icon">👤</span>
+          <span class="en">You</span><span class="nl">Jij</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">🤖</span>
+          <span class="en">AI agent</span><span class="nl">AI-agent</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">🔐</span>
+          <span class="en">Auth server</span><span class="nl">Auth-server</span>
+        </div>
+        <div class="flow-actor">
+          <span class="icon">🧰</span>
+          <span class="en">Tool (MCP)</span><span class="nl">Tool (MCP)</span>
+        </div>
+        <div class="lane"></div>
+        <span class="hop" style="--a:37.5%;--b:87.5%;--d:0s"><span class="en">REQUEST</span><span class="nl">VERZOEK</span></span>
+        <span class="hop" style="--a:87.5%;--b:37.5%;--d:2s"><span class="en">401</span><span class="nl">401</span></span>
+        <span class="hop" style="--a:12.5%;--b:62.5%;--d:4s"><span class="en">CONSENT</span><span class="nl">AKKOORD</span></span>
+        <span class="hop ok" style="--a:62.5%;--b:37.5%;--d:6s"><span class="en">TOKEN</span><span class="nl">TOKEN</span></span>
+        <span class="hop ok" style="--a:37.5%;--b:87.5%;--d:8s"><span class="en">TOKEN</span><span class="nl">TOKEN</span></span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <p class="en">AI agents read mail, open tickets, query databases and call APIs on someone's behalf. That makes them a new kind of user: they log in, hold credentials and act, but they are not a person, they don't do MFA, and they follow instructions they find in the data they read.</p>
+      <p class="en">The Model Context Protocol (MCP), the common way to connect agents to tools, builds its remote authorization on OAuth 2.1 (current revision, mid-2026): the tool answers "401", the agent sends you to the authorization server, you consent, and the agent receives a short-lived token that is valid for that one tool only. Tool servers must reject tokens issued for anyone else and must not pass tokens on to other services. Tools that run locally on the laptop skip all of this and read credentials from the environment, which in practice means static API keys.</p>
+      <p class="en"><strong>Two sides of AI.</strong> As a client, every agent needs its own identity, narrow scopes, short token lifetimes, an owner and a kill switch, because prompt injection can turn its token against you. As an attacker's tool, AI makes phishing kits, deepfaked helpdesk calls and password cracking cheaper, which weakens every protocol that ends in a password or a reset call. Passkeys and certificates hold up; passwords, SMS codes and static keys don't.</p>
+      <p class="nl">AI-agents lezen mail, openen tickets, bevragen databases en roepen API's aan namens iemand. Daarmee zijn ze een nieuw soort gebruiker: ze loggen in, hebben inloggegevens en handelen, maar ze zijn geen persoon, doen geen MFA en volgen instructies die ze aantreffen in de gegevens die ze lezen.</p>
+      <p class="nl">Het Model Context Protocol (MCP), de gangbare manier om agents aan tools te koppelen, baseert zijn autorisatie op afstand op OAuth 2.1 (huidige versie, medio 2026): de tool antwoordt "401", de agent stuurt je naar de autorisatieserver, jij geeft akkoord, en de agent krijgt een kortlevend token dat alleen voor die ene tool geldig is. Toolservers moeten tokens voor anderen weigeren en mogen tokens niet doorgeven aan andere services. Tools die lokaal op de laptop draaien, slaan dit allemaal over en lezen inloggegevens uit de omgeving: in de praktijk statische API-sleutels.</p>
+      <p class="nl"><strong>Twee kanten van AI.</strong> Als client heeft elke agent een eigen identiteit nodig, beperkte rechten, kortlevende tokens, een eigenaar en een noodstop, omdat promptinjectie zijn token tegen je kan keren. Als gereedschap van aanvallers maakt AI phishingkits, deepfake-telefoontjes naar de helpdesk en wachtwoordkraken goedkoper. Dat verzwakt elk protocol dat eindigt in een wachtwoord of een resetgesprek. Passkeys en certificaten houden stand; wachtwoorden, sms-codes en statische sleutels niet.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill use">→ <span class="en">USE FOR: Connecting AI agents to tools and data</span><span class="nl">GEBRUIKEN VOOR: AI-agents koppelen aan tools en gegevens</span></span>
+      <span class="pill fix">✔ <span class="en">CONTROL: Identity per agent, least privilege, short-lived tokens, human approval</span><span class="nl">CONTROLE: Identiteit per agent, minimale rechten, kortlevende tokens, menselijke goedkeuring</span></span>
+    </div>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Strength</span><span class="nl">Sterkte</span></span><span class="v"><span class="en">Standards now exist</span><span class="nl">Er zijn nu standaarden</span></span><p><span class="en">MCP authorization builds on OAuth 2.1 with PKCE, tokens bound to a single tool server, no token passthrough, and step-up consent for extra rights.</span><span class="nl">MCP-autorisatie bouwt op OAuth 2.1 met PKCE, tokens gebonden aan één toolserver, geen doorgeven van tokens en extra toestemming voor extra rechten.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Weakness</span><span class="nl">Zwakte</span></span><span class="v hi"><span class="en">Agents obey what they read</span><span class="nl">Agents volgen wat ze lezen</span></span><p><span class="en">An agent cannot reliably tell your instructions from instructions hidden in an email, web page or ticket it reads. One shared key for all agents, full-mailbox scopes, keys in plain config files and agent accounts nobody owns after the pilot are the usual findings.</span><span class="nl">Een agent kan jouw instructies niet betrouwbaar onderscheiden van instructies die verstopt zitten in een e-mail, webpagina of ticket dat hij leest. Eén gedeelde sleutel voor alle agents, rechten op de hele mailbox, sleutels in platte configbestanden en agentaccounts zonder eigenaar na de pilot zijn de gebruikelijke bevindingen.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><span class="v hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></span><p><span class="en">Prompt injection needs no exploit code: a line of text in a document the agent reads is enough to redirect it.</span><span class="nl">Promptinjectie vraagt geen exploitcode: een regel tekst in een document dat de agent leest, is genoeg om hem om te leiden.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><span class="v hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></span><p><span class="en">An injected agent uses its own valid token, so every log entry looks legitimate. It acts at machine speed across every system it can reach.</span><span class="nl">Een geïnjecteerde agent gebruikt zijn eigen geldige token, dus elke logregel ziet er legitiem uit. Hij handelt op machinesnelheid in elk systeem dat hij kan bereiken.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><span class="v lo"><span class="en">Identity per agent, human on risky steps</span><span class="nl">Identiteit per agent, mens bij risicovolle stappen</span></span><p><span class="en">Give every agent its own identity and owner, narrow short-lived tokens, and a kill switch. Guardrail models and policy checks screen tool calls; payments, deletions and external sharing need a human to approve.</span><span class="nl">Geef elke agent een eigen identiteit en eigenaar, beperkte kortlevende tokens en een noodstop. Guardrailmodellen en beleidscontroles screenen toolaanroepen; betalingen, verwijderingen en extern delen vragen goedkeuring van een mens.</span></p></div>
+    </div>
   </div>
 </section>
 
@@ -469,140 +857,31 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
 
     <div class="panel">
       <table class="en protocol-table">
-        <tr>
-          <th>Property</th>
-          <th>OAuth2</th>
-          <th>SAML</th>
-          <th>OIDC</th>
-          <th>mTLS</th>
-        </tr>
-        <tr>
-          <td class="label">Solves</td>
-          <td>Authorization (grant access)</td>
-          <td>Enterprise login (federated identity)</td>
-          <td>Authentication + Authorization (login + access)</td>
-          <td>Service authentication (machine trust)</td>
-        </tr>
-        <tr>
-          <td class="label">Token format</td>
-          <td>Opaque access token</td>
-          <td>Signed XML assertion</td>
-          <td>ID token (JWT) + access token</td>
-          <td>X.509 certificate</td>
-        </tr>
-        <tr>
-          <td class="label">Who trusts whom</td>
-          <td>Resource server trusts authorization server</td>
-          <td>Service provider trusts identity provider</td>
-          <td>Relying party trusts authorization server</td>
-          <td>Each service trusts the certificate authority</td>
-        </tr>
-        <tr>
-          <td class="label">User involvement</td>
-          <td>Yes (grants permission)</td>
-          <td>Yes (login + MFA)</td>
-          <td>Yes (login + MFA)</td>
-          <td>No (automated)</td>
-        </tr>
-        <tr>
-          <td class="label">Transport</td>
-          <td>Browser + HTTPS</td>
-          <td>Browser + HTTPS (POST)</td>
-          <td>Browser + HTTPS</td>
-          <td>TLS (certificate in handshake)</td>
-        </tr>
-        <tr>
-          <td class="label">Best for</td>
-          <td>Apps accessing user data (Google Drive, Spotify)</td>
-          <td>Enterprise employees across systems</td>
-          <td>Modern web and mobile apps</td>
-          <td>Microservices, API gateways, internal APIs</td>
-        </tr>
-        <tr>
-          <td class="label">Setup complexity</td>
-          <td>Moderate (app registration, scopes)</td>
-          <td>High (federation, metadata, signing)</td>
-          <td>Moderate (OIDC provider, library support)</td>
-          <td>High (PKI, certificate management, rotation)</td>
-        </tr>
-        <tr>
-          <td class="label">Supports MFA</td>
-          <td>No (authorization only)</td>
-          <td>Yes (at identity provider)</td>
-          <td>Yes (at authorization server)</td>
-          <td>No (certificates don't change per session)</td>
-        </tr>
+        <tr><th>Protocol</th><th>Solves</th><th>Phishing-resistant</th><th>Best for</th><th>Watch out for</th><th>Break with AI</th></tr>
+        <tr><td class="label">OAuth2</td><td data-l="Solves">Delegated access for apps and agents</td><td data-l="Phishing-resistant">No, depends on the login</td><td data-l="Best for">Apps and AI agents using your data</td><td data-l="Watch out for">Broad consent, stolen refresh tokens</td><td data-l="Break with AI" class="r mid">Medium</td></tr>
+        <tr><td class="label">SAML</td><td data-l="Solves">Enterprise single sign-on</td><td data-l="Phishing-resistant">No, depends on IdP MFA</td><td data-l="Best for">Employees across SaaS apps</td><td data-l="Watch out for">Signature bugs, stolen signing key, session theft</td><td data-l="Break with AI" class="r mid">Medium</td></tr>
+        <tr><td class="label">OIDC</td><td data-l="Solves">Login and identity for apps</td><td data-l="Phishing-resistant">No, depends on the login</td><td data-l="Best for">Modern web and mobile login</td><td data-l="Watch out for">Skipped token checks, session theft</td><td data-l="Break with AI" class="r mid">Medium</td></tr>
+        <tr><td class="label">mTLS</td><td data-l="Solves">Machine-to-machine trust</td><td data-l="Phishing-resistant">Yes</td><td data-l="Best for">Service-to-service, zero trust</td><td data-l="Watch out for">Expired certificates, leaked keys</td><td data-l="Break with AI" class="r lo">Hard</td></tr>
+        <tr><td class="label">Passkeys</td><td data-l="Solves">Passwordless login for people</td><td data-l="Phishing-resistant">Yes</td><td data-l="Best for">Staff, admin and customer login</td><td data-l="Watch out for">Weak account recovery</td><td data-l="Break with AI" class="r lo">Hard</td></tr>
+        <tr><td class="label">Kerberos / NTLM</td><td data-l="Solves">Windows domain sign-on</td><td data-l="Phishing-resistant">No</td><td data-l="Best for">On-premises Active Directory</td><td data-l="Watch out for">Kerberoasting, pass-the-hash, relay</td><td data-l="Break with AI" class="r hi">Easy</td></tr>
+        <tr><td class="label">LDAP / RADIUS</td><td data-l="Solves">Directory and network login</td><td data-l="Phishing-resistant">No</td><td data-l="Best for">VPN, Wi-Fi, legacy apps</td><td data-l="Watch out for">Cleartext binds, spraying, no MFA</td><td data-l="Break with AI" class="r hi">Easy</td></tr>
+        <tr><td class="label">API keys</td><td data-l="Solves">Simple app-to-API access</td><td data-l="Phishing-resistant">No</td><td data-l="Best for">Low-risk scripts and tools</td><td data-l="Watch out for">Leaks in code, never rotated</td><td data-l="Break with AI" class="r hi">Easy</td></tr>
       </table>
 
       <table class="nl protocol-table">
-        <tr>
-          <th>Eigenschap</th>
-          <th>OAuth2</th>
-          <th>SAML</th>
-          <th>OIDC</th>
-          <th>mTLS</th>
-        </tr>
-        <tr>
-          <td class="label">Oplossing</td>
-          <td>Autorisatie (toegang verlenen)</td>
-          <td>Enterprise-inloggen (federale identiteit)</td>
-          <td>Authenticatie + Autorisatie (inloggen + toegang)</td>
-          <td>Serviceauthenticatie (machinebetrouwbaarheid)</td>
-        </tr>
-        <tr>
-          <td class="label">Tokenformaat</td>
-          <td>Ondoorzichtig toegangstoken</td>
-          <td>Ondertekende XML-assertie</td>
-          <td>ID-token (JWT) + toegangstoken</td>
-          <td>X.509-certificaat</td>
-        </tr>
-        <tr>
-          <td class="label">Wie vertrouwt wie</td>
-          <td>Resourceserver vertrouwt autorisatieserver</td>
-          <td>Serviceprovider vertrouwt identiteitsprovider</td>
-          <td>Afhankelijke partij vertrouwt autorisatieserver</td>
-          <td>Elke service vertrouwt de certificeringsinstantie</td>
-        </tr>
-        <tr>
-          <td class="label">Gebruikersbetrokkenheid</td>
-          <td>Ja (verleent toestemming)</td>
-          <td>Ja (inloggen + MFA)</td>
-          <td>Ja (inloggen + MFA)</td>
-          <td>Nee (geautomatiseerd)</td>
-        </tr>
-        <tr>
-          <td class="label">Vervoer</td>
-          <td>Browser + HTTPS</td>
-          <td>Browser + HTTPS (POST)</td>
-          <td>Browser + HTTPS</td>
-          <td>TLS (certificaat in handshake)</td>
-        </tr>
-        <tr>
-          <td class="label">Geschikt voor</td>
-          <td>Apps die gebruikersgegevens benaderen (Google Drive, Spotify)</td>
-          <td>Werknemers van bedrijven in systemen</td>
-          <td>Moderne web- en mobiele apps</td>
-          <td>Microservices, API-gateways, interne API's</td>
-        </tr>
-        <tr>
-          <td class="label">Complexiteit setup</td>
-          <td>Matig (app-registratie, scopes)</td>
-          <td>Hoog (federatie, metagegevens, ondertekening)</td>
-          <td>Matig (OIDC-provider, bibliotheekondersteuning)</td>
-          <td>Hoog (PKI, certificaatbeheer, rotatie)</td>
-        </tr>
-        <tr>
-          <td class="label">Ondersteunt MFA</td>
-          <td>Nee (alleen autorisatie)</td>
-          <td>Ja (bij identiteitsprovider)</td>
-          <td>Ja (bij autorisatieserver)</td>
-          <td>Nee (certificaten veranderen niet per sessie)</td>
-        </tr>
+        <tr><th>Protocol</th><th>Lost op</th><th>Phishingbestendig</th><th>Beste voor</th><th>Let op</th><th>Breken met AI</th></tr>
+        <tr><td class="label">OAuth2</td><td data-l="Lost op">Gedelegeerde toegang voor apps en agents</td><td data-l="Phishingbestendig">Nee, hangt af van de login</td><td data-l="Beste voor">Apps en AI-agents die jouw gegevens gebruiken</td><td data-l="Let op">Brede toestemming, gestolen refresh-tokens</td><td data-l="Breken met AI" class="r mid">Gemiddeld</td></tr>
+        <tr><td class="label">SAML</td><td data-l="Lost op">Zakelijke single sign-on</td><td data-l="Phishingbestendig">Nee, hangt af van MFA bij de IdP</td><td data-l="Beste voor">Medewerkers in SaaS-apps</td><td data-l="Let op">Handtekeningfouten, gestolen sleutel, sessiediefstal</td><td data-l="Breken met AI" class="r mid">Gemiddeld</td></tr>
+        <tr><td class="label">OIDC</td><td data-l="Lost op">Inloggen en identiteit voor apps</td><td data-l="Phishingbestendig">Nee, hangt af van de login</td><td data-l="Beste voor">Modern inloggen op web en mobiel</td><td data-l="Let op">Overgeslagen tokencontroles, sessiediefstal</td><td data-l="Breken met AI" class="r mid">Gemiddeld</td></tr>
+        <tr><td class="label">mTLS</td><td data-l="Lost op">Vertrouwen tussen machines</td><td data-l="Phishingbestendig">Ja</td><td data-l="Beste voor">Service naar service, zero trust</td><td data-l="Let op">Verlopen certificaten, gelekte sleutels</td><td data-l="Breken met AI" class="r lo">Moeilijk</td></tr>
+        <tr><td class="label">Passkeys</td><td data-l="Lost op">Wachtwoordloos inloggen voor mensen</td><td data-l="Phishingbestendig">Ja</td><td data-l="Beste voor">Inloggen door medewerkers, beheerders, klanten</td><td data-l="Let op">Zwak accountherstel</td><td data-l="Breken met AI" class="r lo">Moeilijk</td></tr>
+        <tr><td class="label">Kerberos / NTLM</td><td data-l="Lost op">Aanmelden in het Windows-domein</td><td data-l="Phishingbestendig">Nee</td><td data-l="Beste voor">On-premises Active Directory</td><td data-l="Let op">Kerberoasting, pass-the-hash, relay</td><td data-l="Breken met AI" class="r hi">Makkelijk</td></tr>
+        <tr><td class="label">LDAP / RADIUS</td><td data-l="Lost op">Directory- en netwerklogin</td><td data-l="Phishingbestendig">Nee</td><td data-l="Beste voor">VPN, wifi, oude applicaties</td><td data-l="Let op">Onversleutelde binds, raden, geen MFA</td><td data-l="Breken met AI" class="r hi">Makkelijk</td></tr>
+        <tr><td class="label">API-sleutels</td><td data-l="Lost op">Eenvoudige app-naar-API-toegang</td><td data-l="Phishingbestendig">Nee</td><td data-l="Beste voor">Scripts en tools met weinig risico</td><td data-l="Let op">Lekken in code, nooit geroteerd</td><td data-l="Breken met AI" class="r hi">Makkelijk</td></tr>
       </table>
 
       <div class="callout">
-        <span class="en"><strong>The board-level point:</strong> These are not competing protocols; they solve different layers. OAuth2 handles delegation but not identity. SAML handles enterprise identity but only for browser redirects. OIDC adds identity to OAuth2 and is now the standard for web apps. mTLS handles machine-to-machine authentication where there is no user. Modern systems use multiple protocols at once: OIDC to log in the user, OAuth2 to grant app access to user data, mTLS for backend service calls, and SAML only if you have an existing enterprise directory. Choose based on the trust relationship you're trying to establish, not on popularity.</span>
-        <span class="nl"><strong>De kern voor de directie:</strong> Dit zijn geen concurrerende protocollen; ze lossen verschillende lagen op. OAuth2 handelt delegatie af maar niet identiteit. SAML handelt bedrijfsidentiteit af maar alleen voor browser-omleidingen. OIDC voegt identiteit toe aan OAuth2 en is nu de standaard voor web-apps. mTLS handelt machine-to-machine-authenticatie af waar geen gebruiker is. Moderne systemen gebruiken meerdere protocollen tegelijk: OIDC om de gebruiker in te loggen, OAuth2 om app-toegang tot gebruikersgegevens toe te kennen, mTLS voor backend-serviceoproepen, en SAML alleen als u een bestaande bedrijfsdirectory heeft. Kies op basis van de vertrouwensrelatie die u probeert tot stand te brengen, niet op basis van populariteit.</span>
+        <span class="en"><strong>The board-level point:</strong> These are not competing protocols; they cover different layers. OIDC logs people into apps, OAuth2 gives apps and AI agents scoped access, SAML federates the corporate directory, mTLS proves machines to each other, and passkeys make the login itself phishing-proof. Kerberos, NTLM, LDAP and RADIUS are the legacy layer you still run: harden it, don't extend it. API keys are the last resort. The question for the board is not which protocol, but where we still depend on something that can be phished, replayed or leaked, and which AI agents hold those credentials.</span><span class="nl"><strong>De kern voor de directie:</strong> Dit zijn geen concurrerende protocollen; ze dekken verschillende lagen. OIDC logt mensen in bij apps, OAuth2 geeft apps en AI-agents beperkte toegang, SAML federeert de bedrijfsdirectory, mTLS laat machines zich aan elkaar bewijzen, en passkeys maken het inloggen zelf phishingbestendig. Kerberos, NTLM, LDAP en RADIUS zijn de oude laag die je nog draait: versterk die, breid hem niet uit. API-sleutels zijn het laatste redmiddel. De vraag voor de directie is niet welk protocol, maar waar we nog afhangen van iets dat gephisht, hergebruikt of gelekt kan worden, en welke AI-agents die inloggegevens hebben.</span>
       </div>
     </div>
   </div>
@@ -625,9 +904,9 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Authentication failure means unauthorized access to systems, data, and resources. An attacker can impersonate users or services, bypass controls, and operate undetected inside trusted systems.</span><span class="nl">Verificatiefout betekent ongeautoriseerde toegang tot systemen, gegevens en resources. Een aanvaller kan gebruikers of services nabootsen, controles omzeilen en ondetecteerd binnen vertrouwde systemen werken.</span></p></div>
       <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Middel</span></span><p><span class="en">Correct protocol selection and implementation eliminate most basic attacks. Residual risk remains from zero-day flaws, compromised keys/certificates, phishing for credentials, and insider abuse. Defense in depth (MFA, rate limiting, anomaly detection) reduces it further.</span><span class="nl">Juiste protocolselectie en implementatie elimineren de meeste basisaanvallen. Restrisico blijft bestaan door zero-day-fouten, gecompromitteerde sleutels/certificaten, phishing voor referenties en misbruik door insiders. Verdediging in diepte (MFA, snelheidsbeperking, anomaliedetectie) vermindert het verder.</span></p></div>
       <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CTO / Security Lead</span><span class="nl">CTO / Beveiligingsleider</span></span><p><span class="en">CTO for engineering practices and protocol choices; Security for policy, token/certificate management, and incident response.</span><span class="nl">CTO voor engineeringpraktijken en protocolkeuzes; Beveiliging voor beleid, token/certificaatbeheer en incidentrespons.</span></p></div>
-      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Three numbers to ask for</span><span class="nl">Drie getallen om naar te vragen</span></span><p><span class="en">% of APIs authenticated with mTLS vs. API keys · % of tokens with configurable expiration and revocation support · number of protocol misconfigurations found in annual audit · average certificate rotation interval in days · number of token theft incidents in the last 12 months.</span><span class="nl">% van API's geverifieerd met mTLS vs. API-sleutels · % van tokens met configureerbare verloopdatum en intrekkingsondersteuning · aantal protocolmisconfiguraties gevonden in jaarlijkse audit · gemiddelde certificaatrotatie-interval in dagen · aantal tokendiefstalincidenten in de afgelopen 12 maanden.</span></p></div>
-      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">"Incorrect authentication or authorization protocol selection, weak token management, or certificate mishandling enables unauthorized access to systems and data."</span><span class="nl">"Onjuiste verificatie- of autorisatieprotocolselectie, slecht tokenbeheer of slecht certificaatbeheer maakt ongeautoriseerde toegang tot systemen en gegevens mogelijk."</span></p></div>
-      <div class="risk-item wide"><span class="k"><span class="en">Emerging vector</span><span class="nl">Opkomende vector</span></span><span class="v mid"><span class="en">Phishing for tokens and certificates</span><span class="nl">Phishing voor tokens en certificaten</span></span><p><span class="en">OAuth2 access tokens and OIDC ID tokens can be phished if not stored securely on the client. Certificates can be exfiltrated if stored on shared or cloud infrastructure without proper access controls. mTLS assumes trusted machine endpoints; a compromised endpoint burns the certificate.</span><span class="nl">OAuth2-toegangstokens en OIDC ID-tokens kunnen worden gephished als ze niet veilig op de client worden opgeslagen. Certificaten kunnen worden geëxfiltreerd als ze op gedeelde of cloud-infrastructuur zonder juiste toegangscontroles worden opgeslagen. mTLS gaat ervan uit dat eindpunten vertrouwd zijn; een gecompromitteerd eindpunt verbrandt het certificaat.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Five numbers to ask for</span><span class="nl">Vijf getallen om naar te vragen</span></span><p><span class="en">% of admins and finance staff on phishing-resistant login (passkeys) · number of static API keys older than 90 days · number of AI agents and service accounts without a named owner · NTLM still enabled: yes or no · average certificate rotation interval in days.</span><span class="nl">% beheerders en financiële medewerkers met phishingbestendig inloggen (passkeys) · aantal statische API-sleutels ouder dan 90 dagen · aantal AI-agents en serviceaccounts zonder benoemde eigenaar · NTLM nog aan: ja of nee · gemiddeld rotatie-interval van certificaten in dagen.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">"Phishable, replayable or leaked credentials, in legacy protocols, static API keys or tokens held by AI agents, enable unauthorized access to systems and data."</span><span class="nl">"Phishbare, herbruikbare of gelekte inloggegevens, in oude protocollen, statische API-sleutels of tokens van AI-agents, maken ongeautoriseerde toegang tot systemen en gegevens mogelijk."</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Emerging vector</span><span class="nl">Opkomende vector</span></span><span class="v mid"><span class="en">AI on both sides of the login</span><span class="nl">AI aan beide kanten van de login</span></span><p><span class="en">Attackers use AI for real-time phishing proxies that steal sessions after MFA, deepfaked helpdesk calls to reset accounts, and faster cracking of weak passwords. Inside, AI agents hold tokens and keys and can be steered by prompt injection. Phishing-resistant login and a per-agent identity with narrow, short-lived access are what hold up.</span><span class="nl">Aanvallers gebruiken AI voor realtime phishingproxy's die sessies na MFA stelen, deepfake-telefoontjes naar de helpdesk om accounts te resetten, en sneller kraken van zwakke wachtwoorden. Binnen hebben AI-agents tokens en sleutels en zijn ze via promptinjectie te sturen. Phishingbestendig inloggen en een eigen identiteit per agent met beperkte, kortlevende toegang houden stand.</span></p></div>
     </div>
 
     <div class="panel">
