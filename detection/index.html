@@ -295,6 +295,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 .risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -381,6 +382,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">NO EVIDENCE · MAXIMAL NOTIFICATION · “WE DON'T KNOW”</span><span class="nl">GEEN BEWIJS · MAXIMALE MELDING · “WE WETEN HET NIET”</span></span>
       <span class="pill fix">✔ <span class="en">FIX: CENTRAL LOG STORE + 12 MONTHS RETENTION</span><span class="nl">OPLOSSING: CENTRALE LOGOPSLAG + 12 MAANDEN BEWAREN</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></b><p><span class="en">This gap is not something an attacker has to work for. Once logs are gone after fourteen days, no amount of AI skill or tooling changes the fact that there is nothing left to analyse, for us or for anyone investigating.</span><span class="nl">Dit gat hoeft een aanvaller niet te verdienen. Zijn logs na veertien dagen verdwenen, dan verandert geen hoeveelheid AI-vaardigheid of tooling iets aan het feit dat er niets meer te analyseren valt, voor ons of voor wie er onderzoek naar doet.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An insider or a compromised admin account with an AI scripting agent can selectively purge specific log entries in seconds instead of waiting out the retention window, actively covering tracks rather than relying on chance.</span><span class="nl">Een insider of een overgenomen beheerdersaccount kan met een AI-scriptagent in seconden specifieke logregels selectief wissen in plaats van de bewaartermijn af te wachten, en zo actief sporen wissen in plaats van op toeval te vertrouwen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">No AI shortcut for deleted evidence</span><span class="nl">Geen AI-truc voor gewiste bewijzen</span></b><p><span class="en">No AI tool restores logs that were never kept. AI does help afterwards, searching a year of retained logs for anomalies far faster than a person, but only once the logs exist to search at all.</span><span class="nl">Geen enkele AI-tool herstelt logs die nooit zijn bewaard. AI helpt wel achteraf, door een jaar aan bewaarde logs veel sneller op afwijkingen te doorzoeken dan een mens, maar alleen als die logs er ook echt zijn.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -420,6 +430,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">NOISE · NO NIGHT SHIFT · READ ON MONDAY</span><span class="nl">RUIS · GEEN NACHTDIENST · MAANDAG GELEZEN</span></span>
       <span class="pill fix">✔ <span class="en">FIX: TEN DETECTIONS THAT MATTER + 24/7 EYES ON THEM</span><span class="nl">OPLOSSING: TIEN DETECTIES DIE TELLEN + 24/7 IEMAND DIE KIJKT</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI lets attackers generate many malware variants and test each one against common detection rules before deployment, tuning timing and behaviour to blend into the thousands of routine alerts the SOC already tunes out.</span><span class="nl">AI laat aanvallers veel malwarevarianten genereren en elke variant vooraf testen tegen veelgebruikte detectieregels, en zo timing en gedrag afstemmen om op te gaan in de duizenden routinemeldingen die het SOC toch al negeert.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">As SOC teams lean on AI assistants to triage alerts, a log entry crafted with hidden text can trick that assistant into summarising the one real event, the new admin account at 02:40, as routine.</span><span class="nl">Nu SOC-teams voor triage op AI-assistenten leunen, kan een logregel met verborgen tekst die assistent misleiden om de ene echte gebeurtenis, het nieuwe beheerdersaccount om 02:40, als routine te bestempelen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">AI cuts the noise</span><span class="nl">AI dempt het lawaai</span></b><p><span class="en">AI can rank and correlate thousands of daily alerts and surface the handful that matter, letting a much smaller night shift keep watch. Someone still has to be paid and woken up when it fires.</span><span class="nl">AI kan duizenden dagelijkse meldingen rangschikken en met elkaar verbinden en de paar die ertoe doen naar boven halen, zodat een veel kleinere nachtploeg kan meekijken. Iemand moet nog steeds betaald worden en wakker gebeld als het afgaat.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -458,6 +477,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">HALF THE ESTATE UNSEEN · FOUND BY OUTSIDERS</span><span class="nl">HELFT ONZICHTBAAR · GEVONDEN DOOR BUITENSTAANDERS</span></span>
       <span class="pill fix">✔ <span class="en">FIX: A SIGNED COVERAGE MAP + CLOUD AND SAAS LOGS IN THE SAME PLACE</span><span class="nl">OPLOSSING: EEN AFGETEKENDE DEKKINGSKAART + CLOUD- EN SAAS-LOGS OP DEZELFDE PLEK</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI-powered external attack-surface scanning maps an organisation's exposed cloud accounts, SaaS integrations and forgotten legacy systems within hours, pointing an attacker straight at the half of the estate nobody is watching.</span><span class="nl">AI-gestuurde scans van het externe aanvalsoppervlak brengen binnen enkele uren de blootgestelde cloudaccounts, SaaS-koppelingen en vergeten legacysystemen in kaart, en wijzen een aanvaller recht naar de helft die niemand bewaakt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Employees connect unsanctioned AI tools to company mail and drives through a one-click permission grant, and every action that tool takes is logged only in the AI vendor's own SaaS console, a source nobody on our side collects.</span><span class="nl">Medewerkers koppelen ongeautoriseerde AI-tools aan bedrijfsmail en -schijven via één toestemmingsklik, en elke actie van die tool wordt alleen gelogd in de SaaS-console van de AI-leverancier zelf, een bron die wij aan onze kant niet verzamelen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">AI narrows the search</span><span class="nl">AI versmalt de zoektocht</span></b><p><span class="en">AI-driven asset-discovery tools compare what is actually watched against what exists across cloud and SaaS, surfacing the gap in hours instead of a manual survey. Someone still has to sign off on the coverage map.</span><span class="nl">AI-gestuurde asset-discoverytools vergelijken wat werkelijk wordt bewaakt met wat er daadwerkelijk bestaat in cloud en SaaS, en tonen het gat binnen uren in plaats van via een handmatige inventarisatie. Iemand moet de dekkingskaart nog altijd aftekenen.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -495,6 +523,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">SEEN BUT NOT STOPPED · THE ATTACKER HAD THE WEEKEND</span><span class="nl">GEZIEN MAAR NIET GESTOPT · DE AANVALLER HAD HET WEEKEND</span></span>
       <span class="pill fix">✔ <span class="en">FIX: PLAYBOOKS + STANDING AUTHORITY TO ISOLATE</span><span class="nl">OPLOSSING: DRAAIBOEKEN + VASTE BEVOEGDHEID OM TE ISOLEREN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Once inside, AI-driven post-exploitation tools keep working through the weekend without a human operator, using the sixty-two hours between a Friday alert and a Monday ticket to spread and exfiltrate far more than a person could alone.</span><span class="nl">Eenmaal binnen blijven AI-gestuurde post-exploitatietools het hele weekend doorwerken zonder menselijke operator, en gebruiken ze de tweeënzestig uur tussen een vrijdagalarm en een maandagticket om veel meer te verspreiden en te stelen dan een mens alleen zou kunnen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">If an AI agent is given standing authority to isolate machines, a prompt injected through a crafted file name or log field can trick it into isolating a decoy instead, burning the response window on the wrong target.</span><span class="nl">Krijgt een AI-agent vaste bevoegdheid om machines te isoleren, dan kan een prompt die via een bewerkte bestandsnaam of logveld wordt binnengesmokkeld hem verleiden een lokaas te isoleren in plaats van het echte doelwit, waardoor het reactievenster verloren gaat.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Faster triage, same authority to act</span><span class="nl">Snellere triage, zelfde bevoegdheid</span></b><p><span class="en">AI can pre-stage the isolation playbook and cut the time to a recommendation to minutes. Someone still needs written authority to act on it at three in the morning without asking permission first.</span><span class="nl">AI kan het isolatiedraaiboek alvast klaarzetten en de tijd tot een aanbeveling terugbrengen tot minuten. Iemand heeft nog steeds schriftelijke bevoegdheid nodig om er om drie uur 's nachts naar te handelen zonder eerst te vragen.</span></p></div>
+      </div>
     </div>
   </div>
 </section>

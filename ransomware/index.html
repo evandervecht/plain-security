@@ -289,6 +289,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 .risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -375,6 +376,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">A LOGIN, NOT A HACK · UNNOTICED FOR WEEKS</span><span class="nl">EEN INLOG, GEEN HACK · WEKEN ONOPGEMERKT</span></span>
       <span class="pill fix">✔ <span class="en">FIX: PHISHING-RESISTANT MFA + SMALL, PATCHED EDGE</span><span class="nl">OPLOSSING: PHISHINGBESTENDIGE MFA + KLEINE, GEPATCHTE BUITENKANT</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI-driven bots test millions of previously breached username and password pairs against every VPN and remote-desktop portal a company exposes, all day and night, finding the one reused login without a single human doing the trying.</span><span class="nl">AI-gestuurde bots proberen dag en nacht miljoenen eerder gelekte combinaties van gebruikersnaam en wachtwoord uit op elk VPN- of remote-desktopportaal van een bedrijf, en vinden zo het ene hergebruikte account zonder dat er een mens hoeft mee te doen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Once one stolen password proves valid, an AI-driven bot automatically tries it against every other login the company owns, email, cloud storage, admin panels, quietly mapping every place a legitimate credential also unlocks, without tripping a single alarm.</span><span class="nl">Blijkt één gestolen wachtwoord geldig, dan probeert een AI-bot het automatisch op elke andere inlog van het bedrijf, e-mail, cloudopslag, beheerpanelen, en brengt zo stilletjes in kaart waar een geldige inlog nog meer toegang geeft, zonder dat er alarm afgaat.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Second factor everywhere</span><span class="nl">Overal een tweede factor</span></b><p><span class="en">AI can flag logins from a new location or an impossible-travel pattern for review faster than a person watching logs, but stopping this step still comes down to phishing-resistant MFA on every external login and a small, patched footprint.</span><span class="nl">AI kan inlogpogingen vanaf een nieuwe locatie of een onmogelijk reispatroon sneller signaleren dan iemand die logs naleest, maar deze stap stoppen komt nog altijd neer op phishingbestendige MFA op elke externe inlog en een kleine, gepatchte buitenkant.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -410,6 +420,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">FLAT NETWORK · SHARED ADMIN · TOTAL BLAST RADIUS</span><span class="nl">PLAT NETWERK · GEDEELD BEHEER · TOTALE SCHADE</span></span>
       <span class="pill fix">✔ <span class="en">FIX: SEGMENTATION + TIERED ADMIN + EDR</span><span class="nl">OPLOSSING: SEGMENTATIE + GESCHEIDEN BEHEER + EDR</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Once inside, AI-assisted reconnaissance tools automatically chart which accounts hold excess privileges and which machines still have admin credentials cached in memory, turning what used to take days of manual poking around into the same afternoon the attacker got in.</span><span class="nl">Eenmaal binnen brengen AI-ondersteunde verkenningstools automatisch in kaart welke accounts te veel rechten hebben en op welke machines beheerdersgegevens nog in het geheugen staan, waardoor dagen handmatig rondzoeken worden teruggebracht tot dezelfde middag als de inbraak.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An IT-automation copilot with standing admin rights, if tricked by a crafted ticket or prompt, can be made to run commands that harvest credentials or widen access across the network on the attacker's behalf, misusing a tool built to speed up admin work.</span><span class="nl">Een IT-automatiseringstool met vaste beheerrechten kan, door een geprepareerd ticket of bericht, worden verleid tot opdrachten die inloggegevens oogsten of toegang verbreden namens de aanvaller, misbruik van een hulpmiddel dat beheerwerk juist moest versnellen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Watch the admin account</span><span class="nl">Het beheerdersaccount bewaken</span></b><p><span class="en">AI-driven endpoint detection can spot a workstation behaving like a domain controller or unusual credential harvesting the moment it happens, but segmentation and separate tiered admin accounts are what actually limit how far that account can reach.</span><span class="nl">AI-gestuurde endpointdetectie kan direct signaleren wanneer een werkplek zich als domeinbeheerder gedraagt of ongebruikelijk inloggegevens oogst, maar segmentatie en gescheiden beheerdersaccounts bepalen echt hoe ver dat account kan reiken.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -448,6 +467,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">DATA BREACH, NOT JUST DOWNTIME · PUBLISHED IF UNPAID</span><span class="nl">DATALEK, NIET ALLEEN STILSTAND · GEPUBLICEERD BIJ NIET BETALEN</span></span>
       <span class="pill fix">✔ <span class="en">FIX: EDR + EGRESS MONITORING + LEAST-PRIVILEGE DATA ACCESS</span><span class="nl">OPLOSSING: EDR + UITGAAND VERKEER BEWAKEN + MINIMALE DATATOEGANG</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI helps attackers sort through stolen files at speed, automatically flagging which contracts, personnel records or board documents are most damaging for extortion instead of reading everything by hand, so the threat to publish becomes credible almost immediately.</span><span class="nl">AI helpt aanvallers razendsnel gestolen bestanden doorzoeken, en markeert automatisch welke contracten, personeelsdossiers of bestuursstukken het meest schadelijk zijn voor afpersing, in plaats van alles handmatig te lezen, waardoor de publicatiedreiging bijna direct geloofwaardig wordt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An insider with normal file access can use an AI assistant to instantly find, summarise and package the most damaging documents for sale or leak, work that used to take deliberate manual effort and left far more traces behind.</span><span class="nl">Een insider met gewone bestandstoegang kan met een AI-assistent razendsnel de meest schadelijke documenten vinden, samenvatten en verzamelen voor verkoop of lek, werk dat vroeger bewuste, handmatige moeite kostte en veel meer sporen achterliet.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Watch what leaves</span><span class="nl">Bewaken wat vertrekt</span></b><p><span class="en">AI-based egress monitoring can spot unusual large transfers to an unfamiliar destination faster than a manual log review, but it only works if someone watches continuously and access to sensitive data is limited from the start.</span><span class="nl">AI-gebaseerde monitoring van uitgaand verkeer kan grote, ongebruikelijke overdrachten sneller signaleren dan iemand die de logs handmatig naleest, maar het werkt alleen als er voortdurend wordt meegekeken en toegang tot gevoelige data vanaf het begin beperkt is.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -484,6 +512,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">NO RECOVERY · NO LEVERAGE · WEEKS OF DOWNTIME</span><span class="nl">GEEN HERSTEL · GEEN ONDERHANDELINGSPOSITIE · WEKEN STILSTAND</span></span>
       <span class="pill fix">✔ <span class="en">FIX: IMMUTABLE OFFLINE BACKUPS + TESTED FULL RESTORE</span><span class="nl">OPLOSSING: ONVERANDERBARE OFFLINE BACK-UPS + GETEST VOLLEDIG HERSTEL</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></b><p><span class="en">Once an attacker holds domain admin, reaching the backup server needs little AI help, since that account already opens it. What AI still cannot touch is a copy kept offline or immutable; that protection holds no matter how capable the attacker's tools are.</span><span class="nl">Heeft een aanvaller eenmaal een domeinbeheerdersaccount, dan is de back-upserver al bereikbaar zonder dat AI daarbij veel toevoegt. Wat AI niet kan raken, is een kopie die offline of onveranderbaar is; die bescherming houdt stand, hoe sterk de tools van de aanvaller ook zijn.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI-driven backup tools tuned for smart retention can be manipulated into shortening a retention period or marking backups as expired early, giving an attacker, or a rogue insider, a legitimate-looking reason to delete data that would otherwise trigger an alarm.</span><span class="nl">AI-gestuurde back-uptools die zijn afgestemd op slimme bewaartermijnen zijn te manipuleren tot het verkorten of vroegtijdig laten verlopen van een bewaartermijn, wat een aanvaller of een kwaadwillende insider een legitiem ogende reden geeft om data te wissen zonder alarm.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Keep one copy untouchable</span><span class="nl">Eén kopie onaantastbaar houden</span></b><p><span class="en">AI can flag unusual admin actions in real time, like a shortened retention period or a mass backup deletion, but the fix that actually survives an attack is a copy that is offline, immutable, or unreachable by any stolen credential, AI-assisted or not.</span><span class="nl">AI kan ongebruikelijke beheeracties direct signaleren, zoals een verkorte bewaartermijn of massale verwijdering van back-ups, maar wat een aanval echt overleeft is een kopie die offline, onveranderbaar of onbereikbaar is voor elke gestolen inlog, met of zonder AI.</span></p></div>
+      </div>
     </div>
   </div>
 </section>

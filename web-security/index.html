@@ -297,6 +297,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 .risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -385,6 +386,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">WHOLE DATABASE · ONE REQUEST · NO LOGIN</span><span class="nl">HELE DATABASE · ÉÉN VERZOEK · GEEN INLOG</span></span>
       <span class="pill fix">✔ <span class="en">FIX: SECURITY TESTING BEFORE RELEASE + WEB APPLICATION FIREWALL</span><span class="nl">OPLOSSING: BEVEILIGINGSTESTS VÓÓR RELEASE + WEBAPPLICATIEFIREWALL</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI-assisted scanning tools can fuzz every form on a website automatically, generating thousands of crafted inputs a minute and recognising which one breaks through, turning a manual attacker's afternoon of guessing into an automated sweep.</span><span class="nl">AI-ondersteunde scantools kunnen automatisch elk formulier op een website fuzzen, duizenden geprepareerde invoerwaarden per minuut genereren en herkennen welke ervoor doorbreekt, en maken van een middag handmatig gokken een volledig geautomatiseerde sweep.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">A chatbot wired into the customer database to answer questions faster is the modern version of this same weakness: a crafted question can make it reveal records it was never meant to share, no code required.</span><span class="nl">Een chatbot die aan de klantendatabase is gekoppeld om vragen sneller te beantwoorden, is de moderne versie van dezelfde zwakte: een geprepareerde vraag kan hem records laten prijsgeven die nooit gedeeld hadden mogen worden, zonder één regel code.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Test with AI before release</span><span class="nl">Testen met AI vóór release</span></b><p><span class="en">AI-assisted testing tools can generate the same crafted inputs an attacker would try and run them automatically before every release, catching an injection flaw in the build instead of on the live site. Strict input separation is the fix.</span><span class="nl">AI-ondersteunde testtools kunnen dezelfde geprepareerde invoer genereren die een aanvaller zou proberen en die automatisch uitvoeren vóór elke release, zodat een injectiefout in de build wordt gevonden in plaats van op de live site. Strikte invoerscheiding blijft de oplossing.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -424,6 +434,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">PUBLIC RECIPE · AUTOMATED · FOUND IN HOURS</span><span class="nl">OPENBAAR RECEPT · GEAUTOMATISEERD · IN UREN GEVONDEN</span></span>
       <span class="pill fix">✔ <span class="en">FIX: INVENTORY + PATCH THE WEB STACK IN DAYS</span><span class="nl">OPLOSSING: INVENTARIS + WEBSTACK BINNEN DAGEN PATCHEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">The moment a hole in a plugin is published, AI tools can turn the description into working exploit code within hours, and automated scanners already sweep the whole internet for sites still running the old version.</span><span class="nl">Zodra een gat in een plug-in wordt gepubliceerd, kunnen AI-tools de beschrijving binnen uren omzetten in werkende exploitcode, en doorzoeken geautomatiseerde scanners dan al het hele internet naar sites die nog de oude versie draaien.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI coding tools make it faster to add a new plugin or a generated snippet of code to the site, but not faster to track and patch it afterwards, so the pile of unmaintained components grows quicker than before.</span><span class="nl">AI-codeertools maken het sneller om een nieuwe plug-in of een gegenereerd stukje code aan de site toe te voegen, maar niet om het daarna bij te houden en te patchen, waardoor de stapel onbeheerde onderdelen sneller groeit dan voorheen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Let AI track every advisory</span><span class="nl">AI volgt elke waarschuwing</span></b><p><span class="en">AI tools can read every new advisory the moment it is published and match it against our own component inventory automatically, cutting the time to know we are affected from weeks to minutes. Patching within days is still the fix.</span><span class="nl">AI-tools kunnen elke nieuwe waarschuwing lezen zodra die verschijnt en die automatisch koppelen aan onze eigen componenteninventaris, waardoor de tijd om te weten dat wij getroffen zijn daalt van weken naar minuten. Binnen dagen patchen blijft de oplossing.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -465,6 +484,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">FRAUD ON OUR SITE · OUR REFUNDS · OUR HEADLINE</span><span class="nl">FRAUDE OP ONZE SITE · ONZE TERUGBETALINGEN · ONZE KRANTENKOP</span></span>
       <span class="pill fix">✔ <span class="en">FIX: PASSKEYS OR MFA FOR CUSTOMERS + RATE LIMITS + BOT MANAGEMENT</span><span class="nl">OPLOSSING: PASSKEYS OF MFA VOOR KLANTEN + LIMIETEN + BOTBEHEER</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI now solves the CAPTCHA challenges meant to stop automated logins, and mimics human typing rhythm and mouse movement closely enough that a bot trying stolen passwords is barely distinguishable from a real, tired customer at night.</span><span class="nl">AI lost nu de CAPTCHA-uitdagingen op die automatische inlogpogingen moesten stoppen, en bootst typeritme en muisbewegingen zo goed na dat een bot met gestolen wachtwoorden nauwelijks te onderscheiden is van een echte, moe geworden klant 's nachts.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Legitimate AI shopping assistants now log into customer accounts automatically on a person's behalf, which makes it harder to tell a real automated agent from a credential-stuffing bot, giving attackers a new kind of traffic to hide inside.</span><span class="nl">Legitieme AI-boodschappenassistenten loggen nu automatisch namens een klant in op accounts, waardoor het lastiger wordt een echte geautomatiseerde agent te onderscheiden van een credential-stuffingbot, en aanvallers een nieuw soort verkeer krijgen om in te verstoppen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Tell bots from people faster</span><span class="nl">Sneller bots van mensen onderscheiden</span></b><p><span class="en">AI-based bot management can spot the subtler patterns that separate a scripted login attempt from a real customer, even as bots get better at mimicking humans. Passkeys or MFA remain the fix, since a bot cannot get in without them.</span><span class="nl">AI-gebaseerd botbeheer kan de subtielere patronen herkennen die een gescripte inlogpoging onderscheiden van een echte klant, ook als bots mensen steeds beter nabootsen. Passkeys of MFA blijven de oplossing, want een bot komt er zonder simpelweg niet in.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -509,6 +537,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">INVISIBLE TO CUSTOMER · INVISIBLE TO US · CARD-BRAND FINES</span><span class="nl">ONZICHTBAAR VOOR KLANT · ONZICHTBAAR VOOR ONS · BOETES KAARTMAATSCHAPPIJEN</span></span>
       <span class="pill fix">✔ <span class="en">FIX: SCRIPT INVENTORY + INTEGRITY CHECKS + CONTENT SECURITY POLICY</span><span class="nl">OPLOSSING: SCRIPTINVENTARIS + INTEGRITEITSCONTROLE + CONTENT SECURITY POLICY</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI helps an attacker write skimming code that mimics the style of the legitimate script it replaces closely enough to pass a casual review, but reaching that position still needs a compromised supplier or an expired domain first.</span><span class="nl">AI helpt een aanvaller skimmingcode schrijven die de stijl van het echte script dat het vervangt zo goed nabootst dat het een oppervlakkige controle doorstaat, maar die positie bereiken vereist nog steeds eerst een gehackte leverancier of een verlopen domein.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An AI chat widget added to the checkout page for customer support runs with the same access as every other script there, and can read card and password fields exactly like a skimmer would, intended or not.</span><span class="nl">Een AI-chatwidget die voor klantenservice op de afrekenpagina wordt geplaatst, draait met dezelfde toegang als elk ander script daar, en kan kaart- en wachtwoordvelden lezen precies zoals een skimmer dat zou doen, bedoeld of niet.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Watch every script's behaviour</span><span class="nl">Gedrag van elk script bewaken</span></b><p><span class="en">AI-based monitoring can flag a script on the checkout page suddenly reading fields it never touched before, catching a swap within minutes. A named script inventory, integrity checks and a strict content security policy remain the actual fix.</span><span class="nl">AI-gebaseerde monitoring kan een script op de afrekenpagina signaleren dat plotseling velden leest die het nooit eerder aanraakte, en zo een vervanging binnen minuten opvangen. Een scriptinventaris, integriteitscontrole en een strikt content security policy blijven de echte oplossing.</span></p></div>
+      </div>
     </div>
   </div>
 </section>

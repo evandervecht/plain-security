@@ -284,6 +284,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 .risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -368,6 +369,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">PUBLIC HOLE · SCANNED WITHIN HOURS · WEEKS IN QUEUE</span><span class="nl">BEKEND GAT · BINNEN UREN GESCAND · WEKEN IN DE WACHTRIJ</span></span>
       <span class="pill fix">✔ <span class="en">FIX: DEADLINE BY EXPOSURE + EMERGENCY PATCH PATH</span><span class="nl">OPLOSSING: DEADLINE NAAR BLOOTSTELLING + NOODPATCHROUTE</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI can read a vendor's patch diff and write working exploit code within hours of release, letting criminal groups scan the whole internet and hit unpatched systems long before the three-week maintenance window even opens.</span><span class="nl">AI kan het verschil tussen oude en nieuwe versie lezen en binnen uren werkende misbruikcode schrijven, waardoor criminele groepen het hele internet scannen en ongepatchte systemen raken lang voordat het onderhoudsvenster van drie weken opengaat.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Someone can use AI to write a convincing low-risk justification inside the change-ticket system, arguing an urgent fix can wait for the standard window, quietly deprioritising the very patch that needed to be fast-tracked.</span><span class="nl">Iemand kan met AI een overtuigende laag-risico-onderbouwing schrijven in het wijzigingssysteem, die stelt dat een dringende fix best kan wachten op het normale venster, en zo juist de patch vertraagt die versneld had gemoeten.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Shorten the decision time</span><span class="nl">De beslistijd verkorten</span></b><p><span class="en">AI can rank thousands of vulnerabilities by which are being actively exploited and auto-draft the emergency change ticket, cutting the time to decide, but a named owner still has to approve and apply the fix before the deadline runs out.</span><span class="nl">AI kan duizenden kwetsbaarheden rangschikken op wat actief wordt misbruikt en het noodwijzigingsticket automatisch opstellen, wat tijd bespaart, maar iemand met naam moet de fix nog altijd goedkeuren en installeren voordat de deadline verstrijkt.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -404,6 +414,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">NO FIXES EXIST · EVERY NEW HOLE IS PERMANENT</span><span class="nl">GEEN FIXES MEER · ELK NIEUW GAT IS PERMANENT</span></span>
       <span class="pill fix">✔ <span class="en">FIX: END-OF-LIFE ROADMAP + ISOLATE WHAT STAYS</span><span class="nl">OPLOSSING: END-OF-LIFE-PLANNING + ISOLEER WAT BLIJFT</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI can decompile old firmware or binaries and generate a working exploit for a system so old that no human researcher would normally bother, turning software everyone assumed was too obscure to attack into an easy target.</span><span class="nl">AI kan oude firmware of binaries analyseren en een werkende exploit maken voor een systeem dat zo oud is dat geen mens er normaal moeite in zou steken, waardoor software die als te obscuur gold een makkelijk doelwit wordt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">To keep an end-of-life system limping along, someone patches it themselves with AI-generated code instead of replacing it, and that unofficial fix can quietly introduce a new bug or backdoor into a system nobody is really responsible for.</span><span class="nl">Om een end-of-life-systeem draaiende te houden, patcht iemand het zelf met door AI gegenereerde code in plaats van het te vervangen, en die eigen fix kan ongemerkt een nieuwe fout of achterdeur invoeren in een systeem waar niemand eigenaar van is.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Find it before they do</span><span class="nl">Het eerst zelf ontdekken</span></b><p><span class="en">AI-assisted scanning can surface which unsupported systems are exposed and how, faster than a manual review, but the decision that follows still belongs to the board: replace it, isolate it, or accept the risk in writing.</span><span class="nl">AI-ondersteund scannen laat sneller dan een handmatige controle zien welke systemen zonder ondersteuning blootstaan en hoe, maar de beslissing die daarop volgt blijft bij de directie: vervangen, isoleren, of het risico schriftelijk accepteren.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -444,6 +463,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">INTERNET-FACING · NO OWNER · NOTICES UNREAD</span><span class="nl">AAN INTERNET · GEEN EIGENAAR · MELDINGEN ONGELEZEN</span></span>
       <span class="pill fix">✔ <span class="en">FIX: NAMED OWNER PER EDGE DEVICE + VENDOR ALERTS ROUTED</span><span class="nl">OPLOSSING: EIGENAAR PER RANDAPPARAAT + MELDINGEN DOORGELEID</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI-driven scanning does more than fingerprint an appliance: it correlates stale certificates, outdated firmware banners and abandoned admin contacts to predict which internet-facing devices are least likely to have an active owner, so attackers target the most neglected boxes first.</span><span class="nl">AI-gestuurd scannen doet meer dan een apparaat herkennen: het combineert verlopen certificaten, verouderde firmwarekenmerken en achterhaalde beheercontacten om te voorspellen welke apparaten aan internet waarschijnlijk geen actieve eigenaar meer hebben, zodat aanvallers de meest verwaarloosde apparaten het eerst kiezen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Knowing the vendor's real alert mailbox is never read, an attacker registers a look-alike domain and uses AI to write a convincing fake critical-update notice, luring an unaware admin into installing a malicious update instead of the real one.</span><span class="nl">Omdat hij weet dat de echte updatemelding van de fabrikant toch nooit gelezen wordt, registreert een aanvaller een gelijkende domeinnaam en laat AI een overtuigende nepmelding schrijven, die een onoplettende beheerder een schadelijke update laat installeren in plaats van de echte.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Assign an owner, then watch</span><span class="nl">Eigenaar aanwijzen, dan bewaken</span></b><p><span class="en">AI can scan the internet from the outside for every device that answers to our name and flag the ones with no listed owner, but someone still has to be named responsible and actually read the vendor's alerts.</span><span class="nl">AI kan van buitenaf elk apparaat scannen dat op onze naam staat en apparaten zonder eigenaar signaleren, maar iemand moet nog altijd met naam verantwoordelijk worden gemaakt en de meldingen van de fabrikant daadwerkelijk lezen.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -479,6 +507,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">NOT IN THE INVENTORY · NEVER PATCHED · FOUND BY ATTACKERS</span><span class="nl">NIET IN DE INVENTARIS · NOOIT GEPATCHT · GEVONDEN DOOR AANVALLERS</span></span>
       <span class="pill fix">✔ <span class="en">FIX: COMPLETE INVENTORY + EXTERNAL ATTACK-SURFACE SCANNING</span><span class="nl">OPLOSSING: VOLLEDIGE INVENTARIS + SCANNEN VAN BUITENAF</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI-powered reconnaissance continuously maps an organisation's entire internet footprint, subsidiaries, old marketing sites and forgotten cloud machines included, far more completely and constantly than any human researcher, finding the gaps in our own inventory before we do.</span><span class="nl">AI-gestuurde verkenning brengt voortdurend de volledige digitale voetafdruk van een organisatie in kaart, inclusief dochterbedrijven, oude marketingsites en vergeten cloudmachines, veel completer en vaker dan een mens, en vindt zo de hiaten in onze eigen inventaris eerder dan wij.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Employees now spin up new cloud systems in minutes using AI coding assistants and agents, creating unlisted infrastructure faster than any inventory process can track it, widening the very blind spot this step describes.</span><span class="nl">Medewerkers zetten met AI-codeerassistenten en agents binnen minuten nieuwe cloudsystemen op, sneller dan enig inventarisatieproces kan bijhouden, waardoor de blinde vlek uit deze stap alleen maar groter wordt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Scan from the outside, always</span><span class="nl">Altijd van buitenaf scannen</span></b><p><span class="en">Continuous AI-driven external scanning finds what is reachable under the company's name and compares it with the official list, but the fix is still adding every match to that inventory with a real, named owner attached.</span><span class="nl">Doorlopend AI-gestuurd scannen van buitenaf vindt wat bereikbaar is onder onze naam en vergelijkt dat met de officiële lijst, maar de oplossing blijft elke treffer aan die inventaris toevoegen met een echte eigenaar bij naam.</span></p></div>
+      </div>
     </div>
   </div>
 </section>

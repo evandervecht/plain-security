@@ -291,6 +291,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
   .banner{opacity:1}
 }
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -381,6 +382,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">DIRECT ACCESS · NO ALARM · YEARS OLD</span><span class="nl">DIRECTE TOEGANG · GEEN ALARM · JAREN OUD</span></span>
       <span class="pill fix">✔ <span class="en">FIX: SECRET SCANNING + A VAULT, NO SECRETS IN CODE</span><span class="nl">OPLOSSING: SECRET SCANNING + EEN KLUIS, GEEN GEHEIMEN IN CODE</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Scanner bots already find leaked keys within minutes; AI now also reads old commit history and decompiled code at scale, turning a forgotten three-year-old key into a same-day, automatically confirmed way in.</span><span class="nl">Scannerbots vinden gelekte sleutels al binnen minuten; AI doorzoekt nu ook oude commits en gedecompileerde code op schaal, waardoor een vergeten sleutel van drie jaar oud dezelfde dag automatisch wordt bevestigd en misbruikt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Developers paste error messages, config files and whole functions into free AI chat tools to get help fast, and a hardcoded password or key travels with the paste, outside any company system entirely.</span><span class="nl">Ontwikkelaars plakken foutmeldingen, configuratiebestanden en hele functies in gratis AI-chattools om snel hulp te krijgen, en een hardgecodeerd wachtwoord of sleutel gaat gewoon mee, buiten elk bedrijfssysteem om.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Scan faster than the bots</span><span class="nl">Sneller scannen dan de bots</span></b><p><span class="en">AI-assisted scanners check every commit and every chat paste in real time, not once a quarter, and block the commit outright. The fix stays the same: a vault that hands out secrets at run time.</span><span class="nl">AI-ondersteunde scanners controleren elke commit en elke chatplak in realtime, niet één keer per kwartaal, en blokkeren de commit meteen. De oplossing blijft hetzelfde: een kluis die geheimen pas tijdens het draaien uitgeeft.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -420,6 +430,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">OUR SIGNATURE ON THEIR MALWARE · EVERY CUSTOMER AT ONCE</span><span class="nl">ONZE HANDTEKENING OP HUN MALWARE · ALLE KLANTEN TEGELIJK</span></span>
       <span class="pill fix">✔ <span class="en">FIX: PROTECTED PIPELINE + SIGNED BUILDS + LEAST PRIVILEGE</span><span class="nl">OPLOSSING: BESCHERMDE PIPELINE + ONDERTEKENDE BUILDS + MINIMALE RECHTEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Once inside, AI helps an attacker write convincing build-step changes and hide them in normal-looking commits, but reaching the pipeline still requires a stolen account or a real misconfiguration to exploit first.</span><span class="nl">Eenmaal binnen helpt AI een aanvaller overtuigende wijzigingen in bouwstappen te schrijven en te verbergen in gewoon ogende commits, maar de pipeline bereiken vereist nog steeds een gestolen account of een echte misconfiguratie.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI coding agents wired into the pipeline can be tricked by a crafted pull request or issue comment into running commands with build-server rights, turning a helpful automation into an attacker's own foothold.</span><span class="nl">AI-codeeragents die in de pipeline zijn gekoppeld, kunnen door een geprepareerde pull request of issuecomment worden verleid tot het uitvoeren van commando's met bouwserverrechten, waardoor een handige automatisering een bruggenhoofd voor de aanvaller wordt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Watch agent behaviour</span><span class="nl">Gedrag van agents bewaken</span></b><p><span class="en">AI-based monitoring flags a build job doing something it has never done before, such as reaching a new server or account. The real fix stays MFA, least privilege and signed releases, not smarter alarms alone.</span><span class="nl">AI-gebaseerde monitoring signaleert een bouwtaak die iets doet wat nooit eerder gebeurde, zoals een nieuwe server of account benaderen. De echte oplossing blijft MFA, minimale rechten en ondertekende releases, niet alleen slimmere alarmen.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -464,6 +483,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">EXPOSED FOR MONTHS · TEN TIMES THE FIX COST</span><span class="nl">MAANDEN BLOOTGESTELD · TIEN KEER DE HERSTELKOSTEN</span></span>
       <span class="pill fix">✔ <span class="en">FIX: SECURITY IN THE DEFINITION OF DONE + AUTOMATED CHECKS</span><span class="nl">OPLOSSING: BEVEILIGING IN DE DEFINITION OF DONE + AUTOMATISCHE CONTROLES</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Between the yearly pentest, AI-assisted scanning tools let an outside attacker probe a live application for known flaw patterns far faster than a human ever could, closing the gap a once-a-year test leaves open.</span><span class="nl">Tussen de jaarlijkse pentest door kan een buitenstaander met AI-ondersteunde scantools een live applicatie veel sneller op bekende foutpatronen doorzoeken dan een mens ooit kon, waardoor het gat van jaarlijks testen sneller wordt gevonden.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI coding assistants let developers ship features far faster than security review capacity grows, so more code reaches production untested between the yearly pentests, and the flaws pile up exactly where nobody is looking.</span><span class="nl">AI-codeerassistenten laten ontwikkelaars functies veel sneller opleveren dan de reviewcapaciteit meegroeit, waardoor meer code ongetest in productie komt tussen de jaarlijkse pentests door, precies waar niemand kijkt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Scan every change, not once</span><span class="nl">Elke wijziging scannen, niet één keer</span></b><p><span class="en">AI-assisted code and dependency scanning can run on every change instead of once a year, flagging likely flaws before release. It still needs the boring part: a rule that a flagged feature is not done yet.</span><span class="nl">AI-ondersteunde code- en afhankelijkheidsscans kunnen op elke wijziging draaien in plaats van eenmaal per jaar, en waarschijnlijke fouten vóór release signaleren. De saaie regel blijft nodig: een gesignaleerde functie is nog niet klaar.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -507,6 +535,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">UNPATCHABLE · PUBLIC · FULL OF DATA</span><span class="nl">ONPATCHBAAR · PUBLIEK · VOL DATA</span></span>
       <span class="pill fix">✔ <span class="en">FIX: A NAMED OWNER + A MAINTENANCE BUDGET PER APPLICATION</span><span class="nl">OPLOSSING: EEN EIGENAAR MET NAAM + ONDERHOUDSBUDGET PER APPLICATIE</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">For an application with years of unpatched advisories, AI tools now turn a published vulnerability description into a working exploit within hours, and nobody is watching an orphaned system closely enough to notice.</span><span class="nl">Voor een applicatie met jaren aan ongepatchte waarschuwingen zetten AI-tools een gepubliceerde kwetsbaarheidsbeschrijving binnen uren om in een werkende exploit, en niemand houdt een verweesde applicatie goed genoeg in de gaten om het op te merken.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI tools can now read and explain undocumented legacy code that only the original agency once understood, which helps an attacker map its weaknesses just as easily as it would help a new maintainer fix them.</span><span class="nl">AI-tools kunnen nu ongedocumenteerde legacycode uitleggen die alleen het oorspronkelijke bureau ooit begreep, wat een aanvaller net zo goed helpt de zwakke plekken in kaart te brengen als het een nieuwe beheerder zou helpen ze te herstellen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Let AI read the orphan</span><span class="nl">AI laat verweesde code lezen</span></b><p><span class="en">AI code-analysis tools can summarise what an abandoned application actually does and where its risk sits, in days instead of months. That only helps once a named owner picks up the maintenance budget behind it.</span><span class="nl">AI-codeanalysetools kunnen in dagen in plaats van maanden samenvatten wat een verweesde applicatie precies doet en waar het risico zit. Dat helpt pas echt zodra een eigenaar met naam het onderhoudsbudget erachter oppakt.</span></p></div>
+      </div>
     </div>
   </div>
 </section>

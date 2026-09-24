@@ -288,6 +288,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 .risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -376,6 +377,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">EVERYTHING EQUAL · NOTHING PRIORITISED</span><span class="nl">ALLES GELIJK · NIETS MET VOORRANG</span></span>
       <span class="pill fix">✔ <span class="en">FIX: NAME THE FIVE + AN OWNER EACH</span><span class="nl">OPLOSSING: BENOEM DE VIJF + PER STUK EEN EIGENAAR</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Once an attacker has any foothold, AI tools scan dumped files in minutes and rank them by sensitivity, instantly finding the M&amp;A room and the salary data buried among identical, unlabelled folders.</span><span class="nl">Zodra een aanvaller ergens binnen is, doorzoekt AI in minuten de buitgemaakte bestanden en rangschikt ze op gevoeligheid, en vindt zo meteen de dataroom van de overname en de salarisdata tussen identieke, ongelabelde mappen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Because nothing carries a label, the exclusion rules that let us tell an AI assistant to skip confidential material have nothing to act on. The protection looks configured, but with an empty label field it restricts exactly nothing.</span><span class="nl">Omdat niets een label draagt, hebben de uitsluitingsregels die een AI-assistent confidentieel materiaal moeten laten overslaan niets om op te sturen. De bescherming oogt ingesteld, maar met een leeg labelveld beperkt ze in de praktijk helemaal niets.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Auto-label, human still decides</span><span class="nl">Automatisch labelen, mens beslist</span></b><p><span class="en">AI can scan documents for patterns like bank details or salary tables and suggest a confidential label automatically, cutting manual tagging work. It still takes a named owner to decide what truly counts as a crown jewel.</span><span class="nl">AI kan documenten scannen op patronen zoals bankgegevens of salaristabellen en automatisch het label vertrouwelijk voorstellen, wat handmatig taggen scheelt. Er is nog steeds een benoemde eigenaar nodig om te bepalen wat echt een kroonjuweel is.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -421,6 +431,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">FORTY COPIES · ONE IS ALWAYS UNPROTECTED</span><span class="nl">VEERTIG KOPIEËN · ÉÉN IS ALTIJD ONBESCHERMD</span></span>
       <span class="pill fix">✔ <span class="en">FIX: NO PRODUCTION DATA IN TEST + FEWER EXPORTS</span><span class="nl">OPLOSSING: GEEN PRODUCTIEDATA IN TEST + MINDER EXPORTS</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An attacker who reaches one weak copy, such as the test system loaded with real data, can use AI recon tools to fingerprint the same records elsewhere, but this still needs a foothold and time to explore.</span><span class="nl">Een aanvaller die bij één zwakke kopie komt, zoals het testsysteem met echte data, kan met AI-verkenningstools dezelfde records elders herkennen, maar dat vraagt nog steeds een voet tussen de deur en tijd om te zoeken.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Employees now paste customer lists or contract text into public AI chatbots to summarise or reformat them, creating an untracked copy outside every control we have, often without realising it counts as a data export.</span><span class="nl">Medewerkers plakken klantenlijsten of contracttekst tegenwoordig in publieke AI-chatbots om ze samen te vatten of te herschrijven, waardoor een ongecontroleerde kopie ontstaat buiten elke maatregel, vaak zonder te beseffen dat dit een data-export is.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Find the copies automatically</span><span class="nl">Kopieën automatisch laten opsporen</span></b><p><span class="en">AI-driven data-discovery tools fingerprint the customer file's content and scan mailboxes, drives and backups to find copies humans lost track of, including test systems quietly loaded with real data instead of masked substitutes.</span><span class="nl">AI-gestuurde datadiscoverytools herkennen de inhoud van het klantenbestand en doorzoeken mailboxen, schijven en back-ups naar kopieën die mensen kwijt zijn, inclusief testsystemen die stiekem met echte in plaats van gemaskeerde data zijn gevuld.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -459,6 +478,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">ONE PHISHED ACCOUNT · EVERY FOLDER</span><span class="nl">ÉÉN GEPHISHT ACCOUNT · ELKE MAP</span></span>
       <span class="pill fix">✔ <span class="en">FIX: INTERNAL BY DEFAULT + LINKS THAT EXPIRE</span><span class="nl">OPLOSSING: STANDAARD INTERN + LINKS DIE VERLOPEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI drastically cuts the cost of the spear-phishing mail that compromises the one account that matters: convincing, personalised, grammatically perfect, and built in seconds from public profiles instead of hours of manual research.</span><span class="nl">AI verlaagt drastisch de kosten van de spearphishingmail die het ene cruciale account kraakt: overtuigend, persoonlijk, foutloos Nederlands, in seconden gebouwd op basis van openbare profielen in plaats van uren handmatig speurwerk.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">An AI assistant with normal search access acts as a search engine over every folder an account can technically reach, surfacing the salary review or pricing model that a stale, forgotten link left open for years.</span><span class="nl">Een AI-assistent met gewone zoekrechten werkt als een zoekmachine over elke map die een account technisch kan bereiken, en haalt zo de salarisronde of het prijsmodel naar boven die een verouderde, vergeten link jarenlang openliet.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Flag the stale shares</span><span class="nl">Oude deelrechten automatisch signaleren</span></b><p><span class="en">AI tools can scan sharing settings and flag links that never expire, folders shared company-wide with no written reason, and access nobody has used in years, giving a shortlist to revoke instead of a full manual audit.</span><span class="nl">AI-tools kunnen deelinstellingen doorzoeken en links signaleren die nooit verlopen, bedrijfsbreed gedeelde mappen zonder schriftelijke reden, en toegang die jarenlang niet is gebruikt, wat een shortlist oplevert om in te trekken in plaats van een volledige handmatige controle.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -510,6 +538,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">PURE LIABILITY · MULTIPLIES THE BREACH</span><span class="nl">PURE AANSPRAKELIJKHEID · VERGROOT HET LEK</span></span>
       <span class="pill fix">✔ <span class="en">FIX: A RETENTION SCHEDULE THAT DELETES</span><span class="nl">OPLOSSING: EEN BEWAARSCHEMA DAT WIST</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Once a breach happens, AI tools sift through fifteen years of retained records in minutes, pulling out the still-valid bank details, ID numbers and contracts that make the stolen data far more usable and valuable.</span><span class="nl">Zodra een lek gebeurt, doorzoekt AI vijftien jaar bewaarde dossiers in minuten en haalt daar de nog geldige bankgegevens, BSN's en contracten uit, waardoor de gestolen data veel bruikbaarder en waardevoller wordt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An internal AI search tool indexed across every system can retrieve a 2011 job application or an ex-customer's file that should already have been deleted, exposing data nobody remembered still existed.</span><span class="nl">Een interne AI-zoektool die alles doorzoekt kan een sollicitatie uit 2011 of het dossier van een ex-klant naar boven halen dat allang gewist had moeten zijn, en zo data blootleggen waarvan niemand meer wist dat die nog bestond.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">AI flags what is overdue</span><span class="nl">AI signaleert wat te lang bleef</span></b><p><span class="en">AI can scan systems against the retention schedule and flag every record past its date, turning a manual yearly review into a daily check. The control that actually reduces risk is still deletion that happens automatically.</span><span class="nl">AI kan systemen aftoetsen aan het bewaarschema en elk record signaleren dat zijn termijn is gepasseerd, waardoor een jaarlijkse handmatige controle een dagelijkse check wordt. De maatregel die het risico echt verkleint blijft automatische verwijdering.</span></p></div>
+      </div>
     </div>
   </div>
 </section>

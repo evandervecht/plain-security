@@ -291,6 +291,7 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 .risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -379,6 +380,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">WARRANTY BREACH · CLAIM REDUCED OR VOID</span><span class="nl">GARANTIE GESCHONDEN · CLAIM VERLAAGD OF VERVALLEN</span></span>
       <span class="pill fix">✔ <span class="en">FIX: ANSWER WITH EVIDENCE, RE-CHECK EVERY RENEWAL</span><span class="nl">OPLOSSING: ANTWOORD MET BEWIJS, CONTROLEER BIJ ELKE VERLENGING</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Automated scanning and credential-stuffing tools already find a gap like a VPN without MFA without any AI needed. What AI adds is faster triage afterward, correlating that one weak point with other exposed systems before anyone gets around to patching it.</span><span class="nl">Geautomatiseerde scan- en credential-stuffingtools vinden een gat zoals een VPN zonder MFA ook al zonder AI. AI helpt vooral bij het daarna sneller koppelen van dat ene zwakke punt aan andere blootgestelde systemen, voordat iemand er toe komt het te patchen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Someone under deadline pressure can ask AI to draft confident, technical-sounding justification for a questionnaire answer nobody actually verified, making an untested yes look far more credible to whoever signs off on the renewal.</span><span class="nl">Iemand onder tijdsdruk kan AI vragen om een zelfverzekerde, technisch klinkende onderbouwing te schrijven voor een antwoord op de vragenlijst dat niemand echt heeft geverifieerd, waardoor een ongeteste ja veel geloofwaardiger oogt voor wie de verlenging goedkeurt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Check answers against configuration</span><span class="nl">Toets antwoorden aan de configuratie</span></b><p><span class="en">AI can cross-check a questionnaire answer against actual configuration data, such as whether MFA is truly enforced everywhere, instead of trusting a checkbox filled in on a Friday afternoon. Someone still has to act on the mismatch before renewal, not after a claim.</span><span class="nl">AI kan een antwoord op de vragenlijst toetsen aan de werkelijke configuratie, zoals of MFA echt overal is afgedwongen, in plaats van te vertrouwen op een vinkje van een vrijdagmiddag. Iemand moet nog steeds op de afwijking reageren vóór de verlenging, niet na een claim.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -415,6 +425,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">WAR · UNPATCHED · FINES · PENALTIES</span><span class="nl">OORLOG · ONGEPATCHT · BOETES · CONTRACTBOETES</span></span>
       <span class="pill fix">✔ <span class="en">FIX: EXCLUSIONS IN THE RISK REGISTER, WITH A NUMBER</span><span class="nl">OPLOSSING: UITSLUITINGEN IN HET RISICOREGISTER, MET EEN BEDRAG</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI is helping shorten the time between a public vulnerability disclosure and a working automated exploit, so the known-but-unpatched window that policies exclude may now arrive sooner than a typical patch schedule expects.</span><span class="nl">AI helpt de tijd te verkorten tussen een openbare kwetsbaarheidsmelding en een werkende geautomatiseerde exploit, waardoor het bekende-maar-ongepatchte venster dat polissen uitsluiten nu mogelijk eerder komt dan een gewone patchplanning verwacht.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">After a breach, either side can use AI to draft a plausible narrative that blurs who was actually behind the attack, complicating attribution and giving both the company and the insurer leverage in a dispute over the state-actor exclusion.</span><span class="nl">Na een inbraak kan elke partij AI gebruiken om een aannemelijk verhaal te schrijven dat vertroebelt wie er werkelijk achter de aanval zat, wat toeschrijving bemoeilijkt en beide partijen munitie geeft in een geschil over de uitsluiting voor statelijke actoren.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Shrink the unpatched window fast</span><span class="nl">Verklein het ongepatchte venster snel</span></b><p><span class="en">AI-assisted vulnerability scanning and patch prioritisation can shorten how long a known flaw stays open across the estate, keeping an incident inside the window the policy actually covers. The fix underneath is still patching on schedule, not the scanning tool.</span><span class="nl">AI-ondersteunde kwetsbaarheidsscans en patchprioritering kunnen verkorten hoe lang een bekende fout openstaat, zodat een incident binnen het venster valt dat de polis daadwerkelijk dekt. De oplossing eronder blijft tijdig patchen, niet het scantool.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
@@ -454,6 +473,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="pill risk">⚠ <span class="en">SUB-LIMITS · WAITING PERIOD · THE REST IS OURS</span><span class="nl">SUBLIMIETEN · WACHTTERMIJN · DE REST IS VOOR ONS</span></span>
       <span class="pill fix">✔ <span class="en">FIX: LIMITS TESTED AGAINST A COSTED WORST CASE</span><span class="nl">OPLOSSING: LIMIETEN GETOETST AAN EEN DOORGEREKEND WORSTCASESCENARIO</span></span>
     </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">Hard</span><span class="nl">Moeilijk</span></b><p><span class="en">Sub-limits and waiting periods are fixed contract numbers agreed at signing; AI changes neither the cap nor the clock. It can compress incident response into fewer, costlier days, which burns through a forensics cap faster without changing what that cap is.</span><span class="nl">Sublimieten en wachttermijnen zijn vaste contractgetallen die bij ondertekening zijn afgesproken; AI verandert noch het plafond noch de klok. Het kan incidentrespons wel samenpersen tot minder, duurdere dagen, waardoor een forensisch plafond sneller opraakt zonder dat het plafond zelf verandert.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A forensics vendor can lean on AI to produce a thorough-looking report that overstates hours actually worked, quietly consuming the sub-limit faster than the genuine investigation would, while the invoice still reads as detailed and professional throughout.</span><span class="nl">Een forensisch bureau kan AI gebruiken om een grondig ogend rapport te schrijven dat de werkelijk bestede uren overdrijft, waardoor het sublimiet sneller opraakt dan het echte onderzoek zou vergen, terwijl de factuur er gedetailleerd en professioneel uitziet.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Model the cap before it happens</span><span class="nl">Modelleer het plafond vooraf</span></b><p><span class="en">AI can run realistic cost simulations against sub-limits and waiting periods using data from past incidents, turning a vague worst case into a number the board can compare with the policy. That number only helps if someone updates it and acts on the gap.</span><span class="nl">AI kan realistische kostensimulaties draaien tegen sublimieten en wachttermijnen op basis van data van eerdere incidenten, waardoor een vaag worstcasescenario een getal wordt dat de directie kan vergelijken met de polis. Dat getal helpt alleen als iemand het bijwerkt en op het gat reageert.</span></p></div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -491,6 +519,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">LATE NOTICE · OFF-PANEL FIRMS · COVERAGE DISPUTED</span><span class="nl">TE LATE MELDING · PARTIJEN BUITEN HET PANEL · DEKKING BETWIST</span></span>
       <span class="pill fix">✔ <span class="en">FIX: INSURER FIRST IN THE PLAN, OWN FIRMS PRE-APPROVED</span><span class="nl">OPLOSSING: VERZEKERAAR EERST IN HET PLAN, EIGEN PARTIJEN VOORAF GOEDGEKEURD</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">During the panic of day one, an attacker can send an AI-cloned voice or a fluent fake message impersonating the claims line at the insurer or an approved forensics firm, redirecting the response team to the wrong contact exactly when trust matters most.</span><span class="nl">Tijdens de paniek van de eerste dag kan een aanvaller een AI-gekloonde stem of een vloeiend nagemaakt bericht sturen dat zich voordoet als de schadelijn van de verzekeraar of een goedgekeurd forensisch bureau, en het responsteam naar het verkeerde contact leiden wanneer vertrouwen het telt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A team member eager to look decisive can use AI to quickly draft an authoritative-sounding brief and loop in their own trusted, off-panel IT firm before anyone checks the actual notification clause, because drafting that request is faster than finding the real requirement.</span><span class="nl">Een teamlid dat daadkrachtig wil overkomen, kan AI gebruiken om snel een gezaghebbend klinkende briefing te schrijven en het eigen vertrouwde IT-bureau buiten het panel in te schakelen voordat iemand de werkelijke meldingsclausule controleert, omdat dat sneller gaat dan de echte eis opzoeken.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Insurer goes on line one</span><span class="nl">Verzekeraar staat bovenaan de lijst</span></b><p><span class="en">AI can auto-alert the correct contact list the moment an incident is declared, cutting the delay that panic usually causes on day one. What actually works is putting the insurer on line one of a plan everyone already knows and has rehearsed.</span><span class="nl">AI kan de juiste contactlijst automatisch waarschuwen zodra een incident wordt vastgesteld, waardoor de vertraging door paniek op de eerste dag afneemt. Wat daadwerkelijk werkt is de hotline van de verzekeraar bovenaan een plan dat iedereen al kent en heeft geoefend.</span></p></div>
+      </div>
     </div>
   </div>
 </section>
