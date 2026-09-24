@@ -1,0 +1,28 @@
+name: Missing anything? / Mist er iets?
+description: Something a briefing should cover but doesn't. / Iets wat een briefing zou moeten behandelen maar mist.
+title: "Missing: "
+labels: ["missing-content"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Briefing / Briefing
+      description: Filled in when you use the button on a briefing. / Wordt ingevuld als je de knop op een briefing gebruikt.
+      placeholder: e.g. ransomware
+    validations:
+      required: true
+  - type: input
+    id: section
+    attributes:
+      label: Section / Sectie
+      description: Where on the page should it go? / Waar op de pagina hoort het?
+      placeholder: e.g. Step 2, the controls table, Risk & compliance / bijv. Stap 2, de maatregelentabel, Risico & compliance
+    validations:
+      required: true
+  - type: textarea
+    id: missing
+    attributes:
+      label: What is missing? / Wat mist er?
+      description: The topic, risk, control or regulation, and why it matters. Links to sources help. / Het onderwerp, risico, de maatregel of regelgeving, en waarom het ertoe doet. Links naar bronnen helpen.
+    validations:
+      required: true

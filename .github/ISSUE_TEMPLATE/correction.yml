@@ -1,0 +1,28 @@
+name: Something not correct? / Klopt er iets niet?
+description: A fact, figure, deadline or translation that is wrong. / Een feit, cijfer, termijn of vertaling die niet klopt.
+title: "Correction: "
+labels: ["correction"]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Briefing / Briefing
+      description: Filled in when you use the button on a briefing. / Wordt ingevuld als je de knop op een briefing gebruikt.
+      placeholder: e.g. ransomware
+    validations:
+      required: true
+  - type: input
+    id: section
+    attributes:
+      label: Section / Sectie
+      description: Where on the page is it? / Waar op de pagina staat het?
+      placeholder: e.g. Step 2, the controls table, Risk & compliance / bijv. Stap 2, de maatregelentabel, Risico & compliance
+    validations:
+      required: true
+  - type: textarea
+    id: incorrect
+    attributes:
+      label: What is not correct? / Wat klopt er niet?
+      description: Quote the text, say what it should be, and link a source if you have one. / Citeer de tekst, zeg wat het moet zijn, en link een bron als je die hebt.
+    validations:
+      required: true
