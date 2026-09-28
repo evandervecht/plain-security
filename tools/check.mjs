@@ -13,8 +13,9 @@ import { readFileSync, existsSync, readdirSync, statSync, mkdtempSync } from "no
 import { execFileSync, spawn } from "node:child_process";
 import { join, resolve } from "node:path";
 import { tmpdir } from "node:os";
+import { fileURLToPath } from "node:url";
 
-const ROOT = resolve(new URL("..", import.meta.url).pathname);
+const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url))); // .pathname is "/C:/..." on Windows
 const args = process.argv.slice(2);
 const STATIC_ONLY = args.includes("--static");
 const bi = args.indexOf("--baseline");
@@ -99,7 +100,9 @@ function findChrome() {
   const c = [process.env.CHROME,
     "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-    "/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser", "/usr/bin/microsoft-edge"].filter(Boolean);
+    "/usr/bin/google-chrome", "/usr/bin/chromium", "/usr/bin/chromium-browser", "/usr/bin/microsoft-edge",
+    "C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe", "C:/Program Files/Microsoft/Edge/Application/msedge.exe",
+    "C:/Program Files/Google/Chrome/Application/chrome.exe"].filter(Boolean);
   return c.find(existsSync);
 }
 async function browserChecks(list) {
