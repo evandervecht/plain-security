@@ -293,6 +293,66 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
 .ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+/* ---------- sources + related ---------- */
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* diagram:ot-map */
+/* ---------- OT reference map (zones and conduits) ---------- */
+.arch{margin:0 0 30px;background:var(--bg-lo);border:1px solid var(--line-soft);padding:12px;overflow-x:auto}
+.arch svg{display:block;width:100%;min-width:900px;height:auto}
+.arch .ot-zone{fill:var(--bg-hi);stroke:var(--line-soft)}
+.arch .ot-zlabel{font:700 11px var(--mono);letter-spacing:.2em;fill:var(--slate)}
+.arch .ot-hit{fill:transparent}
+.arch .ot-node{fill:var(--surface);stroke:var(--line)}
+.arch .ot-s-ok .ot-bar{fill:var(--good)}
+.arch .ot-s-mid .ot-bar{fill:var(--warn)}
+.arch .ot-s-bad .ot-bar{fill:var(--bad)}
+.arch .ot-s-mon .ot-bar{fill:var(--brand)}
+.arch .ot-s-bad .ot-node{stroke:rgba(255,93,115,.45)}
+.arch .ot-kick{font:500 10px var(--mono);letter-spacing:.12em;fill:var(--muted)}
+.arch .ot-name{font:600 13px var(--sans);fill:var(--white)}
+.arch .ot-st{font:400 10px var(--mono);fill:var(--prose)}
+.arch .ot-legend{font:400 11px var(--mono);fill:var(--body)}
+.arch .ot-foot{font:400 10px var(--mono);letter-spacing:.04em;fill:var(--slate)}
+.arch .ot-llabel{font:700 10px var(--mono);letter-spacing:.12em;fill:var(--muted)}
+.arch .ot-link{fill:none;stroke:var(--slate);stroke-width:1.5;stroke-dasharray:5 5;animation:ot-flow 1.4s linear infinite}
+.arch .ot-tap{fill:none;stroke:var(--brand);stroke-width:1.3;stroke-dasharray:2 4}
+.arch .ot-closed{fill:none;stroke:var(--bad);stroke-width:1.3;stroke-dasharray:3 6;opacity:.6}
+.arch .ot-arrowhead{fill:var(--slate)}
+.arch .ot-arrowhead-m{fill:var(--brand)}
+.arch .ot-u-ok{color:var(--good)}
+.arch .ot-u-mid{color:var(--warn)}
+.arch .ot-u-bad{color:var(--bad)}
+.arch .ot-u-mon{color:var(--brand)}
+.arch .ot-tag-f rect{fill:var(--deep);stroke:var(--warn)}
+.arch .ot-tag-f text{font:700 10px var(--mono);letter-spacing:.08em;fill:var(--warn)}
+.arch .ot-tag-m rect{fill:var(--deep);stroke:var(--warn)}
+.arch .ot-tag-m text{font:700 10px var(--mono);letter-spacing:.04em;fill:var(--warn)}
+.arch .ot-tag-t rect{fill:var(--deep);stroke:var(--brand)}
+.arch .ot-tag-t text{font:700 10px var(--mono);letter-spacing:.04em;fill:var(--brand)}
+.arch .ot-tag-x rect{fill:var(--deep);stroke:rgba(255,93,115,.6)}
+.arch .ot-tag-x text{font:700 10px var(--mono);letter-spacing:.04em;fill:var(--bad-soft)}
+@keyframes ot-flow{to{stroke-dashoffset:-10}}
+@media (prefers-reduced-motion:reduce){.arch .ot-link{animation:none}}
+.arch .ot-svtip{visibility:hidden;pointer-events:none}
+.arch .ot-tip-bg{fill:var(--deep);stroke:var(--line)}
+.arch .ot-tip-acc{fill:var(--brand)}
+.arch .ot-tip-t0{font:700 11px var(--mono);fill:var(--white)}
+.arch .ot-tip-t{font:400 11px var(--mono);fill:var(--prose)}
+.arch [tabindex]{cursor:help;outline:none}
+.arch [tabindex]:focus-visible > rect:first-child{stroke:var(--brand);stroke-width:1.5}
+.arch svg:has(.ot-ho0:hover,.ot-ho0:focus) .ot-to0,.arch svg:has(.ot-ho1:hover,.ot-ho1:focus) .ot-to1,.arch svg:has(.ot-ho2:hover,.ot-ho2:focus) .ot-to2,.arch svg:has(.ot-ho3:hover,.ot-ho3:focus) .ot-to3,.arch svg:has(.ot-ho4:hover,.ot-ho4:focus) .ot-to4,.arch svg:has(.ot-ho5:hover,.ot-ho5:focus) .ot-to5,.arch svg:has(.ot-ho6:hover,.ot-ho6:focus) .ot-to6,.arch svg:has(.ot-ho7:hover,.ot-ho7:focus) .ot-to7,.arch svg:has(.ot-ho8:hover,.ot-ho8:focus) .ot-to8,.arch svg:has(.ot-ho9:hover,.ot-ho9:focus) .ot-to9,.arch svg:has(.ot-ho10:hover,.ot-ho10:focus) .ot-to10,.arch svg:has(.ot-ho11:hover,.ot-ho11:focus) .ot-to11,.arch svg:has(.ot-ho12:hover,.ot-ho12:focus) .ot-to12,.arch svg:has(.ot-ho13:hover,.ot-ho13:focus) .ot-to13,.arch svg:has(.ot-ho14:hover,.ot-ho14:focus) .ot-to14,.arch svg:has(.ot-ho15:hover,.ot-ho15:focus) .ot-to15,.arch svg:has(.ot-ho16:hover,.ot-ho16:focus) .ot-to16,.arch svg:has(.ot-ho17:hover,.ot-ho17:focus) .ot-to17,.arch svg:has(.ot-ho18:hover,.ot-ho18:focus) .ot-to18,.arch svg:has(.ot-ho19:hover,.ot-ho19:focus) .ot-to19{visibility:visible}
+/* /diagram:ot-map */
 </style>
 </head>
 <body>
@@ -332,7 +392,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     </h1>
     <p class="lede">
       <span class="en">Production lines, climate systems, door locks and cameras were built to run for twenty years, not to be attacked. In plain language: how they get reached, why they cannot simply be patched, and what keeps the plant running.</span>
-      <span class="nl">Productielijnen, klimaatsystemen, deursloten en camera's zijn gebouwd om twintig jaar te draaien, niet om aangevallen te worden. In gewone taal: hoe ze bereikt worden, waarom je ze niet zomaar kunt patchen, en wat de fabriek draaiend houdt.</span>
+      <span class="nl">Productielijnen, klimaatsystemen, deursloten en camera's zijn gebouwd om twintig jaar te draaien, niet om aangevallen te worden. In gewone taal: hoe ze bereikt worden, waarom ze niet zomaar te patchen zijn, en wat de fabriek draaiend houdt.</span>
     </p>
     <div class="btns">
       <a class="btn solid" href="#r1"><span class="en">SEE THE RISKS</span><span class="nl">BEKIJK DE RISICO'S</span></a>
@@ -376,7 +436,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">ONE INFECTION · WHOLE PLANT · HOURS OF OUTPUT</span><span class="nl">ÉÉN BESMETTING · HELE FABRIEK · UREN PRODUCTIE</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: IT/OT SEGMENTATION + ONE MONITORED CROSSING</span><span class="nl">OPLOSSING: IT/OT-SEGMENTATIE + ÉÉN BEWAAKTE OVERGANG</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: IT/OT SEGMENTATION + ONE MONITORED CROSSING</span><span class="nl">AANBEVOLEN: IT/OT-SEGMENTATIE + ÉÉN BEWAAKTE OVERGANG</span></span>
     </div>
 
     <div class="ai3">
@@ -384,7 +444,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <div class="g">
         <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Once inside the office network, AI-driven tools automatically map which devices on the shared network are reachable and vulnerable, letting an attacker pivot from a finance laptop to the production line without the slow, manual poking around that used to give it away.</span><span class="nl">Eenmaal binnen het kantoornetwerk brengen AI-tools automatisch in kaart welke apparaten bereikbaar en kwetsbaar zijn, waardoor een aanvaller van een financelaptop naar de productielijn springt zonder het trage, handmatige rondkijken dat vroeger opviel.</span></p></div>
         <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An AI-powered helpdesk or monitoring agent with reach into both networks can be tricked by a crafted message into running commands that cross from the office side to the plant, misusing a legitimate tool nobody meant to touch production.</span><span class="nl">Een AI-helpdesk- of monitoringtool die bij beide netwerken kan, is met een geprepareerd bericht te verleiden tot opdrachten die van kantoor naar de fabriek overspringen, misbruik van een legitiem hulpmiddel dat productie nooit had mogen raken.</span></p></div>
-        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Watch the one crossing</span><span class="nl">De ene overgang bewaken</span></b><p><span class="en">AI-based anomaly detection can flag unusual traffic crossing from office to plant in real time, catching what a person would miss, but the wall itself still has to be built: segmentation with one monitored crossing point.</span><span class="nl">AI-gebaseerde detectie kan ongebruikelijk verkeer van kantoor naar fabriek in realtime signaleren, iets wat een mens mist, maar de muur zelf moet er nog steeds komen: segmentatie met één bewaakte overgang.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Watch the one crossing</span><span class="nl">De ene overgang bewaken</span></b><p><span class="en">AI-based anomaly detection can flag unusual traffic crossing from office to plant in real time, catching what a person would miss, but the wall itself is still the control that counts: segmentation with one monitored crossing point.</span><span class="nl">AI-gebaseerde detectie kan ongebruikelijk verkeer van kantoor naar fabriek in realtime signaleren, iets wat een mens mist, maar de muur zelf blijft de maatregel die telt: segmentatie met één bewaakte overgang.</span></p></div>
       </div>
     </div>
   </div>
@@ -438,7 +498,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">TEN MORE YEARS · HOLES INCLUDED · NO OWNER</span><span class="nl">NOG TIEN JAAR · INCLUSIEF GATEN · GEEN EIGENAAR</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: INVENTORY + OWNER + ISOLATE WHAT CANNOT BE PATCHED</span><span class="nl">OPLOSSING: INVENTARIS + EIGENAAR + ISOLEER WAT NIET TE PATCHEN IS</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: INVENTORY + OWNER + ISOLATE WHAT CANNOT BE PATCHED</span><span class="nl">AANBEVOLEN: INVENTARIS + EIGENAAR + ISOLEER WAT NIET TE PATCHEN IS</span></span>
     </div>
 
     <div class="ai3">
@@ -486,7 +546,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">BYPASSES EVERY WALL · NOBODY SEES IT</span><span class="nl">OMZEILT ELKE MUUR · NIEMAND ZIET HET</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: ACCESS ON REQUEST + JUMP HOST + SESSION RECORDING</span><span class="nl">OPLOSSING: TOEGANG OP AANVRAAG + JUMP HOST + SESSIEOPNAME</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ACCESS ON REQUEST + JUMP HOST + SESSION RECORDING</span><span class="nl">AANBEVOLEN: TOEGANG OP AANVRAAG + JUMP HOST + SESSIEOPNAME</span></span>
     </div>
 
     <div class="ai3">
@@ -526,14 +586,14 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
 
     <div class="panel">
       <p class="en">In the office, the worst case is data: stolen, leaked, encrypted. On the plant floor the worst case is physical. A changed setpoint overheats a vessel. A disabled interlock lets two things happen at once that must never happen at once. A frozen cooling system in a data centre or a cold store ruins what is inside. And the operator screen can be made to show normal values while the process is anything but. The damage is to equipment, product, people and the environment, and it is not restored from a backup.</p>
-      <p class="en"><strong>Business impact:</strong> a safety incident brings the labour inspectorate, the environmental regulator and the insurer, on top of the production loss. The board is accountable for safety in a way it is not for a data breach. This is why OT security belongs with the operations director and the safety officer, not only with IT.</p>
+      <p class="en"><strong>Business impact:</strong> a safety incident brings the labour inspectorate, the environmental regulator and the insurer, on top of the production loss. The board is accountable for safety in a way it is not for a data breach. From 20 January 2027 the Machinery Regulation (EU) 2023/1230 requires that a connected or remote device cannot make new machinery unsafe. This is why <abbr class="tip" tabindex="0" data-tip="Operational technology: the controllers, sensors and screens that run physical processes.">OT</abbr> security belongs with the operations director and the safety officer, not only with IT.</p>
       <p class="nl">Op kantoor is het ergste geval data: gestolen, gelekt, versleuteld. Op de productievloer is het ergste geval fysiek. Een gewijzigde instelwaarde laat een vat oververhitten. Een uitgeschakelde vergrendeling laat twee dingen tegelijk gebeuren die nooit tegelijk mogen gebeuren. Een stilgevallen koeling in een datacenter of een koelhuis verpest wat erin ligt. En het bedienscherm kan normale waarden tonen terwijl het proces alles behalve normaal is. De schade is aan apparatuur, product, mensen en milieu, en die komt niet terug uit een back-up.</p>
-      <p class="nl"><strong>Bedrijfsimpact:</strong> een veiligheidsincident brengt de arbeidsinspectie, de milieutoezichthouder en de verzekeraar aan tafel, bovenop het productieverlies. De directie is aansprakelijk voor veiligheid op een manier die bij een datalek niet geldt. Daarom hoort OT-beveiliging bij de operationeel directeur en de veiligheidskundige, niet alleen bij IT.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een veiligheidsincident brengt de arbeidsinspectie, de milieutoezichthouder en de verzekeraar aan tafel, bovenop het productieverlies. De directie is aansprakelijk voor veiligheid op een manier die bij een datalek niet geldt. Vanaf 20 januari 2027 eist de Machineverordening (EU) 2023/1230 dat een aangesloten of extern apparaat nieuwe machines niet onveilig kan maken. Daarom hoort <abbr class="tip" tabindex="0" data-tip="Operationele technologie: de besturingen, sensoren en schermen die fysieke processen aansturen.">OT</abbr>-beveiliging bij de operationeel directeur en de veiligheidskundige, niet alleen bij IT.</p>
     </div>
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">NOT RESTORED FROM BACKUP · REGULATORS · LIABILITY</span><span class="nl">KOMT NIET TERUG UIT BACK-UP · TOEZICHTHOUDERS · AANSPRAKELIJKHEID</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: OT MONITORING + CONFIG BACKUPS + SAFETY IN THE INCIDENT PLAN</span><span class="nl">OPLOSSING: OT-MONITORING + CONFIGURATIEBACK-UPS + VEILIGHEID IN HET INCIDENTPLAN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: OT MONITORING + CONFIG BACKUPS + SAFETY IN THE INCIDENT PLAN</span><span class="nl">AANBEVOLEN: OT-MONITORING + CONFIGURATIEBACK-UPS + VEILIGHEID IN HET INCIDENTPLAN</span></span>
     </div>
 
     <div class="ai3">
@@ -547,6 +607,384 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
   </div>
 </section>
 
+<!-- diagram:ot-map -->
+<section class="risk-block" id="ot-map">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">IN PRACTICE</span><span class="nl">IN DE PRAKTIJK</span></span>
+    <h2><span class="en">What the line could look like. <em>One door for vendors.</em></span><span class="nl">Hoe die lijn eruit kan zien. <em>Eén deur voor leveranciers.</em></span></h2>
+    <span class="term"><span class="en">reference design / Purdue model · IEC 62443 zones and conduits</span><span class="nl">referentieontwerp / Purdue-model · IEC 62443-zones en -conduits</span></span>
+
+    <figure class="arch">
+<svg viewBox="0 0 1120 720" role="img" aria-labelledby="ot-title ot-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="ot-title">Office, DMZ, plant: one door in</title>
+<desc id="ot-desc">Reference design in the Purdue model with IEC 62443 zones and conduits. Office IT at the top, then an IT/OT DMZ with a jump host and a patch and antivirus relay, then OT operations with SCADA, HMI and historian, then cell and area zones with PLCs and sensors. Each crossing between zones passes a firewall. The machine vendor reaches the plant only through the jump host; the old direct link is closed. A passive monitoring tap copies plant traffic.</desc>
+<defs>
+<marker id="ot-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="ot-arrowhead"/></marker>
+<marker id="ot-arrm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="ot-arrowhead-m"/></marker>
+<symbol id="ot-ok" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 7.3 L6.1 9.4 L10.2 4.9" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="ot-mid" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 1 A6 6 0 0 1 7 13 Z" fill="currentColor"/></symbol>
+<symbol id="ot-bad" viewBox="0 0 14 14"><path d="M7 1.2 L13.2 12.6 H0.8 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 5.2 V8.6" stroke="currentColor" stroke-width="1.6"/><circle cx="7" cy="10.6" r="0.9" fill="currentColor"/></symbol>
+<symbol id="ot-mon" viewBox="0 0 14 14"><path d="M1 7 Q7 1 13 7 Q7 13 1 7 Z" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="7" cy="7" r="2.2" fill="currentColor"/></symbol>
+</defs>
+<rect x="20" y="40" width="790" height="120" class="ot-zone"/>
+<g class="ot-zl ot-ho0" tabindex="0"><rect x="34" y="48" width="210" height="20" class="ot-hit"/>
+<text x="40" y="62" class="ot-zlabel en">OFFICE IT · LEVEL 4–5</text><text x="40" y="62" class="ot-zlabel nl">KANTOOR-IT · NIVEAU 4–5</text></g>
+<rect x="830" y="40" width="270" height="120" class="ot-zone"/>
+<g class="ot-zl ot-ho1" tabindex="0"><rect x="844" y="48" width="210" height="20" class="ot-hit"/>
+<text x="850" y="62" class="ot-zlabel en">INTERNET · SUPPLIERS</text><text x="850" y="62" class="ot-zlabel nl">INTERNET · LEVERANCIERS</text></g>
+<rect x="20" y="190" width="1080" height="120" class="ot-zone"/>
+<g class="ot-zl ot-ho2" tabindex="0"><rect x="34" y="198" width="202" height="20" class="ot-hit"/>
+<text x="40" y="212" class="ot-zlabel en">IT/OT DMZ · LEVEL 3.5</text><text x="40" y="212" class="ot-zlabel nl">IT/OT-DMZ · NIVEAU 3,5</text></g>
+<rect x="20" y="340" width="1080" height="120" class="ot-zone"/>
+<g class="ot-zl ot-ho3" tabindex="0"><rect x="34" y="348" width="281" height="20" class="ot-hit"/>
+<text x="40" y="362" class="ot-zlabel en">OT OPERATIONS · LEVEL 2–3</text><text x="40" y="362" class="ot-zlabel nl">OT-BEDRIJFSVOERING · NIVEAU 2–3</text></g>
+<rect x="20" y="490" width="1080" height="120" class="ot-zone"/>
+<g class="ot-zl ot-ho4" tabindex="0"><rect x="34" y="498" width="290" height="20" class="ot-hit"/>
+<text x="40" y="512" class="ot-zlabel en">CELL / AREA ZONES · LEVEL 0–1</text><text x="40" y="512" class="ot-zlabel nl">CEL- / GEBIEDSZONES · NIVEAU 0–1</text></g>
+<path d="M405.0 148 V223" class="ot-link" marker-end="url(#ot-arr)"/>
+<text x="429.0" y="186" class="ot-llabel" text-anchor="start">UPDATES</text>
+<path d="M955.0 148 V261.0 H773" class="ot-link" marker-end="url(#ot-arr)"/>
+<text x="943.0" y="214" class="ot-llabel en" text-anchor="end">VENDOR SESSION</text><text x="943.0" y="214" class="ot-llabel nl" text-anchor="end">LEVERANCIERSSESSIE</text>
+<path d="M665.0 298 V373" class="ot-link" marker-end="url(#ot-arr)"/>
+<text x="689.0" y="336" class="ot-llabel en" text-anchor="start">RECORDED</text><text x="689.0" y="336" class="ot-llabel nl" text-anchor="start">OPGENOMEN</text>
+<path d="M490 298 L580 373" class="ot-link" marker-end="url(#ot-arr)"/>
+<text x="520" y="336" class="ot-llabel" text-anchor="end">PATCHES · AV</text>
+<path d="M558 411.0 H513" class="ot-link" marker-end="url(#ot-arr)"/>
+<text x="535.0" y="404.0" class="ot-llabel" text-anchor="middle">DATA</text>
+<path d="M665.0 448 V523" class="ot-link" marker-end="url(#ot-arr)"/>
+<path d="M665.0 476 H405.0 V523" class="ot-link" marker-end="url(#ot-arr)"/>
+<path d="M668.0 476 H955.0 V449" class="ot-tap" marker-end="url(#ot-arrm)"/>
+<path d="M1062 111.0 H1082 V561.0 H773" class="ot-closed"/>
+<g class="ot-tag-f ot-ho5" tabindex="0"><rect x="391.0" y="167" width="28" height="16"/><text x="405.0" y="178.5" class="ot-tt" text-anchor="middle">FW</text></g>
+<g class="ot-tag-f ot-ho6" tabindex="0"><rect x="651.0" y="317" width="28" height="16"/><text x="665.0" y="328.5" class="ot-tt" text-anchor="middle">FW</text></g>
+<g class="ot-tag-f ot-ho7" tabindex="0"><rect x="445.0" y="468" width="28" height="16"/><text x="459.0" y="479.5" class="ot-tt" text-anchor="middle">FW</text></g>
+<g class="ot-tag-m ot-ho8" tabindex="0"><rect x="823.0" y="230" width="126" height="16"/><text x="886.1" y="241.5" class="ot-tt en" text-anchor="middle">MFA · ON REQUEST</text><text x="886.1" y="241.5" class="ot-tt nl" text-anchor="middle">MFA · OP AANVRAAG</text></g>
+<g class="ot-tag-t ot-ho9" tabindex="0"><rect x="967.0" y="466" width="80" height="16"/><text x="1007.0" y="477.5" class="ot-tt" text-anchor="middle">SPAN / TAP</text></g>
+<g class="ot-node-g ot-s-bad ot-ho10" tabindex="0">
+<rect x="300" y="76" width="210" height="70" class="ot-node"/>
+<rect x="300" y="76" width="4" height="70" class="ot-bar"/>
+<text x="316" y="96" class="ot-kick en">ERP · EMAIL · LAPTOPS</text><text x="316" y="96" class="ot-kick nl">ERP · E-MAIL · LAPTOPS</text>
+<text x="316" y="117" class="ot-name en">Office network</text><text x="316" y="117" class="ot-name nl">Kantoornetwerk</text>
+<use href="#ot-bad" class="ot-u-bad" x="316" y="126" width="12" height="12"/>
+<text x="334" y="136" class="ot-st en">Where infections start</text><text x="334" y="136" class="ot-st nl">Hier beginnen besmettingen</text>
+</g>
+<g class="ot-node-g ot-s-bad ot-ho11" tabindex="0">
+<rect x="850" y="76" width="210" height="70" class="ot-node"/>
+<rect x="850" y="76" width="4" height="70" class="ot-bar"/>
+<text x="866" y="96" class="ot-kick en">REMOTE MAINTENANCE</text><text x="866" y="96" class="ot-kick nl">ONDERHOUD OP AFSTAND</text>
+<text x="866" y="117" class="ot-name en">Machine vendor</text><text x="866" y="117" class="ot-name nl">Machineleverancier</text>
+<use href="#ot-bad" class="ot-u-bad" x="866" y="126" width="12" height="12"/>
+<text x="884" y="136" class="ot-st en">Only via the jump host</text><text x="884" y="136" class="ot-st nl">Alleen via de jump host</text>
+</g>
+<g class="ot-node-g ot-s-mid ot-ho12" tabindex="0">
+<rect x="300" y="226" width="210" height="70" class="ot-node"/>
+<rect x="300" y="226" width="4" height="70" class="ot-bar"/>
+<text x="316" y="246" class="ot-kick en">PATCH · AV RELAY</text><text x="316" y="246" class="ot-kick nl">PATCH- · AV-RELAY</text>
+<text x="316" y="267" class="ot-name en">Update relay</text><text x="316" y="267" class="ot-name nl">Updaterelay</text>
+<use href="#ot-mid" class="ot-u-mid" x="316" y="276" width="12" height="12"/>
+<text x="334" y="286" class="ot-st en">Tested updates go in</text><text x="334" y="286" class="ot-st nl">Geteste updates gaan erin</text>
+</g>
+<g class="ot-node-g ot-s-mid ot-ho13" tabindex="0">
+<rect x="560" y="226" width="210" height="70" class="ot-node"/>
+<rect x="560" y="226" width="4" height="70" class="ot-bar"/>
+<text x="576" y="246" class="ot-kick en">RECORDED SESSIONS</text><text x="576" y="246" class="ot-kick nl">OPGENOMEN SESSIES</text>
+<text x="576" y="267" class="ot-name">Jump host</text>
+<use href="#ot-mid" class="ot-u-mid" x="576" y="276" width="12" height="12"/>
+<text x="594" y="286" class="ot-st en">On request · recorded</text><text x="594" y="286" class="ot-st nl">Op aanvraag · opgenomen</text>
+</g>
+<g class="ot-node-g ot-s-ok ot-ho14" tabindex="0">
+<rect x="300" y="376" width="210" height="70" class="ot-node"/>
+<rect x="300" y="376" width="4" height="70" class="ot-bar"/>
+<text x="316" y="396" class="ot-kick">HISTORIAN</text>
+<text x="316" y="417" class="ot-name en">Process history</text><text x="316" y="417" class="ot-name nl">Procesgeschiedenis</text>
+<use href="#ot-ok" class="ot-u-ok" x="316" y="426" width="12" height="12"/>
+<text x="334" y="436" class="ot-st en">Records every value</text><text x="334" y="436" class="ot-st nl">Bewaart elke waarde</text>
+</g>
+<g class="ot-node-g ot-s-ok ot-ho15" tabindex="0">
+<rect x="560" y="376" width="210" height="70" class="ot-node"/>
+<rect x="560" y="376" width="4" height="70" class="ot-bar"/>
+<text x="576" y="396" class="ot-kick">SCADA · HMI</text>
+<text x="576" y="417" class="ot-name en">Control room</text><text x="576" y="417" class="ot-name nl">Controlekamer</text>
+<use href="#ot-ok" class="ot-u-ok" x="576" y="426" width="12" height="12"/>
+<text x="594" y="436" class="ot-st en">Operators see and steer</text><text x="594" y="436" class="ot-st nl">Operators zien en sturen</text>
+</g>
+<g class="ot-node-g ot-s-mon ot-ho16" tabindex="0">
+<rect x="850" y="376" width="210" height="70" class="ot-node"/>
+<rect x="850" y="376" width="4" height="70" class="ot-bar"/>
+<text x="866" y="396" class="ot-kick en">PASSIVE TAP</text><text x="866" y="396" class="ot-kick nl">PASSIEVE TAP</text>
+<text x="866" y="417" class="ot-name en">OT monitoring</text><text x="866" y="417" class="ot-name nl">OT-monitoring</text>
+<use href="#ot-mon" class="ot-u-mon" x="866" y="426" width="12" height="12"/>
+<text x="884" y="436" class="ot-st en">Listens, never sends</text><text x="884" y="436" class="ot-st nl">Luistert, zendt nooit</text>
+</g>
+<g class="ot-node-g ot-s-ok ot-ho17" tabindex="0">
+<rect x="300" y="526" width="210" height="70" class="ot-node"/>
+<rect x="300" y="526" width="4" height="70" class="ot-bar"/>
+<text x="316" y="546" class="ot-kick en">CELL A · PLCS</text><text x="316" y="546" class="ot-kick nl">CEL A · PLC&#x27;S</text>
+<text x="316" y="567" class="ot-name en">Production line</text><text x="316" y="567" class="ot-name nl">Productielijn</text>
+<use href="#ot-ok" class="ot-u-ok" x="316" y="576" width="12" height="12"/>
+<text x="334" y="586" class="ot-st en">One zone per line</text><text x="334" y="586" class="ot-st nl">Eén zone per lijn</text>
+</g>
+<g class="ot-node-g ot-s-ok ot-ho18" tabindex="0">
+<rect x="560" y="526" width="210" height="70" class="ot-node"/>
+<rect x="560" y="526" width="4" height="70" class="ot-bar"/>
+<text x="576" y="546" class="ot-kick en">CELL B · SENSORS</text><text x="576" y="546" class="ot-kick nl">CEL B · SENSOREN</text>
+<text x="576" y="567" class="ot-name en">Building &amp; safety</text><text x="576" y="567" class="ot-name nl">Gebouw &amp; veiligheid</text>
+<use href="#ot-ok" class="ot-u-ok" x="576" y="576" width="12" height="12"/>
+<text x="594" y="586" class="ot-st en">Interlocks stay physical</text><text x="594" y="586" class="ot-st nl">Vergrendeling blijft fysiek</text>
+</g>
+<g class="ot-tag-x ot-ho19" tabindex="0"><rect x="862" y="553.0" width="192" height="16"/><text x="958.1" y="564.5" class="ot-tt en" text-anchor="middle">✕ OLD DIRECT LINK · CLOSED</text><text x="958.1" y="564.5" class="ot-tt nl" text-anchor="middle">✕ OUDE DIRECTE LIJN · DICHT</text></g>
+<use href="#ot-bad" class="ot-u-bad" x="40" y="639" width="14" height="14"/>
+<text x="62" y="650" class="ot-legend en">Untrusted side: where attacks start</text><text x="62" y="650" class="ot-legend nl">Onvertrouwde kant: hier begint een aanval</text>
+<use href="#ot-mid" class="ot-u-mid" x="560" y="639" width="14" height="14"/>
+<text x="582" y="650" class="ot-legend en">Crossing point: controlled and recorded</text><text x="582" y="650" class="ot-legend nl">Overgang: gecontroleerd en opgenomen</text>
+<use href="#ot-ok" class="ot-u-ok" x="40" y="663" width="14" height="14"/>
+<text x="62" y="674" class="ot-legend en">Protected zone: reachable via a conduit only</text><text x="62" y="674" class="ot-legend nl">Beschermde zone: alleen via een conduit</text>
+<use href="#ot-mon" class="ot-u-mon" x="560" y="663" width="14" height="14"/>
+<text x="582" y="674" class="ot-legend en">Passive monitoring: listens, never sends</text><text x="582" y="674" class="ot-legend nl">Passieve monitoring: luistert, zendt nooit</text>
+<text x="40" y="704" class="ot-foot en">Reference design after the Purdue model and IEC 62443 zones and conduits · FW = firewall · hover or tap a box or tag for an explanation</text><text x="40" y="704" class="ot-foot nl">Referentieontwerp naar het Purdue-model en IEC 62443-zones en -conduits · FW = firewall · beweeg of tik op een blok of label voor uitleg</text>
+<g class="ot-svtip ot-to0" aria-hidden="true">
+<rect x="34" y="74" width="303" height="62" class="ot-tip-bg"/>
+<rect x="34" y="74" width="3" height="62" class="ot-tip-acc"/>
+<text x="48" y="92" class="ot-tip-t0 en">Office IT · Purdue level 4–5</text>
+<text x="48" y="107" class="ot-tip-t en">The business network: laptops, email, ERP,</text>
+<text x="48" y="122" class="ot-tip-t en">and its links to the internet and cloud.</text>
+<text x="48" y="92" class="ot-tip-t0 nl">Kantoor-IT · Purdue-niveau 4–5</text>
+<text x="48" y="107" class="ot-tip-t nl">Het bedrijfsnetwerk: laptops, e-mail, ERP,</text>
+<text x="48" y="122" class="ot-tip-t nl">en de koppelingen met internet en cloud.</text>
+</g>
+<g class="ot-svtip ot-to1" aria-hidden="true">
+<rect x="799" y="74" width="297" height="62" class="ot-tip-bg"/>
+<rect x="799" y="74" width="3" height="62" class="ot-tip-acc"/>
+<text x="813" y="92" class="ot-tip-t0 en">Internet · suppliers</text>
+<text x="813" y="107" class="ot-tip-t en">Everything outside our control, including</text>
+<text x="813" y="122" class="ot-tip-t en">the vendors who maintain the machines.</text>
+<text x="813" y="92" class="ot-tip-t0 nl">Internet · leveranciers</text>
+<text x="813" y="107" class="ot-tip-t nl">Alles buiten onze controle, ook de</text>
+<text x="813" y="122" class="ot-tip-t nl">leveranciers die de machines onderhouden.</text>
+</g>
+<g class="ot-svtip ot-to2" aria-hidden="true">
+<rect x="34" y="224" width="277" height="77" class="ot-tip-bg"/>
+<rect x="34" y="224" width="3" height="77" class="ot-tip-acc"/>
+<text x="48" y="242" class="ot-tip-t0 en">IT/OT DMZ · level 3.5</text>
+<text x="48" y="257" class="ot-tip-t en">DMZ: a buffer zone between office and</text>
+<text x="48" y="272" class="ot-tip-t en">plant. Nothing crosses directly; every</text>
+<text x="48" y="287" class="ot-tip-t en">connection stops here first.</text>
+<text x="48" y="242" class="ot-tip-t0 nl">IT/OT-DMZ · niveau 3,5</text>
+<text x="48" y="257" class="ot-tip-t nl">DMZ: een bufferzone tussen kantoor en</text>
+<text x="48" y="272" class="ot-tip-t nl">fabriek. Niets gaat rechtstreeks; elke</text>
+<text x="48" y="287" class="ot-tip-t nl">verbinding stopt eerst hier.</text>
+</g>
+<g class="ot-svtip ot-to3" aria-hidden="true">
+<rect x="34" y="374" width="297" height="62" class="ot-tip-bg"/>
+<rect x="34" y="374" width="3" height="62" class="ot-tip-acc"/>
+<text x="48" y="392" class="ot-tip-t0 en">OT · operational technology</text>
+<text x="48" y="407" class="ot-tip-t en">The systems that run physical processes.</text>
+<text x="48" y="422" class="ot-tip-t en">Level 2–3: supervision and control rooms.</text>
+<text x="48" y="392" class="ot-tip-t0 nl">OT · operationele technologie</text>
+<text x="48" y="407" class="ot-tip-t nl">Systemen die fysieke processen aansturen.</text>
+<text x="48" y="422" class="ot-tip-t nl">Niveau 2–3: bewaking en controlekamers.</text>
+</g>
+<g class="ot-svtip ot-to4" aria-hidden="true">
+<rect x="34" y="524" width="297" height="77" class="ot-tip-bg"/>
+<rect x="34" y="524" width="3" height="77" class="ot-tip-acc"/>
+<text x="48" y="542" class="ot-tip-t0 en">Cells and areas · level 0–1</text>
+<text x="48" y="557" class="ot-tip-t en">Controllers, drives and sensors on the</text>
+<text x="48" y="572" class="ot-tip-t en">floor. IEC 62443 groups them into zones</text>
+<text x="48" y="587" class="ot-tip-t en">by risk, one zone per line or area.</text>
+<text x="48" y="542" class="ot-tip-t0 nl">Cellen en gebieden · niveau 0–1</text>
+<text x="48" y="557" class="ot-tip-t nl">Besturingen, aandrijvingen en sensoren op</text>
+<text x="48" y="572" class="ot-tip-t nl">de vloer. IEC 62443 deelt ze op risico in</text>
+<text x="48" y="587" class="ot-tip-t nl">zones in, één zone per lijn of gebied.</text>
+</g>
+<g class="ot-svtip ot-to5" aria-hidden="true">
+<rect x="391.0" y="189" width="297" height="77" class="ot-tip-bg"/>
+<rect x="391.0" y="189" width="3" height="77" class="ot-tip-acc"/>
+<text x="405.0" y="207" class="ot-tip-t0 en">Conduit · firewall</text>
+<text x="405.0" y="222" class="ot-tip-t en">IEC 62443 term: the one permitted path</text>
+<text x="405.0" y="237" class="ot-tip-t en">between two zones. Only listed traffic</text>
+<text x="405.0" y="252" class="ot-tip-t en">passes; everything else is blocked.</text>
+<text x="405.0" y="207" class="ot-tip-t0 nl">Conduit · firewall</text>
+<text x="405.0" y="222" class="ot-tip-t nl">IEC 62443-term: de enige toegestane route</text>
+<text x="405.0" y="237" class="ot-tip-t nl">tussen twee zones. Alleen vastgelegd</text>
+<text x="405.0" y="252" class="ot-tip-t nl">verkeer mag door; de rest wordt geweerd.</text>
+</g>
+<g class="ot-svtip ot-to6" aria-hidden="true">
+<rect x="651.0" y="339" width="297" height="77" class="ot-tip-bg"/>
+<rect x="651.0" y="339" width="3" height="77" class="ot-tip-acc"/>
+<text x="665.0" y="357" class="ot-tip-t0 en">Conduit · firewall</text>
+<text x="665.0" y="372" class="ot-tip-t en">IEC 62443 term: the one permitted path</text>
+<text x="665.0" y="387" class="ot-tip-t en">between two zones. Only listed traffic</text>
+<text x="665.0" y="402" class="ot-tip-t en">passes; everything else is blocked.</text>
+<text x="665.0" y="357" class="ot-tip-t0 nl">Conduit · firewall</text>
+<text x="665.0" y="372" class="ot-tip-t nl">IEC 62443-term: de enige toegestane route</text>
+<text x="665.0" y="387" class="ot-tip-t nl">tussen twee zones. Alleen vastgelegd</text>
+<text x="665.0" y="402" class="ot-tip-t nl">verkeer mag door; de rest wordt geweerd.</text>
+</g>
+<g class="ot-svtip ot-to7" aria-hidden="true">
+<rect x="445.0" y="490" width="297" height="77" class="ot-tip-bg"/>
+<rect x="445.0" y="490" width="3" height="77" class="ot-tip-acc"/>
+<text x="459.0" y="508" class="ot-tip-t0 en">Conduit · firewall</text>
+<text x="459.0" y="523" class="ot-tip-t en">IEC 62443 term: the one permitted path</text>
+<text x="459.0" y="538" class="ot-tip-t en">between two zones. Only listed traffic</text>
+<text x="459.0" y="553" class="ot-tip-t en">passes; everything else is blocked.</text>
+<text x="459.0" y="508" class="ot-tip-t0 nl">Conduit · firewall</text>
+<text x="459.0" y="523" class="ot-tip-t nl">IEC 62443-term: de enige toegestane route</text>
+<text x="459.0" y="538" class="ot-tip-t nl">tussen twee zones. Alleen vastgelegd</text>
+<text x="459.0" y="553" class="ot-tip-t nl">verkeer mag door; de rest wordt geweerd.</text>
+</g>
+<g class="ot-svtip ot-to8" aria-hidden="true">
+<rect x="793" y="252" width="303" height="62" class="ot-tip-bg"/>
+<rect x="793" y="252" width="3" height="62" class="ot-tip-acc"/>
+<text x="807" y="270" class="ot-tip-t0 en">MFA · on request</text>
+<text x="807" y="285" class="ot-tip-t en">Multi-factor login, and access opened</text>
+<text x="807" y="300" class="ot-tip-t en">only when we approve it, for a set time.</text>
+<text x="807" y="270" class="ot-tip-t0 nl">MFA · op aanvraag</text>
+<text x="807" y="285" class="ot-tip-t nl">Inloggen met een tweede factor, en toegang</text>
+<text x="807" y="300" class="ot-tip-t nl">alleen open als wij die goedkeuren.</text>
+</g>
+<g class="ot-svtip ot-to9" aria-hidden="true">
+<rect x="799" y="488" width="297" height="77" class="ot-tip-bg"/>
+<rect x="799" y="488" width="3" height="77" class="ot-tip-acc"/>
+<text x="813" y="506" class="ot-tip-t0 en">SPAN port / tap</text>
+<text x="813" y="521" class="ot-tip-t en">A switch port or small device that copies</text>
+<text x="813" y="536" class="ot-tip-t en">traffic to the monitor. Read-only: it</text>
+<text x="813" y="551" class="ot-tip-t en">cannot disturb the process.</text>
+<text x="813" y="506" class="ot-tip-t0 nl">SPAN-poort / tap</text>
+<text x="813" y="521" class="ot-tip-t nl">Een switchpoort of kastje dat verkeer</text>
+<text x="813" y="536" class="ot-tip-t nl">kopieert naar de monitor. Alleen lezen:</text>
+<text x="813" y="551" class="ot-tip-t nl">het kan het proces niet verstoren.</text>
+</g>
+<g class="ot-svtip ot-to10" aria-hidden="true">
+<rect x="300" y="152" width="310" height="77" class="ot-tip-bg"/>
+<rect x="300" y="152" width="3" height="77" class="ot-tip-acc"/>
+<text x="314" y="170" class="ot-tip-t0 en">Office network</text>
+<text x="314" y="185" class="ot-tip-t en">Laptops, email and ERP: most infections</text>
+<text x="314" y="200" class="ot-tip-t en">start here, so the office gets no direct</text>
+<text x="314" y="215" class="ot-tip-t en">route to the plant.</text>
+<text x="314" y="170" class="ot-tip-t0 nl">Kantoornetwerk</text>
+<text x="314" y="185" class="ot-tip-t nl">Laptops, e-mail en ERP: de meeste</text>
+<text x="314" y="200" class="ot-tip-t nl">besmettingen beginnen hier, dus het kantoor</text>
+<text x="314" y="215" class="ot-tip-t nl">krijgt geen directe route naar de fabriek.</text>
+</g>
+<g class="ot-svtip ot-to11" aria-hidden="true">
+<rect x="780" y="152" width="316" height="77" class="ot-tip-bg"/>
+<rect x="780" y="152" width="3" height="77" class="ot-tip-acc"/>
+<text x="794" y="170" class="ot-tip-t0 en">Vendor remote access</text>
+<text x="794" y="185" class="ot-tip-t en">The machine builder&#x27;s engineers fixing</text>
+<text x="794" y="200" class="ot-tip-t en">faults from their office. Only through the</text>
+<text x="794" y="215" class="ot-tip-t en">jump host, named person, set time.</text>
+<text x="794" y="170" class="ot-tip-t0 nl">Leverancierstoegang op afstand</text>
+<text x="794" y="185" class="ot-tip-t nl">Monteurs van de machinebouwer die vanaf</text>
+<text x="794" y="200" class="ot-tip-t nl">kantoor storingen verhelpen. Alleen via de</text>
+<text x="794" y="215" class="ot-tip-t nl">jump host, per persoon, voor een vaste tijd.</text>
+</g>
+<g class="ot-svtip ot-to12" aria-hidden="true">
+<rect x="300" y="302" width="310" height="77" class="ot-tip-bg"/>
+<rect x="300" y="302" width="3" height="77" class="ot-tip-acc"/>
+<text x="314" y="320" class="ot-tip-t0 en">Patch / AV relay</text>
+<text x="314" y="335" class="ot-tip-t en">Updates and antivirus signatures are</text>
+<text x="314" y="350" class="ot-tip-t en">staged and tested in the DMZ, then passed</text>
+<text x="314" y="365" class="ot-tip-t en">on: plant systems never touch the internet.</text>
+<text x="314" y="320" class="ot-tip-t0 nl">Patch-/AV-relay</text>
+<text x="314" y="335" class="ot-tip-t nl">Updates en virusdefinities worden in de DMZ</text>
+<text x="314" y="350" class="ot-tip-t nl">klaargezet en getest, en dan doorgegeven:</text>
+<text x="314" y="365" class="ot-tip-t nl">fabriekssystemen raken nooit het internet.</text>
+</g>
+<g class="ot-svtip ot-to13" aria-hidden="true">
+<rect x="560" y="302" width="303" height="77" class="ot-tip-bg"/>
+<rect x="560" y="302" width="3" height="77" class="ot-tip-acc"/>
+<text x="574" y="320" class="ot-tip-t0 en">Jump host · the one door in</text>
+<text x="574" y="335" class="ot-tip-t en">A hardened server in the DMZ. Every remote</text>
+<text x="574" y="350" class="ot-tip-t en">session passes it: MFA, opened on request,</text>
+<text x="574" y="365" class="ot-tip-t en">recorded, closed by default.</text>
+<text x="574" y="320" class="ot-tip-t0 nl">Jump host · de ene deur naar binnen</text>
+<text x="574" y="335" class="ot-tip-t nl">Een geharde server in de DMZ. Elke sessie</text>
+<text x="574" y="350" class="ot-tip-t nl">van buiten loopt erdoorheen: MFA, open op</text>
+<text x="574" y="365" class="ot-tip-t nl">aanvraag, opgenomen, standaard dicht.</text>
+</g>
+<g class="ot-svtip ot-to14" aria-hidden="true">
+<rect x="300" y="452" width="303" height="77" class="ot-tip-bg"/>
+<rect x="300" y="452" width="3" height="77" class="ot-tip-acc"/>
+<text x="314" y="470" class="ot-tip-t0 en">Historian</text>
+<text x="314" y="485" class="ot-tip-t en">A database of every process value over</text>
+<text x="314" y="500" class="ot-tip-t en">time. Useful for reports, and for spotting</text>
+<text x="314" y="515" class="ot-tip-t en">a setpoint that drifted.</text>
+<text x="314" y="470" class="ot-tip-t0 nl">Historian</text>
+<text x="314" y="485" class="ot-tip-t nl">Database met elke proceswaarde door de</text>
+<text x="314" y="500" class="ot-tip-t nl">tijd. Handig voor rapportages en om een</text>
+<text x="314" y="515" class="ot-tip-t nl">verschoven instelwaarde te zien.</text>
+</g>
+<g class="ot-svtip ot-to15" aria-hidden="true">
+<rect x="560" y="452" width="283" height="77" class="ot-tip-bg"/>
+<rect x="560" y="452" width="3" height="77" class="ot-tip-acc"/>
+<text x="574" y="470" class="ot-tip-t0 en">SCADA / HMI</text>
+<text x="574" y="485" class="ot-tip-t en">SCADA: software that supervises the</text>
+<text x="574" y="500" class="ot-tip-t en">process. HMI: the operator screen.</text>
+<text x="574" y="515" class="ot-tip-t en">Its own zone, behind a firewall.</text>
+<text x="574" y="470" class="ot-tip-t0 nl">SCADA / HMI</text>
+<text x="574" y="485" class="ot-tip-t nl">SCADA: software die het proces bewaakt.</text>
+<text x="574" y="500" class="ot-tip-t nl">HMI: het bedienscherm.</text>
+<text x="574" y="515" class="ot-tip-t nl">Een eigen zone, achter een firewall.</text>
+</g>
+<g class="ot-svtip ot-to16" aria-hidden="true">
+<rect x="793" y="452" width="303" height="77" class="ot-tip-bg"/>
+<rect x="793" y="452" width="3" height="77" class="ot-tip-acc"/>
+<text x="807" y="470" class="ot-tip-t0 en">OT monitoring · passive</text>
+<text x="807" y="485" class="ot-tip-t en">Analyses a copy of plant traffic for new</text>
+<text x="807" y="500" class="ot-tip-t en">devices, reprogrammed controllers and odd</text>
+<text x="807" y="515" class="ot-tip-t en">setpoint changes. Sends nothing back.</text>
+<text x="807" y="470" class="ot-tip-t0 nl">OT-monitoring · passief</text>
+<text x="807" y="485" class="ot-tip-t nl">Analyseert een kopie van fabrieksverkeer</text>
+<text x="807" y="500" class="ot-tip-t nl">op nieuwe apparaten, herprogrammering en</text>
+<text x="807" y="515" class="ot-tip-t nl">vreemde instelwaarden. Stuurt niets terug.</text>
+</g>
+<g class="ot-svtip ot-to17" aria-hidden="true">
+<rect x="300" y="443" width="283" height="77" class="ot-tip-bg"/>
+<rect x="300" y="443" width="3" height="77" class="ot-tip-acc"/>
+<text x="314" y="461" class="ot-tip-t0 en">Cell zone · PLCs</text>
+<text x="314" y="476" class="ot-tip-t en">PLC: the small computer that runs a</text>
+<text x="314" y="491" class="ot-tip-t en">machine. Each line is its own zone, so</text>
+<text x="314" y="506" class="ot-tip-t en">a problem on one line stays there.</text>
+<text x="314" y="461" class="ot-tip-t0 nl">Celzone · PLC&#x27;s</text>
+<text x="314" y="476" class="ot-tip-t nl">PLC: de kleine computer die een machine</text>
+<text x="314" y="491" class="ot-tip-t nl">aanstuurt. Elke lijn is een eigen zone:</text>
+<text x="314" y="506" class="ot-tip-t nl">een probleem op één lijn blijft daar.</text>
+</g>
+<g class="ot-svtip ot-to18" aria-hidden="true">
+<rect x="560" y="443" width="290" height="77" class="ot-tip-bg"/>
+<rect x="560" y="443" width="3" height="77" class="ot-tip-acc"/>
+<text x="574" y="461" class="ot-tip-t0 en">Sensors, building &amp; safety</text>
+<text x="574" y="476" class="ot-tip-t en">Sensors, climate, access control and the</text>
+<text x="574" y="491" class="ot-tip-t en">safety system. The safety interlock is</text>
+<text x="574" y="506" class="ot-tip-t en">hard-wired: no login can override it.</text>
+<text x="574" y="461" class="ot-tip-t0 nl">Sensoren, gebouw &amp; veiligheid</text>
+<text x="574" y="476" class="ot-tip-t nl">Sensoren, klimaat, toegang en het</text>
+<text x="574" y="491" class="ot-tip-t nl">veiligheidssysteem. De vergrendeling is</text>
+<text x="574" y="506" class="ot-tip-t nl">bedraad: geen inlog kan die omzeilen.</text>
+</g>
+<g class="ot-svtip ot-to19" aria-hidden="true">
+<rect x="780" y="575.0" width="316" height="77" class="ot-tip-bg"/>
+<rect x="780" y="575.0" width="3" height="77" class="ot-tip-acc"/>
+<text x="794" y="593.0" class="ot-tip-t0 en">Old direct vendor link</text>
+<text x="794" y="608.0" class="ot-tip-t en">A permanent line straight to the machines</text>
+<text x="794" y="623.0" class="ot-tip-t en">bypasses every zone. Worth closing once</text>
+<text x="794" y="638.0" class="ot-tip-t en">the jump host is in place.</text>
+<text x="794" y="593.0" class="ot-tip-t0 nl">Oude directe leverancierslijn</text>
+<text x="794" y="608.0" class="ot-tip-t nl">Een vaste lijn rechtstreeks naar de machines</text>
+<text x="794" y="623.0" class="ot-tip-t nl">omzeilt elke zone. De moeite waard om te</text>
+<text x="794" y="638.0" class="ot-tip-t nl">sluiten zodra de jump host er is.</text>
+</g>
+</svg>
+    </figure>
+
+    <div class="panel">
+      <p class="en"><strong>Where to start is your call.</strong> Often the most effective first step is the vendor path: route it through the jump host and close the old direct line. Then split the plant into zones that meet only through a monitored <abbr class="tip" tabindex="0" data-tip="IEC 62443 term: the one permitted, monitored path between two zones, enforced by a firewall.">conduit</abbr>.</p>
+      <p class="nl"><strong>Waar u begint, bepaalt u zelf.</strong> Vaak is de leveranciersroute de meest effectieve eerste stap: leid die via de jump host en sluit de oude directe lijn. Deel daarna de fabriek op in zones die elkaar alleen via een bewaakte <abbr class="tip" tabindex="0" data-tip="IEC 62443-term: de enige toegestane, bewaakte route tussen twee zones, afgedwongen door een firewall.">conduit</abbr> raken.</p>
+    </div>
+  </div>
+</section>
+<!-- /diagram:ot-map -->
+
 <!-- ============================ CONTROLS ============================ -->
 <section class="risk-block" id="fix">
   <div class="wrap">
@@ -557,7 +995,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     </h2>
     <span class="term">
       <span class="en">mostly knowing what you have and drawing one line — not replacing the machines</span>
-      <span class="nl">vooral weten wat je hebt en één lijn trekken — niet de machines vervangen</span>
+      <span class="nl">vooral weten wat u hebt en één lijn trekken — niet de machines vervangen</span>
     </span>
 
     <div class="stage s5">
@@ -581,25 +1019,25 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <table class="en">
         <tr><th>Control</th><th>Stops</th><th>In one line</th></tr>
         <tr><td class="ctl">Device inventory</td><td>Unpatchable (02)</td><td>Every connected controller, camera, sensor and screen on a list, with a named owner and a support end date. You cannot protect what you have not counted.</td></tr>
-        <tr><td class="ctl">IT/OT segmentation</td><td>Reachable (01)</td><td>A wall between the office network and the plant, with one crossing point that is monitored. An office infection stays an office infection.</td></tr>
-        <tr><td class="ctl">Vendor access on request</td><td>Vendor door (03)</td><td>Remote maintenance only when we open it, for a named person, for a set time, through a jump host that records the session. Closed by default.</td></tr>
+        <tr><td class="ctl">IT/OT segmentation</td><td>Reachable (01)</td><td>A wall between the office network and the plant, with one crossing point that is monitored. An office infection stays an office infection. <abbr class="tip" tabindex="0" data-tip="The international standard series for industrial control security: zones, conduits, and duties for suppliers.">IEC 62443</abbr> zones and conduits are the common yardstick.</td></tr>
+        <tr><td class="ctl">Vendor access on request</td><td>Vendor door (03)</td><td>Remote maintenance only when we open it, for a named person, for a set time, through a <abbr class="tip" tabindex="0" data-tip="A hardened server in the buffer zone that every remote session must pass through, so it can be controlled and recorded.">jump host</abbr> that records the session. Closed by default.</td></tr>
         <tr><td class="ctl">Isolate the unpatchable</td><td>Unpatchable (02)</td><td>Default passwords changed. Devices that cannot be patched put in their own corner where only what needs them can reach them.</td></tr>
         <tr><td class="ctl">OT monitoring</td><td>Safety (04)</td><td>Listening to plant traffic for things that never happen normally: a new device, a controller being reprogrammed, a setpoint changed from an unusual place.</td></tr>
         <tr><td class="ctl">Configuration backups</td><td>Safety (04)</td><td>The programs and settings of every controller saved offline, so a tampered or bricked machine can be restored in hours rather than re-engineered in weeks.</td></tr>
         <tr><td class="ctl">Incident plan with operations</td><td>All four</td><td>The plant manager and the safety officer in the plan, with the authority to stop the line. Rehearsed with a scenario that involves a machine, not a laptop.</td></tr>
-        <tr><td class="ctl">Procurement rules</td><td>Unpatchable (02)</td><td>Before buying anything that connects: how long will it get security updates, can the password be changed, does it need the internet. No answer, no purchase.</td></tr>
+        <tr><td class="ctl">Procurement rules</td><td>Unpatchable (02)</td><td>Before buying anything that connects: ask for the security support period and <abbr class="tip" tabindex="0" data-tip="Cyber Resilience Act: EU law setting security duties for makers of products with software or network connections.">CRA</abbr> conformity, whether the password can be changed, and whether it needs the internet. No clear answer is a good reason not to buy.</td></tr>
       </table>
 
       <table class="nl">
         <tr><th>Maatregel</th><th>Stopt</th><th>In één zin</th></tr>
-        <tr><td class="ctl">Apparaatinventaris</td><td>Niet te patchen (02)</td><td>Elke aangesloten besturing, camera, sensor en scherm op een lijst, met een eigenaar bij naam en een einddatum van ondersteuning. Wat je niet geteld hebt, kun je niet beschermen.</td></tr>
-        <tr><td class="ctl">IT/OT-segmentatie</td><td>Bereikbaar (01)</td><td>Een muur tussen het kantoornetwerk en de fabriek, met één bewaakte overgang. Een kantoorbesmetting blijft een kantoorbesmetting.</td></tr>
-        <tr><td class="ctl">Leverancierstoegang op aanvraag</td><td>Leveranciersdeur (03)</td><td>Onderhoud op afstand alleen als wij het openzetten, voor een persoon bij naam, voor een vaste tijd, via een jump host die de sessie opneemt. Standaard dicht.</td></tr>
+        <tr><td class="ctl">Apparaatinventaris</td><td>Niet te patchen (02)</td><td>Elke aangesloten besturing, camera, sensor en scherm op een lijst, met een eigenaar bij naam en een einddatum van ondersteuning. Wat u niet hebt geteld, kunt u niet beschermen.</td></tr>
+        <tr><td class="ctl">IT/OT-segmentatie</td><td>Bereikbaar (01)</td><td>Een muur tussen het kantoornetwerk en de fabriek, met één bewaakte overgang. Een kantoorbesmetting blijft een kantoorbesmetting. De zones en conduits van <abbr class="tip" tabindex="0" data-tip="De internationale normenreeks voor beveiliging van industriële besturing: zones, conduits en eisen aan leveranciers.">IEC 62443</abbr> zijn de gangbare maatstaf.</td></tr>
+        <tr><td class="ctl">Leverancierstoegang op aanvraag</td><td>Leveranciersdeur (03)</td><td>Onderhoud op afstand alleen als wij het openzetten, voor een persoon bij naam, voor een vaste tijd, via een <abbr class="tip" tabindex="0" data-tip="Een geharde server in de bufferzone waar elke sessie van buiten doorheen moet, zodat die te controleren en op te nemen is.">jump host</abbr> die de sessie opneemt. Standaard dicht.</td></tr>
         <tr><td class="ctl">Isoleer wat niet te patchen is</td><td>Niet te patchen (02)</td><td>Standaardwachtwoorden gewijzigd. Apparaten die niet gepatcht kunnen worden in een eigen hoek, waar alleen bij kan wat ze nodig heeft.</td></tr>
         <tr><td class="ctl">OT-monitoring</td><td>Veiligheid (04)</td><td>Meeluisteren op het fabrieksverkeer naar dingen die normaal nooit gebeuren: een nieuw apparaat, een besturing die wordt geherprogrammeerd, een instelwaarde die vanaf een ongebruikelijke plek verandert.</td></tr>
         <tr><td class="ctl">Configuratieback-ups</td><td>Veiligheid (04)</td><td>De programma's en instellingen van elke besturing offline bewaard, zodat een gesaboteerde of onbruikbare machine in uren wordt teruggezet in plaats van in weken opnieuw ontworpen.</td></tr>
         <tr><td class="ctl">Incidentplan met operations</td><td>Alle vier</td><td>De fabrieksmanager en de veiligheidskundige in het plan, met de bevoegdheid om de lijn te stoppen. Geoefend met een scenario rond een machine, niet rond een laptop.</td></tr>
-        <tr><td class="ctl">Inkoopregels</td><td>Niet te patchen (02)</td><td>Voordat iets wordt gekocht dat verbinding maakt: hoe lang krijgt het beveiligingsupdates, kan het wachtwoord worden gewijzigd, heeft het internet nodig. Geen antwoord, geen aankoop.</td></tr>
+        <tr><td class="ctl">Inkoopregels</td><td>Niet te patchen (02)</td><td>Voordat u iets koopt dat verbinding maakt: vraag naar de ondersteuningsperiode voor beveiliging en <abbr class="tip" tabindex="0" data-tip="Cyber Resilience Act: EU-wet met beveiligingsplichten voor makers van producten met software of netwerkverbinding.">CRA</abbr>-conformiteit, of het wachtwoord te wijzigen is en of het internet nodig heeft. Geen duidelijk antwoord is een goede reden om niet te kopen.</td></tr>
       </table>
 
       <div class="callout">
@@ -633,25 +1071,33 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="panel">
       <table class="en">
         <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
-        <tr><td class="ctl">NIS2</td><td>Many OT operators are essential or important entities: energy, water, manufacturing, food, transport, health. The required measures apply to the plant as much as to the office, including access control, supply chain security and continuity. Management is accountable.</td><td>Machine builders and maintenance firms are suppliers under NIS2. Their remote access and update process is your risk: put security lifetime, access rules and incident notification in the contract. Confirm scope with legal.</td><td>A production disruption or safety event is a significant incident: early warning within roughly 24 hours, full notification within about 72, final report within a month. Safety and environmental regulators may need to hear separately.</td></tr>
-        <tr><td class="ctl">DORA</td><td>For financial entities the OT is mostly buildings and data centres: cooling, power, physical access. These belong in the ICT risk framework as part of the critical functions they support.</td><td>Data-centre and facility providers are ICT third parties: they go in the register, and their report should show controls over physical access, environmental systems and remote maintenance. A report is input, not a substitute.</td><td>An outage of a critical function caused by a facility system is a major ICT incident: initial notification within hours of classification, intermediate report within about 72 hours, final report within a month.</td></tr>
+        <tr><td class="ctl">NIS2</td><td>Many OT operators are essential or important entities: energy, water, manufacturing, food, transport, health. The required measures apply to the plant as much as to the office, including access control, supply chain security and continuity. Management is accountable. In the Netherlands: the <abbr class="tip" tabindex="0" data-tip="Cyberbeveiligingswet: the Dutch law implementing NIS2, in force since 15 August 2026.">Cbw</abbr>, in force since 15 August 2026.</td><td>Machine builders and maintenance firms are suppliers under NIS2. Their remote access and update process is your risk: it is worth putting security lifetime, access rules (<abbr class="tip" tabindex="0" data-tip="The part of IEC 62443 with security requirements for service suppliers who integrate and maintain control systems.">IEC 62443-2-4</abbr> for service suppliers) and incident notification in the contract. Confirm scope with legal.</td><td>A production disruption or safety event can count as a significant incident if it meets the thresholds: early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month. Safety and environmental regulators may need to hear separately.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities the OT is mostly buildings and data centres: cooling, power, physical access. These belong in the ICT risk framework as part of the critical functions they support.</td><td>Data-centre and facility providers are ICT third parties: they go in the register, and their report should show controls over physical access, environmental systems and remote maintenance. A report is input, not a substitute.</td><td>An outage of a critical function caused by a facility system can be classified as a major ICT incident: initial notification within 4 hours of classifying it as major (and at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
         <tr><td class="ctl">SOC 2</td><td>Physical and environmental controls and network segmentation are tested. Plant-floor devices are rarely in scope unless the service delivered depends on them.</td><td>For a manufacturing or hosting partner: check whether the plant and building systems appear in the system description. Often only the corporate IT does, and the line is out of scope.</td><td>An OT incident that hits a customer service becomes an availability deviation in the report. Expect auditors to ask for segmentation evidence and the incident timeline.</td></tr>
-        <tr><td class="ctl">ISAE 3402</td><td>Relevant where production or logistics is outsourced: continuity of processing and physical safeguards are common control objectives, but the service organisation chooses them.</td><td>Read whether the continuity objectives cover the machines and warehouse systems, not just the ERP. A report about the office systems says nothing about the line.</td><td>Production loss at a service organisation must be disclosed to the user auditors. If you are the operator, expect it in your opinion and in your customers’ audits.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant where production or logistics is outsourced: continuity of processing and physical safeguards are common control objectives, but the service organisation chooses them.</td><td>Read whether the continuity objectives cover the machines and warehouse systems, not just the <abbr class="tip" tabindex="0" data-tip="Enterprise resource planning: the central business system for orders, stock and finance.">ERP</abbr>. A report about the office systems says nothing about the line.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+        <tr><td class="ctl">CRA · RED</td><td>EU product law for what you buy. The <abbr class="tip" tabindex="0" data-tip="Radio Equipment Directive: EU product rules for anything with Wi-Fi, Bluetooth or another radio.">RED</abbr> delegated act (EU) 2022/30 has applied to new connected radio equipment since 1 August 2025 (EN 18031). The CRA's main obligations apply from 11 December 2027.</td><td>Ask for the security support period and CRA conformity.</td><td>From 11 September 2026 makers report actively exploited vulnerabilities: early warning 24h, notification 72h, via ENISA's Single Reporting Platform.</td></tr>
       </table>
 
       <table class="nl">
         <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
-        <tr><td class="ctl">NIS2</td><td>Veel OT-exploitanten zijn essentiële of belangrijke entiteiten: energie, water, industrie, voeding, transport, zorg. De verplichte maatregelen gelden voor de fabriek net zo goed als voor het kantoor, inclusief toegangsbeheer, ketenbeveiliging en continuïteit. Het bestuur is aansprakelijk.</td><td>Machinebouwers en onderhoudsbedrijven zijn leveranciers onder NIS2. Hun toegang op afstand en updateproces zijn uw risico: leg beveiligingslevensduur, toegangsregels en incidentmelding vast in het contract. Bevestig de reikwijdte met legal.</td><td>Een productieverstoring of veiligheidsincident is een significant incident: vroegtijdige waarschuwing binnen ongeveer 24 uur, volledige melding binnen ongeveer 72 uur, eindrapport binnen een maand. Veiligheids- en milieutoezichthouders moeten mogelijk apart worden geïnformeerd.</td></tr>
-        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen bestaat de OT vooral uit gebouwen en datacenters: koeling, stroom, fysieke toegang. Die horen in het ICT-risicokader als onderdeel van de kritieke functies die ze ondersteunen.</td><td>Datacenter- en facilitaire leveranciers zijn ICT-derden: ze staan in het register, en hun rapport moet maatregelen tonen voor fysieke toegang, klimaatsystemen en onderhoud op afstand. Een rapport is input, geen vervanging.</td><td>Een uitval van een kritieke functie door een gebouwsysteem is een ernstig ICT-incident: eerste melding binnen enkele uren na classificatie, tussenrapport binnen ongeveer 72 uur, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">NIS2</td><td>Veel OT-exploitanten zijn essentiële of belangrijke entiteiten: energie, water, industrie, voeding, transport, zorg. De verplichte maatregelen gelden voor de fabriek net zo goed als voor het kantoor, inclusief toegangsbeheer, ketenbeveiliging en continuïteit. Het bestuur is aansprakelijk. In Nederland: de <abbr class="tip" tabindex="0" data-tip="Cyberbeveiligingswet: de Nederlandse wet die NIS2 invoert, van kracht sinds 15 augustus 2026.">Cbw</abbr>, van kracht sinds 15 augustus 2026.</td><td>Machinebouwers en onderhoudsbedrijven zijn leveranciers onder NIS2. Hun toegang op afstand en updateproces zijn uw risico: het is de moeite waard beveiligingslevensduur, toegangsregels (<abbr class="tip" tabindex="0" data-tip="Het deel van IEC 62443 met beveiligingseisen aan dienstverleners die besturingssystemen integreren en onderhouden.">IEC 62443-2-4</abbr> voor dienstverleners) en incidentmelding in het contract vast te leggen. Bevestig de reikwijdte met legal.</td><td>Een productieverstoring of veiligheidsincident kan gelden als significant incident als het de drempels haalt: vroegtijdige waarschuwing binnen 24 uur na kennisname, incidentmelding binnen 72 uur, eindrapport binnen een maand. Veiligheids- en milieutoezichthouders moeten mogelijk apart worden geïnformeerd.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen bestaat de OT vooral uit gebouwen en datacenters: koeling, stroom, fysieke toegang. Die horen in het ICT-risicokader als onderdeel van de kritieke functies die ze ondersteunen.</td><td>Datacenter- en facilitaire leveranciers zijn ICT-derden: ze staan in het register, en hun rapport hoort maatregelen te tonen voor fysieke toegang, klimaatsystemen en onderhoud op afstand. Een rapport is input, geen vervanging.</td><td>Een uitval van een kritieke functie door een gebouwsysteem kan als ernstig ICT-incident worden geclassificeerd: eerste melding binnen 4 uur na classificatie als ernstig (en uiterlijk 24 uur na kennisname), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
         <tr><td class="ctl">SOC 2</td><td>Fysieke en omgevingsmaatregelen en netwerksegmentatie worden getest. Apparaten op de productievloer vallen zelden binnen scope, tenzij de geleverde dienst ervan afhangt.</td><td>Bij een productie- of hostingpartner: controleer of de fabriek en de gebouwsystemen in de systeembeschrijving staan. Vaak staat alleen de kantoor-IT erin en valt de lijn erbuiten.</td><td>Een OT-incident dat een klantdienst raakt, wordt een afwijking op beschikbaarheid in het rapport. Verwacht dat auditors bewijs van segmentatie en de incidenttijdlijn opvragen.</td></tr>
-        <tr><td class="ctl">ISAE 3402</td><td>Relevant waar productie of logistiek is uitbesteed: continuïteit van verwerking en fysieke beveiliging zijn gangbare beheersdoelstellingen, maar de serviceorganisatie kiest ze zelf.</td><td>Lees of de continuïteitsdoelstellingen de machines en magazijnsystemen dekken, en niet alleen het ERP. Een rapport over de kantoorsystemen zegt niets over de lijn.</td><td>Productieverlies bij een serviceorganisatie moet aan de auditors van haar klanten worden gemeld. Bent u zelf de exploitant, verwacht het dan in uw oordeel en in de audits van uw klanten.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant waar productie of logistiek is uitbesteed: continuïteit van verwerking en fysieke beveiliging zijn gangbare beheersdoelstellingen, maar de serviceorganisatie kiest ze zelf.</td><td>Lees of de continuïteitsdoelstellingen de machines en magazijnsystemen dekken, en niet alleen het <abbr class="tip" tabindex="0" data-tip="Enterprise resource planning: het centrale bedrijfssysteem voor orders, voorraad en financiën.">ERP</abbr>. Een rapport over de kantoorsystemen zegt niets over de lijn.</td><td>ISAE 3402 schept geen meldplicht richting de auditors van klanten. Verwacht een afwijking in het volgende rapport, en vraag in het contract om tussentijdse melding.</td></tr>
+        <tr><td class="ctl">CRA · RED</td><td>EU-productwetgeving voor wat u koopt. De gedelegeerde verordening (EU) 2022/30 onder de <abbr class="tip" tabindex="0" data-tip="Radio Equipment Directive: EU-productregels voor alles met wifi, bluetooth of een andere radio.">RED</abbr> geldt sinds 1 augustus 2025 voor nieuwe verbonden radioapparatuur (EN 18031). De hoofdverplichtingen van de CRA gelden vanaf 11 december 2027.</td><td>Vraag naar de ondersteuningsperiode voor beveiliging en CRA-conformiteit.</td><td>Vanaf 11 september 2026 melden makers actief misbruikte kwetsbaarheden: vroegtijdige waarschuwing binnen 24 uur, melding binnen 72 uur, via het Single Reporting Platform van ENISA.</td></tr>
       </table>
+      <p class="sources en">Checked against: <a href="https://eur-lex.europa.eu/eli/reg/2024/2847/oj">CRA (EU) 2024/2847</a>, <a href="https://single-market-economy.ec.europa.eu/sectors/electrical-and-electronic-engineering-industries-eei/radio-equipment-directive-red_en">European Commission on the RED delegated act 2022/30</a> and <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202500138">Decision (EU) 2025/138 on EN 18031</a> (Jan 2025), <a href="https://osha.europa.eu/en/legislation/directive/regulation-20231230eu-machinery">Machinery Regulation (EU) 2023/1230</a>, IEC 62443-2-4 and 62443-3-2, NIS2 Art. 23, DORA and the <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">Cbw</a> (Aug 2026) · September 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://eur-lex.europa.eu/eli/reg/2024/2847/oj">CRA (EU) 2024/2847</a>, <a href="https://single-market-economy.ec.europa.eu/sectors/electrical-and-electronic-engineering-industries-eei/radio-equipment-directive-red_en">Europese Commissie over de gedelegeerde RED-verordening 2022/30</a> en <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=OJ:L_202500138">Besluit (EU) 2025/138 over EN 18031</a> (jan 2025), <a href="https://osha.europa.eu/en/legislation/directive/regulation-20231230eu-machinery">Machineverordening (EU) 2023/1230</a>, IEC 62443-2-4 en 62443-3-2, NIS2 art. 23, DORA en de <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">Cbw</a> (aug 2026) · september 2026.</p>
     </div>
   </div>
 </section>
 
 <div class="divider"><i></i><i></i><i></i><i></i></div>
 
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../supply-chain/"><span class="en">Supply chain</span><span class="nl">Toeleveringsketen</span></a> ·
+  <a href="../patching/"><span class="en">The unpatched server</span><span class="nl">De ongepatchte server</span></a> ·
+  <a href="../nis2-dora/"><span class="en">NIS2 and DORA</span><span class="nl">NIS2 en DORA</span></a></p>
 <div class="fb">
   <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=ot-iot&amp;title=Missing%3A%20ot-iot"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
   <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=ot-iot&amp;title=Correction%3A%20ot-iot"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
