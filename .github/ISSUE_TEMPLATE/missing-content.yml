@@ -26,3 +26,23 @@ body:
       description: The topic, risk, control or regulation, and why it matters. Links to sources help. / Het onderwerp, risico, de maatregel of regelgeving, en waarom het ertoe doet. Links naar bronnen helpen.
     validations:
       required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source / Bron
+      description: A link to a primary source (law, regulator, standard, vendor documentation) helps us verify quickly. / Een link naar een primaire bron (wet, toezichthouder, standaard, leveranciersdocumentatie) helpt ons snel te controleren.
+      placeholder: https://
+  - type: textarea
+    id: standard
+    attributes:
+      label: For whoever fixes this / Voor wie dit oplost
+      description: Pre-filled checklist from AGENTS.md. No need to edit. / Vooraf ingevulde checklist uit AGENTS.md.
+      value: |
+        Leave this as is / Laat dit staan. Whoever picks up this issue, person or agent, works to AGENTS.md in the repo:
+        - [ ] Facts, dates and figures verified against a primary source on the day of the change; sources line updated
+        - [ ] Advisory tone: SUGGESTED: pills, "must" only when a law says so
+        - [ ] Timelines say "suggested, not a legal deadline"; law, recommendation, draft or guidance is named
+        - [ ] Acronyms get a tooltip on first use per section (one sentence, max 160 characters)
+        - [ ] Readable: replace, don't append; visible text grows 10% at most; at most one diagram, only if it replaces text
+        - [ ] EN and NL say the same; NL uses formal "u"
+        - [ ] `node tools/check.mjs <slug>` passes (add `--baseline main` for an existing page)

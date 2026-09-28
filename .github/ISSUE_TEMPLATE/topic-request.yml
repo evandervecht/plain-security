@@ -41,8 +41,33 @@ body:
         - Dutch only
     validations:
       required: true
+  - type: dropdown
+    id: diagram
+    attributes:
+      label: Diagram
+      description: "Briefings stay readable: at most one diagram, only where it explains faster than words."
+      options:
+        - Only if it replaces text (default)
+        - Yes, one reference-architecture diagram
+        - No diagram
+    validations:
+      required: true
   - type: textarea
     id: notes
     attributes:
       label: Anything else
       description: Regulations, incidents or examples that must be in it. Optional.
+  - type: textarea
+    id: standard
+    attributes:
+      label: "For whoever builds this: briefing standard"
+      description: Pre-filled checklist from AGENTS.md. No need to edit.
+      value: |
+        Leave this as is. Whoever picks up this issue, person or agent, works to AGENTS.md in the repo:
+        - [ ] Facts, dates and figures verified against a primary source on the day of the change; sources line updated
+        - [ ] Advisory tone: SUGGESTED: pills, "must" only when a law says so
+        - [ ] Timelines say "suggested, not a legal deadline"; law, recommendation, draft or guidance is named
+        - [ ] Acronyms get a tooltip on first use per section (one sentence, max 160 characters)
+        - [ ] Readable: replace, don't append; visible text grows 10% at most; at most one diagram, only if it replaces text
+        - [ ] EN and NL say the same; NL uses formal "u"
+        - [ ] `node tools/check.mjs <slug>` passes (add `--baseline main` for an existing page)
