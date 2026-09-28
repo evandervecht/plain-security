@@ -238,6 +238,14 @@ tr:last-child td{border-bottom:none}
 
 .callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
 .callout strong{color:var(--white)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+.callout .disclaimer{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:var(--muted)}
+body:has(#lang-en:checked) .callout .disclaimer.en,body:has(#lang-nl:checked) .callout .disclaimer.nl{display:block}
 
 /* ---------- footer ---------- */
 footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
@@ -296,6 +304,110 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
 .ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+/* ---------- sources + related ---------- */
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* diagram:crypto-map */
+/* ---------- crypto map (where your crypto lives) ---------- */
+.cmap{margin:0 0 30px;background:var(--bg-lo);border:1px solid var(--line-soft);padding:12px;overflow-x:auto}
+.cmap svg{display:block;width:100%;min-width:900px;height:auto}
+.cmap .cm-zone{fill:var(--bg-hi);stroke:var(--line-soft)}
+.cmap .cm-zlabel{font:700 11px var(--mono);letter-spacing:.28em;fill:var(--slate)}
+.cmap .cm-node{fill:var(--surface);stroke:var(--line)}
+.cmap .cm-s-ok .cm-bar{fill:var(--good)}
+.cmap .cm-s-mid .cm-bar{fill:var(--warn)}
+.cmap .cm-s-bad .cm-bar{fill:var(--bad)}
+.cmap .cm-s-bad .cm-node{stroke:rgba(255,93,115,.45)}
+.cmap .cm-kick{font:500 10px var(--mono);letter-spacing:.12em;fill:var(--muted)}
+.cmap .cm-name{font:600 13px var(--sans);fill:var(--white)}
+.cmap .cm-st{font:400 10px var(--mono);fill:var(--prose)}
+.cmap .cm-legend{font:400 11px var(--mono);fill:var(--body)}
+.cmap .cm-foot{font:400 10px var(--mono);letter-spacing:.06em;fill:var(--slate)}
+.cmap .cm-llabel{font:700 9.5px var(--mono);letter-spacing:.12em;fill:var(--muted)}
+.cmap .cm-link{fill:none;stroke:var(--slate);stroke-width:1.5;stroke-dasharray:5 5;animation:cm-flow 1.4s linear infinite}
+.cmap .cm-arrowhead{fill:var(--slate)}
+.cmap .cm-u-ok{color:var(--good)}
+.cmap .cm-u-mid{color:var(--warn)}
+.cmap .cm-u-bad{color:var(--bad)}
+.cmap .cm-tag-h rect{fill:rgba(255,93,115,.12);stroke:rgba(255,93,115,.5)}
+.cmap .cm-tag-h text{font:700 9px var(--mono);letter-spacing:.1em;fill:var(--bad-soft)}
+.cmap .cm-tag-s rect{fill:rgba(135,162,176,.12);stroke:var(--slate)}
+.cmap .cm-tag-s text{font:700 9px var(--mono);letter-spacing:.1em;fill:var(--muted)}
+@keyframes cm-flow{to{stroke-dashoffset:-10}}
+@media (prefers-reduced-motion:reduce){.cmap .cm-link{animation:none}}
+.cmap .cm-svtip{visibility:hidden;pointer-events:none}
+.cmap .cm-tip-bg{fill:var(--deep);stroke:var(--line)}
+.cmap .cm-tip-acc{fill:var(--brand)}
+.cmap .cm-tip-t0{font:700 11px var(--mono);fill:var(--white)}
+.cmap .cm-tip-t{font:400 11px var(--mono);fill:var(--prose)}
+.cmap [tabindex]{cursor:help;outline:none}
+.cmap [tabindex]:focus-visible > rect:first-child{stroke:var(--brand);stroke-width:1.5}
+.cmap svg:has(.cm-hc0:hover,.cm-hc0:focus) .cm-tc0,.cmap svg:has(.cm-hc1:hover,.cm-hc1:focus) .cm-tc1,.cmap svg:has(.cm-hc2:hover,.cm-hc2:focus) .cm-tc2,.cmap svg:has(.cm-hc3:hover,.cm-hc3:focus) .cm-tc3,.cmap svg:has(.cm-hc4:hover,.cm-hc4:focus) .cm-tc4,.cmap svg:has(.cm-hc5:hover,.cm-hc5:focus) .cm-tc5,.cmap svg:has(.cm-hc6:hover,.cm-hc6:focus) .cm-tc6,.cmap svg:has(.cm-hc7:hover,.cm-hc7:focus) .cm-tc7,.cmap svg:has(.cm-hc8:hover,.cm-hc8:focus) .cm-tc8,.cmap svg:has(.cm-hc9:hover,.cm-hc9:focus) .cm-tc9,.cmap svg:has(.cm-hc10:hover,.cm-hc10:focus) .cm-tc10,.cmap svg:has(.cm-hc11:hover,.cm-hc11:focus) .cm-tc11,.cmap svg:has(.cm-hc12:hover,.cm-hc12:focus) .cm-tc12,.cmap svg:has(.cm-hc13:hover,.cm-hc13:focus) .cm-tc13,.cmap svg:has(.cm-hc14:hover,.cm-hc14:focus) .cm-tc14,.cmap svg:has(.cm-hc15:hover,.cm-hc15:focus) .cm-tc15,.cmap svg:has(.cm-hc16:hover,.cm-hc16:focus) .cm-tc16,.cmap svg:has(.cm-hc17:hover,.cm-hc17:focus) .cm-tc17,.cmap svg:has(.cm-hc18:hover,.cm-hc18:focus) .cm-tc18,.cmap svg:has(.cm-hc19:hover,.cm-hc19:focus) .cm-tc19,.cmap svg:has(.cm-hc20:hover,.cm-hc20:focus) .cm-tc20,.cmap svg:has(.cm-hc21:hover,.cm-hc21:focus) .cm-tc21,.cmap svg:has(.cm-hc22:hover,.cm-hc22:focus) .cm-tc22,.cmap svg:has(.cm-hc23:hover,.cm-hc23:focus) .cm-tc23{visibility:visible}
+/* /diagram:crypto-map */
+/* diagram:roadmap */
+/* ---------- roadmap (phased gantt) ---------- */
+.rmap{margin:0 0 30px;background:var(--bg-lo);border:1px solid var(--line-soft);padding:12px;overflow-x:auto}
+.rmap svg{display:block;width:100%;min-width:940px;height:auto}
+.rmap .rm-zone{fill:var(--bg-hi);stroke:var(--line-soft);fill-opacity:.7}
+.rmap .rm-zlabel{font:700 11px var(--mono);letter-spacing:.28em;fill:var(--slate)}
+.rmap .rm-grid{stroke:var(--line-soft);stroke-width:1}
+.rmap .rm-axis{stroke:var(--line);stroke-width:1}
+.rmap .rm-year{font:700 12px var(--mono);letter-spacing:.1em;fill:var(--muted)}
+.rmap .rm-deadline{stroke:var(--warn);stroke-opacity:.35;stroke-dasharray:2 4}
+.rmap .rm-flag{fill:none;stroke:var(--warn);stroke-width:1.5;stroke-linejoin:round}
+.rmap .rm-dl1{font:700 9.5px var(--mono);letter-spacing:.1em;fill:var(--warn)}
+.rmap .rm-dl2{font:400 9.5px var(--mono);fill:var(--body)}
+.rmap .rm-name{font:600 12.5px var(--sans);fill:var(--white)}
+.rmap .rm-sub{font:400 9.5px var(--mono);fill:var(--muted)}
+.rmap .rm-bar-in{font:700 9.5px var(--mono);letter-spacing:.1em;fill:var(--deep)}
+.rmap .rm-bar-out{font:700 9.5px var(--mono);letter-spacing:.1em;fill:var(--body)}
+.rmap .rm-risk-in{font:700 9.5px var(--mono);letter-spacing:.1em;fill:var(--white)}
+.rmap .rm-q-in{font:700 9.5px var(--mono);letter-spacing:.1em;fill:var(--white)}
+.rmap .rm-ongoing-in{font:700 9.5px var(--mono);letter-spacing:.14em;fill:var(--body)}
+.rmap .rm-b-data{fill:var(--brand)}
+.rmap .rm-b-risk{stroke:var(--bad);stroke-opacity:.6}
+.rmap .rm-risk-bg{fill:rgba(255,93,115,.18)}
+.rmap .rm-risk-ln{stroke:var(--bad);stroke-opacity:.45;stroke-width:2}
+.rmap .rm-b-mig{fill:var(--warn)}
+.rmap .rm-q0{stop-color:var(--bad);stop-opacity:0}
+.rmap .rm-q1{stop-color:var(--bad);stop-opacity:.45}
+.rmap .rm-q2{stop-color:var(--bad);stop-opacity:.8}
+.rmap .rm-b-p1{fill:var(--muted)}
+.rmap .rm-b-p2{fill:var(--brand)}
+.rmap .rm-b-p3{fill:var(--bad)}
+.rmap .rm-b-p4{fill:var(--warn)}
+.rmap .rm-b-p5{fill:var(--good)}
+.rmap .rm-b-ongoing{stroke:var(--slate)}
+.rmap .rm-hatch-bg{fill:var(--surface)}
+.rmap .rm-hatch-ln{stroke:var(--line);stroke-width:2}
+.rmap .rm-sep{stroke:var(--line);stroke-dasharray:3 4}
+.rmap .rm-diamond{fill:var(--white)}
+.rmap .rm-dnum{font:700 10px var(--mono);fill:var(--deep)}
+.rmap .rm-check{font:700 10px var(--mono);fill:var(--prose);paint-order:stroke;stroke:var(--bg-hi);stroke-width:4px}
+.rmap .rm-leader{stroke:var(--slate)}
+.rmap .rm-today{stroke:var(--brand);stroke-width:1.5}
+.rmap .rm-today-t{font:700 9.5px var(--mono);letter-spacing:.18em;fill:var(--brand);paint-order:stroke;stroke:var(--bg-lo);stroke-width:4px}
+.rmap .rm-arrowhead{fill:var(--slate)}
+.rmap .rm-legend{font:400 11px var(--mono);fill:var(--body)}
+.rmap .rm-foot{font:400 10px var(--mono);letter-spacing:.04em;fill:var(--slate)}
+.rmap .rm-tag-h rect{fill:rgba(255,93,115,.12);stroke:rgba(255,93,115,.5)}
+.rmap .rm-tag-h text{font:700 9px var(--mono);letter-spacing:.1em;fill:var(--bad-soft)}
+.rmap .rm-tag-s rect{fill:rgba(135,162,176,.12);stroke:var(--slate)}
+.rmap .rm-tag-s text{font:700 9px var(--mono);letter-spacing:.1em;fill:var(--muted)}
+.rmap .rm-hint{font:700 9.5px var(--mono);letter-spacing:.16em;fill:var(--slate)}
+.rmap .rm-svtip{visibility:hidden;pointer-events:none}
+.rmap .rm-tip-bg{fill:var(--deep);stroke:var(--line)}
+.rmap .rm-tip-acc{fill:var(--brand)}
+.rmap .rm-tip-t0{font:700 11px var(--mono);fill:var(--white)}
+.rmap .rm-tip-t{font:400 11px var(--mono);fill:var(--prose)}
+.rmap [tabindex]{cursor:help;outline:none}
+.rmap [tabindex]:focus-visible > rect:first-child{stroke:var(--brand);stroke-width:1.5}
+.rmap svg:has(.rm-hr0:hover,.rm-hr0:focus) .rm-tr0,.rmap svg:has(.rm-hr1:hover,.rm-hr1:focus) .rm-tr1,.rmap svg:has(.rm-hr2:hover,.rm-hr2:focus) .rm-tr2,.rmap svg:has(.rm-hr3:hover,.rm-hr3:focus) .rm-tr3,.rmap svg:has(.rm-hr4:hover,.rm-hr4:focus) .rm-tr4,.rmap svg:has(.rm-hr5:hover,.rm-hr5:focus) .rm-tr5,.rmap svg:has(.rm-hr6:hover,.rm-hr6:focus) .rm-tr6,.rmap svg:has(.rm-hr7:hover,.rm-hr7:focus) .rm-tr7,.rmap svg:has(.rm-hr8:hover,.rm-hr8:focus) .rm-tr8,.rmap svg:has(.rm-hr9:hover,.rm-hr9:focus) .rm-tr9,.rmap svg:has(.rm-hr10:hover,.rm-hr10:focus) .rm-tr10,.rmap svg:has(.rm-hr11:hover,.rm-hr11:focus) .rm-tr11,.rmap svg:has(.rm-hr12:hover,.rm-hr12:focus) .rm-tr12,.rmap svg:has(.rm-hr13:hover,.rm-hr13:focus) .rm-tr13{visibility:visible}
+/* /diagram:roadmap */
 </style>
 </head>
 <body>
@@ -378,7 +490,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">STORED TODAY · DECRYPTED LATER · NO TIME TO RECOVER</span><span class="nl">OPGESLAGEN VANDAAG · ONTCIJFERD LATER · GEEN TIJD VOOR HERSTEL</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: POST-QUANTUM ENCRYPTION FOR HIGH-VALUE DATA NOW</span><span class="nl">OPLOSSING: POST-QUANTUM ENCRYPTIE VOOR WAARDEVOLLE DATA NU</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: POST-QUANTUM ENCRYPTION FOR HIGH-VALUE DATA NOW</span><span class="nl">AANBEVOLEN: POST-QUANTUM ENCRYPTIE VOOR WAARDEVOLLE DATA NU</span></span>
     </div>
 
     <div class="ai3">
@@ -427,7 +539,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">UNDETECTABLE SHORTCUT · NO MATHEMATICAL PROOF OF SAFETY</span><span class="nl">ONDETECTEERBARE SNELKOPPELING · GEEN WISKUNDIG BEWIJS VAN VEILIGHEID</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: ALGORITHM DIVERSITY + CRYPTOGRAPHIC AGILITY</span><span class="nl">OPLOSSING: ALGORITME DIVERSITEIT + CRYPTOGRAFISCHE FLEXIBILITEIT</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ALGORITHM DIVERSITY + CRYPTOGRAPHIC AGILITY</span><span class="nl">AANBEVOLEN: ALGORITME DIVERSITEIT + CRYPTOGRAFISCHE FLEXIBILITEIT</span></span>
     </div>
 
     <div class="ai3">
@@ -435,7 +547,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <div class="g">
         <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Conditional</span><span class="nl">Voorwaardelijk</span></b><p><span class="en">AI excels at finding patterns that humans miss. A system trained on millions of encrypted messages could potentially find statistical weaknesses in key generation, message padding, or implementation that reveal information about the plaintext.</span><span class="nl">AI blinkt uit in het vinden van patronen die mensen missen. Een systeem dat op miljoenen versleutelde berichten is getraind, kan statistisch zwakke punten in sleutelgeneratie, berichtopvulling of implementatie vinden.</span></p></div>
         <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="lo"><span class="en">Requires scale</span><span class="nl">Vereist schaal</span></b><p><span class="en">An organisation with AI expertise and access to massive encrypted data samples has an advantage, but this is a sophisticated attack, not a mass exploitation. Small organisations are lower priority targets.</span><span class="nl">Een organisatie met AI-expertise en toegang tot grote versleutelde gegevensmonsters heeft een voordeel, maar dit is een geavanceerde aanval, geen massale exploitatie.</span></p></div>
-        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Rotate algorithms</span><span class="nl">Algoritmen wisselen</span></b><p><span class="en">Machine learning can monitor your cryptographic implementations for anomalies, and switching between algorithms regularly makes it harder for an attacker to focus their AI training on a single target.</span><span class="nl">Machine learning kan uw cryptografische implementaties op anomalieën controleren, en het regelmatig wisselen van algoritmen maakt het voor een aanvaller moeilijker hun AI-training op een enkel doelwit te richten.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Stay able to switch</span><span class="nl">Kunnen wisselen</span></b><p><span class="en">Machine learning can flag anomalies in how your cryptography behaves. Being able to swap an algorithm quickly when a weakness is found matters more than rotating algorithms routinely.</span><span class="nl">Machine learning kan afwijkingen signaleren in hoe uw cryptografie zich gedraagt. Snel een algoritme kunnen vervangen als er een zwakte wordt gevonden, weegt zwaarder dan routinematig wisselen.</span></p></div>
       </div>
     </div>
   </div>
@@ -446,12 +558,12 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
   <div class="wrap">
     <span class="kicker"><b>//</b> <span class="en">RISK 03</span><span class="nl">RISICO 03</span></span>
     <h2>
-      <span class="en">Quantum and AI in one attack. <em>Together they do more.</em></span>
-      <span class="nl">Quantum en AI in één aanval. <em>Samen doen ze meer.</em></span>
+      <span class="en">Quantum and AI together. <em>Where the real speed-up is.</em></span>
+      <span class="nl">Quantum en AI samen. <em>Waar de echte versnelling zit.</em></span>
     </h2>
     <span class="term">
-      <span class="en">quantum + AI fusion / accelerated key recovery</span>
-      <span class="nl">quantum + AI fusie / versnelde sleutelterugwinning</span>
+      <span class="en">quantum + AI / what actually speeds up</span>
+      <span class="nl">quantum + AI / wat echt versnelt</span>
     </span>
 
     <div class="stage s3">
@@ -461,33 +573,33 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <div class="wire"></div>
       <div class="phone">
         <div class="sub"><span class="en">HYBRID ATTACK</span><span class="nl">HYBRIDE AANVAL</span></div>
-        <div class="who"><span class="en">1,000x faster</span><span class="nl">1.000x sneller</span></div>
+        <div class="who"><span class="en">RSA / ECC broken</span><span class="nl">RSA / ECC gebroken</span></div>
         <div class="wave"><i></i><i></i><i></i><i></i><i></i></div>
       </div>
       <div class="mask">⚙️</div>
       <div class="pay">🔑</div>
-      <div class="tagline"><span class="en">AI NARROWS SEARCH · QUANTUM COMPLETES IT</span><span class="nl">AI VERKLEINT ZOEKRUIMTE · QUANTUM VOLTOOIT HET</span></div>
-      <div class="banner"><span class="en">CLASSICAL ATTACK TIME: 2^256 OPERATIONS · AI+QUANTUM: HOURS</span><span class="nl">KLASSIEKE AANVAL: 2^256 BEWERKINGEN · AI+QUANTUM: UREN</span></div>
+      <div class="tagline"><span class="en">QUANTUM BREAKS PUBLIC KEYS · AI SPEEDS UP THE REST</span><span class="nl">QUANTUM BREEKT PUBLIEKE SLEUTELS · AI VERSNELT DE REST</span></div>
+      <div class="banner"><span class="en">AES-256 STAYS STRONG · RSA AND ECC DO NOT</span><span class="nl">AES-256 BLIJFT STERK · RSA EN ECC NIET</span></div>
     </div>
 
     <div class="panel">
-      <p class="en">Quantum computers and AI are most dangerous when they work together. AI can reduce the search space from 2^256 possibilities to 2^100 by finding patterns that matter. A quantum computer can then search 2^100 in hours instead of classical brute force taking billions of years. The combination is not just the sum of two threats — it is exponential. An AI system narrows the problem down, a quantum computer solves it, and a key that was mathematically impossible to recover becomes a matter of time and resources.</p>
-      <p class="en"><strong>Business impact:</strong> encryption that relies on computationally hard problems is broken in a hybrid attack at a scale and speed that an organisation cannot prepare for defensively. The threat is not quantum computers alone or AI alone — it is the pairing. Any system that stores high-value data assumes both risks arrive together.</p>
-      <p class="nl">Quantumcomputers en AI zijn het gevaarlijkst als ze samenwerken. AI kan de zoekruimte van 2^256 mogelijkheden tot 2^100 verkleinen door patronen te vinden die ertoe doen. Een quantumcomputer kan dan 2^100 in uren doorzoeken in plaats van klassieke brute force die miljarden jaar duurt. De combinatie is niet zomaar de som van twee bedreigingen — het is exponentieel. Een AI-systeem beperkt het probleem, een quantumcomputer lost het op, en een sleutel die wiskundig onmogelijk was om terug te vinden, wordt een kwestie van tijd en middelen.</p>
-      <p class="nl"><strong>Bedrijfsimpact:</strong> encryptie die vertrouwt op rekenkundig moeilijke problemen, is gebroken in een hybride aanval op een schaal en snelheid waar een organisatie zich niet defensief op kan voorbereiden. De bedreiging is niet zomaar een quantumcomputer alleen of AI alleen — het is de koppeling.</p>
+      <p class="en">A large quantum computer breaks <abbr class="tip" tabindex="0" data-tip="RSA and ECC: the public-key maths behind most key exchange and digital signatures today.">RSA and ECC</abbr> outright with Shor’s algorithm — it needs no help from AI to do that. Against symmetric encryption such as AES-256 it gives only a limited speed-up, so AES-256 stays strong. AI adds to the threat around the maths: it speeds up quantum research itself and finds implementation flaws and side-channel leaks faster. Current research does not support claims that AI cuts a 256-bit key to hours of quantum work.</p>
+      <p class="en"><strong>Business impact:</strong> the exposure sits almost entirely in public-key cryptography — key exchange (TLS, VPN), certificates and code signing. Data stored under AES-256 is not the weak point; the RSA or ECC keys that protect or transport it are.</p>
+      <p class="nl">Een grote quantumcomputer breekt <abbr class="tip" tabindex="0" data-tip="RSA en ECC: de public-key-wiskunde achter de meeste sleuteluitwisseling en digitale handtekeningen van nu.">RSA en ECC</abbr> volledig met het algoritme van Shor — daar is geen AI voor nodig. Tegen symmetrische encryptie zoals AES-256 geeft hij maar een beperkte versnelling, dus AES-256 blijft sterk. AI vergroot de dreiging rondom de wiskunde: het versnelt het quantumonderzoek zelf en vindt implementatiefouten en zijkanaallekken sneller. Beweringen dat AI een 256-bits sleutel terugbrengt tot uren quantumwerk, worden door huidig onderzoek niet ondersteund.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de blootstelling zit vrijwel volledig in public-key-cryptografie — sleuteluitwisseling (TLS, VPN), certificaten en codesignering. Data die met AES-256 is opgeslagen, is niet het zwakke punt; de RSA- of ECC-sleutels die haar beschermen of transporteren wel.</p>
     </div>
 
     <div class="pills">
-      <span class="pill risk">⚠ <span class="en">EXPONENTIAL SPEEDUP · DEFENSE-IN-DEPTH REQUIRED</span><span class="nl">EXPONENTIËLE VERSNELLING · DIEPGAANDE VERDEDIGING NODIG</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: HYBRID POST-QUANTUM + HARDWARE SECURITY MODULES</span><span class="nl">OPLOSSING: HYBRIDE POST-QUANTUM + HARDWARE VEILIGHEID</span></span>
+      <span class="pill risk">⚠ <span class="en">PUBLIC-KEY CRYPTO BROKEN · AI SPEEDS UP THE REST</span><span class="nl">PUBLIC-KEY-CRYPTO GEBROKEN · AI VERSNELT DE REST</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: HYBRID POST-QUANTUM KEY EXCHANGE + KEYS IN HSMs</span><span class="nl">AANBEVOLEN: HYBRIDE POST-QUANTUM UITWISSELING + SLEUTELS IN HSM's</span></span>
     </div>
 
     <div class="ai3">
       <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
       <div class="g">
-        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Dramatic</span><span class="nl">Dramatisch</span></b><p><span class="en">A quantum computer running Shor's algorithm is fast but dumb — it searches every path. AI identifies which paths are worth searching, reducing the problem from intractable to merely hard. Together they turn an RSA-2048 key into a few hours of computation.</span><span class="nl">Een quantumcomputer met Shor's algoritme is snel maar dom — het zoekt elk pad. AI geeft aan welke paden het waard zijn om te zoeken, waardoor het probleem van onhandelbaar naar slechts moeilijk wordt.</span></p></div>
-        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Requires both</span><span class="nl">Vereist beide</span></b><p><span class="en">An attacker needs both technologies: quantum hardware (rare and stateful) and AI training (common). The pairing is still rare, but nation-states and well-funded groups are building both. Assume they will find each other.</span><span class="nl">Een aanvaller heeft beide technologieën nodig: quantumhardware (zeldzaam en stateful) en AI-training (gewoon). De koppeling is nog steeds zeldzaam, maar natiestaten en goed gefinancierde groepen bouwen beide op.</span></p></div>
-        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="mid"><span class="en">Multiple factors</span><span class="nl">Meerdere factoren</span></b><p><span class="en">No single algorithm survives a hybrid attack. Defense is layered: post-quantum encryption for baseline, hardware-backed key storage to avoid AI having direct access to key material, and secrets split across systems so one compromise does not reveal all.</span><span class="nl">Geen enkel algoritme kan een hybride aanval overleven. Verdediging is gelaagd: post-quantum encryptie voor basislijn, hardwareondersteunde sleutelopslag om AI geen directe toegang tot sleutelmateriaal te geven, en geheimen verdeeld over systemen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Indirect</span><span class="nl">Indirect</span></b><p><span class="en">AI does not make Shor’s algorithm smarter. It speeds up the research — error correction, qubit control — that brings a useful quantum computer closer, and it finds implementation bugs faster.</span><span class="nl">AI maakt het algoritme van Shor niet slimmer. Het versnelt het onderzoek — foutcorrectie, qubitbesturing — dat een bruikbare quantumcomputer dichterbij brengt, en vindt implementatiefouten sneller.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Requires both</span><span class="nl">Vereist beide</span></b><p><span class="en">Quantum hardware is rare and built at national scale; AI is everywhere. Expect the pairing at nation-state level first — the same actors that harvest traffic today.</span><span class="nl">Quantumhardware is zeldzaam en wordt op nationale schaal gebouwd; AI is overal. Verwacht de combinatie eerst bij staten — dezelfde partijen die nu verkeer oogsten.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="mid"><span class="en">Layered defence</span><span class="nl">Gelaagde verdediging</span></b><p><span class="en">Hybrid post-quantum encryption as the baseline, keys in hardware security modules so they cannot be copied off a compromised server, and validated, constant-time crypto libraries so side-channel attacks find less.</span><span class="nl">Hybride post-quantum encryptie als basis, sleutels in hardware-beveiligingsmodules zodat ze niet van een gehackte server te kopiëren zijn, en gevalideerde, constant-time cryptobibliotheken zodat zijkanaalaanvallen minder vinden.</span></p></div>
       </div>
     </div>
   </div>
@@ -512,34 +624,840 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <div class="node right"><div class="box">⚛️</div><span class="en">Quantum arrives</span><span class="nl">Quantum komt</span></div>
       <div class="wire"></div>
       <div class="val orig"><span class="en">"We have 10 years"</span><span class="nl">"We hebben 10 jaar"</span></div>
-      <div class="val fake"><span class="en">QUANTUM MAY ARRIVE IN 5-7 YEARS</span><span class="nl">QUANTUM KAN IN 5-7 JAAR ARRIVEREN</span></div>
+      <div class="val fake"><span class="en">QUANTUM COULD ARRIVE FROM 2030</span><span class="nl">QUANTUM KAN VANAF 2030 KOMEN</span></div>
       <div class="doc">📋</div>
       <div class="stamp-ok"><span class="en">DONE ✓</span><span class="nl">KLAAR ✓</span></div>
       <div class="banner"><span class="en">PLANNING ASSUMES SLOW ROLLOUT · RISK ARRIVES FAST · DATA ENCRYPTED NOW MUST SURVIVE THE TRANSITION</span><span class="nl">PLANNING VERONDERSTELT TRAGE UITROL · RISICO KOMT SNEL · DATA VERSLEUTELD NU MOET OVERGANG OVERLEVEN</span></div>
     </div>
 
     <div class="panel">
-      <p class="en">Most organisations are not migrating to post-quantum encryption yet. The assumption is that there is time — that quantum computers are 10+ years away. But quantum computing timelines are uncertain. If the first cryptographically useful quantum computer arrives in 5-7 years, and your migration plan assumes 10, you will be mid-transition when the window closes. Worse: data encrypted today with current algorithms will be decoded when quantum arrives, even if you switch to post-quantum encryption tomorrow. There is no "catching up" after the fact. Your migration must start now to cover the data stream that matters for the next decade.</p>
+      <p class="en">Most organisations are not migrating to post-quantum encryption yet. The assumption is that there is time — that quantum computers are 10+ years away. But quantum computing timelines are uncertain. If the first cryptographically useful quantum computer arrives around 2030 (possible, says the AIVD) and your plan assumes the 2040s, you will be mid-transition when the window closes. Worse: data encrypted today with current algorithms will be decoded when quantum arrives, even if you switch to post-quantum encryption tomorrow. There is no "catching up" after the fact. Your migration must start now to cover the data stream that matters for the next decade.</p>
       <p class="en"><strong>Business impact:</strong> a gap between the arrival of quantum computers and the completion of your migration means an undefended period. Data encrypted during the migration will be vulnerable for years. The migration is long — it involves every system that generates, stores or transmits secrets. And it cannot be undone: once you switch off old encryption, you cannot decrypt data stored under it if you were wrong about the quantum timeline.</p>
-      <p class="nl">De meeste organisaties migreren nog niet naar post-quantum encryptie. De aanname is dat er tijd is — dat quantumcomputers 10+ jaar weg zijn. Maar quantumcomputing-tijdlijnen zijn onzeker. Als de eerste cryptografisch bruikbare quantumcomputer in 5-7 jaar aankomt, en uw migratieplan gaat uit van 10, bent u halverwege de overgang wanneer het venster sluit. Erger: data versleuteld vandaag met huidige algoritmen zal worden gedecodeerd wanneer quantum aankomt, zelfs als u morgen naar post-quantum encryptie overschakelt. Er is geen "inhalen" achteraf.</p>
+      <p class="nl">De meeste organisaties migreren nog niet naar post-quantum encryptie. De aanname is dat er tijd is — dat quantumcomputers 10+ jaar weg zijn. Maar quantumcomputing-tijdlijnen zijn onzeker. Als de eerste cryptografisch bruikbare quantumcomputer rond 2030 komt (mogelijk, zegt de AIVD) en uw plan uitgaat van de jaren 2040, bent u halverwege de overgang wanneer het venster sluit. Erger: data versleuteld vandaag met huidige algoritmen zal worden gedecodeerd wanneer quantum aankomt, zelfs als u morgen naar post-quantum encryptie overschakelt. Er is geen "inhalen" achteraf.</p>
       <p class="nl"><strong>Bedrijfsimpact:</strong> een gat tussen de komst van quantumcomputers en het voltooien van uw migratie betekent een onverdedigde periode. Data versleuteld tijdens de migratie zal jaren kwetsbaar zijn. De migratie is lang — het betreft elk systeem dat geheimen genereert, opslaat of verzendt. En het kan niet ongedaan worden gemaakt: als u oude encryptie uitschakelt, kunt u geen data gedecodeerd die daaronder is opgeslagen, als u het fout had over de quantumtijdlijn.</p>
     </div>
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">TIMELINE MISMATCH · MIGRATION IS LONG · NO RECOVERY IF YOU ARE LATE</span><span class="nl">TIJDLIJNVERSCHIL · MIGRATIE IS LANG · GEEN HERSTEL ALS JE TE LAAT BENT</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: START MIGRATION NOW, TRACK PROGRESS, PROTECT DATA CREATED TODAY</span><span class="nl">OPLOSSING: BEGIN NU MET MIGRATIE, VOORTGANG VOLGEN, DATA NU BESCHERMEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: START MIGRATION NOW, TRACK PROGRESS, PROTECT DATA CREATED TODAY</span><span class="nl">AANBEVOLEN: BEGIN NU MET MIGRATIE, VOORTGANG VOLGEN, DATA NU BESCHERMEN</span></span>
     </div>
 
     <div class="ai3">
       <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
       <div class="g">
-        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Accelerates timeline</span><span class="nl">Versnelt tijdlijn</span></b><p><span class="en">AI will not build a quantum computer, but breakthroughs in error correction, qubit control and algorithm design may arrive faster than expected because AI itself accelerates discovery. A quantum breakthrough you assumed was 10 years away could compress to 5-7.</span><span class="nl">AI zal geen quantumcomputer bouwen, maar doorbraken in foutcorrectie, qubitbesturing en algoritmieontwerp kunnen sneller arriveren dan verwacht omdat AI zelf ontdekkingen versnelt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Accelerates timeline</span><span class="nl">Versnelt tijdlijn</span></b><p><span class="en">AI will not build a quantum computer, but breakthroughs in error correction, qubit control and algorithm design may arrive faster than expected because AI itself accelerates discovery. A breakthrough you expected in the 2040s could come years earlier.</span><span class="nl">AI zal geen quantumcomputer bouwen, maar doorbraken in foutcorrectie, qubitbesturing en algoritmieontwerp kunnen sneller arriveren dan verwacht omdat AI zelf ontdekkingen versnelt.</span></p></div>
         <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="lo"><span class="en">Rare at scale</span><span class="nl">Zeldzaam op schaal</span></b><p><span class="en">Building a quantum computer is a national investment, not a rogue operation. An organisation can focus on preparing for the threat without watching for a sudden weaponisation event. The timeline is the risk, not surprise.</span><span class="nl">Het bouwen van een quantumcomputer is een nationale investering, geen ondernemingsactiviteit. Een organisatie kan zich op voorbereiding richten zonder plotselinge wapeninggebeurtenissen te controleren.</span></p></div>
         <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Plan conservatively</span><span class="nl">Plan conservatief</span></b><p><span class="en">AI can track the quantum computing landscape, analyse published papers and patent activity to estimate timelines, and update your risk model. But planning for "quantum in 5 years" is safer than hoping for 10, regardless of what the models say.</span><span class="nl">AI kan het quantumcomputinglandschap bijhouden, gepubliceerde papers en octrooiactiviteiten analyseren om tijdlijnen in te schatten. Maar plannen voor "quantum in 5 jaar" is veiliger dan hopen op 10.</span></p></div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- diagram:crypto-map -->
+<section class="risk-block" id="crypto-map">
+  <div class="wrap">
+    <span class="kicker"><b>//</b><span class="en">IN PRACTICE</span><span class="nl">IN DE PRAKTIJK</span></span>
+    <h2><span class="en">Where your crypto lives.<br><em>And where you might start.</em></span><span class="nl">Waar uw cryptografie zit.<br><em>En waar u zou kunnen beginnen.</em></span></h2>
+    <span class="term"><span class="en">crypto inventory / reference map</span><span class="nl">crypto-inventaris / referentiekaart</span></span>
+
+    <figure class="cmap">
+<svg viewBox="0 0 1120 650" role="img" aria-labelledby="cm-title cm-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="cm-title">Where your crypto lives</title>
+<desc id="cm-desc">Map of twelve places where cryptography is used, across edge, internal and trust layers, each marked safe today, hybrid post-quantum available, or needs a plan. VPN, SaaS suppliers, PKI roots and code signing need a plan; SSH and data at rest are safe today.</desc>
+<defs>
+<marker id="cm-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="cm-arrowhead"/></marker>
+<symbol id="cm-ok" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 7.3 L6.1 9.4 L10.2 4.9" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="cm-mid" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 1 A6 6 0 0 1 7 13 Z" fill="currentColor"/></symbol>
+<symbol id="cm-bad" viewBox="0 0 14 14"><path d="M7 1.2 L13.2 12.6 H0.8 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 5.2 V8.6" stroke="currentColor" stroke-width="1.6"/><circle cx="7" cy="10.6" r="0.9" fill="currentColor"/></symbol>
+</defs>
+<rect x="20" y="40" width="1080" height="156" class="cm-zone"/>
+<text x="40" y="62" class="cm-zlabel en">EDGE · PUBLIC INTERNET</text><text x="40" y="62" class="cm-zlabel nl">EDGE · PUBLIEK INTERNET</text>
+<rect x="20" y="216" width="1080" height="176" class="cm-zone"/>
+<text x="40" y="238" class="cm-zlabel en">INSIDE · YOUR NETWORK &amp; CLOUD</text><text x="40" y="238" class="cm-zlabel nl">BINNEN · UW NETWERK &amp; CLOUD</text>
+<rect x="20" y="412" width="1080" height="156" class="cm-zone"/>
+<text x="40" y="434" class="cm-zlabel en">TRUST &amp; KEYS · UNDERPINS EVERYTHING ABOVE</text><text x="40" y="434" class="cm-zlabel nl">VERTROUWEN &amp; SLEUTELS · ONDER ALLES HIERBOVEN</text>
+<path d="M262 124.0 H297" class="cm-link" marker-end="url(#cm-arr)"/>
+<text x="280" y="117.0" class="cm-llabel" text-anchor="middle">TLS</text>
+<path d="M522 124.0 H557" class="cm-link" marker-end="url(#cm-arr)"/>
+<text x="540" y="117.0" class="cm-llabel" text-anchor="middle">TLS</text>
+<path d="M670.0 174 V249" class="cm-link" marker-end="url(#cm-arr)"/>
+<text x="680.0" y="216.0" class="cm-llabel" text-anchor="start">TLS</text>
+<path d="M920 174 L760 249" class="cm-link" marker-end="url(#cm-arr)"/>
+<text x="894" y="224.0" class="cm-llabel" text-anchor="start">IPSEC</text>
+<path d="M522 300.0 H557" class="cm-link" marker-end="url(#cm-arr)"/>
+<text x="540" y="293.0" class="cm-llabel" text-anchor="middle">SSH</text>
+<path d="M782 300.0 H857" class="cm-link" marker-end="url(#cm-arr)"/>
+<text x="820" y="293.0" class="cm-llabel" text-anchor="middle">TLS</text>
+<path d="M600 350 V370 H150.0 V351" class="cm-link" marker-end="url(#cm-arr)"/>
+<text x="410.0" y="365" class="cm-llabel" text-anchor="middle">TLS · OUTBOUND</text>
+<g class="cm-node-g cm-s-mid cm-hc0" tabindex="0">
+<rect x="40" y="76" width="220" height="96" class="cm-node"/>
+<rect x="40" y="76" width="4" height="96" class="cm-bar"/>
+<text x="56" y="98" class="cm-kick">X25519MLKEM768</text>
+<text x="56" y="121" class="cm-name en">Visitors &amp; apps</text><text x="56" y="121" class="cm-name nl">Bezoekers &amp; apps</text>
+<use href="#cm-mid" class="cm-u-mid" x="56" y="136" width="13" height="13"/>
+<text x="76" y="146" class="cm-st en">Modern browsers ready ·</text><text x="76" y="146" class="cm-st nl">Moderne browsers klaar ·</text>
+<text x="76" y="160" class="cm-st en">old clients &amp; apps lag</text><text x="76" y="160" class="cm-st nl">oude clients &amp; apps achter</text>
+</g>
+<g class="cm-tag-h cm-hc1" tabindex="0"><rect x="208" y="86" width="42" height="16"/><text x="229.0" y="97.5" text-anchor="middle">HNDL</text></g>
+<g class="cm-node-g cm-s-mid cm-hc2" tabindex="0">
+<rect x="300" y="76" width="220" height="96" class="cm-node"/>
+<rect x="300" y="76" width="4" height="96" class="cm-bar"/>
+<text x="316" y="98" class="cm-kick">TLS TERMINATION</text>
+<text x="316" y="121" class="cm-name">CDN / WAF</text>
+<use href="#cm-mid" class="cm-u-mid" x="316" y="136" width="13" height="13"/>
+<text x="336" y="146" class="cm-st en">Hybrid key exchange:</text><text x="336" y="146" class="cm-st nl">Hybride sleuteluitwisseling:</text>
+<text x="336" y="160" class="cm-st en">worth enabling &amp; verifying</text><text x="336" y="160" class="cm-st nl">aanzetten overwegen</text>
+</g>
+<g class="cm-tag-h cm-hc3" tabindex="0"><rect x="468" y="86" width="42" height="16"/><text x="489.0" y="97.5" text-anchor="middle">HNDL</text></g>
+<g class="cm-node-g cm-s-mid cm-hc4" tabindex="0">
+<rect x="560" y="76" width="220" height="96" class="cm-node"/>
+<rect x="560" y="76" width="4" height="96" class="cm-bar"/>
+<text x="576" y="98" class="cm-kick en">TLS TO ORIGIN</text><text x="576" y="98" class="cm-kick nl">TLS NAAR ORIGIN</text>
+<text x="576" y="121" class="cm-name">Load balancer / gateway</text>
+<use href="#cm-mid" class="cm-u-mid" x="576" y="136" width="13" height="13"/>
+<text x="596" y="146" class="cm-st en">Needs OpenSSL 3.5+</text><text x="596" y="146" class="cm-st nl">Vereist OpenSSL 3.5+</text>
+<text x="596" y="160" class="cm-st en">or vendor support</text><text x="596" y="160" class="cm-st nl">of leveranciersondersteuning</text>
+</g>
+<g class="cm-tag-h cm-hc5" tabindex="0"><rect x="728" y="86" width="42" height="16"/><text x="749.0" y="97.5" text-anchor="middle">HNDL</text></g>
+<g class="cm-node-g cm-s-bad cm-hc6" tabindex="0">
+<rect x="860" y="76" width="220" height="96" class="cm-node"/>
+<rect x="860" y="76" width="4" height="96" class="cm-bar"/>
+<text x="876" y="98" class="cm-kick">IKEV2 / IPSEC</text>
+<text x="876" y="121" class="cm-name en">Branch &amp; partner VPN</text><text x="876" y="121" class="cm-name nl">VPN vestigingen</text>
+<use href="#cm-bad" class="cm-u-bad" x="876" y="136" width="13" height="13"/>
+<text x="896" y="146" class="cm-st en">Vendor-dependent ·</text><text x="896" y="146" class="cm-st nl">Afhankelijk van leverancier ·</text>
+<text x="896" y="160" class="cm-st en">top harvest target</text><text x="896" y="160" class="cm-st nl">favoriet oogstdoel</text>
+</g>
+<g class="cm-tag-h cm-hc7" tabindex="0"><rect x="1028" y="86" width="42" height="16"/><text x="1049.0" y="97.5" text-anchor="middle">HNDL</text></g>
+<g class="cm-node-g cm-s-bad cm-hc8" tabindex="0">
+<rect x="40" y="252" width="220" height="96" class="cm-node"/>
+<rect x="40" y="252" width="4" height="96" class="cm-bar"/>
+<text x="56" y="274" class="cm-kick en">OUTBOUND TLS</text><text x="56" y="274" class="cm-kick nl">UITGAAND TLS</text>
+<text x="56" y="297" class="cm-name en">SaaS &amp; suppliers</text><text x="56" y="297" class="cm-name nl">SaaS &amp; leveranciers</text>
+<use href="#cm-bad" class="cm-u-bad" x="56" y="312" width="13" height="13"/>
+<text x="76" y="322" class="cm-st en">Unknown until you ask ·</text><text x="76" y="322" class="cm-st nl">Onbekend tot u het vraagt ·</text>
+<text x="76" y="336" class="cm-st en">consider the contract</text><text x="76" y="336" class="cm-st nl">denk aan het contract</text>
+</g>
+<g class="cm-tag-h cm-hc9" tabindex="0"><rect x="208" y="262" width="42" height="16"/><text x="229.0" y="273.5" text-anchor="middle">HNDL</text></g>
+<g class="cm-node-g cm-s-ok cm-hc10" tabindex="0">
+<rect x="300" y="252" width="220" height="96" class="cm-node"/>
+<rect x="300" y="252" width="4" height="96" class="cm-bar"/>
+<text x="316" y="274" class="cm-kick">MLKEM768X25519</text>
+<text x="316" y="297" class="cm-name en">Admin access (SSH)</text><text x="316" y="297" class="cm-name nl">Beheertoegang (SSH)</text>
+<use href="#cm-ok" class="cm-u-ok" x="316" y="312" width="13" height="13"/>
+<text x="336" y="322" class="cm-st en">OpenSSH 10+: hybrid default ·</text><text x="336" y="322" class="cm-st nl">OpenSSH 10+: hybride default ·</text>
+<text x="336" y="336" class="cm-st en">upgrade older servers</text><text x="336" y="336" class="cm-st nl">oudere servers upgraden</text>
+</g>
+<g class="cm-tag-h cm-hc11" tabindex="0"><rect x="468" y="262" width="42" height="16"/><text x="489.0" y="273.5" text-anchor="middle">HNDL</text></g>
+<g class="cm-node-g cm-s-mid cm-hc12" tabindex="0">
+<rect x="560" y="252" width="220" height="96" class="cm-node"/>
+<rect x="560" y="252" width="4" height="96" class="cm-bar"/>
+<text x="576" y="274" class="cm-kick">MTLS · EAST-WEST</text>
+<text x="576" y="297" class="cm-name">Services &amp; mesh</text>
+<use href="#cm-mid" class="cm-u-mid" x="576" y="312" width="13" height="13"/>
+<text x="596" y="322" class="cm-st en">Depends on mesh &amp;</text><text x="596" y="322" class="cm-st nl">Afhankelijk van mesh-</text>
+<text x="596" y="336" class="cm-st en">library versions</text><text x="596" y="336" class="cm-st nl">en bibliotheekversies</text>
+</g>
+<g class="cm-tag-h cm-hc13" tabindex="0"><rect x="728" y="262" width="42" height="16"/><text x="749.0" y="273.5" text-anchor="middle">HNDL</text></g>
+<g class="cm-node-g cm-s-ok cm-hc14" tabindex="0">
+<rect x="860" y="252" width="220" height="96" class="cm-node"/>
+<rect x="860" y="252" width="4" height="96" class="cm-bar"/>
+<text x="876" y="274" class="cm-kick en">AES-256 AT REST</text><text x="876" y="274" class="cm-kick nl">AES-256 IN RUST</text>
+<text x="876" y="297" class="cm-name en">Databases &amp; storage</text><text x="876" y="297" class="cm-name nl">Databases &amp; opslag</text>
+<use href="#cm-ok" class="cm-u-ok" x="876" y="312" width="13" height="13"/>
+<text x="896" y="322" class="cm-st en">At rest AES-256: safe ·</text><text x="896" y="322" class="cm-st nl">In rust AES-256: veilig ·</text>
+<text x="896" y="336" class="cm-st en">check client TLS</text><text x="896" y="336" class="cm-st nl">client-TLS controleren</text>
+</g>
+<g class="cm-node-g cm-s-bad cm-hc15" tabindex="0">
+<rect x="40" y="448" width="220" height="96" class="cm-node"/>
+<rect x="40" y="448" width="4" height="96" class="cm-bar"/>
+<text x="56" y="470" class="cm-kick">RSA / ECDSA CERTS</text>
+<text x="56" y="493" class="cm-name en">PKI &amp; certificates</text><text x="56" y="493" class="cm-name nl">PKI &amp; certificaten</text>
+<use href="#cm-bad" class="cm-u-bad" x="56" y="508" width="13" height="13"/>
+<text x="76" y="518" class="cm-st en">Not harvestable, but</text><text x="76" y="518" class="cm-st nl">Niet te oogsten, maar</text>
+<text x="76" y="532" class="cm-st en">roots live 20+ years</text><text x="76" y="532" class="cm-st nl">roots leven 20+ jaar</text>
+</g>
+<g class="cm-tag-s cm-hc16" tabindex="0"><rect x="218" y="458" width="32" height="16"/><text x="234.0" y="469.5" text-anchor="middle">SIG</text></g>
+<g class="cm-node-g cm-s-mid cm-hc17" tabindex="0">
+<rect x="300" y="448" width="220" height="96" class="cm-node"/>
+<rect x="300" y="448" width="4" height="96" class="cm-bar"/>
+<text x="316" y="470" class="cm-kick en">ENVELOPE ENCRYPTION</text><text x="316" y="470" class="cm-kick nl">ENVELOPE-ENCRYPTIE</text>
+<text x="316" y="493" class="cm-name">KMS / HSM</text>
+<use href="#cm-mid" class="cm-u-mid" x="316" y="508" width="13" height="13"/>
+<text x="336" y="518" class="cm-st en">AES key wrap: safe ·</text><text x="336" y="518" class="cm-st nl">AES-sleutelwrap: veilig ·</text>
+<text x="336" y="532" class="cm-st en">RSA wrap &amp; firmware: check</text><text x="336" y="532" class="cm-st nl">RSA-wrap &amp; firmware: check</text>
+</g>
+<g class="cm-node-g cm-s-bad cm-hc18" tabindex="0">
+<rect x="560" y="448" width="220" height="96" class="cm-node"/>
+<rect x="560" y="448" width="4" height="96" class="cm-bar"/>
+<text x="576" y="470" class="cm-kick en">UPDATES · PACKAGES</text><text x="576" y="470" class="cm-kick nl">UPDATES · PAKKETTEN</text>
+<text x="576" y="493" class="cm-name en">Code &amp; firmware signing</text><text x="576" y="493" class="cm-name nl">Code- &amp; firmwaresignering</text>
+<use href="#cm-bad" class="cm-u-bad" x="576" y="508" width="13" height="13"/>
+<text x="596" y="518" class="cm-st en">Devices live 10+ years ·</text><text x="596" y="518" class="cm-st nl">Apparaten leven 10+ jaar ·</text>
+<text x="596" y="532" class="cm-st en">ML-DSA / LMS to plan</text><text x="596" y="532" class="cm-st nl">ML-DSA / LMS inplannen</text>
+</g>
+<g class="cm-tag-s cm-hc19" tabindex="0"><rect x="738" y="458" width="32" height="16"/><text x="754.0" y="469.5" text-anchor="middle">SIG</text></g>
+<g class="cm-node-g cm-s-mid cm-hc20" tabindex="0">
+<rect x="860" y="448" width="220" height="96" class="cm-node"/>
+<rect x="860" y="448" width="4" height="96" class="cm-bar"/>
+<text x="876" y="470" class="cm-kick en">LONG RETENTION</text><text x="876" y="470" class="cm-kick nl">LANGE BEWAARTERMIJN</text>
+<text x="876" y="493" class="cm-name en">Backups &amp; archives</text><text x="876" y="493" class="cm-name nl">Back-ups &amp; archieven</text>
+<use href="#cm-mid" class="cm-u-mid" x="876" y="508" width="13" height="13"/>
+<text x="896" y="518" class="cm-st en">AES-256 data: safe ·</text><text x="896" y="518" class="cm-st nl">AES-256-data: veilig ·</text>
+<text x="896" y="532" class="cm-st en">re-wrap RSA-held keys</text><text x="896" y="532" class="cm-st nl">RSA-sleutels herwrappen</text>
+</g>
+<g class="cm-tag-h cm-hc21" tabindex="0"><rect x="1028" y="458" width="42" height="16"/><text x="1049.0" y="469.5" text-anchor="middle">HNDL</text></g>
+<use href="#cm-ok" class="cm-u-ok" x="40" y="593" width="14" height="14"/>
+<text x="62" y="604" class="cm-legend en">Safe today</text><text x="62" y="604" class="cm-legend nl">Vandaag veilig</text>
+<use href="#cm-mid" class="cm-u-mid" x="210" y="593" width="14" height="14"/>
+<text x="232" y="604" class="cm-legend en">Hybrid available — worth enabling</text><text x="232" y="604" class="cm-legend nl">Hybride beschikbaar — overwegen</text>
+<use href="#cm-bad" class="cm-u-bad" x="470" y="593" width="14" height="14"/>
+<text x="492" y="604" class="cm-legend en">Worth a plan / ask vendor</text><text x="492" y="604" class="cm-legend nl">Plan of leverancier nodig</text>
+<g class="cm-tag-h cm-hc22" tabindex="0"><rect x="700" y="592" width="42" height="16"/><text x="721.0" y="603.5" text-anchor="middle">HNDL</text></g>
+<text x="750" y="604" class="cm-legend en">harvest-now exposure</text><text x="750" y="604" class="cm-legend nl">blootgesteld aan oogsten</text>
+<g class="cm-tag-s cm-hc23" tabindex="0"><rect x="930" y="592" width="32" height="16"/><text x="946.0" y="603.5" text-anchor="middle">SIG</text></g>
+<text x="970" y="604" class="cm-legend en">authenticity only</text><text x="970" y="604" class="cm-legend nl">alleen echtheid</text>
+<text x="40" y="630" class="cm-foot en">Defaults as of 2026 · worth checking against the versions you run · hover or tap a box or tag for an explanation</text><text x="40" y="630" class="cm-foot nl">Standaardwaarden per 2026 · vergelijk met de versies die u draait · beweeg of tik op een blok of label voor uitleg</text>
+<g class="cm-svtip cm-tc0" aria-hidden="true">
+<rect x="40" y="178" width="303" height="77" class="cm-tip-bg"/>
+<rect x="40" y="178" width="3" height="77" class="cm-tip-acc"/>
+<text x="54" y="196" class="cm-tip-t0 en">X25519MLKEM768 · hybrid key exchange</text>
+<text x="54" y="211" class="cm-tip-t en">Classic X25519 plus post-quantum ML-KEM.</text>
+<text x="54" y="226" class="cm-tip-t en">Modern browsers use it by default; the</text>
+<text x="54" y="241" class="cm-tip-t en">connection stays safe if either one holds.</text>
+<text x="54" y="196" class="cm-tip-t0 nl">X25519MLKEM768 · hybride uitwisseling</text>
+<text x="54" y="211" class="cm-tip-t nl">Klassiek X25519 plus post-quantum ML-KEM.</text>
+<text x="54" y="226" class="cm-tip-t nl">Moderne browsers gebruiken het standaard;</text>
+<text x="54" y="241" class="cm-tip-t nl">veilig zolang één van beide standhoudt.</text>
+</g>
+<g class="cm-svtip cm-tc1" aria-hidden="true">
+<rect x="208" y="108" width="323" height="77" class="cm-tip-bg"/>
+<rect x="208" y="108" width="3" height="77" class="cm-tip-acc"/>
+<text x="222" y="126" class="cm-tip-t0 en">HNDL · harvest now, decrypt later</text>
+<text x="222" y="141" class="cm-tip-t en">Attackers record encrypted traffic today</text>
+<text x="222" y="156" class="cm-tip-t en">and read it once a quantum computer exists.</text>
+<text x="222" y="171" class="cm-tip-t en">Often a sensible first step: hybrid PQ.</text>
+<text x="222" y="126" class="cm-tip-t0 nl">HNDL · harvest now, decrypt later</text>
+<text x="222" y="141" class="cm-tip-t nl">Aanvallers slaan versleuteld verkeer nu op</text>
+<text x="222" y="156" class="cm-tip-t nl">en lezen het zodra er een quantumcomputer is.</text>
+<text x="222" y="171" class="cm-tip-t nl">Vaak een logische eerste stap: hybride PQ.</text>
+</g>
+<g class="cm-svtip cm-tc2" aria-hidden="true">
+<rect x="300" y="178" width="316" height="77" class="cm-tip-bg"/>
+<rect x="300" y="178" width="3" height="77" class="cm-tip-acc"/>
+<text x="314" y="196" class="cm-tip-t0 en">CDN / WAF</text>
+<text x="314" y="211" class="cm-tip-t en">CDN: network that serves your site close to</text>
+<text x="314" y="226" class="cm-tip-t en">visitors. WAF: web application firewall.</text>
+<text x="314" y="241" class="cm-tip-t en">Both decrypt TLS, so they set the crypto.</text>
+<text x="314" y="196" class="cm-tip-t0 nl">CDN / WAF</text>
+<text x="314" y="211" class="cm-tip-t nl">CDN: netwerk dat uw site dicht bij bezoekers</text>
+<text x="314" y="226" class="cm-tip-t nl">aanbiedt. WAF: firewall voor webapplicaties.</text>
+<text x="314" y="241" class="cm-tip-t nl">Beide ontsleutelen TLS en bepalen de crypto.</text>
+</g>
+<g class="cm-svtip cm-tc3" aria-hidden="true">
+<rect x="468" y="108" width="323" height="77" class="cm-tip-bg"/>
+<rect x="468" y="108" width="3" height="77" class="cm-tip-acc"/>
+<text x="482" y="126" class="cm-tip-t0 en">HNDL · harvest now, decrypt later</text>
+<text x="482" y="141" class="cm-tip-t en">Attackers record encrypted traffic today</text>
+<text x="482" y="156" class="cm-tip-t en">and read it once a quantum computer exists.</text>
+<text x="482" y="171" class="cm-tip-t en">Often a sensible first step: hybrid PQ.</text>
+<text x="482" y="126" class="cm-tip-t0 nl">HNDL · harvest now, decrypt later</text>
+<text x="482" y="141" class="cm-tip-t nl">Aanvallers slaan versleuteld verkeer nu op</text>
+<text x="482" y="156" class="cm-tip-t nl">en lezen het zodra er een quantumcomputer is.</text>
+<text x="482" y="171" class="cm-tip-t nl">Vaak een logische eerste stap: hybride PQ.</text>
+</g>
+<g class="cm-svtip cm-tc4" aria-hidden="true">
+<rect x="560" y="178" width="316" height="77" class="cm-tip-bg"/>
+<rect x="560" y="178" width="3" height="77" class="cm-tip-acc"/>
+<text x="574" y="196" class="cm-tip-t0 en">TLS · the encryption behind https://</text>
+<text x="574" y="211" class="cm-tip-t en">Load balancers and gateways decrypt and</text>
+<text x="574" y="226" class="cm-tip-t en">re-encrypt traffic to your servers. Needs a</text>
+<text x="574" y="241" class="cm-tip-t en">recent library, e.g. OpenSSL 3.5 or newer.</text>
+<text x="574" y="196" class="cm-tip-t0 nl">TLS · de encryptie achter https://</text>
+<text x="574" y="211" class="cm-tip-t nl">Load balancers en gateways ontsleutelen en</text>
+<text x="574" y="226" class="cm-tip-t nl">versleutelen verkeer naar uw servers. Vraagt</text>
+<text x="574" y="241" class="cm-tip-t nl">een recente bibliotheek, zoals OpenSSL 3.5+.</text>
+</g>
+<g class="cm-svtip cm-tc5" aria-hidden="true">
+<rect x="728" y="108" width="323" height="77" class="cm-tip-bg"/>
+<rect x="728" y="108" width="3" height="77" class="cm-tip-acc"/>
+<text x="742" y="126" class="cm-tip-t0 en">HNDL · harvest now, decrypt later</text>
+<text x="742" y="141" class="cm-tip-t en">Attackers record encrypted traffic today</text>
+<text x="742" y="156" class="cm-tip-t en">and read it once a quantum computer exists.</text>
+<text x="742" y="171" class="cm-tip-t en">Often a sensible first step: hybrid PQ.</text>
+<text x="742" y="126" class="cm-tip-t0 nl">HNDL · harvest now, decrypt later</text>
+<text x="742" y="141" class="cm-tip-t nl">Aanvallers slaan versleuteld verkeer nu op</text>
+<text x="742" y="156" class="cm-tip-t nl">en lezen het zodra er een quantumcomputer is.</text>
+<text x="742" y="171" class="cm-tip-t nl">Vaak een logische eerste stap: hybride PQ.</text>
+</g>
+<g class="cm-svtip cm-tc6" aria-hidden="true">
+<rect x="773" y="178" width="323" height="77" class="cm-tip-bg"/>
+<rect x="773" y="178" width="3" height="77" class="cm-tip-acc"/>
+<text x="787" y="196" class="cm-tip-t0 en">VPN · IKEv2 / IPsec</text>
+<text x="787" y="211" class="cm-tip-t en">VPN: encrypted tunnel between locations.</text>
+<text x="787" y="226" class="cm-tip-t en">IKEv2/IPsec: the protocols most VPNs use.</text>
+<text x="787" y="241" class="cm-tip-t en">Post-quantum support depends on the vendor.</text>
+<text x="787" y="196" class="cm-tip-t0 nl">VPN · IKEv2 / IPsec</text>
+<text x="787" y="211" class="cm-tip-t nl">VPN: versleutelde tunnel tussen locaties.</text>
+<text x="787" y="226" class="cm-tip-t nl">IKEv2/IPsec: protocollen van de meeste VPN&#x27;s.</text>
+<text x="787" y="241" class="cm-tip-t nl">PQ-ondersteuning hangt af van de leverancier.</text>
+</g>
+<g class="cm-svtip cm-tc7" aria-hidden="true">
+<rect x="773" y="108" width="323" height="77" class="cm-tip-bg"/>
+<rect x="773" y="108" width="3" height="77" class="cm-tip-acc"/>
+<text x="787" y="126" class="cm-tip-t0 en">HNDL · harvest now, decrypt later</text>
+<text x="787" y="141" class="cm-tip-t en">Attackers record encrypted traffic today</text>
+<text x="787" y="156" class="cm-tip-t en">and read it once a quantum computer exists.</text>
+<text x="787" y="171" class="cm-tip-t en">Often a sensible first step: hybrid PQ.</text>
+<text x="787" y="126" class="cm-tip-t0 nl">HNDL · harvest now, decrypt later</text>
+<text x="787" y="141" class="cm-tip-t nl">Aanvallers slaan versleuteld verkeer nu op</text>
+<text x="787" y="156" class="cm-tip-t nl">en lezen het zodra er een quantumcomputer is.</text>
+<text x="787" y="171" class="cm-tip-t nl">Vaak een logische eerste stap: hybride PQ.</text>
+</g>
+<g class="cm-svtip cm-tc8" aria-hidden="true">
+<rect x="40" y="354" width="310" height="77" class="cm-tip-bg"/>
+<rect x="40" y="354" width="3" height="77" class="cm-tip-acc"/>
+<text x="54" y="372" class="cm-tip-t0 en">SaaS · software as a service</text>
+<text x="54" y="387" class="cm-tip-t en">Software you rent online: CRM, HR, mail.</text>
+<text x="54" y="402" class="cm-tip-t en">Your data reaches them over TLS — worth</text>
+<text x="54" y="417" class="cm-tip-t en">asking when they support hybrid PQ.</text>
+<text x="54" y="372" class="cm-tip-t0 nl">SaaS · software as a service</text>
+<text x="54" y="387" class="cm-tip-t nl">Online gehuurde software: CRM, HR, mail.</text>
+<text x="54" y="402" class="cm-tip-t nl">Uw data gaat erheen via TLS — de moeite</text>
+<text x="54" y="417" class="cm-tip-t nl">waard om te vragen wanneer hybride PQ komt.</text>
+</g>
+<g class="cm-svtip cm-tc9" aria-hidden="true">
+<rect x="208" y="284" width="323" height="77" class="cm-tip-bg"/>
+<rect x="208" y="284" width="3" height="77" class="cm-tip-acc"/>
+<text x="222" y="302" class="cm-tip-t0 en">HNDL · harvest now, decrypt later</text>
+<text x="222" y="317" class="cm-tip-t en">Attackers record encrypted traffic today</text>
+<text x="222" y="332" class="cm-tip-t en">and read it once a quantum computer exists.</text>
+<text x="222" y="347" class="cm-tip-t en">Often a sensible first step: hybrid PQ.</text>
+<text x="222" y="302" class="cm-tip-t0 nl">HNDL · harvest now, decrypt later</text>
+<text x="222" y="317" class="cm-tip-t nl">Aanvallers slaan versleuteld verkeer nu op</text>
+<text x="222" y="332" class="cm-tip-t nl">en lezen het zodra er een quantumcomputer is.</text>
+<text x="222" y="347" class="cm-tip-t nl">Vaak een logische eerste stap: hybride PQ.</text>
+</g>
+<g class="cm-svtip cm-tc10" aria-hidden="true">
+<rect x="300" y="354" width="330" height="77" class="cm-tip-bg"/>
+<rect x="300" y="354" width="3" height="77" class="cm-tip-acc"/>
+<text x="314" y="372" class="cm-tip-t0 en">SSH · secure shell</text>
+<text x="314" y="387" class="cm-tip-t en">Encrypted remote login for administrators.</text>
+<text x="314" y="402" class="cm-tip-t en">OpenSSH 10+ uses mlkem768x25519, a hybrid</text>
+<text x="314" y="417" class="cm-tip-t en">post-quantum key exchange, by default.</text>
+<text x="314" y="372" class="cm-tip-t0 nl">SSH · secure shell</text>
+<text x="314" y="387" class="cm-tip-t nl">Versleutelde beheertoegang op afstand.</text>
+<text x="314" y="402" class="cm-tip-t nl">OpenSSH 10+ gebruikt standaard mlkem768x25519,</text>
+<text x="314" y="417" class="cm-tip-t nl">een hybride post-quantum uitwisseling.</text>
+</g>
+<g class="cm-svtip cm-tc11" aria-hidden="true">
+<rect x="468" y="284" width="323" height="77" class="cm-tip-bg"/>
+<rect x="468" y="284" width="3" height="77" class="cm-tip-acc"/>
+<text x="482" y="302" class="cm-tip-t0 en">HNDL · harvest now, decrypt later</text>
+<text x="482" y="317" class="cm-tip-t en">Attackers record encrypted traffic today</text>
+<text x="482" y="332" class="cm-tip-t en">and read it once a quantum computer exists.</text>
+<text x="482" y="347" class="cm-tip-t en">Often a sensible first step: hybrid PQ.</text>
+<text x="482" y="302" class="cm-tip-t0 nl">HNDL · harvest now, decrypt later</text>
+<text x="482" y="317" class="cm-tip-t nl">Aanvallers slaan versleuteld verkeer nu op</text>
+<text x="482" y="332" class="cm-tip-t nl">en lezen het zodra er een quantumcomputer is.</text>
+<text x="482" y="347" class="cm-tip-t nl">Vaak een logische eerste stap: hybride PQ.</text>
+</g>
+<g class="cm-svtip cm-tc12" aria-hidden="true">
+<rect x="560" y="354" width="316" height="77" class="cm-tip-bg"/>
+<rect x="560" y="354" width="3" height="77" class="cm-tip-acc"/>
+<text x="574" y="372" class="cm-tip-t0 en">mTLS · mutual TLS</text>
+<text x="574" y="387" class="cm-tip-t en">Both sides prove who they are with a</text>
+<text x="574" y="402" class="cm-tip-t en">certificate. East-west: traffic between your</text>
+<text x="574" y="417" class="cm-tip-t en">own services. A service mesh automates it.</text>
+<text x="574" y="372" class="cm-tip-t0 nl">mTLS · wederzijdse TLS</text>
+<text x="574" y="387" class="cm-tip-t nl">Beide kanten bewijzen met een certificaat</text>
+<text x="574" y="402" class="cm-tip-t nl">wie ze zijn. East-west: verkeer tussen uw</text>
+<text x="574" y="417" class="cm-tip-t nl">eigen services. Een service mesh regelt dit.</text>
+</g>
+<g class="cm-svtip cm-tc13" aria-hidden="true">
+<rect x="728" y="284" width="323" height="77" class="cm-tip-bg"/>
+<rect x="728" y="284" width="3" height="77" class="cm-tip-acc"/>
+<text x="742" y="302" class="cm-tip-t0 en">HNDL · harvest now, decrypt later</text>
+<text x="742" y="317" class="cm-tip-t en">Attackers record encrypted traffic today</text>
+<text x="742" y="332" class="cm-tip-t en">and read it once a quantum computer exists.</text>
+<text x="742" y="347" class="cm-tip-t en">Often a sensible first step: hybrid PQ.</text>
+<text x="742" y="302" class="cm-tip-t0 nl">HNDL · harvest now, decrypt later</text>
+<text x="742" y="317" class="cm-tip-t nl">Aanvallers slaan versleuteld verkeer nu op</text>
+<text x="742" y="332" class="cm-tip-t nl">en lezen het zodra er een quantumcomputer is.</text>
+<text x="742" y="347" class="cm-tip-t nl">Vaak een logische eerste stap: hybride PQ.</text>
+</g>
+<g class="cm-svtip cm-tc14" aria-hidden="true">
+<rect x="773" y="354" width="323" height="77" class="cm-tip-bg"/>
+<rect x="773" y="354" width="3" height="77" class="cm-tip-acc"/>
+<text x="787" y="372" class="cm-tip-t0 en">AES-256 · symmetric encryption</text>
+<text x="787" y="387" class="cm-tip-t en">Used for stored data. Quantum computers only</text>
+<text x="787" y="402" class="cm-tip-t en">weaken it slightly — it stays safe. The TLS</text>
+<text x="787" y="417" class="cm-tip-t en">to the database is worth a check.</text>
+<text x="787" y="372" class="cm-tip-t0 nl">AES-256 · symmetrische encryptie</text>
+<text x="787" y="387" class="cm-tip-t nl">Voor opgeslagen data. Quantumcomputers</text>
+<text x="787" y="402" class="cm-tip-t nl">verzwakken die maar licht — blijft veilig.</text>
+<text x="787" y="417" class="cm-tip-t nl">De TLS naar de database is het checken waard.</text>
+</g>
+<g class="cm-svtip cm-tc15" aria-hidden="true">
+<rect x="40" y="365" width="310" height="77" class="cm-tip-bg"/>
+<rect x="40" y="365" width="3" height="77" class="cm-tip-acc"/>
+<text x="54" y="383" class="cm-tip-t0 en">PKI · RSA / ECDSA</text>
+<text x="54" y="398" class="cm-tip-t en">PKI: the system that issues certificates.</text>
+<text x="54" y="413" class="cm-tip-t en">RSA/ECDSA: today&#x27;s signature algorithms —</text>
+<text x="54" y="428" class="cm-tip-t en">quantum breaks them. Roots live 20+ years.</text>
+<text x="54" y="383" class="cm-tip-t0 nl">PKI · RSA / ECDSA</text>
+<text x="54" y="398" class="cm-tip-t nl">PKI: het systeem dat certificaten uitgeeft.</text>
+<text x="54" y="413" class="cm-tip-t nl">RSA/ECDSA: huidige handtekeningalgoritmen —</text>
+<text x="54" y="428" class="cm-tip-t nl">quantum breekt ze. Roots gaan 20+ jaar mee.</text>
+</g>
+<g class="cm-svtip cm-tc16" aria-hidden="true">
+<rect x="218" y="480" width="310" height="77" class="cm-tip-bg"/>
+<rect x="218" y="480" width="3" height="77" class="cm-tip-acc"/>
+<text x="232" y="498" class="cm-tip-t0 en">SIG · digital signature</text>
+<text x="232" y="513" class="cm-tip-t en">Proves who sent something. Not harvestable:</text>
+<text x="232" y="528" class="cm-tip-t en">only forgeable once quantum arrives. But</text>
+<text x="232" y="543" class="cm-tip-t en">certificates and firmware live long.</text>
+<text x="232" y="498" class="cm-tip-t0 nl">SIG · digitale handtekening</text>
+<text x="232" y="513" class="cm-tip-t nl">Bewijst wie iets stuurde. Niet te oogsten:</text>
+<text x="232" y="528" class="cm-tip-t nl">pas te vervalsen als quantum er is. Maar</text>
+<text x="232" y="543" class="cm-tip-t nl">certificaten en firmware gaan lang mee.</text>
+</g>
+<g class="cm-svtip cm-tc17" aria-hidden="true">
+<rect x="300" y="350" width="316" height="92" class="cm-tip-bg"/>
+<rect x="300" y="350" width="3" height="92" class="cm-tip-acc"/>
+<text x="314" y="368" class="cm-tip-t0 en">KMS / HSM</text>
+<text x="314" y="383" class="cm-tip-t en">KMS: key management service. HSM: sealed</text>
+<text x="314" y="398" class="cm-tip-t en">hardware that guards keys. Envelope</text>
+<text x="314" y="413" class="cm-tip-t en">encryption wraps data keys in a master key —</text>
+<text x="314" y="428" class="cm-tip-t en">safe with AES, not with RSA.</text>
+<text x="314" y="368" class="cm-tip-t0 nl">KMS / HSM</text>
+<text x="314" y="383" class="cm-tip-t nl">KMS: sleutelbeheerdienst. HSM: afgeschermde</text>
+<text x="314" y="398" class="cm-tip-t nl">hardware die sleutels bewaakt. Envelope-</text>
+<text x="314" y="413" class="cm-tip-t nl">encryptie pakt datasleutels in met een</text>
+<text x="314" y="428" class="cm-tip-t nl">hoofdsleutel — veilig met AES, niet met RSA.</text>
+</g>
+<g class="cm-svtip cm-tc18" aria-hidden="true">
+<rect x="560" y="365" width="323" height="77" class="cm-tip-bg"/>
+<rect x="560" y="365" width="3" height="77" class="cm-tip-acc"/>
+<text x="574" y="383" class="cm-tip-t0 en">ML-DSA / LMS · quantum-safe signatures</text>
+<text x="574" y="398" class="cm-tip-t en">Code signing proves an update is genuine.</text>
+<text x="574" y="413" class="cm-tip-t en">Devices in the field for 10+ years will</text>
+<text x="574" y="428" class="cm-tip-t en">need to accept the new signatures.</text>
+<text x="574" y="383" class="cm-tip-t0 nl">ML-DSA / LMS · quantumveilige handtekening</text>
+<text x="574" y="398" class="cm-tip-t nl">Codesignering bewijst dat een update echt is.</text>
+<text x="574" y="413" class="cm-tip-t nl">Apparaten die 10+ jaar meegaan, moeten de</text>
+<text x="574" y="428" class="cm-tip-t nl">nieuwe handtekeningen kunnen controleren.</text>
+</g>
+<g class="cm-svtip cm-tc19" aria-hidden="true">
+<rect x="738" y="480" width="310" height="77" class="cm-tip-bg"/>
+<rect x="738" y="480" width="3" height="77" class="cm-tip-acc"/>
+<text x="752" y="498" class="cm-tip-t0 en">SIG · digital signature</text>
+<text x="752" y="513" class="cm-tip-t en">Proves who sent something. Not harvestable:</text>
+<text x="752" y="528" class="cm-tip-t en">only forgeable once quantum arrives. But</text>
+<text x="752" y="543" class="cm-tip-t en">certificates and firmware live long.</text>
+<text x="752" y="498" class="cm-tip-t0 nl">SIG · digitale handtekening</text>
+<text x="752" y="513" class="cm-tip-t nl">Bewijst wie iets stuurde. Niet te oogsten:</text>
+<text x="752" y="528" class="cm-tip-t nl">pas te vervalsen als quantum er is. Maar</text>
+<text x="752" y="543" class="cm-tip-t nl">certificaten en firmware gaan lang mee.</text>
+</g>
+<g class="cm-svtip cm-tc20" aria-hidden="true">
+<rect x="780" y="365" width="316" height="77" class="cm-tip-bg"/>
+<rect x="780" y="365" width="3" height="77" class="cm-tip-acc"/>
+<text x="794" y="383" class="cm-tip-t0 en">Backups &amp; archives</text>
+<text x="794" y="398" class="cm-tip-t en">Kept for years. AES-256 data is safe, but</text>
+<text x="794" y="413" class="cm-tip-t en">keys wrapped with RSA are not — they can be</text>
+<text x="794" y="428" class="cm-tip-t en">re-wrapped with AES or post-quantum keys.</text>
+<text x="794" y="383" class="cm-tip-t0 nl">Back-ups &amp; archieven</text>
+<text x="794" y="398" class="cm-tip-t nl">Jaren bewaard. AES-256-data is veilig, maar</text>
+<text x="794" y="413" class="cm-tip-t nl">met RSA ingepakte sleutels niet — die kunnen</text>
+<text x="794" y="428" class="cm-tip-t nl">opnieuw worden ingepakt met AES of PQ.</text>
+</g>
+<g class="cm-svtip cm-tc21" aria-hidden="true">
+<rect x="773" y="480" width="323" height="77" class="cm-tip-bg"/>
+<rect x="773" y="480" width="3" height="77" class="cm-tip-acc"/>
+<text x="787" y="498" class="cm-tip-t0 en">HNDL · harvest now, decrypt later</text>
+<text x="787" y="513" class="cm-tip-t en">Attackers record encrypted traffic today</text>
+<text x="787" y="528" class="cm-tip-t en">and read it once a quantum computer exists.</text>
+<text x="787" y="543" class="cm-tip-t en">Often a sensible first step: hybrid PQ.</text>
+<text x="787" y="498" class="cm-tip-t0 nl">HNDL · harvest now, decrypt later</text>
+<text x="787" y="513" class="cm-tip-t nl">Aanvallers slaan versleuteld verkeer nu op</text>
+<text x="787" y="528" class="cm-tip-t nl">en lezen het zodra er een quantumcomputer is.</text>
+<text x="787" y="543" class="cm-tip-t nl">Vaak een logische eerste stap: hybride PQ.</text>
+</g>
+<g class="cm-svtip cm-tc22" aria-hidden="true">
+<rect x="700" y="509" width="323" height="77" class="cm-tip-bg"/>
+<rect x="700" y="509" width="3" height="77" class="cm-tip-acc"/>
+<text x="714" y="527" class="cm-tip-t0 en">HNDL · harvest now, decrypt later</text>
+<text x="714" y="542" class="cm-tip-t en">Attackers record encrypted traffic today</text>
+<text x="714" y="557" class="cm-tip-t en">and read it once a quantum computer exists.</text>
+<text x="714" y="572" class="cm-tip-t en">Often a sensible first step: hybrid PQ.</text>
+<text x="714" y="527" class="cm-tip-t0 nl">HNDL · harvest now, decrypt later</text>
+<text x="714" y="542" class="cm-tip-t nl">Aanvallers slaan versleuteld verkeer nu op</text>
+<text x="714" y="557" class="cm-tip-t nl">en lezen het zodra er een quantumcomputer is.</text>
+<text x="714" y="572" class="cm-tip-t nl">Vaak een logische eerste stap: hybride PQ.</text>
+</g>
+<g class="cm-svtip cm-tc23" aria-hidden="true">
+<rect x="786" y="509" width="310" height="77" class="cm-tip-bg"/>
+<rect x="786" y="509" width="3" height="77" class="cm-tip-acc"/>
+<text x="800" y="527" class="cm-tip-t0 en">SIG · digital signature</text>
+<text x="800" y="542" class="cm-tip-t en">Proves who sent something. Not harvestable:</text>
+<text x="800" y="557" class="cm-tip-t en">only forgeable once quantum arrives. But</text>
+<text x="800" y="572" class="cm-tip-t en">certificates and firmware live long.</text>
+<text x="800" y="527" class="cm-tip-t0 nl">SIG · digitale handtekening</text>
+<text x="800" y="542" class="cm-tip-t nl">Bewijst wie iets stuurde. Niet te oogsten:</text>
+<text x="800" y="557" class="cm-tip-t nl">pas te vervalsen als quantum er is. Maar</text>
+<text x="800" y="572" class="cm-tip-t nl">certificaten en firmware gaan lang mee.</text>
+</g>
+</svg>
+    </figure>
+
+    <div class="panel">
+      <p class="en"><strong>Where to start is your call.</strong> Boxes tagged <abbr class="tip" tabindex="0" data-tip="Harvest now, decrypt later: encrypted traffic recorded today and decrypted once a quantum computer exists."><code>HNDL</code></abbr> carry secrets over a network that can be recorded today and decrypted later — hybrid post-quantum key exchange there is often the most effective first step. Boxes tagged <abbr class="tip" tabindex="0" data-tip="Signature: proves who sent something. It cannot be harvested, but certificates and firmware live for decades."><code>SIG</code></abbr> cannot be harvested, but roots and firmware live for decades, so they usually need the longest planning.</p>
+      <p class="nl"><strong>Waar u begint, bepaalt u zelf.</strong> Blokken met <abbr class="tip" tabindex="0" data-tip="Harvest now, decrypt later: versleuteld verkeer dat vandaag wordt opgenomen en later wordt ontcijferd met een quantumcomputer."><code>HNDL</code></abbr> vervoeren geheimen over een netwerk die vandaag kunnen worden opgenomen en later ontcijferd — hybride post-quantum sleuteluitwisseling is daar vaak de meest effectieve eerste stap. Blokken met <abbr class="tip" tabindex="0" data-tip="Handtekening: bewijst wie iets stuurde. Niet te oogsten, maar certificaten en firmware gaan decennia mee."><code>SIG</code></abbr> zijn niet te oogsten, maar roots en firmware gaan decennia mee, dus die vragen meestal de langste planning.</p>
+    </div>
+  </div>
+</section>
+<!-- /diagram:crypto-map -->
+
+<!-- diagram:roadmap -->
+<section class="risk-block" id="roadmap">
+  <div class="wrap">
+    <span class="kicker"><b>//</b><span class="en">ROADMAP</span><span class="nl">ROADMAP</span></span>
+    <h2><span class="en">From today to 2035.<br><em>Five phases, five board checkpoints.</em></span><span class="nl">Van vandaag tot 2035.<br><em>Vijf fasen, vijf toetsmomenten.</em></span></h2>
+    <span class="term"><span class="en">post-quantum migration / suggested plan, not mandatory</span><span class="nl">post-quantum migratie / voorgesteld plan, niet verplicht</span></span>
+
+    <figure class="rmap">
+<svg viewBox="0 0 1120 820" role="img" aria-labelledby="rm-title rm-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="rm-title">Post-quantum migration roadmap, 2026 to 2035</title>
+<desc id="rm-desc">Why now: data encrypted today must stay secret for 10 to 25 years, migration takes 5 to 8 years, and a quantum computer that breaks current encryption may arrive in the 2030s. Five phases: decide and fund (2026), know what we have (to 2027), stop the harvest (2027 to 2029), renew digital signatures (2028 to mid 2031), clean up and switch off (2030 to 2035), plus ongoing supplier management and crypto agility. Deadlines: EU start by end 2026, high-risk systems by 2030, everything by 2035. Five board checkpoints.</desc>
+<defs>
+<pattern id="rm-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" class="rm-hatch-bg"/><line x1="0" y1="0" x2="0" y2="6" class="rm-hatch-ln"/></pattern>
+<pattern id="rm-risk" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" class="rm-risk-bg"/><line x1="0" y1="0" x2="0" y2="6" class="rm-risk-ln"/></pattern>
+<linearGradient id="rm-q" x1="0" x2="1" y1="0" y2="0"><stop offset="0" class="rm-q0"/><stop offset=".45" class="rm-q1"/><stop offset="1" class="rm-q2"/></linearGradient>
+<marker id="rm-arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 Z" class="rm-arrowhead"/></marker>
+</defs>
+<line x1="330.0" y1="62" x2="330.0" y2="736" class="rm-grid"/>
+<text x="367.5" y="52" class="rm-year" text-anchor="middle">2026</text>
+<line x1="405.0" y1="62" x2="405.0" y2="736" class="rm-grid"/>
+<text x="442.5" y="52" class="rm-year" text-anchor="middle">2027</text>
+<line x1="480.0" y1="62" x2="480.0" y2="736" class="rm-grid"/>
+<text x="517.5" y="52" class="rm-year" text-anchor="middle">2028</text>
+<line x1="555.0" y1="62" x2="555.0" y2="736" class="rm-grid"/>
+<text x="592.5" y="52" class="rm-year" text-anchor="middle">2029</text>
+<line x1="630.0" y1="62" x2="630.0" y2="736" class="rm-grid"/>
+<text x="667.5" y="52" class="rm-year" text-anchor="middle">2030</text>
+<line x1="705.0" y1="62" x2="705.0" y2="736" class="rm-grid"/>
+<text x="742.5" y="52" class="rm-year" text-anchor="middle">2031</text>
+<line x1="780.0" y1="62" x2="780.0" y2="736" class="rm-grid"/>
+<text x="817.5" y="52" class="rm-year" text-anchor="middle">2032</text>
+<line x1="855.0" y1="62" x2="855.0" y2="736" class="rm-grid"/>
+<text x="892.5" y="52" class="rm-year" text-anchor="middle">2033</text>
+<line x1="930.0" y1="62" x2="930.0" y2="736" class="rm-grid"/>
+<text x="967.5" y="52" class="rm-year" text-anchor="middle">2034</text>
+<line x1="1005.0" y1="62" x2="1005.0" y2="736" class="rm-grid"/>
+<text x="1042.5" y="52" class="rm-year" text-anchor="middle">2035</text>
+<line x1="1080" y1="62" x2="1080" y2="736" class="rm-grid"/>
+<line x1="330" y1="62" x2="1080" y2="62" class="rm-axis"/>
+<line x1="405.0" y1="70" x2="405.0" y2="736" class="rm-deadline"/>
+<g class="rm-hr0" tabindex="0"><rect x="405.0" y="66" width="160" height="44" fill="transparent"/>
+<path d="M405.0 70 V96 M405.0 70 h9 l-3 4 l3 4 h-9" class="rm-flag"/>
+<text x="419.0" y="80" class="rm-dl1 en" text-anchor="start">EU: PLANS + PILOTS</text><text x="419.0" y="80" class="rm-dl1 nl" text-anchor="start">EU: PLANNEN + PILOTS</text>
+<text x="419.0" y="93" class="rm-dl2 en" text-anchor="start">started by end of 2026</text><text x="419.0" y="93" class="rm-dl2 nl" text-anchor="start">gestart vóór eind 2026</text>
+</g>
+<line x1="705.0" y1="70" x2="705.0" y2="736" class="rm-deadline"/>
+<g class="rm-hr1" tabindex="0"><rect x="705.0" y="66" width="160" height="44" fill="transparent"/>
+<path d="M705.0 70 V96 M705.0 70 h9 l-3 4 l3 4 h-9" class="rm-flag"/>
+<text x="719.0" y="80" class="rm-dl1 en" text-anchor="start">EU: HIGH-RISK DONE</text><text x="719.0" y="80" class="rm-dl1 nl" text-anchor="start">EU: HOOG RISICO KLAAR</text>
+<text x="719.0" y="93" class="rm-dl2 en" text-anchor="start">NIST draft:</text><text x="719.0" y="93" class="rm-dl2 nl" text-anchor="start">NIST-concept:</text>
+<text x="719.0" y="105" class="rm-dl2 en" text-anchor="start">RSA/ECC deprecated</text><text x="719.0" y="105" class="rm-dl2 nl" text-anchor="start">RSA/ECC afgeraden</text>
+</g>
+<line x1="1080.0" y1="70" x2="1080.0" y2="736" class="rm-deadline"/>
+<g class="rm-hr2" tabindex="0"><rect x="920.0" y="66" width="160" height="44" fill="transparent"/>
+<path d="M1080.0 70 V96 M1080.0 70 h-9 l3 4 l-3 4 h9" class="rm-flag"/>
+<text x="1066.0" y="80" class="rm-dl1 en" text-anchor="end">EU: MEDIUM-RISK DONE</text><text x="1066.0" y="80" class="rm-dl1 nl" text-anchor="end">EU: MIDDEL RISICO KLAAR</text>
+<text x="1066.0" y="93" class="rm-dl2 en" text-anchor="end">NIST draft:</text><text x="1066.0" y="93" class="rm-dl2 nl" text-anchor="end">NIST-concept:</text>
+<text x="1066.0" y="105" class="rm-dl2 en" text-anchor="end">RSA/ECC disallowed</text><text x="1066.0" y="105" class="rm-dl2 nl" text-anchor="end">RSA/ECC verboden</text>
+</g>
+<rect x="20" y="116" width="1080" height="162" class="rm-zone"/>
+<text x="40" y="138" class="rm-zlabel en">WHY NOW · THE WINDOW</text><text x="40" y="138" class="rm-zlabel nl">WAAROM NU · HET VENSTER</text>
+<text x="40" y="162" class="rm-name en">Today&#x27;s data must stay secret</text><text x="40" y="162" class="rm-name nl">Data van vandaag moet geheim blijven</text>
+<text x="40" y="177" class="rm-sub en">Medical, IP, personal data: 10–25 years</text><text x="40" y="177" class="rm-sub nl">Medisch, IP, persoonsgegevens: 10–25 jaar</text>
+<rect x="385.5" y="150" width="244.5" height="18" class="rm-b-data"/>
+<text x="393.5" y="163" class="rm-bar-in en">SAFE — FOR NOW</text><text x="393.5" y="163" class="rm-bar-in nl">VEILIG — VOOR NU</text>
+<rect x="630.0" y="150" width="450.0" height="18" fill="url(#rm-risk)" class="rm-b-risk"/>
+<text x="638.0" y="163" class="rm-risk-in en">READABLE BY ATTACKER IF NOT MIGRATED  →  2040+</text><text x="638.0" y="163" class="rm-risk-in nl">LEESBAAR VOOR AANVALLER ALS NIET GEMIGREERD  →  2040+</text>
+<text x="40" y="202" class="rm-name en">Moving to new encryption takes</text><text x="40" y="202" class="rm-name nl">Overstappen op nieuwe encryptie duurt</text>
+<text x="40" y="217" class="rm-sub en">A typical programme: 5–8 years</text><text x="40" y="217" class="rm-sub nl">Een gemiddeld programma: 5–8 jaar</text>
+<rect x="385.5" y="190" width="507.0" height="18" class="rm-b-mig"/>
+<text x="393.5" y="203" class="rm-bar-in en">5–8 YEARS OF WORK</text><text x="393.5" y="203" class="rm-bar-in nl">5–8 JAAR WERK</text>
+<g class="rm-hr3" tabindex="0"><rect x="36" y="226" width="250" height="38" fill="transparent"/>
+<text x="40" y="242" class="rm-name en">When quantum breaks today&#x27;s crypto</text><text x="40" y="242" class="rm-name nl">Wanneer quantum huidige crypto breekt</text>
+<text x="40" y="257" class="rm-sub en">Credible estimates: the 2030s · uncertain</text><text x="40" y="257" class="rm-sub nl">Serieuze schattingen: jaren 2030 · onzeker</text>
+</g>
+<rect x="555.0" y="230" width="525.0" height="18" fill="url(#rm-q)"/>
+<text x="625.0" y="243" class="rm-q-in en">POSSIBLE ARRIVAL — NOBODY KNOWS THE YEAR</text><text x="625.0" y="243" class="rm-q-in nl">MOGELIJKE KOMST — NIEMAND KENT HET JAAR</text>
+<rect x="20" y="292" width="1080" height="332" class="rm-zone"/>
+<text x="40" y="314" class="rm-zlabel en">WHAT WE DO · FIVE PHASES</text><text x="40" y="314" class="rm-zlabel nl">WAT WE DOEN · VIJF FASEN</text>
+<text x="40" y="340" class="rm-name en">1  Decide &amp; fund</text><text x="40" y="340" class="rm-name nl">1  Besluiten &amp; financieren</text>
+<text x="40" y="355" class="rm-sub en">Board mandate · one owner · budget</text><text x="40" y="355" class="rm-sub nl">Mandaat directie · één eigenaar · budget</text>
+<rect x="385.5" y="328" width="38.30000000000001" height="18" class="rm-b-p1"/>
+<text x="431.8" y="341" class="rm-bar-out">Q4 2026</text>
+<g class="rm-hr4" tabindex="0"><rect x="36" y="366" width="250" height="38" fill="transparent"/>
+<text x="40" y="382" class="rm-name en">2  Know what we have</text><text x="40" y="382" class="rm-name nl">2  Weten wat we hebben</text>
+<text x="40" y="397" class="rm-sub en">Crypto inventory · data classification</text><text x="40" y="397" class="rm-sub nl">Crypto-inventaris · dataclassificatie</text>
+</g>
+<rect x="385.5" y="370" width="94.5" height="18" class="rm-b-p2"/>
+<text x="488.0" y="383" class="rm-bar-out">2026 – 2027</text>
+<g class="rm-hr5" tabindex="0"><rect x="36" y="408" width="250" height="38" fill="transparent"/>
+<text x="40" y="424" class="rm-name en">3  Stop the harvest</text><text x="40" y="424" class="rm-name nl">3  Oogsten stoppen</text>
+<text x="40" y="439" class="rm-sub en">New encryption on web, VPN &amp; supplier links</text><text x="40" y="439" class="rm-sub nl">Nieuwe encryptie op web, VPN &amp; leveranciers</text>
+</g>
+<g class="rm-tag-h rm-hr6" tabindex="0"><rect x="262" y="411" width="42" height="16"/><text x="283.0" y="422.5" text-anchor="middle">HNDL</text></g>
+<rect x="423.8" y="412" width="206.2" height="18" class="rm-b-p3"/>
+<text x="431.8" y="425" class="rm-bar-in">2027 – 2029</text>
+<g class="rm-hr7" tabindex="0"><rect x="36" y="450" width="250" height="38" fill="transparent"/>
+<text x="40" y="466" class="rm-name en">4  Renew digital signatures</text><text x="40" y="466" class="rm-name nl">4  Digitale handtekeningen</text>
+<text x="40" y="481" class="rm-sub en">Certificates, code &amp; firmware signing, HSMs</text><text x="40" y="481" class="rm-sub nl">Certificaten, code- &amp; firmwaresignering, HSM&#x27;s</text>
+</g>
+<g class="rm-tag-s rm-hr8" tabindex="0"><rect x="272" y="453" width="32" height="16"/><text x="288.0" y="464.5" text-anchor="middle">SIG</text></g>
+<rect x="480.0" y="454" width="262.5" height="18" class="rm-b-p4"/>
+<text x="488.0" y="467" class="rm-bar-in en">2028 – mid 2031</text><text x="488.0" y="467" class="rm-bar-in nl">2028 – medio 2031</text>
+<g class="rm-hr9" tabindex="0"><rect x="36" y="492" width="250" height="38" fill="transparent"/>
+<text x="40" y="508" class="rm-name en">5  Clean up &amp; switch off</text><text x="40" y="508" class="rm-name nl">5  Opruimen &amp; uitschakelen</text>
+<text x="40" y="523" class="rm-sub en">Legacy, OT/IoT, archives · retire RSA/ECC</text><text x="40" y="523" class="rm-sub nl">Legacy, OT/IoT, archieven · RSA/ECC uit</text>
+</g>
+<rect x="630.0" y="496" width="442.5" height="18" class="rm-b-p5"/>
+<text x="638.0" y="509" class="rm-bar-in">2030 – 2035</text>
+<line x1="40" y1="526" x2="1080" y2="526" class="rm-sep"/>
+<g class="rm-hr10" tabindex="0"><rect x="36" y="540" width="250" height="38" fill="transparent"/>
+<text x="40" y="556" class="rm-name en">Keep suppliers in step</text><text x="40" y="556" class="rm-name nl">Leveranciers meenemen</text>
+<text x="40" y="571" class="rm-sub en">Contracts · due diligence · NIS2/DORA evidence</text><text x="40" y="571" class="rm-sub nl">Contracten · due diligence · NIS2/DORA-bewijs</text>
+</g>
+<rect x="385.5" y="544" width="694.5" height="18" class="rm-b-ongoing" fill="url(#rm-hatch)"/>
+<text x="393.5" y="557" class="rm-ongoing-in en">ONGOING</text><text x="393.5" y="557" class="rm-ongoing-in nl">DOORLOPEND</text>
+<g class="rm-hr11" tabindex="0"><rect x="36" y="582" width="250" height="38" fill="transparent"/>
+<text x="40" y="598" class="rm-name en">Stay able to switch</text><text x="40" y="598" class="rm-name nl">Kunnen blijven wisselen</text>
+<text x="40" y="613" class="rm-sub en">Crypto agility · monitoring · risk indicators</text><text x="40" y="613" class="rm-sub nl">Crypto-agility · monitoring · risico-indicatoren</text>
+</g>
+<rect x="442.5" y="586" width="637.5" height="18" class="rm-b-ongoing" fill="url(#rm-hatch)"/>
+<text x="450.5" y="599" class="rm-ongoing-in en">ONGOING</text><text x="450.5" y="599" class="rm-ongoing-in nl">DOORLOPEND</text>
+<rect x="20" y="638" width="1080" height="104" class="rm-zone"/>
+<text x="40" y="660" class="rm-zlabel en">WHEN THE BOARD CHECKS · YES / NO</text><text x="40" y="660" class="rm-zlabel nl">WANNEER DE DIRECTIE TOETST</text>
+<text x="40" y="686" class="rm-name en">Five checkpoints</text><text x="40" y="686" class="rm-name nl">Vijf toetsmomenten</text>
+<text x="40" y="702" class="rm-sub en">Each is a yes/no question, not a tech review</text><text x="40" y="702" class="rm-sub nl">Elk een ja/nee-vraag, geen technische review</text>
+<rect x="393.3" y="676" width="16" height="16" transform="rotate(45 401.3 684)" class="rm-diamond"/>
+<text x="401.3" y="688" class="rm-dnum" text-anchor="middle">1</text>
+<text x="401.3" y="710" class="rm-check en" text-anchor="middle">Mandate &amp; budget?</text><text x="401.3" y="710" class="rm-check nl" text-anchor="middle">Mandaat &amp; budget?</text>
+<rect x="472.0" y="676" width="16" height="16" transform="rotate(45 480.0 684)" class="rm-diamond"/>
+<text x="480.0" y="688" class="rm-dnum" text-anchor="middle">2</text>
+<line x1="480.0" y1="696" x2="480.0" y2="717" class="rm-leader"/>
+<text x="480.0" y="728" class="rm-check en" text-anchor="middle">Inventory done · baseline set?</text><text x="480.0" y="728" class="rm-check nl" text-anchor="middle">Inventaris klaar · nulmeting?</text>
+<rect x="622.0" y="676" width="16" height="16" transform="rotate(45 630.0 684)" class="rm-diamond"/>
+<text x="630.0" y="688" class="rm-dnum" text-anchor="middle">3</text>
+<text x="630.0" y="710" class="rm-check en" text-anchor="middle">Harvest-exposed links protected?</text><text x="630.0" y="710" class="rm-check nl" text-anchor="middle">Oogstbare verbindingen beschermd?</text>
+<rect x="734.5" y="676" width="16" height="16" transform="rotate(45 742.5 684)" class="rm-diamond"/>
+<text x="742.5" y="688" class="rm-dnum" text-anchor="middle">4</text>
+<line x1="742.5" y1="696" x2="742.5" y2="717" class="rm-leader"/>
+<text x="742.5" y="728" class="rm-check en" text-anchor="middle">Signatures renewed?</text><text x="742.5" y="728" class="rm-check nl" text-anchor="middle">Handtekeningen vernieuwd?</text>
+<rect x="1064.5" y="676" width="16" height="16" transform="rotate(45 1072.5 684)" class="rm-diamond"/>
+<text x="1072.5" y="688" class="rm-dnum" text-anchor="middle">5</text>
+<text x="1080.5" y="710" class="rm-check en" text-anchor="end">Old crypto switched off?</text><text x="1080.5" y="710" class="rm-check nl" text-anchor="end">Oude crypto uitgeschakeld?</text>
+<line x1="385.5" y1="104" x2="385.5" y2="624" class="rm-today"/>
+<text x="385.5" y="112" class="rm-today-t en" text-anchor="middle">TODAY</text><text x="385.5" y="112" class="rm-today-t nl" text-anchor="middle">VANDAAG</text>
+<rect x="40" y="764" width="12" height="12" transform="rotate(45 46 770)" class="rm-diamond"/>
+<text x="62" y="774" class="rm-legend en">Board checkpoint</text><text x="62" y="774" class="rm-legend nl">Toetsmoment directie</text>
+<path d="M240 761 V776 M240 761 h9 l-3 4 l3 4 h-9" class="rm-flag"/>
+<text x="258" y="774" class="rm-legend en">Official target date</text><text x="258" y="774" class="rm-legend nl">Officiële streefdatum</text>
+<rect x="440" y="764" width="30" height="12" fill="url(#rm-hatch)" class="rm-b-ongoing"/>
+<text x="480" y="774" class="rm-legend en">Ongoing, never “done”</text><text x="480" y="774" class="rm-legend nl">Doorlopend, nooit “klaar”</text>
+<g class="rm-tag-h rm-hr12" tabindex="0"><rect x="680" y="762" width="42" height="16"/><text x="701.0" y="773.5" text-anchor="middle">HNDL</text></g>
+<g class="rm-tag-s rm-hr13" tabindex="0"><rect x="730" y="762" width="32" height="16"/><text x="746.0" y="773.5" text-anchor="middle">SIG</text></g>
+<text x="772" y="774" class="rm-legend en">Same tags as the crypto map</text><text x="772" y="774" class="rm-legend nl">Zelfde labels als de cryptokaart</text>
+<text x="40" y="802" class="rm-foot en">Suggested timeline, not a legal deadline · sources: EU PQC Roadmap v1.1 (June 2025), NCSC UK (2025), NIST IR 8547 draft (2024)</text><text x="40" y="802" class="rm-foot nl">Voorgestelde tijdlijn, geen wettelijke deadline · bronnen: EU PQC Roadmap v1.1 (juni 2025), NCSC UK (2025), NIST IR 8547-concept (2024)</text>
+<text x="40" y="30" class="rm-hint en">HOVER OR TAP A LABEL FOR AN EXPLANATION</text><text x="40" y="30" class="rm-hint nl">BEWEEG OF TIK OP EEN LABEL VOOR UITLEG</text>
+<g class="rm-svtip rm-tr0" aria-hidden="true">
+<rect x="405.0" y="116" width="297" height="77" class="rm-tip-bg"/>
+<rect x="405.0" y="116" width="3" height="77" class="rm-tip-acc"/>
+<text x="419.0" y="134" class="rm-tip-t0 en">EU PQC Roadmap · June 2025</text>
+<text x="419.0" y="149" class="rm-tip-t en">A recommendation from the NIS Cooperation</text>
+<text x="419.0" y="164" class="rm-tip-t en">Group to EU Member States. Not a law, but</text>
+<text x="419.0" y="179" class="rm-tip-t en">a likely yardstick for supervisors.</text>
+<text x="419.0" y="134" class="rm-tip-t0 nl">EU PQC-roadmap · juni 2025</text>
+<text x="419.0" y="149" class="rm-tip-t nl">Aanbeveling van de NIS-samenwerkingsgroep</text>
+<text x="419.0" y="164" class="rm-tip-t nl">aan de lidstaten. Geen wet, maar wel een</text>
+<text x="419.0" y="179" class="rm-tip-t nl">verwachte maatstaf voor toezichthouders.</text>
+</g>
+<g class="rm-svtip rm-tr1" aria-hidden="true">
+<rect x="705.0" y="116" width="310" height="77" class="rm-tip-bg"/>
+<rect x="705.0" y="116" width="3" height="77" class="rm-tip-acc"/>
+<text x="719.0" y="134" class="rm-tip-t0 en">EU + NIST target dates</text>
+<text x="719.0" y="149" class="rm-tip-t en">EU: high-risk systems quantum-safe by end</text>
+<text x="719.0" y="164" class="rm-tip-t en">2030, medium-risk by end 2035. NIST (US,</text>
+<text x="719.0" y="179" class="rm-tip-t en">draft IR 8547): RSA/ECC out by 2030/2035.</text>
+<text x="719.0" y="134" class="rm-tip-t0 nl">Streefdata EU + NIST</text>
+<text x="719.0" y="149" class="rm-tip-t nl">EU: hoog-risicosystemen quantumveilig eind</text>
+<text x="719.0" y="164" class="rm-tip-t nl">2030, middelrisico eind 2035. NIST (VS,</text>
+<text x="719.0" y="179" class="rm-tip-t nl">concept IR 8547): RSA/ECC uit in 2030/2035.</text>
+</g>
+<g class="rm-svtip rm-tr2" aria-hidden="true">
+<rect x="786" y="116" width="310" height="77" class="rm-tip-bg"/>
+<rect x="786" y="116" width="3" height="77" class="rm-tip-acc"/>
+<text x="800" y="134" class="rm-tip-t0 en">EU + NIST target dates</text>
+<text x="800" y="149" class="rm-tip-t en">EU: high-risk systems quantum-safe by end</text>
+<text x="800" y="164" class="rm-tip-t en">2030, medium-risk by end 2035. NIST (US,</text>
+<text x="800" y="179" class="rm-tip-t en">draft IR 8547): RSA/ECC out by 2030/2035.</text>
+<text x="800" y="134" class="rm-tip-t0 nl">Streefdata EU + NIST</text>
+<text x="800" y="149" class="rm-tip-t nl">EU: hoog-risicosystemen quantumveilig eind</text>
+<text x="800" y="164" class="rm-tip-t nl">2030, middelrisico eind 2035. NIST (VS,</text>
+<text x="800" y="179" class="rm-tip-t nl">concept IR 8547): RSA/ECC uit in 2030/2035.</text>
+</g>
+<g class="rm-svtip rm-tr3" aria-hidden="true">
+<rect x="36" y="270" width="303" height="77" class="rm-tip-bg"/>
+<rect x="36" y="270" width="3" height="77" class="rm-tip-acc"/>
+<text x="50" y="288" class="rm-tip-t0 en">Q-day</text>
+<text x="50" y="303" class="rm-tip-t en">The day a quantum computer can break RSA</text>
+<text x="50" y="318" class="rm-tip-t en">and ECC. Nobody knows when; the Dutch AIVD</text>
+<text x="50" y="333" class="rm-tip-t en">says it could be as early as 2030.</text>
+<text x="50" y="288" class="rm-tip-t0 nl">Q-day</text>
+<text x="50" y="303" class="rm-tip-t nl">De dag dat een quantumcomputer RSA en ECC</text>
+<text x="50" y="318" class="rm-tip-t nl">kan breken. Niemand weet wanneer; de AIVD</text>
+<text x="50" y="333" class="rm-tip-t nl">zegt mogelijk al in 2030.</text>
+</g>
+<g class="rm-svtip rm-tr4" aria-hidden="true">
+<rect x="36" y="410" width="303" height="77" class="rm-tip-bg"/>
+<rect x="36" y="410" width="3" height="77" class="rm-tip-acc"/>
+<text x="50" y="428" class="rm-tip-t0 en">Crypto inventory · data classification</text>
+<text x="50" y="443" class="rm-tip-t en">Inventory: every place encryption is used,</text>
+<text x="50" y="458" class="rm-tip-t en">and which algorithm. Classification: how</text>
+<text x="50" y="473" class="rm-tip-t en">long each kind of data must stay secret.</text>
+<text x="50" y="428" class="rm-tip-t0 nl">Crypto-inventaris · dataclassificatie</text>
+<text x="50" y="443" class="rm-tip-t nl">Inventaris: waar encryptie wordt gebruikt,</text>
+<text x="50" y="458" class="rm-tip-t nl">en welk algoritme. Classificatie: hoe lang</text>
+<text x="50" y="473" class="rm-tip-t nl">elk soort data geheim moet blijven.</text>
+</g>
+<g class="rm-svtip rm-tr5" aria-hidden="true">
+<rect x="36" y="452" width="310" height="77" class="rm-tip-bg"/>
+<rect x="36" y="452" width="3" height="77" class="rm-tip-acc"/>
+<text x="50" y="470" class="rm-tip-t0 en">PQ · post-quantum encryption</text>
+<text x="50" y="485" class="rm-tip-t en">Encryption quantum computers cannot break.</text>
+<text x="50" y="500" class="rm-tip-t en">Hybrid = PQ plus today&#x27;s method, so if one</text>
+<text x="50" y="515" class="rm-tip-t en">fails your data is still protected.</text>
+<text x="50" y="470" class="rm-tip-t0 nl">PQ · post-quantum encryptie</text>
+<text x="50" y="485" class="rm-tip-t nl">Encryptie die quantumcomputers niet breken.</text>
+<text x="50" y="500" class="rm-tip-t nl">Hybride = PQ plus de huidige methode; faalt</text>
+<text x="50" y="515" class="rm-tip-t nl">er één, dan blijft uw data beschermd.</text>
+</g>
+<g class="rm-svtip rm-tr6" aria-hidden="true">
+<rect x="262" y="433" width="323" height="77" class="rm-tip-bg"/>
+<rect x="262" y="433" width="3" height="77" class="rm-tip-acc"/>
+<text x="276" y="451" class="rm-tip-t0 en">HNDL · harvest now, decrypt later</text>
+<text x="276" y="466" class="rm-tip-t en">Attackers record encrypted traffic today</text>
+<text x="276" y="481" class="rm-tip-t en">and read it once a quantum computer exists.</text>
+<text x="276" y="496" class="rm-tip-t en">Often a sensible first step: hybrid PQ.</text>
+<text x="276" y="451" class="rm-tip-t0 nl">HNDL · harvest now, decrypt later</text>
+<text x="276" y="466" class="rm-tip-t nl">Aanvallers slaan versleuteld verkeer nu op</text>
+<text x="276" y="481" class="rm-tip-t nl">en lezen het zodra er een quantumcomputer is.</text>
+<text x="276" y="496" class="rm-tip-t nl">Vaak een logische eerste stap: hybride PQ.</text>
+</g>
+<g class="rm-svtip rm-tr7" aria-hidden="true">
+<rect x="36" y="494" width="316" height="77" class="rm-tip-bg"/>
+<rect x="36" y="494" width="3" height="77" class="rm-tip-acc"/>
+<text x="50" y="512" class="rm-tip-t0 en">Certificates · HSMs</text>
+<text x="50" y="527" class="rm-tip-t en">Certificates prove a site or device is</text>
+<text x="50" y="542" class="rm-tip-t en">genuine. HSM: sealed hardware for keys.</text>
+<text x="50" y="557" class="rm-tip-t en">Both move to ML-DSA or LMS signatures.</text>
+<text x="50" y="512" class="rm-tip-t0 nl">Certificaten · HSM&#x27;s</text>
+<text x="50" y="527" class="rm-tip-t nl">Certificaten bewijzen dat een site of</text>
+<text x="50" y="542" class="rm-tip-t nl">apparaat echt is. HSM: afgeschermde</text>
+<text x="50" y="557" class="rm-tip-t nl">sleutelhardware. Beide gaan naar ML-DSA/LMS.</text>
+</g>
+<g class="rm-svtip rm-tr8" aria-hidden="true">
+<rect x="272" y="475" width="310" height="77" class="rm-tip-bg"/>
+<rect x="272" y="475" width="3" height="77" class="rm-tip-acc"/>
+<text x="286" y="493" class="rm-tip-t0 en">SIG · digital signature</text>
+<text x="286" y="508" class="rm-tip-t en">Proves who sent something. Not harvestable:</text>
+<text x="286" y="523" class="rm-tip-t en">only forgeable once quantum arrives. But</text>
+<text x="286" y="538" class="rm-tip-t en">certificates and firmware live long.</text>
+<text x="286" y="493" class="rm-tip-t0 nl">SIG · digitale handtekening</text>
+<text x="286" y="508" class="rm-tip-t nl">Bewijst wie iets stuurde. Niet te oogsten:</text>
+<text x="286" y="523" class="rm-tip-t nl">pas te vervalsen als quantum er is. Maar</text>
+<text x="286" y="538" class="rm-tip-t nl">certificaten en firmware gaan lang mee.</text>
+</g>
+<g class="rm-svtip rm-tr9" aria-hidden="true">
+<rect x="36" y="536" width="330" height="77" class="rm-tip-bg"/>
+<rect x="36" y="536" width="3" height="77" class="rm-tip-acc"/>
+<text x="50" y="554" class="rm-tip-t0 en">RSA / ECC · OT / IoT</text>
+<text x="50" y="569" class="rm-tip-t en">RSA/ECC: today&#x27;s public-key algorithms,</text>
+<text x="50" y="584" class="rm-tip-t en">broken outright by quantum. OT/IoT: machines,</text>
+<text x="50" y="599" class="rm-tip-t en">sensors, devices — often slowest to update.</text>
+<text x="50" y="554" class="rm-tip-t0 nl">RSA / ECC · OT / IoT</text>
+<text x="50" y="569" class="rm-tip-t nl">RSA/ECC: huidige public-key-algoritmen, door</text>
+<text x="50" y="584" class="rm-tip-t nl">quantum volledig te breken. OT/IoT: machines,</text>
+<text x="50" y="599" class="rm-tip-t nl">sensoren, apparaten — vaak traagst te updaten.</text>
+</g>
+<g class="rm-svtip rm-tr10" aria-hidden="true">
+<rect x="36" y="584" width="330" height="92" class="rm-tip-bg"/>
+<rect x="36" y="584" width="3" height="92" class="rm-tip-acc"/>
+<text x="50" y="602" class="rm-tip-t0 en">NIS2 · DORA</text>
+<text x="50" y="617" class="rm-tip-t en">NIS2: EU cyber law — in the Netherlands the</text>
+<text x="50" y="632" class="rm-tip-t en">Cyberbeveiligingswet, in force 15 Aug 2026.</text>
+<text x="50" y="647" class="rm-tip-t en">DORA: EU rules for financial firms. Both</text>
+<text x="50" y="662" class="rm-tip-t en">expect you to manage supplier risk.</text>
+<text x="50" y="602" class="rm-tip-t0 nl">NIS2 · DORA</text>
+<text x="50" y="617" class="rm-tip-t nl">NIS2: EU-cyberwet — in Nederland de</text>
+<text x="50" y="632" class="rm-tip-t nl">Cyberbeveiligingswet, van kracht per 15 aug</text>
+<text x="50" y="647" class="rm-tip-t nl">2026. DORA: EU-regels voor financiële</text>
+<text x="50" y="662" class="rm-tip-t nl">instellingen. Beide vragen leveranciersbeheer.</text>
+</g>
+<g class="rm-svtip rm-tr11" aria-hidden="true">
+<rect x="36" y="626" width="323" height="77" class="rm-tip-bg"/>
+<rect x="36" y="626" width="3" height="77" class="rm-tip-acc"/>
+<text x="50" y="644" class="rm-tip-t0 en">Crypto agility · risk indicators (KRIs)</text>
+<text x="50" y="659" class="rm-tip-t en">Agility: swapping an algorithm without</text>
+<text x="50" y="674" class="rm-tip-t en">rebuilding the system. KRIs: the numbers the</text>
+<text x="50" y="689" class="rm-tip-t en">board tracks, e.g. % of systems migrated.</text>
+<text x="50" y="644" class="rm-tip-t0 nl">Crypto-agility · risico-indicatoren (KRI&#x27;s)</text>
+<text x="50" y="659" class="rm-tip-t nl">Agility: een algoritme wisselen zonder het</text>
+<text x="50" y="674" class="rm-tip-t nl">systeem opnieuw te bouwen. KRI&#x27;s: cijfers die</text>
+<text x="50" y="689" class="rm-tip-t nl">de directie volgt, zoals % gemigreerd.</text>
+</g>
+<g class="rm-svtip rm-tr12" aria-hidden="true">
+<rect x="680" y="679" width="323" height="77" class="rm-tip-bg"/>
+<rect x="680" y="679" width="3" height="77" class="rm-tip-acc"/>
+<text x="694" y="697" class="rm-tip-t0 en">HNDL · harvest now, decrypt later</text>
+<text x="694" y="712" class="rm-tip-t en">Attackers record encrypted traffic today</text>
+<text x="694" y="727" class="rm-tip-t en">and read it once a quantum computer exists.</text>
+<text x="694" y="742" class="rm-tip-t en">Often a sensible first step: hybrid PQ.</text>
+<text x="694" y="697" class="rm-tip-t0 nl">HNDL · harvest now, decrypt later</text>
+<text x="694" y="712" class="rm-tip-t nl">Aanvallers slaan versleuteld verkeer nu op</text>
+<text x="694" y="727" class="rm-tip-t nl">en lezen het zodra er een quantumcomputer is.</text>
+<text x="694" y="742" class="rm-tip-t nl">Vaak een logische eerste stap: hybride PQ.</text>
+</g>
+<g class="rm-svtip rm-tr13" aria-hidden="true">
+<rect x="730" y="679" width="310" height="77" class="rm-tip-bg"/>
+<rect x="730" y="679" width="3" height="77" class="rm-tip-acc"/>
+<text x="744" y="697" class="rm-tip-t0 en">SIG · digital signature</text>
+<text x="744" y="712" class="rm-tip-t en">Proves who sent something. Not harvestable:</text>
+<text x="744" y="727" class="rm-tip-t en">only forgeable once quantum arrives. But</text>
+<text x="744" y="742" class="rm-tip-t en">certificates and firmware live long.</text>
+<text x="744" y="697" class="rm-tip-t0 nl">SIG · digitale handtekening</text>
+<text x="744" y="712" class="rm-tip-t nl">Bewijst wie iets stuurde. Niet te oogsten:</text>
+<text x="744" y="727" class="rm-tip-t nl">pas te vervalsen als quantum er is. Maar</text>
+<text x="744" y="742" class="rm-tip-t nl">certificaten en firmware gaan lang mee.</text>
+</g>
+</svg>
+    </figure>
+
+    <div class="panel">
+      <p class="en"><strong>The top three bars carry the argument:</strong> data encrypted today may need to stay secret for longer than it takes a quantum computer to arrive, and switching takes years. That is why we suggest starting now — mostly by adding post-quantum requirements to hardware, software and contract renewals you already plan.</p>
+      <p class="en"><strong>What the board may want to decide in 2026:</strong> a mandate, one owner (often the <abbr class="tip" tabindex="0" data-tip="Chief Information Officer: the executive responsible for IT.">CIO</abbr>) and a multi-year budget — then five yes/no checkpoints. The flags are EU recommendations and <abbr class="tip" tabindex="0" data-tip="US National Institute of Standards and Technology. Published the first post-quantum standards in 2024.">NIST</abbr> drafts, not legal deadlines; your sector or supervisor may set other dates.</p>
+      <p class="nl"><strong>De bovenste drie balken dragen het verhaal:</strong> data die vandaag wordt versleuteld, moet mogelijk langer geheim blijven dan het duurt voordat er een quantumcomputer is, en overstappen kost jaren. Daarom stellen we voor nu te beginnen — vooral door post-quantum eisen op te nemen in hardware-, software- en contractvernieuwingen die u al plant.</p>
+      <p class="nl"><strong>Wat de directie in 2026 zou kunnen besluiten:</strong> een mandaat, één eigenaar (vaak de <abbr class="tip" tabindex="0" data-tip="Chief Information Officer: de bestuurder die verantwoordelijk is voor IT.">CIO</abbr>) en een meerjarig budget — daarna vijf ja/nee-toetsmomenten. De vlaggen zijn EU-aanbevelingen en <abbr class="tip" tabindex="0" data-tip="Amerikaans standaardeninstituut. Publiceerde in 2024 de eerste post-quantum standaarden.">NIST</abbr>-concepten, geen wettelijke deadlines; uw sector of toezichthouder kan andere data stellen.</p>
+    </div>
+  </div>
+</section>
+<!-- /diagram:roadmap -->
 
 <!-- ============================ CONTROLS ============================ -->
 <section class="risk-block" id="fix">
@@ -576,11 +1494,11 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
         <tr><th>Control</th><th>Contains</th><th>In one line</th></tr>
         <tr><td class="ctl">Data classification</td><td>Stored data (01)</td><td>Which information in your systems will be sensitive 10+ years from now? That data needs post-quantum protection today, whether it is encrypted or not.</td></tr>
         <tr><td class="ctl">Cryptographic inventory</td><td>All four</td><td>Every system that generates, stores or transmits secrets: algorithm, key size, key rotation policy, end-of-life date. You cannot migrate what you haven't counted.</td></tr>
-        <tr><td class="ctl">Post-quantum standards</td><td>Stored data (01)</td><td>NIST has standardised post-quantum algorithms (as of 2024). Adopt them for new systems immediately, even if the threat is years away.</td></tr>
+        <tr><td class="ctl">Post-quantum standards</td><td>Stored data (01)</td><td>NIST published the first post-quantum standards in August 2024 (ML-KEM, ML-DSA, SLH-DSA). Adopt them for new systems immediately, even if the threat is years away.</td></tr>
         <tr><td class="ctl">Hybrid encryption</td><td>Stored data, AI shortcut (01, 02)</td><td>Use both current and post-quantum encryption together. If one fails to a quantum computer or AI shortcut, the other still holds.</td></tr>
-        <tr><td class="ctl">Hardware key storage</td><td>AI shortcut, hybrid (02, 03)</td><td>Keys protected by a hardware security module that an AI system cannot extract directly, even with full system compromise. Not unbreakable, but costly to attack.</td></tr>
-        <tr><td class="ctl">Timeline planning</td><td>Migration lag (04)</td><td>Plan for quantum to arrive in 5-7 years, not 10+. Start migration of your highest-value systems now. A fast start keeps you ahead of the timeline.</td></tr>
-        <tr><td class="ctl">Harvest-protected secrets</td><td>Stored data (01)</td><td>For data that must stay confidential for decades: crypto-agility (ability to switch algorithms), forward secrecy where possible, and post-quantum re-encryption of old archives.</td></tr>
+        <tr><td class="ctl">Hardware key storage</td><td>AI shortcut, hybrid (02, 03)</td><td>Keys held in a hardware security module cannot be copied off a compromised server. It does not stop cryptanalysis, so check that the HSM supports post-quantum algorithms.</td></tr>
+        <tr><td class="ctl">Timeline planning</td><td>Migration lag (04)</td><td>Plan as if quantum could break today’s encryption around 2030 — the AIVD’s early estimate — not “some time in the 2040s”. Start migration of your highest-value systems now. A fast start keeps you ahead of the timeline.</td></tr>
+        <tr><td class="ctl">Harvest-protected secrets</td><td>Stored data (01)</td><td>For data that must stay confidential for decades: crypto-agility (ability to switch algorithms), hybrid post-quantum key exchange (classic forward secrecy alone does not help against quantum), and re-wrapping archive keys held under RSA.</td></tr>
         <tr><td class="ctl">Rotation and monitoring</td><td>All four</td><td>Regular rotation of encryption keys, monitoring of cryptographic implementations for weaknesses, and a process to disable compromised algorithms quickly when needed.</td></tr>
       </table>
 
@@ -588,17 +1506,19 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
         <tr><th>Maatregel</th><th>Beheerst</th><th>In één zin</th></tr>
         <tr><td class="ctl">Dataclassificatie</td><td>Opgeslagen data (01)</td><td>Welke informatie in uw systemen blijft 10+ jaar gevoelig? Die data heeft vandaag post-quantum bescherming nodig, versleuteld of niet.</td></tr>
         <tr><td class="ctl">Cryptografie inventaris</td><td>Alle vier</td><td>Elk systeem dat geheimen genereert, opslaat of verzendt: algoritme, sleutelgrootte, sleutelrotatie, einddatum. Wat u niet hebt geteld, kunt u niet migreren.</td></tr>
-        <tr><td class="ctl">Post-quantum standaarden</td><td>Opgeslagen data (01)</td><td>NIST heeft post-quantum algoritmen gestandaardiseerd (per 2024). Gebruik ze onmiddellijk voor nieuwe systemen, zelfs als de bedreiging jaren weg is.</td></tr>
+        <tr><td class="ctl">Post-quantum standaarden</td><td>Opgeslagen data (01)</td><td>NIST publiceerde in augustus 2024 de eerste post-quantum standaarden (ML-KEM, ML-DSA, SLH-DSA). Gebruik ze onmiddellijk voor nieuwe systemen, zelfs als de bedreiging jaren weg is.</td></tr>
         <tr><td class="ctl">Hybride encryptie</td><td>Opgeslagen data, AI snelkoppeling (01, 02)</td><td>Gebruik huidige en post-quantum encryptie samen. Als één mislukt tegen een quantumcomputer of AI-snelkoppeling, holt de ander nog.</td></tr>
-        <tr><td class="ctl">Hardwaresleutelopslag</td><td>AI snelkoppeling, hybride (02, 03)</td><td>Sleutels beschermd door een hardware-veiligheidsmodule die een AI-systeem niet direct kan extraheren, zelfs niet bij volledige systeemkompromie. Niet onbreekbaar, maar kostbaar aan te vallen.</td></tr>
-        <tr><td class="ctl">Tijdlijnplanning</td><td>Migratievertraging (04)</td><td>Plan voor quantum in 5-7 jaar, niet 10+. Begin nu met migratie van uw hoogwaardigste systemen. Een snelle start houdt u voor op de tijdlijn.</td></tr>
-        <tr><td class="ctl">Oogstbescherming</td><td>Opgeslagen data (01)</td><td>Voor data die decennia vertrouwelijk moet blijven: crypto-flexibiliteit (vermogen om algoritmen te wisselen), forward secrecy waar mogelijk, en post-quantum hervercryptie van oude archieven.</td></tr>
+        <tr><td class="ctl">Hardwaresleutelopslag</td><td>AI snelkoppeling, hybride (02, 03)</td><td>Sleutels in een hardware-beveiligingsmodule zijn niet van een gehackte server te kopiëren. Het houdt cryptanalyse niet tegen, dus controleer of de HSM post-quantum algoritmen ondersteunt.</td></tr>
+        <tr><td class="ctl">Tijdlijnplanning</td><td>Migratievertraging (04)</td><td>Plan alsof quantum de huidige encryptie rond 2030 kan breken — de vroege schatting van de AIVD — niet “ergens in de jaren 2040”. Begin nu met migratie van uw hoogwaardigste systemen. Een snelle start houdt u voor op de tijdlijn.</td></tr>
+        <tr><td class="ctl">Oogstbescherming</td><td>Opgeslagen data (01)</td><td>Voor data die decennia vertrouwelijk moet blijven: crypto-flexibiliteit (vermogen om algoritmen te wisselen), hybride post-quantum sleuteluitwisseling (klassieke forward secrecy alleen helpt niet tegen quantum), en archiefsleutels onder RSA opnieuw inpakken.</td></tr>
         <tr><td class="ctl">Rotatie en monitoring</td><td>Alle vier</td><td>Regelmatige rotatie van encryptiesleutels, controle van cryptografische implementaties op zwaktes, en een proces om gecompromitteerde algoritmen snel uit te schakelen.</td></tr>
       </table>
 
       <div class="callout">
-        <span class="en"><strong>The board-level point:</strong> quantum and AI are not immediate threats, but the data you encrypt today will outlive both. Your migration to post-quantum encryption is not a response to a breach — it is a commitment to protecting information that will still matter a decade from now. Start the migration in 2024 or 2025, not 2029 or 2030. The timeline will tell you if you started in time.</span>
-        <span class="nl"><strong>De kern voor de directie:</strong> quantum en AI zijn geen directe bedreigingen, maar de data die u vandaag versleutelt, overleeft beide. Uw migratie naar post-quantum encryptie is geen reactie op een inbreuk — het is een toezegging om informatie te beschermen die over tien jaar nog van belang is. Begin de migratie in 2024 of 2025, niet in 2029 of 2030. De tijdlijn zal u zeggen of u op tijd bent begonnen.</span>
+        <span class="en"><strong>The board-level point:</strong> quantum and AI are not immediate threats, but the data you encrypt today will outlive both. Your migration to post-quantum encryption is not a response to a breach — it is a commitment to protecting information that will still matter a decade from now. We suggest starting in 2026: an inventory and a plan by the end of 2027, the most sensitive data protected by 2030, and the migration finished by 2035. Those dates follow the EU and UK government roadmaps; the Dutch <abbr class="tip" tabindex="0" data-tip="General Intelligence and Security Service of the Netherlands.">AIVD</abbr> warns that quantum computers could break today’s encryption as early as 2030.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> quantum en AI zijn geen directe bedreigingen, maar de data die u vandaag versleutelt, overleeft beide. Uw migratie naar post-quantum encryptie is geen reactie op een inbreuk — het is een toezegging om informatie te beschermen die over tien jaar nog van belang is. Wij stellen voor in 2026 te beginnen: een inventaris en een plan vóór eind 2027, de gevoeligste data beschermd vóór 2030, en de migratie afgerond in 2035. Die data volgen de roadmaps van de EU en de Britse overheid; de <abbr class="tip" tabindex="0" data-tip="Algemene Inlichtingen- en Veiligheidsdienst.">AIVD</abbr> waarschuwt dat quantumcomputers de huidige encryptie mogelijk al in 2030 kunnen breken.</span>
+        <span class="en disclaimer">Suggested timeline, not a legal deadline. The EU roadmap is a recommendation to Member States and the <abbr class="tip" tabindex="0" data-tip="US National Institute of Standards and Technology. Published the first post-quantum standards in 2024.">NIST</abbr> dates are still a draft; national rules and sector supervisors may set their own.</span>
+        <span class="nl disclaimer">Voorgestelde tijdlijn, geen wettelijke deadline. De EU-roadmap is een aanbeveling aan lidstaten en de <abbr class="tip" tabindex="0" data-tip="Amerikaans standaardeninstituut. Publiceerde in 2024 de eerste post-quantum standaarden.">NIST</abbr>-data zijn nog een concept; nationale regels en sectortoezichthouders kunnen eigen termijnen stellen.</span>
       </div>
     </div>
   </div>
@@ -615,7 +1535,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
 
     <div class="risk-grid">
-      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">Medium-High</span><span class="nl">Middelgroot-Hoog</span></span><p><span class="en">Harvest-now attacks are happening today; cryptographically useful quantum computers are 5-7+ years away. The risk is timing: you need to act before arrival.</span><span class="nl">Aanvallen om nu te oogsten gebeuren vandaag; cryptografisch bruikbare quantumcomputers zijn 5-7+ jaar weg. Het risico is timing: u moet vóór aankomst handelen.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">Medium-High</span><span class="nl">Middelgroot-Hoog</span></span><p><span class="en">Harvest-now attacks are happening today; cryptographically useful quantum computers could arrive from 2030 (AIVD). The risk is timing: you need to act before arrival.</span><span class="nl">Aanvallen om nu te oogsten gebeuren vandaag; cryptografisch bruikbare quantumcomputers kunnen vanaf 2030 komen (AIVD). Het risico is timing: u moet vóór aankomst handelen.</span></p></div>
       <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Breach of long-lived secrets: trade secrets, medical records, personal data, authentication keys. Once decrypted, recovery is not possible and regulatory breach occurs.</span><span class="nl">Schending van langdurige geheimen: bedrijfsgeheimen, medische gegevens, persoonsgegevens, authenticatiesleutels. Eenmaal ontcijferd is herstel niet mogelijk en regelschending treedt op.</span></p></div>
       <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Middel</span></span><p><span class="en">Post-quantum encryption and hybrid algorithms reduce risk significantly. Residual risk comes from timing: if quantum arrives faster than your migration, you are still vulnerable.</span><span class="nl">Post-quantum encryptie en hybride algoritmen verminderen het risico aanzienlijk. Restrisico komt voort uit timing: als quantum sneller aankomt dan uw migratie, bent u nog steeds kwetsbaar.</span></p></div>
       <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CIO / Chief Security Officer</span><span class="nl">CIO / Chief Security Officer</span></span><p><span class="en">CIO owns the migration roadmap and timeline. CSO owns the harvest-now threat monitoring. Legal and Compliance must approve data classification and retention policies.</span><span class="nl">CIO bezit de migratie roadmap en tijdlijn. CSO bezit threat monitoring voor oogsten nu. Legal en Compliance moeten gegevensclassificatie goedkeuren.</span></p></div>
@@ -639,12 +1559,18 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
         <tr><td class="ctl">SOC 2</td><td>Als u er zelf een afgeeft: cryptografische maatregelen moeten een roadmap naar post-quantum encryptie bevatten. Uw controleomgeving moet de migratietijdlijn en voortgang tonen. Het auditkader moet expliciet de transitie van erfenis naar quantum dekken.</td><td>Een audit van een cryptografieverkopers zou moeten verifiëren: inventarisatie van systemen op algoritme, migratieplan en tijdlijn, en bewijs van post-quantum testing. Verouderde algoritmen zonder einddatum zijn een tekortkoming in controles.</td><td>De audit zal elk langdurig versleuteld gegeven dat niet naar post-quantum bescherming werd gemigreerd, als een tekortkoming in controles markeren. Klanten zullen naar uw herstelschema en voortgangsbewijzen vragen.</td></tr>
         <tr><td class="ctl">ISAE 3402</td><td>Als u een service met cryptografie levert: uw beheersdoelstellingen moeten de post-quantum transitie expliciet dekken. De beschrijving van uw controleomgeving moet aangeven wanneer systemen met verouderde algoritmen worden ontmanteld.</td><td>Controleer de beschrijving van de serviceorganisatie: vermeldt het post-quantum encryptie? Wat is de tijdlijn voor erfenissystemen? Als post-quantum niet wordt genoemd, kan dit aanduiden dat de organisatie dit risico nog niet heeft aangepakt.</td><td>Als een quantumdoorbraak ontcijfering van gegevens in de systemen van uw klant versnelt, worden de maatregelen van de serviceorganisatie relevant. Auditors zullen controleren of de overgang op tijd was.</td></tr>
       </table>
+      <p class="sources en">Checked against: <a href="https://digital-strategy.ec.europa.eu/en/library/coordinated-implementation-roadmap-transition-post-quantum-cryptography">EU PQC Roadmap v1.1</a> (June 2025), NIST FIPS 203–205 (Aug 2024) and <a href="https://csrc.nist.gov/pubs/ir/8547/ipd">IR 8547 draft</a> (Nov 2024), <a href="https://www.ncsc.gov.uk/guidance/pqc-migration-timelines">NCSC UK</a> (2025), <a href="https://www.aivd.nl/documenten/2024/12/3/het-pqc-migratie-handboek">AIVD PQC handbook</a> (Dec 2024), <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL on the Cbw</a> (Aug 2026) · September 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://digital-strategy.ec.europa.eu/en/library/coordinated-implementation-roadmap-transition-post-quantum-cryptography">EU PQC-roadmap v1.1</a> (juni 2025), NIST FIPS 203–205 (aug 2024) en <a href="https://csrc.nist.gov/pubs/ir/8547/ipd">IR 8547-concept</a> (nov 2024), <a href="https://www.ncsc.gov.uk/guidance/pqc-migration-timelines">NCSC UK</a> (2025), <a href="https://www.aivd.nl/documenten/2024/12/3/het-pqc-migratie-handboek">AIVD PQC-handboek</a> (dec 2024), <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL over de Cbw</a> (aug 2026) · september 2026.</p>
     </div>
   </div>
 </section>
 
 <div class="divider"><i></i><i></i><i></i><i></i></div>
 
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../tls-cipher-suites/"><span class="en">SSL/TLS cipher suites</span><span class="nl">SSL/TLS-ciphersuites</span></a> ·
+  <a href="../supply-chain/"><span class="en">Supply chain</span><span class="nl">Toeleveringsketen</span></a> ·
+  <a href="../nis2-dora/"><span class="en">NIS2 and DORA</span><span class="nl">NIS2 en DORA</span></a></p>
 <div class="fb">
   <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=quantum-and-ai&amp;title=Missing%3A%20quantum-and-ai"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
   <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=quantum-and-ai&amp;title=Correction%3A%20quantum-and-ai"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
