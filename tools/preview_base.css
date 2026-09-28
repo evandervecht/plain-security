@@ -1,0 +1,16 @@
+:root{--deep:#051324;--bg:#0b1b2b;--bg-lo:#081727;--bg-hi:#0d1e2d;--surface:#2a4858;--slate:#637b88;--muted:#87a2b0;--body:#c8d8e1;--prose:#e6eff5;--white:#fff;--line:#335364;--line-soft:#1d3444;--good:#37d39b;--warn:#ffc857;--bad:#ff5d73;--bad-soft:#ffb3be;--brand:#5ac8fa;
+--mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;--sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--body);font-family:var(--mono);font-size:15px;line-height:1.75}
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+.en,.nl{display:none}body:has(#lang-en:checked) .en{display:revert}body:has(#lang-nl:checked) .nl{display:revert}
+.lang{display:inline-flex;border:1px solid var(--line);margin:20px 40px}.lang input{position:absolute;opacity:0}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted)}
+#lang-en:checked ~ label[for=lang-en],#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+section.risk-block{padding:40px 0 78px}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}.kicker b{color:var(--slate);margin-right:10px}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;margin:0 0 20px}h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px;max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;margin:0 0 18px;color:var(--prose);max-width:70ch}.panel strong{color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+figure{margin:0}

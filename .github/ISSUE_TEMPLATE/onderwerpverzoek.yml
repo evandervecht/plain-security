@@ -41,8 +41,33 @@ body:
         - Alleen Nederlands
     validations:
       required: true
+  - type: dropdown
+    id: diagram
+    attributes:
+      label: Diagram
+      description: "Briefings blijven leesbaar: hooguit één diagram, alleen waar het sneller uitlegt dan tekst."
+      options:
+        - Alleen als het tekst vervangt (standaard)
+        - Ja, één referentiearchitectuur-diagram
+        - Geen diagram
+    validations:
+      required: true
   - type: textarea
     id: notes
     attributes:
       label: Verder nog iets
       description: Regelgeving, incidenten of voorbeelden die erin moeten. Optioneel.
+  - type: textarea
+    id: standard
+    attributes:
+      label: "Voor wie dit bouwt: briefingstandaard"
+      description: Vooraf ingevulde checklist uit AGENTS.md. Niet aanpassen.
+      value: |
+        Laat dit staan. Wie dit issue oppakt, mens of agent, werkt volgens AGENTS.md in de repo:
+        - [ ] Feiten, data en cijfers gecontroleerd tegen een primaire bron op de dag van de wijziging; bronnenregel bijgewerkt
+        - [ ] Adviserende toon: AANBEVOLEN:-pillen, "moet" alleen als een wet het zegt
+        - [ ] Tijdlijnen melden "voorgesteld, geen wettelijke deadline"; wet, aanbeveling, concept of richtlijn wordt benoemd
+        - [ ] Afkortingen krijgen een tooltip bij eerste gebruik per sectie (één zin, max. 160 tekens)
+        - [ ] Leesbaar: vervangen, niet toevoegen; zichtbare tekst groeit maximaal 10%; hooguit één diagram, alleen als het tekst vervangt
+        - [ ] EN en NL zeggen hetzelfde; NL gebruikt "u"
+        - [ ] `node tools/check.mjs <slug>` slaagt (voeg `--baseline main` toe bij een bestaande pagina)

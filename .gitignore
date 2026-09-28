@@ -1,1 +1,3 @@
 _t*.html
+tools/out/
+__pycache__/
