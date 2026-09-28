@@ -123,12 +123,42 @@ Last verified 28 Sep 2026. Re-verify before reuse, and use the same wording on e
 
 ## Working an issue
 
-1. Read the issue, the page, and this file.
-2. List the claims you will touch. Verify each against a primary source, and note source and date.
-3. Make the smallest change that makes the page correct. Keep the page's structure and generic CSS.
-4. Run `node tools/check.mjs <slug> --baseline main`. Everything must pass.
-5. Look at the page yourself: EN and NL, at desktop width and at 390px. Hover a few tooltips.
-6. In the pull request, say what changed and why, list the sources you verified, and give the text-budget figure. Use a separate PR for changes to shared canonical text.
+Issues come from the forms in `.github/ISSUE_TEMPLATE` (topic requests, corrections, "missing" reports), and each one gets its own pull request.
+
+1. Read the issue, including its pre-filled checklist, the page, and this file. Create a branch `issue-<n>-<slug>`.
+2. List every claim you will add, change or keep near the change. Verify each against a primary source, and note the URL and date.
+3. Make the smallest change that makes the page correct and readable. Keep the page's structure and generic CSS. Touch only the page concerned. Use a separate PR for changes to shared canonical text.
+4. Run `node tools/check.mjs <slug> --baseline main`, or without `--baseline` for a new page. It must end with "All checks passed".
+5. Look at the page yourself in headless Chrome or Edge: EN and NL, at 1260px and at 390px. Force a few tooltips visible in a temporary copy, and fix any overlap.
+6. Open a pull request. Never commit to `main`.
+
+### Pull-request description
+
+```
+## What changed
+- <bullet per change, in plain language>
+
+## Verified against
+- <source> — <URL> — <date checked>
+
+## Checks
+- node tools/check.mjs <slug> --baseline main: passed (text +x.x%)
+- Viewed EN/NL at desktop and 390px
+
+## Left out on purpose
+- <what you didn't add to stay readable, or couldn't verify>
+
+Closes #<n>
+```
+
+### When to stop and ask
+
+Ask a maintainer in the issue, and don't guess, when:
+- a primary source contradicts the issue;
+- a claim can't be verified;
+- the fix would push the page over the text budget;
+- the issue asks for more than one diagram, a new step, or a change to many pages;
+- the answer needs legal interpretation beyond quoting the text.
 
 ## Definition of done
 
@@ -138,7 +168,7 @@ Last verified 28 Sep 2026. Re-verify before reuse, and use the same wording on e
 - [ ] Acronyms have tooltips on first use per section; the tips are short.
 - [ ] At most one diagram; it has tooltips, a legend, and scrolls on mobile.
 - [ ] EN and NL say the same thing; Dutch uses formal *u*.
-- [ ] Text grew by 10% or less; `node tools/check.mjs` passes.
+- [ ] Text grew by 10% or less; `node tools/check.mjs` passes; the PR description is complete.
 
 ## Diagram candidates
 
