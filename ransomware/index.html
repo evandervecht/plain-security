@@ -291,6 +291,62 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
 .ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+/* diagram:ransomware-map */
+/* ---------- ransomware containment map ---------- */
+.arch{margin:0 0 30px;background:var(--bg-lo);border:1px solid var(--line-soft);padding:12px;overflow-x:auto}
+.arch svg{display:block;width:100%;min-width:900px;height:auto}
+.arch .rw-dom{fill:none;stroke:var(--line);stroke-dasharray:2 4}
+.arch .rw-vdom{stroke:var(--good);stroke-opacity:.55}
+.arch .rw-dlabel{font:700 10.5px var(--mono);letter-spacing:.24em;fill:var(--muted)}
+.arch .rw-band{fill:var(--bg-hi);stroke:var(--line-soft)}
+.arch .rw-blabel{font:700 11px var(--mono);letter-spacing:.24em;fill:var(--slate)}
+.arch .rw-node{fill:var(--surface);stroke:var(--line)}
+.arch .rw-s-ok .rw-bar{fill:var(--good)}
+.arch .rw-s-mid .rw-bar{fill:var(--warn)}
+.arch .rw-s-mid .rw-node{stroke:rgba(255,200,87,.45)}
+.arch .rw-kick{font:500 10px var(--mono);letter-spacing:.12em;fill:var(--muted)}
+.arch .rw-name{font:600 13px var(--sans);fill:var(--white)}
+.arch .rw-st{font:400 10px var(--mono);fill:var(--prose)}
+.arch .rw-note{font:400 10.5px var(--mono);fill:var(--body)}
+.arch .rw-legend{font:400 11px var(--mono);fill:var(--body)}
+.arch .rw-foot{font:400 10px var(--mono);letter-spacing:.06em;fill:var(--slate)}
+.arch .llabel{font:700 9.5px var(--mono);letter-spacing:.12em;fill:var(--muted)}
+.arch .rw-link-g{fill:none;stroke:var(--good);stroke-width:1.6}
+.arch .rw-link-b{fill:none;stroke:var(--brand);stroke-width:1.6;stroke-dasharray:5 5;animation:rw-flow 1.4s linear infinite}
+.arch .rw-link-x{fill:none;stroke:var(--bad);stroke-width:1.5;stroke-dasharray:3 4}
+.arch .rw-ah-g{fill:var(--good)}
+.arch .rw-ah-b{fill:var(--brand)}
+.arch .rw-xmark circle{fill:var(--deep);stroke:var(--bad);stroke-width:1.5}
+.arch .rw-xmark path{stroke:var(--bad);stroke-width:2}
+.arch .rw-lg-ok{fill:var(--good)}
+.arch .rw-lg-mid{fill:var(--warn)}
+.arch .rw-tag-x rect{fill:rgba(255,93,115,.12);stroke:rgba(255,93,115,.5)}
+.arch .rw-tag-x .rw-tagt{font:700 9px var(--mono);letter-spacing:.1em;fill:var(--bad-soft)}
+.arch .rw-tag-f rect{fill:rgba(135,162,176,.12);stroke:var(--slate)}
+.arch .rw-tag-f .rw-tagt{font:700 9px var(--mono);letter-spacing:.1em;fill:var(--muted)}
+@keyframes rw-flow{to{stroke-dashoffset:-10}}
+@media (prefers-reduced-motion:reduce){.arch .rw-link-b{animation:none}}
+.arch .rw-svtip{visibility:hidden;pointer-events:none}
+.arch .rw-tip-bg{fill:var(--deep);stroke:var(--line)}
+.arch .rw-tip-acc{fill:var(--brand)}
+.arch .rw-tip-t0{font:700 11px var(--mono);fill:var(--white)}
+.arch .rw-tip-t{font:400 11px var(--mono);fill:var(--prose)}
+.arch [tabindex]{cursor:help;outline:none}
+.arch [tabindex]:focus-visible > rect:first-child{stroke:var(--brand);stroke-width:1.5}
+.arch svg:has(.rw-hr0:hover,.rw-hr0:focus) .rw-tr0,.arch svg:has(.rw-hr1:hover,.rw-hr1:focus) .rw-tr1,.arch svg:has(.rw-hr2:hover,.rw-hr2:focus) .rw-tr2,.arch svg:has(.rw-hr3:hover,.rw-hr3:focus) .rw-tr3,.arch svg:has(.rw-hr4:hover,.rw-hr4:focus) .rw-tr4,.arch svg:has(.rw-hr5:hover,.rw-hr5:focus) .rw-tr5,.arch svg:has(.rw-hr6:hover,.rw-hr6:focus) .rw-tr6,.arch svg:has(.rw-hr7:hover,.rw-hr7:focus) .rw-tr7,.arch svg:has(.rw-hr8:hover,.rw-hr8:focus) .rw-tr8,.arch svg:has(.rw-hr9:hover,.rw-hr9:focus) .rw-tr9,.arch svg:has(.rw-hr10:hover,.rw-hr10:focus) .rw-tr10{visibility:visible}
+/* /diagram:ransomware-map */
 </style>
 </head>
 <body>
@@ -329,8 +385,8 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="nl">Ransomware. <em>Vier stappen naar stilstand.</em></span>
     </h1>
     <p class="lede">
-      <span class="en">How one stolen login becomes weeks of downtime and a public data leak — in plain language: what happens at each step, and the single control that breaks the chain.</span>
-      <span class="nl">Hoe één gestolen wachtwoord uitmondt in weken stilstand en een publiek datalek — in gewone taal: wat er bij elke stap gebeurt, en welke maatregel de keten breekt.</span>
+      <span class="en">How one stolen login or one unpatched device becomes weeks of downtime and a public data leak — in plain language: what happens at each step, and the single control that breaks the chain.</span>
+      <span class="nl">Hoe één gestolen inlog of één ongepatcht apparaat uitmondt in weken stilstand en een publiek datalek — in gewone taal: wat er bij elke stap gebeurt, en welke maatregel de keten breekt.</span>
     </p>
     <div class="btns">
       <a class="btn solid" href="#r1"><span class="en">SEE THE STEPS</span><span class="nl">BEKIJK DE STAPPEN</span></a>
@@ -350,8 +406,8 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="nl">Iemand loopt <em>door de voordeur binnen.</em></span>
     </h2>
     <span class="term">
-      <span class="en">initial access / a login, not a hack</span>
-      <span class="nl">initial access / een inlog, geen hack</span>
+      <span class="en">initial access / a login or an unpatched edge device</span>
+      <span class="nl">initial access / een inlog of een ongepatcht randapparaat</span>
     </span>
 
     <div class="stage s1">
@@ -367,22 +423,22 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     </div>
 
     <div class="panel">
-      <p class="en">Ransomware almost never starts with a clever exploit. It starts with a login. A password reused from a breached webshop, a phishing mail asking to “re-authenticate”, a VPN or remote-desktop portal that was never given a second factor. The attacker signs in the way an employee would, from an unremarkable location, and nothing flags it. Days or weeks pass before anything visible happens.</p>
-      <p class="en"><strong>Why this step matters most:</strong> it is the only point where stopping the attacker is still cheap. Every step after it costs orders of magnitude more. A second factor on every external login, and an internet-facing footprint that is small and patched, removes most entry routes at once.</p>
-      <p class="nl">Ransomware begint bijna nooit met een slimme exploit. Het begint met een inlog. Een wachtwoord dat ook bij een gehackte webshop werd gebruikt, een phishingmail die vraagt om “opnieuw te verifiëren”, een VPN- of remote-desktopportaal dat nooit een tweede factor kreeg. De aanvaller logt in zoals een medewerker dat doet, vanaf een onopvallende locatie, en niets slaat alarm. Er gaan dagen of weken voorbij voordat er iets zichtbaar gebeurt.</p>
-      <p class="nl"><strong>Waarom juist deze stap telt:</strong> het is het enige moment waarop de aanvaller nog goedkoop te stoppen is. Elke stap daarna kost een veelvoud. Een tweede factor op elke externe inlog, en een kleine, gepatchte buitenkant, sluit de meeste ingangen in één keer.</p>
+      <p class="en">Ransomware rarely needs a clever new exploit. It starts with a login or an unpatched <abbr class="tip" tabindex="0" data-tip="A VPN box, firewall or gateway that faces the internet. A known flaw there is a door anyone can find.">edge device</abbr>. A password reused from a breached webshop, a phishing mail, a <abbr class="tip" tabindex="0" data-tip="Virtual private network: the encrypted tunnel staff use to reach the company network from outside.">VPN</abbr> portal without a second factor. Or a known flaw in a VPN or firewall, patched too late: Sophos (State of Ransomware 2025) names exploited vulnerabilities as the most common root cause (32%), ahead of stolen credentials (23%). Either way, nothing flags it. Days or weeks pass before anything visible happens.</p>
+      <p class="en"><strong>Why this step matters most:</strong> it is the only point where stopping the attacker is still cheap. Two measures weigh equally: a second factor on every external login, and a small internet-facing footprint patched within days.</p>
+      <p class="nl">Ransomware heeft zelden een slimme nieuwe exploit nodig. Het begint met een inlog of een ongepatcht <abbr class="tip" tabindex="0" data-tip="Een VPN-server, firewall of gateway aan het internet. Een bekende fout daarin is een deur die iedereen kan vinden.">randapparaat</abbr>. Een wachtwoord dat ook bij een gehackte webshop werd gebruikt, een phishingmail, een <abbr class="tip" tabindex="0" data-tip="Virtual private network: de versleutelde tunnel waarmee medewerkers van buitenaf het bedrijfsnetwerk bereiken.">VPN</abbr>-portaal zonder tweede factor. Of een bekende fout in een VPN of firewall, te laat gepatcht: Sophos (State of Ransomware 2025) noemt misbruikte kwetsbaarheden de vaakste oorzaak (32%), vóór gestolen inloggegevens (23%). Hoe dan ook: niets slaat alarm. Er gaan dagen of weken voorbij voordat er iets zichtbaar gebeurt.</p>
+      <p class="nl"><strong>Waarom juist deze stap telt:</strong> het is het enige moment waarop de aanvaller nog goedkoop te stoppen is. Twee maatregelen wegen even zwaar: een tweede factor op elke externe inlog, en een kleine buitenkant die binnen dagen wordt gepatcht.</p>
     </div>
 
     <div class="pills">
-      <span class="pill risk">⚠ <span class="en">A LOGIN, NOT A HACK · UNNOTICED FOR WEEKS</span><span class="nl">EEN INLOG, GEEN HACK · WEKEN ONOPGEMERKT</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: PHISHING-RESISTANT MFA + SMALL, PATCHED EDGE</span><span class="nl">OPLOSSING: PHISHINGBESTENDIGE MFA + KLEINE, GEPATCHTE BUITENKANT</span></span>
+      <span class="pill risk">⚠ <span class="en">A LOGIN OR AN UNPATCHED EDGE · UNNOTICED FOR WEEKS</span><span class="nl">EEN INLOG OF EEN ONGEPATCHTE RAND · WEKEN ONOPGEMERKT</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: PHISHING-RESISTANT MFA + SMALL, PATCHED EDGE</span><span class="nl">AANBEVOLEN: PHISHINGBESTENDIGE MFA + KLEINE, GEPATCHTE BUITENKANT</span></span>
     </div>
 
     <div class="ai3">
       <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
       <div class="g">
-        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI-driven bots test millions of previously breached username and password pairs against every VPN and remote-desktop portal a company exposes, all day and night, finding the one reused login without a single human doing the trying.</span><span class="nl">AI-gestuurde bots proberen dag en nacht miljoenen eerder gelekte combinaties van gebruikersnaam en wachtwoord uit op elk VPN- of remote-desktopportaal van een bedrijf, en vinden zo het ene hergebruikte account zonder dat er een mens hoeft mee te doen.</span></p></div>
-        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Once one stolen password proves valid, an AI-driven bot automatically tries it against every other login the company owns, email, cloud storage, admin panels, quietly mapping every place a legitimate credential also unlocks, without tripping a single alarm.</span><span class="nl">Blijkt één gestolen wachtwoord geldig, dan probeert een AI-bot het automatisch op elke andere inlog van het bedrijf, e-mail, cloudopslag, beheerpanelen, en brengt zo stilletjes in kaart waar een geldige inlog nog meer toegang geeft, zonder dat er alarm afgaat.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Testing millions of breached username and password pairs against every VPN portal is ordinary automation, no AI needed. What AI adds is speed elsewhere: more convincing phishing mails, and faster sifting of which exposed edge devices are still unpatched.</span><span class="nl">Miljoenen gelekte combinaties van gebruikersnaam en wachtwoord uitproberen op elk VPN-portaal is gewone automatisering, daar is geen AI voor nodig. AI versnelt vooral de rest: overtuigender phishingmails, en sneller uitzoeken welke randapparaten nog ongepatcht zijn.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Once one stolen password proves valid, an AI assistant can help an attacker map every other login it also opens, such as email, cloud storage and admin panels, faster than working through them by hand, without tripping an alarm.</span><span class="nl">Blijkt één gestolen wachtwoord geldig, dan helpt een AI-assistent de aanvaller sneller in kaart te brengen welke andere inlogs het nog meer opent, zoals e-mail, cloudopslag en beheerpanelen, zonder dat er alarm afgaat.</span></p></div>
         <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Second factor everywhere</span><span class="nl">Overal een tweede factor</span></b><p><span class="en">AI can flag logins from a new location or an impossible-travel pattern for review faster than a person watching logs, but stopping this step still comes down to phishing-resistant MFA on every external login and a small, patched footprint.</span><span class="nl">AI kan inlogpogingen vanaf een nieuwe locatie of een onmogelijk reispatroon sneller signaleren dan iemand die logs naleest, maar deze stap stoppen komt nog altijd neer op phishingbestendige MFA op elke externe inlog en een kleine, gepatchte buitenkant.</span></p></div>
       </div>
     </div>
@@ -412,15 +468,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     </div>
 
     <div class="panel">
-      <p class="en">Once inside, the attacker encrypts nothing yet. They look around. On a flat network every server is reachable from every desk. An IT administrator who logs on to a workstation leaves credentials behind that can be harvested. Within days the attacker holds a domain administrator account — the keys to every system, including the ones that run the backups. From there, encrypting the entire estate is a scheduled task set to run on a Friday night.</p>
+      <p class="en">Once inside, the attacker encrypts nothing yet. They look around. On a <abbr class="tip" tabindex="0" data-tip="A network without internal walls: every device can reach every other device.">flat network</abbr> every server is reachable from every desk. An IT administrator who logs on to a workstation leaves credentials behind that can be harvested. Within days the attacker holds a <abbr class="tip" tabindex="0" data-tip="The Active Directory account that can change every Windows system and user in the company.">domain administrator</abbr> account — the keys to every system, including the ones that run the backups. From there, encrypting the entire estate is a scheduled task set to run on a Friday night.</p>
       <p class="en"><strong>Business impact:</strong> blast radius is the whole decision. A segmented network with separate admin accounts turns “the company is down” into “one department is down”. Same attacker, same entry point; a fraction of the cost.</p>
-      <p class="nl">Eenmaal binnen versleutelt de aanvaller nog niets. Hij kijkt rond. In een plat netwerk is elke server bereikbaar vanaf elk bureau. Een IT-beheerder die inlogt op een werkplek laat daar inloggegevens achter die geoogst kunnen worden. Binnen enkele dagen heeft de aanvaller een domeinbeheerdersaccount — de sleutel tot elk systeem, inclusief de systemen die de back-ups maken. Vanaf dat moment is het versleutelen van het hele bedrijf een geplande taak voor vrijdagnacht.</p>
-      <p class="nl"><strong>Bedrijfsimpact:</strong> de omvang van de schade is de hele beslissing. Een gesegmenteerd netwerk met gescheiden beheerdersaccounts maakt van “het bedrijf ligt plat” een “één afdeling ligt plat”. Dezelfde aanvaller, dezelfde ingang; een fractie van de kosten.</p>
+      <p class="nl">Eenmaal binnen versleutelt de aanvaller nog niets. Hij kijkt rond. In een <abbr class="tip" tabindex="0" data-tip="Een netwerk zonder interne muren: elk apparaat kan elk ander apparaat bereiken.">plat netwerk</abbr> is elke server bereikbaar vanaf elk bureau. Een IT-beheerder die inlogt op een werkplek laat daar inloggegevens achter die geoogst kunnen worden. Binnen enkele dagen heeft de aanvaller een <abbr class="tip" tabindex="0" data-tip="Het Active Directory-account dat elk Windows-systeem en elke gebruiker in het bedrijf kan wijzigen.">domeinbeheerdersaccount</abbr> — de sleutel tot elk systeem, inclusief de systemen die de back-ups maken. Vanaf dat moment is het versleutelen van het hele bedrijf een geplande taak voor vrijdagnacht.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de omvang van de schade is waar het om draait. Een gesegmenteerd netwerk met gescheiden beheerdersaccounts maakt van “het bedrijf ligt plat” een “één afdeling ligt plat”. Dezelfde aanvaller, dezelfde ingang; een fractie van de kosten.</p>
     </div>
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">FLAT NETWORK · SHARED ADMIN · TOTAL BLAST RADIUS</span><span class="nl">PLAT NETWERK · GEDEELD BEHEER · TOTALE SCHADE</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: SEGMENTATION + TIERED ADMIN + EDR</span><span class="nl">OPLOSSING: SEGMENTATIE + GESCHEIDEN BEHEER + EDR</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: SEGMENTATION + TIERED ADMIN + EDR</span><span class="nl">AANBEVOLEN: SEGMENTATIE + GESCHEIDEN BEHEER + EDR</span></span>
     </div>
 
     <div class="ai3">
@@ -458,15 +514,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     </div>
 
     <div class="panel">
-      <p class="en">Encryption is the loud part, and it comes last. Before it, the attacker quietly copies out what hurts most: contracts, personnel files, customer data, board minutes, the M&amp;A data room. Then they encrypt, and the ransom note has two halves — pay to get your systems back, and pay so we do not publish. Restoring from backup fixes the first half only.</p>
-      <p class="en"><strong>Business impact:</strong> this turns an outage into a data breach. GDPR's 72-hour notification, a regulator, customers and staff to inform, and a leak site with our name on it — whether or not we pay. Gigabytes leaving for an address we have never talked to is detectable. But only if someone is watching.</p>
-      <p class="nl">Versleutelen is het luidruchtige deel, en het komt als laatste. Daarvóór kopieert de aanvaller in stilte wat het meeste pijn doet: contracten, personeelsdossiers, klantgegevens, bestuursnotulen, de dataroom van de overname. Daarna versleutelt hij, en het losgeldbriefje heeft twee helften — betaal om je systemen terug te krijgen, en betaal zodat wij niet publiceren. Herstellen vanaf back-up lost alleen de eerste helft op.</p>
-      <p class="nl"><strong>Bedrijfsimpact:</strong> dit maakt van een storing een datalek. De 72-uursmelding onder de AVG, een toezichthouder, klanten en medewerkers die geïnformeerd moeten worden, en een leksite met onze naam erop — of we nu betalen of niet. Gigabytes die vertrekken naar een adres waar we nooit mee gesproken hebben, is detecteerbaar. Maar alleen als iemand kijkt.</p>
+      <p class="en">Encryption is the loud part, and it comes last. Before it, the attacker quietly copies out what hurts most: contracts, personnel files, customer data, board minutes, the M&amp;A data room. Then they encrypt, and the ransom note has two halves — pay to get your systems back, and pay so we do not publish. Restoring from backup fixes the first half only. Some groups skip encryption altogether: they only steal, then extort.</p>
+      <p class="en"><strong>Business impact:</strong> this turns an outage into a data breach. <abbr class="tip" tabindex="0" data-tip="EU privacy law (AVG in Dutch). A personal-data breach goes to the Autoriteit Persoonsgegevens within 72 hours.">GDPR</abbr> requires notifying the Autoriteit Persoonsgegevens within 72 hours and, when the risk is high, the people affected. Then a leak site with our name on it — whether or not we pay. Gigabytes leaving for an address we have never talked to is detectable. But only if someone is watching.</p>
+      <p class="nl">Versleutelen is het luidruchtige deel, en het komt als laatste. Daarvóór kopieert de aanvaller in stilte wat het meeste pijn doet: contracten, personeelsdossiers, klantgegevens, bestuursnotulen, de dataroom van de overname. Daarna versleutelt hij, en het losgeldbriefje heeft twee helften — betaal om uw systemen terug te krijgen, en betaal zodat wij niet publiceren. Herstellen vanaf back-up lost alleen de eerste helft op. Sommige groepen slaan het versleutelen zelfs over: ze stelen alleen, en persen dan af.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> dit maakt van een storing een datalek. De <abbr class="tip" tabindex="0" data-tip="De Algemene verordening gegevensbescherming (GDPR). Een datalek meldt u binnen 72 uur bij de Autoriteit Persoonsgegevens.">AVG</abbr> vraagt een melding bij de Autoriteit Persoonsgegevens binnen 72 uur en, bij een hoog risico, het informeren van de betrokkenen. Daarna een leksite met onze naam erop — of we nu betalen of niet. Gigabytes die vertrekken naar een adres waar we nooit mee gesproken hebben, zijn te detecteren. Maar alleen als iemand kijkt.</p>
     </div>
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">DATA BREACH, NOT JUST DOWNTIME · PUBLISHED IF UNPAID</span><span class="nl">DATALEK, NIET ALLEEN STILSTAND · GEPUBLICEERD BIJ NIET BETALEN</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: EDR + EGRESS MONITORING + LEAST-PRIVILEGE DATA ACCESS</span><span class="nl">OPLOSSING: EDR + UITGAAND VERKEER BEWAKEN + MINIMALE DATATOEGANG</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: EDR + EGRESS MONITORING + LEAST-PRIVILEGE DATA ACCESS</span><span class="nl">AANBEVOLEN: EDR + UITGAAND VERKEER BEWAKEN + MINIMALE DATATOEGANG</span></span>
     </div>
 
     <div class="ai3">
@@ -486,7 +542,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
     <h2>
       <span class="en">Your backups were <em>the first thing they deleted.</em></span>
-      <span class="nl">Je back-ups waren <em>het eerste dat ze wisten.</em></span>
+      <span class="nl">Uw back-ups waren <em>het eerste wat ze wisten.</em></span>
     </h2>
     <span class="term">
       <span class="en">backup destruction / recovery failure</span>
@@ -504,15 +560,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     </div>
 
     <div class="panel">
-      <p class="en">Attackers read the same playbooks we do. Before the encryption runs, they find the backup server — reachable with the same domain administrator account — and delete the backups, or encrypt them too. Cloud backup tied to a connected account? Deleted. A retention period an administrator can shorten? Shortened. What survives is only what the attacker could not touch: a copy that is offline, immutable, or in an account no stolen credential can reach.</p>
+      <p class="en">Attackers read the same playbooks we do. Before the encryption runs, they find the backup server — reachable with the same domain administrator account — and delete the backups, or encrypt them too. Cloud backup tied to a connected account? Deleted. A retention period an administrator can shorten? Shortened. What survives is only what the attacker could not touch: a copy that is offline, <abbr class="tip" tabindex="0" data-tip="Locked for a fixed period: nobody, not even an administrator, can delete or change it until the period ends.">immutable</abbr>, or in an account no stolen credential can reach.</p>
       <p class="en"><strong>Business impact:</strong> this is the difference between a bad week and an existential event. Companies with tested, untouchable backups restore and refuse to pay. The rest negotiate. “We have backups” is not the question. “When did we last restore everything, and how many days did it take?” is.</p>
-      <p class="nl">Aanvallers lezen dezelfde handboeken als wij. Voordat de versleuteling draait, zoeken ze de back-upserver — bereikbaar met datzelfde domeinbeheerdersaccount — en wissen ze de back-ups, of versleutelen ze die ook. Cloudback-up gekoppeld aan een verbonden account? Gewist. Een bewaartermijn die een beheerder kan verkorten? Verkort. Wat overblijft is alleen wat de aanvaller niet kon aanraken: een kopie die offline staat, onveranderbaar is, of in een account zit waar geen gestolen inlog bij kan.</p>
+      <p class="nl">Aanvallers lezen dezelfde handboeken als wij. Voordat de versleuteling draait, zoeken ze de back-upserver — bereikbaar met datzelfde domeinbeheerdersaccount — en wissen ze de back-ups, of versleutelen ze die ook. Cloudback-up gekoppeld aan een verbonden account? Gewist. Een bewaartermijn die een beheerder kan verkorten? Verkort. Wat overblijft is alleen wat de aanvaller niet kon aanraken: een kopie die offline staat, <abbr class="tip" tabindex="0" data-tip="Een vaste periode vergrendeld: niemand, ook geen beheerder, kan hem wissen of wijzigen tot die periode voorbij is.">onveranderbaar</abbr> is, of in een account zit waar geen gestolen inlog bij kan.</p>
       <p class="nl"><strong>Bedrijfsimpact:</strong> dit is het verschil tussen een slechte week en een existentiële crisis. Bedrijven met geteste, onaantastbare back-ups herstellen en weigeren te betalen. De rest onderhandelt. “We hebben back-ups” is niet de vraag. “Wanneer hebben we voor het laatst álles teruggezet, en hoeveel dagen kostte dat?” wel.</p>
     </div>
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">NO RECOVERY · NO LEVERAGE · WEEKS OF DOWNTIME</span><span class="nl">GEEN HERSTEL · GEEN ONDERHANDELINGSPOSITIE · WEKEN STILSTAND</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: IMMUTABLE OFFLINE BACKUPS + TESTED FULL RESTORE</span><span class="nl">OPLOSSING: ONVERANDERBARE OFFLINE BACK-UPS + GETEST VOLLEDIG HERSTEL</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: IMMUTABLE OFFLINE BACKUPS + TESTED FULL RESTORE</span><span class="nl">AANBEVOLEN: ONVERANDERBARE OFFLINE BACK-UPS + GETEST VOLLEDIG HERSTEL</span></span>
     </div>
 
     <div class="ai3">
@@ -525,6 +581,264 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     </div>
   </div>
 </section>
+
+<!-- diagram:ransomware-map -->
+<section class="risk-block" id="ransomware-map">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">IN PRACTICE</span><span class="nl">IN DE PRAKTIJK</span></span>
+    <h2><span class="en">What a contained network looks like. <em>And where attackers get stuck.</em></span><span class="nl">Zo ziet een ingedamd netwerk eruit. <em>En hier loopt de aanvaller vast.</em></span></h2>
+    <span class="term"><span class="en">tiered administration / isolated backups / reference pattern</span><span class="nl">gelaagd beheer / geïsoleerde back-ups / referentiepatroon</span></span>
+
+    <figure class="arch">
+<svg viewBox="0 0 1120 604" role="img" aria-labelledby="rw-title rw-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="rw-title">What a contained network looks like</title>
+<desc id="rw-desc">Reference pattern for ransomware containment. Three administrative tiers: Tier 0 identity, Tier 0 admin workstation and backup server; Tier 1 servers with a separate server-admin workstation; Tier 2 laptops with a separate helpdesk account. Each admin account only manages its own tier, firewalls separate the tiers, and the path from laptops to Tier 0 is blocked. The backup server copies one way into an immutable backup vault in a separate trust domain.</desc>
+<defs>
+<marker id="rw-arr-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="rw-ah-g"/></marker>
+<marker id="rw-arr-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="rw-ah-b"/></marker>
+</defs>
+<rect x="20" y="30" width="790" height="500" class="rw-dom"/>
+<text x="36" y="50" class="rw-dlabel en">PRODUCTION · ONE TRUST DOMAIN</text><text x="36" y="50" class="rw-dlabel nl">PRODUCTIE · ÉÉN VERTROUWENSDOMEIN</text>
+<rect x="830" y="30" width="270" height="500" class="rw-dom rw-vdom"/>
+<text x="846" y="50" class="rw-dlabel en">SEPARATE TRUST DOMAIN</text><text x="846" y="50" class="rw-dlabel nl">APART VERTROUWENSDOMEIN</text>
+<rect x="36" y="64" width="758" height="150" class="rw-band"/>
+<text x="52" y="86" class="rw-blabel en">TIER 0 · IDENTITY &amp; CONTROL</text><text x="52" y="86" class="rw-blabel nl">TIER 0 · IDENTITEIT &amp; CONTROLE</text>
+<rect x="36" y="236" width="758" height="130" class="rw-band"/>
+<text x="52" y="258" class="rw-blabel">TIER 1 · SERVERS &amp; APPS</text>
+<rect x="36" y="388" width="758" height="130" class="rw-band"/>
+<text x="52" y="410" class="rw-blabel en">TIER 2 · WORKSTATIONS &amp; USERS</text><text x="52" y="410" class="rw-blabel nl">TIER 2 · WERKPLEKKEN &amp; GEBRUIKERS</text>
+<path d="M262 152.0 H297" class="rw-link-g" marker-end="url(#rw-arr-g)"/>
+<path d="M158.0 110 V100 H646.0 V109" class="rw-link-g" marker-end="url(#rw-arr-g)"/>
+<path d="M262 316.0 H297" class="rw-link-g" marker-end="url(#rw-arr-g)"/>
+<path d="M262 468.0 H297" class="rw-link-g" marker-end="url(#rw-arr-g)"/>
+<path d="M750 152.0 H863" class="rw-link-b" marker-end="url(#rw-arr-b)"/>
+<path d="M506 468.0 H646.0 V195" class="rw-link-x"/>
+<g class="rw-xmark"><circle cx="646.0" cy="316.0" r="10"/><path d="M641.5 311.5 L650.5 320.5 M650.5 311.5 L641.5 320.5"/></g>
+<g class="rw-tag-x rw-hr0" tabindex="0"><rect x="664.0" y="308.0" width="92" height="16"/><text x="710.0" y="319.5" class="rw-tagt en" text-anchor="middle">BLOCKED</text><text x="710.0" y="319.5" class="rw-tagt nl" text-anchor="middle">GEBLOKKEERD</text></g>
+<g class="rw-tag-f rw-hr1" tabindex="0"><rect x="706" y="217" width="76" height="16"/><text x="744.0" y="228.5" class="rw-tagt" text-anchor="middle">FIREWALL</text></g>
+<g class="rw-tag-f rw-hr2" tabindex="0"><rect x="706" y="369" width="76" height="16"/><text x="744.0" y="380.5" class="rw-tagt" text-anchor="middle">FIREWALL</text></g>
+<g class="rw-node-g rw-s-ok rw-hr3" tabindex="0">
+<rect x="56" y="112" width="204" height="80" class="rw-node"/>
+<rect x="56" y="112" width="4" height="80" class="rw-bar"/>
+<text x="72" y="132" class="rw-kick">TIER 0 · PAW</text>
+<text x="72" y="153" class="rw-name en">Admin workstation</text><text x="72" y="153" class="rw-name nl">Beheerwerkplek</text>
+<text x="72" y="170" class="rw-st en">Only for Tier 0 work ·</text><text x="72" y="170" class="rw-st nl">Alleen voor Tier 0-werk ·</text>
+<text x="72" y="183" class="rw-st en">no mail, no browsing</text><text x="72" y="183" class="rw-st nl">geen mail, geen browser</text>
+</g>
+<g class="rw-node-g rw-s-ok rw-hr4" tabindex="0">
+<rect x="300" y="112" width="204" height="80" class="rw-node"/>
+<rect x="300" y="112" width="4" height="80" class="rw-bar"/>
+<text x="316" y="132" class="rw-kick">AD · ENTRA ID</text>
+<text x="316" y="153" class="rw-name en">Identity</text><text x="316" y="153" class="rw-name nl">Identiteit</text>
+<text x="316" y="170" class="rw-st en">Keys to every system ·</text><text x="316" y="170" class="rw-st nl">Sleutels tot alles ·</text>
+<text x="316" y="183" class="rw-st en">managed from a PAW only</text><text x="316" y="183" class="rw-st nl">alleen beheer via een PAW</text>
+</g>
+<g class="rw-node-g rw-s-ok rw-hr5" tabindex="0">
+<rect x="544" y="112" width="204" height="80" class="rw-node"/>
+<rect x="544" y="112" width="4" height="80" class="rw-bar"/>
+<text x="560" y="132" class="rw-kick en">BACKUP ADMIN</text><text x="560" y="132" class="rw-kick nl">BACK-UPBEHEER</text>
+<text x="560" y="153" class="rw-name en">Backup server</text><text x="560" y="153" class="rw-name nl">Back-upserver</text>
+<text x="560" y="170" class="rw-st en">Treated as Tier 0 ·</text><text x="560" y="170" class="rw-st nl">Behandeld als Tier 0 ·</text>
+<text x="560" y="183" class="rw-st en">its own admin accounts</text><text x="560" y="183" class="rw-st nl">eigen beheeraccounts</text>
+</g>
+<g class="rw-node-g rw-s-ok rw-hr6" tabindex="0">
+<rect x="56" y="276" width="204" height="80" class="rw-node"/>
+<rect x="56" y="276" width="4" height="80" class="rw-bar"/>
+<text x="72" y="296" class="rw-kick">TIER 1 · PAW</text>
+<text x="72" y="317" class="rw-name en">Server admin</text><text x="72" y="317" class="rw-name nl">Serverbeheer</text>
+<text x="72" y="334" class="rw-st en">Separate account ·</text><text x="72" y="334" class="rw-st nl">Apart account ·</text>
+<text x="72" y="347" class="rw-st en">servers only, never Tier 0</text><text x="72" y="347" class="rw-st nl">alleen servers, nooit Tier 0</text>
+</g>
+<g class="rw-node-g rw-s-ok rw-hr7" tabindex="0">
+<rect x="300" y="276" width="204" height="80" class="rw-node"/>
+<rect x="300" y="276" width="4" height="80" class="rw-bar"/>
+<text x="316" y="296" class="rw-kick">SERVERS · APPS</text>
+<text x="316" y="317" class="rw-name">Servers &amp; databases</text>
+<text x="316" y="334" class="rw-st en">Reachable only through</text><text x="316" y="334" class="rw-st nl">Alleen bereikbaar via</text>
+<text x="316" y="347" class="rw-st en">admin paths &amp; app ports</text><text x="316" y="347" class="rw-st nl">beheerpaden &amp; app-poorten</text>
+</g>
+<g class="rw-node-g rw-s-ok rw-hr8" tabindex="0">
+<rect x="56" y="428" width="204" height="80" class="rw-node"/>
+<rect x="56" y="428" width="4" height="80" class="rw-bar"/>
+<text x="72" y="448" class="rw-kick">TIER 2 · SUPPORT</text>
+<text x="72" y="469" class="rw-name en">Helpdesk account</text><text x="72" y="469" class="rw-name nl">Helpdeskaccount</text>
+<text x="72" y="486" class="rw-st en">Manages laptops ·</text><text x="72" y="486" class="rw-st nl">Beheert laptops ·</text>
+<text x="72" y="499" class="rw-st en">no rights on servers</text><text x="72" y="499" class="rw-st nl">geen rechten op servers</text>
+</g>
+<g class="rw-node-g rw-s-mid rw-hr9" tabindex="0">
+<rect x="300" y="428" width="204" height="80" class="rw-node"/>
+<rect x="300" y="428" width="4" height="80" class="rw-bar"/>
+<text x="316" y="448" class="rw-kick en">EMAIL · WEB · VPN</text><text x="316" y="448" class="rw-kick nl">E-MAIL · WEB · VPN</text>
+<text x="316" y="469" class="rw-name en">Laptops &amp; users</text><text x="316" y="469" class="rw-name nl">Laptops &amp; gebruikers</text>
+<text x="316" y="486" class="rw-st en">Phishing lands here ·</text><text x="316" y="486" class="rw-st nl">Phishing landt hier ·</text>
+<text x="316" y="499" class="rw-st en">cannot reach Tier 0</text><text x="316" y="499" class="rw-st nl">kan niet bij Tier 0</text>
+</g>
+<g class="rw-node-g rw-s-ok rw-hr10" tabindex="0">
+<rect x="866" y="112" width="204" height="80" class="rw-node"/>
+<rect x="866" y="112" width="4" height="80" class="rw-bar"/>
+<text x="882" y="132" class="rw-kick en">IMMUTABLE</text><text x="882" y="132" class="rw-kick nl">ONVERANDERBAAR</text>
+<text x="882" y="153" class="rw-name en">Backup vault</text><text x="882" y="153" class="rw-name nl">Back-upkluis</text>
+<text x="882" y="170" class="rw-st en">Own accounts &amp; MFA ·</text><text x="882" y="170" class="rw-st nl">Eigen accounts &amp; MFA ·</text>
+<text x="882" y="183" class="rw-st en">no one can delete early</text><text x="882" y="183" class="rw-st nl">niemand kan vroeg wissen</text>
+</g>
+<text x="850" y="226" class="rw-note en">· Copies locked for a set period</text><text x="850" y="226" class="rw-note nl">· Kopieën een vaste periode op slot</text>
+<text x="850" y="246" class="rw-note en">· No production login reaches it</text><text x="850" y="246" class="rw-note nl">· Geen productie-inlog kan erbij</text>
+<text x="850" y="266" class="rw-note en">· Full restore tested yearly</text><text x="850" y="266" class="rw-note nl">· Volledig herstel jaarlijks getest</text>
+<rect x="40" y="549" width="4" height="14" class="rw-lg-ok"/>
+<text x="52" y="560" class="rw-legend en">Hardened &amp; separated</text><text x="52" y="560" class="rw-legend nl">Gehard &amp; gescheiden</text>
+<rect x="230" y="549" width="4" height="14" class="rw-lg-mid"/>
+<text x="242" y="560" class="rw-legend en">Where attackers usually land</text><text x="242" y="560" class="rw-legend nl">Waar aanvallers binnenkomen</text>
+<path d="M470 556 H500" class="rw-link-g" marker-end="url(#rw-arr-g)"/>
+<text x="510" y="560" class="rw-legend en">Allowed admin path</text><text x="510" y="560" class="rw-legend nl">Toegestaan beheerpad</text>
+<path d="M680 556 H710" class="rw-link-x"/>
+<text x="720" y="560" class="rw-legend en">Blocked path</text><text x="720" y="560" class="rw-legend nl">Geblokkeerd pad</text>
+<path d="M850 556 H880" class="rw-link-b" marker-end="url(#rw-arr-b)"/>
+<text x="890" y="560" class="rw-legend en">One-way, locked copy</text><text x="890" y="560" class="rw-legend nl">Eenrichtingskopie</text>
+<text x="40" y="588" class="rw-foot en">Reference pattern, not a product design · tiers as in Microsoft&#x27;s Enterprise Access Model · hover or tap a box or tag for an explanation</text><text x="40" y="588" class="rw-foot nl">Referentiepatroon, geen productontwerp · lagen zoals in Microsofts Enterprise Access Model · beweeg of tik op een blok of label voor uitleg</text>
+<g class="rw-svtip rw-tr0" aria-hidden="true">
+<rect x="664.0" y="330.0" width="310" height="77" class="rw-tip-bg"/>
+<rect x="664.0" y="330.0" width="3" height="77" class="rw-tip-acc"/>
+<text x="678.0" y="348.0" class="rw-tip-t0 en">Blocked path · Tier 2 to Tier 0</text>
+<text x="678.0" y="363.0" class="rw-tip-t en">Tier 0 accounts never log on to laptops,</text>
+<text x="678.0" y="378.0" class="rw-tip-t en">so there are no admin credentials there</text>
+<text x="678.0" y="393.0" class="rw-tip-t en">for an attacker to harvest.</text>
+<text x="678.0" y="348.0" class="rw-tip-t0 nl">Geblokkeerd pad · Tier 2 naar Tier 0</text>
+<text x="678.0" y="363.0" class="rw-tip-t nl">Tier 0-accounts loggen nooit in op laptops,</text>
+<text x="678.0" y="378.0" class="rw-tip-t nl">dus daar liggen geen beheergegevens</text>
+<text x="678.0" y="393.0" class="rw-tip-t nl">die een aanvaller kan oogsten.</text>
+</g>
+<g class="rw-svtip rw-tr1" aria-hidden="true">
+<rect x="706" y="239" width="297" height="77" class="rw-tip-bg"/>
+<rect x="706" y="239" width="3" height="77" class="rw-tip-acc"/>
+<text x="720" y="257" class="rw-tip-t0 en">Segmentation · firewall between tiers</text>
+<text x="720" y="272" class="rw-tip-t en">Only the listed admin paths and app ports</text>
+<text x="720" y="287" class="rw-tip-t en">may cross. Everything else is dropped</text>
+<text x="720" y="302" class="rw-tip-t en">and logged.</text>
+<text x="720" y="257" class="rw-tip-t0 nl">Segmentatie · firewall tussen lagen</text>
+<text x="720" y="272" class="rw-tip-t nl">Alleen de vastgelegde beheerpaden en</text>
+<text x="720" y="287" class="rw-tip-t nl">app-poorten mogen erdoor. De rest wordt</text>
+<text x="720" y="302" class="rw-tip-t nl">geblokkeerd en gelogd.</text>
+</g>
+<g class="rw-svtip rw-tr2" aria-hidden="true">
+<rect x="706" y="391" width="297" height="77" class="rw-tip-bg"/>
+<rect x="706" y="391" width="3" height="77" class="rw-tip-acc"/>
+<text x="720" y="409" class="rw-tip-t0 en">Segmentation · firewall between tiers</text>
+<text x="720" y="424" class="rw-tip-t en">Only the listed admin paths and app ports</text>
+<text x="720" y="439" class="rw-tip-t en">may cross. Everything else is dropped</text>
+<text x="720" y="454" class="rw-tip-t en">and logged.</text>
+<text x="720" y="409" class="rw-tip-t0 nl">Segmentatie · firewall tussen lagen</text>
+<text x="720" y="424" class="rw-tip-t nl">Alleen de vastgelegde beheerpaden en</text>
+<text x="720" y="439" class="rw-tip-t nl">app-poorten mogen erdoor. De rest wordt</text>
+<text x="720" y="454" class="rw-tip-t nl">geblokkeerd en gelogd.</text>
+</g>
+<g class="rw-svtip rw-tr3" aria-hidden="true">
+<rect x="56" y="198" width="330" height="77" class="rw-tip-bg"/>
+<rect x="56" y="198" width="3" height="77" class="rw-tip-acc"/>
+<text x="70" y="216" class="rw-tip-t0 en">PAW · privileged access workstation</text>
+<text x="70" y="231" class="rw-tip-t en">A locked-down device used only for admin</text>
+<text x="70" y="246" class="rw-tip-t en">work. No email or web, so phishing and</text>
+<text x="70" y="261" class="rw-tip-t en">browser attacks cannot reach admin logins.</text>
+<text x="70" y="216" class="rw-tip-t0 nl">PAW · privileged access workstation</text>
+<text x="70" y="231" class="rw-tip-t nl">Afgeschermd apparaat alleen voor beheer.</text>
+<text x="70" y="246" class="rw-tip-t nl">Geen mail of web, dus phishing en</text>
+<text x="70" y="261" class="rw-tip-t nl">browseraanvallen bereiken de beheerlogin niet.</text>
+</g>
+<g class="rw-svtip rw-tr4" aria-hidden="true">
+<rect x="300" y="198" width="303" height="77" class="rw-tip-bg"/>
+<rect x="300" y="198" width="3" height="77" class="rw-tip-acc"/>
+<text x="314" y="216" class="rw-tip-t0 en">Tier 0 · identity (AD / Entra ID)</text>
+<text x="314" y="231" class="rw-tip-t en">Active Directory and Entra ID decide who</text>
+<text x="314" y="246" class="rw-tip-t en">may log in anywhere. Whoever controls them</text>
+<text x="314" y="261" class="rw-tip-t en">controls the whole company.</text>
+<text x="314" y="216" class="rw-tip-t0 nl">Tier 0 · identiteit (AD / Entra ID)</text>
+<text x="314" y="231" class="rw-tip-t nl">Active Directory en Entra ID bepalen wie</text>
+<text x="314" y="246" class="rw-tip-t nl">overal mag inloggen. Wie ze beheerst,</text>
+<text x="314" y="261" class="rw-tip-t nl">beheerst het hele bedrijf.</text>
+</g>
+<g class="rw-svtip rw-tr5" aria-hidden="true">
+<rect x="544" y="198" width="310" height="77" class="rw-tip-bg"/>
+<rect x="544" y="198" width="3" height="77" class="rw-tip-acc"/>
+<text x="558" y="216" class="rw-tip-t0 en">Backup server · worth treating as Tier 0</text>
+<text x="558" y="231" class="rw-tip-t en">It can restore or delete every backup,</text>
+<text x="558" y="246" class="rw-tip-t en">so it deserves the same protection as</text>
+<text x="558" y="261" class="rw-tip-t en">identity: own accounts, MFA, a PAW.</text>
+<text x="558" y="216" class="rw-tip-t0 nl">Back-upserver · behandelen als Tier 0</text>
+<text x="558" y="231" class="rw-tip-t nl">Hij kan elke back-up terugzetten of wissen,</text>
+<text x="558" y="246" class="rw-tip-t nl">dus verdient hij dezelfde bescherming als</text>
+<text x="558" y="261" class="rw-tip-t nl">identiteit: eigen accounts, MFA, een PAW.</text>
+</g>
+<g class="rw-svtip rw-tr6" aria-hidden="true">
+<rect x="56" y="362" width="290" height="77" class="rw-tip-bg"/>
+<rect x="56" y="362" width="3" height="77" class="rw-tip-acc"/>
+<text x="70" y="380" class="rw-tip-t0 en">Tier 1 · server administration</text>
+<text x="70" y="395" class="rw-tip-t en">A separate admin account and device for</text>
+<text x="70" y="410" class="rw-tip-t en">servers and apps. It never logs on to</text>
+<text x="70" y="425" class="rw-tip-t en">Tier 0 systems or to workstations.</text>
+<text x="70" y="380" class="rw-tip-t0 nl">Tier 1 · serverbeheer</text>
+<text x="70" y="395" class="rw-tip-t nl">Een apart beheeraccount en apparaat voor</text>
+<text x="70" y="410" class="rw-tip-t nl">servers en apps. Logt nooit in op</text>
+<text x="70" y="425" class="rw-tip-t nl">Tier 0-systemen of op werkplekken.</text>
+</g>
+<g class="rw-svtip rw-tr7" aria-hidden="true">
+<rect x="300" y="362" width="290" height="77" class="rw-tip-bg"/>
+<rect x="300" y="362" width="3" height="77" class="rw-tip-acc"/>
+<text x="314" y="380" class="rw-tip-t0 en">Tier 1 · servers &amp; databases</text>
+<text x="314" y="395" class="rw-tip-t en">Segmented: reachable only through the</text>
+<text x="314" y="410" class="rw-tip-t en">admin path and the ports the apps need,</text>
+<text x="314" y="425" class="rw-tip-t en">not from every desk.</text>
+<text x="314" y="380" class="rw-tip-t0 nl">Tier 1 · servers &amp; databases</text>
+<text x="314" y="395" class="rw-tip-t nl">Gesegmenteerd: alleen bereikbaar via het</text>
+<text x="314" y="410" class="rw-tip-t nl">beheerpad en de poorten die apps nodig</text>
+<text x="314" y="425" class="rw-tip-t nl">hebben, niet vanaf elk bureau.</text>
+</g>
+<g class="rw-svtip rw-tr8" aria-hidden="true">
+<rect x="56" y="345" width="290" height="77" class="rw-tip-bg"/>
+<rect x="56" y="345" width="3" height="77" class="rw-tip-acc"/>
+<text x="70" y="363" class="rw-tip-t0 en">Tier 2 · workstation support</text>
+<text x="70" y="378" class="rw-tip-t en">Helpdesk accounts manage laptops only.</text>
+<text x="70" y="393" class="rw-tip-t en">If one is stolen, the attacker still has</text>
+<text x="70" y="408" class="rw-tip-t en">no rights on servers or identity.</text>
+<text x="70" y="363" class="rw-tip-t0 nl">Tier 2 · werkplekbeheer</text>
+<text x="70" y="378" class="rw-tip-t nl">Helpdeskaccounts beheren alleen laptops.</text>
+<text x="70" y="393" class="rw-tip-t nl">Wordt er één gestolen, dan heeft de</text>
+<text x="70" y="408" class="rw-tip-t nl">aanvaller nog geen rechten op servers.</text>
+</g>
+<g class="rw-svtip rw-tr9" aria-hidden="true">
+<rect x="300" y="345" width="290" height="77" class="rw-tip-bg"/>
+<rect x="300" y="345" width="3" height="77" class="rw-tip-acc"/>
+<text x="314" y="363" class="rw-tip-t0 en">Tier 2 · laptops, email &amp; web</text>
+<text x="314" y="378" class="rw-tip-t en">Where phishing and stolen logins usually</text>
+<text x="314" y="393" class="rw-tip-t en">land. Assume one is compromised: the</text>
+<text x="314" y="408" class="rw-tip-t en">tiers keep it from reaching the rest.</text>
+<text x="314" y="363" class="rw-tip-t0 nl">Tier 2 · laptops, e-mail &amp; web</text>
+<text x="314" y="378" class="rw-tip-t nl">Hier landen phishing en gestolen inlogs</text>
+<text x="314" y="393" class="rw-tip-t nl">meestal. Ga ervan uit dat er één lek is:</text>
+<text x="314" y="408" class="rw-tip-t nl">de lagen houden de rest buiten bereik.</text>
+</g>
+<g class="rw-svtip rw-tr10" aria-hidden="true">
+<rect x="806" y="198" width="290" height="92" class="rw-tip-bg"/>
+<rect x="806" y="198" width="3" height="92" class="rw-tip-acc"/>
+<text x="820" y="216" class="rw-tip-t0 en">Immutable backup vault</text>
+<text x="820" y="231" class="rw-tip-t en">Separate trust domain: its own accounts,</text>
+<text x="820" y="246" class="rw-tip-t en">MFA and network. Copies are locked for</text>
+<text x="820" y="261" class="rw-tip-t en">a set period, so even a stolen domain</text>
+<text x="820" y="276" class="rw-tip-t en">admin account cannot delete them.</text>
+<text x="820" y="216" class="rw-tip-t0 nl">Onveranderbare back-upkluis</text>
+<text x="820" y="231" class="rw-tip-t nl">Apart vertrouwensdomein: eigen accounts,</text>
+<text x="820" y="246" class="rw-tip-t nl">MFA en netwerk. Kopieën zijn een vaste</text>
+<text x="820" y="261" class="rw-tip-t nl">periode vergrendeld; ook een gestolen</text>
+<text x="820" y="276" class="rw-tip-t nl">domeinbeheerder kan ze niet wissen.</text>
+</g>
+</svg>
+    </figure>
+
+    <div class="panel">
+      <p class="en"><strong>What to look for:</strong> each tier has its own admin accounts, used only from its own hardened device (<abbr class="tip" tabindex="0" data-tip="Privileged access workstation: a locked-down device used only for admin work, never for email or browsing.">PAW</abbr>). Microsoft calls this its Enterprise Access Model. The backup vault sits outside it all, so a stolen domain admin cannot delete the last clean copy. Which gap to close first is your call.</p>
+      <p class="nl"><strong>Waar u op let:</strong> elke laag heeft eigen beheeraccounts, alleen te gebruiken vanaf een eigen geharde werkplek (<abbr class="tip" tabindex="0" data-tip="Privileged access workstation: een afgeschermd apparaat alleen voor beheer, nooit voor mail of internet.">PAW</abbr>). Microsoft noemt dit het Enterprise Access Model. De back-upkluis staat daarbuiten, zodat een gestolen domeinbeheerder de laatste schone kopie niet kan wissen. Welk gat u eerst dicht, bepaalt u zelf.</p>
+    </div>
+  </div>
+</section>
+<!-- /diagram:ransomware-map -->
 
 <!-- ============================ CONTROLS ============================ -->
 <section class="risk-block" id="fix">
@@ -559,33 +873,33 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="panel">
       <table class="en">
         <tr><th>Control</th><th>Breaks</th><th>In one line</th></tr>
-        <tr><td class="ctl">MFA</td><td>Entry (01)</td><td>A second factor on every login that reaches us from outside. Hardware keys or passkeys for administrators.</td></tr>
-        <tr><td class="ctl">Attack surface</td><td>Entry (01)</td><td>Nothing on the internet that does not need to be there. What remains is patched within days, not quarters.</td></tr>
+        <tr><td class="ctl">MFA</td><td>Entry (01)</td><td>A second factor on every login that reaches us from outside. <abbr class="tip" tabindex="0" data-tip="A second factor a fake login page cannot capture or replay, such as a hardware key or passkey.">Phishing-resistant</abbr> keys or passkeys for administrators.</td></tr>
+        <tr><td class="ctl">Attack surface</td><td>Entry (01)</td><td>Nothing on the internet that does not need to be there. VPNs, firewalls and other edge devices patched within days, not quarters.</td></tr>
         <tr><td class="ctl">Segmentation</td><td>Spread (02)</td><td>Networks divided so a desk cannot reach the server room, and workstations cannot talk to each other.</td></tr>
         <tr><td class="ctl">Tiered admin</td><td>Spread (02)</td><td>Domain administrator accounts never touch a workstation or read mail. Separate account, separate device.</td></tr>
-        <tr><td class="ctl">EDR</td><td>Spread (02), Steal (03)</td><td>Software on every endpoint that spots attacker behaviour and isolates a machine in seconds — with someone watching around the clock.</td></tr>
+        <tr><td class="ctl">EDR</td><td>Spread (02), Steal (03)</td><td><abbr class="tip" tabindex="0" data-tip="EDR: security software on each laptop and server that spots attacker behaviour and can isolate the machine.">Endpoint detection and response</abbr> on every device: spots attacker behaviour and isolates a machine in seconds — with someone watching around the clock.</td></tr>
         <tr><td class="ctl">Egress monitoring</td><td>Steal (03)</td><td>An alert when gigabytes leave for an address we have never talked to.</td></tr>
         <tr><td class="ctl">Immutable backups</td><td>Backups (04)</td><td>A copy nobody can delete or change for a fixed period, not even an administrator. Offline or in a separate account.</td></tr>
-        <tr><td class="ctl">Restore test</td><td>Backups (04)</td><td>Rebuild the critical systems from backup, for real, at least yearly. Measure the hours. That number is our true downtime.</td></tr>
-        <tr><td class="ctl">Response plan</td><td>All four</td><td>Who decides, who calls whom, who speaks to press and regulator, at 03:00 on a Saturday. Written in advance, rehearsed yearly.</td></tr>
+        <tr><td class="ctl">Restore test</td><td>Backups (04)</td><td>Worth rebuilding the critical systems from backup, for real, at least yearly, and measuring the hours. That number is our true downtime.</td></tr>
+        <tr><td class="ctl">Response plan</td><td>All four</td><td>Who decides, who calls whom, who speaks to press and regulator, at 03:00 on a Saturday. Includes reporting to the police. Written in advance, rehearsed yearly.</td></tr>
       </table>
 
       <table class="nl">
         <tr><th>Maatregel</th><th>Breekt</th><th>In één zin</th></tr>
-        <tr><td class="ctl">MFA</td><td>Binnenkomen (01)</td><td>Een tweede factor op elke inlog die van buiten komt. Hardwaresleutels of passkeys voor beheerders.</td></tr>
-        <tr><td class="ctl">Buitenkant</td><td>Binnenkomen (01)</td><td>Niets aan het internet dat er niet hoeft te staan. Wat overblijft wordt binnen dagen gepatcht, niet binnen kwartalen.</td></tr>
+        <tr><td class="ctl">MFA</td><td>Binnenkomen (01)</td><td>Een tweede factor op elke inlog die van buiten komt. <abbr class="tip" tabindex="0" data-tip="Een tweede factor die een nep-inlogpagina niet kan onderscheppen of hergebruiken, zoals een hardwaresleutel of passkey.">Phishingbestendige</abbr> sleutels of passkeys voor beheerders.</td></tr>
+        <tr><td class="ctl">Buitenkant</td><td>Binnenkomen (01)</td><td>Niets aan het internet dat er niet hoeft te staan. VPN's, firewalls en andere randapparaten binnen dagen gepatcht, niet binnen kwartalen.</td></tr>
         <tr><td class="ctl">Segmentatie</td><td>Verspreiden (02)</td><td>Netwerken zo verdeeld dat een bureau niet bij de serverruimte kan, en werkplekken niet met elkaar praten.</td></tr>
         <tr><td class="ctl">Gescheiden beheer</td><td>Verspreiden (02)</td><td>Domeinbeheerdersaccounts raken nooit een werkplek aan en lezen geen mail. Apart account, apart apparaat.</td></tr>
-        <tr><td class="ctl">EDR</td><td>Verspreiden (02), Stelen (03)</td><td>Software op elk apparaat die aanvallersgedrag herkent en een machine in seconden isoleert — met iemand die dag en nacht meekijkt.</td></tr>
+        <tr><td class="ctl">EDR</td><td>Verspreiden (02), Stelen (03)</td><td><abbr class="tip" tabindex="0" data-tip="EDR: beveiligingssoftware op elke laptop en server die aanvallersgedrag herkent en de machine kan isoleren.">Endpoint detection and response</abbr> op elk apparaat: herkent aanvallersgedrag en isoleert een machine in seconden — met iemand die dag en nacht meekijkt.</td></tr>
         <tr><td class="ctl">Uitgaand verkeer</td><td>Stelen (03)</td><td>Een alarm zodra gigabytes vertrekken naar een adres waar we nooit mee gesproken hebben.</td></tr>
         <tr><td class="ctl">Onveranderbare back-ups</td><td>Back-ups (04)</td><td>Een kopie die niemand een vaste periode kan wissen of wijzigen, ook geen beheerder. Offline of in een apart account.</td></tr>
-        <tr><td class="ctl">Hersteltest</td><td>Back-ups (04)</td><td>De kritieke systemen echt terugzetten vanaf back-up, minstens jaarlijks. Meet de uren. Dat getal is onze werkelijke stilstand.</td></tr>
-        <tr><td class="ctl">Responsplan</td><td>Alle vier</td><td>Wie beslist, wie belt wie, wie praat met pers en toezichthouder, om 03:00 op een zaterdag. Vooraf geschreven, jaarlijks geoefend.</td></tr>
+        <tr><td class="ctl">Hersteltest</td><td>Back-ups (04)</td><td>Het loont om de kritieke systemen minstens jaarlijks echt terug te zetten vanaf back-up, en de uren te meten. Dat getal is onze werkelijke stilstand.</td></tr>
+        <tr><td class="ctl">Responsplan</td><td>Alle vier</td><td>Wie beslist, wie belt wie, wie praat met pers en toezichthouder, om 03:00 op een zaterdag. Inclusief aangifte bij de politie. Vooraf geschreven, jaarlijks geoefend.</td></tr>
       </table>
 
       <div class="callout">
-        <span class="en"><strong>The board-level point:</strong> two numbers decide everything — how many days can we be down, and how much data can we afford to lose. Every control above is priced against those two. And decide now, in calm, whether we would ever pay. At 03:00 with the company down is the wrong moment to have that debate.</span>
-        <span class="nl"><strong>De kern voor de directie:</strong> twee getallen bepalen alles — hoeveel dagen kunnen we plat liggen, en hoeveel data kunnen we ons veroorloven te verliezen. Elke maatregel hierboven wordt tegen die twee afgewogen. En beslis nu, in rust, of we ooit zouden betalen. Om 03:00 met een stilstaand bedrijf is het verkeerde moment voor dat debat.</span>
+        <span class="en"><strong>The board-level point:</strong> two numbers decide everything — how many days can we be down, and how much data can we afford to lose. Every control above is priced against those two. And it is worth deciding now, in calm, whether we would ever pay, including a sanctions and legality check: paying a sanctioned group can itself be unlawful. Report to the police either way, and check <a href="https://www.nomoreransom.org/">No More Ransom</a> for a free decryptor. At 03:00 with the company down is the wrong moment for that debate.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> twee getallen bepalen alles — hoeveel dagen kunnen we plat liggen, en hoeveel data kunnen we ons veroorloven te verliezen. Elke maatregel hierboven wordt tegen die twee afgewogen. En het loont om nu, in rust, te beslissen of we ooit zouden betalen, inclusief een toets op sancties en rechtmatigheid: betalen aan een groep op een sanctielijst kan zelf onrechtmatig zijn. Doe hoe dan ook aangifte bij de politie, en kijk op <a href="https://www.nomoreransom.org/nl/">No More Ransom</a> of er een gratis decryptor is. Om 03:00 met een stilstaand bedrijf is het verkeerde moment voor dat debat.</span>
       </div>
     </div>
   </div>
@@ -603,36 +917,42 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
 
     <div class="risk-grid">
-      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Every organisation with email and remote access is a target. Entry needs a password, not an exploit.</span><span class="nl">Elke organisatie met e-mail en externe toegang is doelwit. Binnenkomen vraagt een wachtwoord, geen exploit.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Every organisation with email and remote access is a target. Entry needs one stolen login or one unpatched edge device.</span><span class="nl">Elke organisatie met e-mail en externe toegang is doelwit. Binnenkomen vraagt één gestolen inlog of één ongepatcht randapparaat.</span></p></div>
       <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">Critical</span><span class="nl">Kritiek</span></span><p><span class="en">Weeks of downtime, a data breach with notification duties, a ransom demand and months of recovery cost.</span><span class="nl">Weken stilstand, een datalek met meldplicht, een losgeldeis en maanden herstelkosten.</span></p></div>
       <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Middel</span></span><p><span class="en">Entry stays possible. Segmentation, EDR and immutable backups bound the blast radius and cut downtime to days.</span><span class="nl">Binnenkomen blijft mogelijk. Segmentatie, EDR en onveranderbare back-ups beperken de schade en brengen de stilstand terug tot dagen.</span></p></div>
       <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CIO / COO</span><span class="nl">CIO / COO</span></span><p><span class="en">Executes through the CISO and IT. The board owns the two numbers: tolerable downtime and tolerable data loss.</span><span class="nl">Uitvoering via de CISO en IT. De directie is eigenaar van de twee getallen: aanvaardbare stilstand en aanvaardbaar dataverlies.</span></p></div>
       <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">% of external logins without MFA · days to patch a critical internet-facing flaw · date and duration of the last full restore test · % of endpoints with EDR.</span><span class="nl">% externe inlogs zonder MFA · dagen tot een kritieke kwetsbaarheid aan de buitenkant is gepatcht · datum en duur van de laatste volledige hersteltest · % apparaten met EDR.</span></p></div>
-      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Ransomware through compromised credentials and a flat network causes a multi-week outage, a personal-data breach and extortion.”</span><span class="nl">“Ransomware via gestolen inloggegevens en een plat netwerk veroorzaakt wekenlange stilstand, een datalek en afpersing.”</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Ransomware through compromised credentials or an unpatched edge device, and a flat network, causes a multi-week outage, a personal-data breach and extortion.”</span><span class="nl">“Ransomware via gestolen inloggegevens of een ongepatcht randapparaat, en een plat netwerk, veroorzaakt wekenlange stilstand, een datalek en afpersing.”</span></p></div>
     </div>
 
     <div class="panel">
       <table class="en">
         <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
-        <tr><td class="ctl">NIS2</td><td>Risk management measures covering incident handling, backup and continuity, supply chain, MFA and encryption. Management approves them, follows training, and is personally accountable.</td><td>There is no NIS2 certificate. Ask how the supplier covers these measures, and put their duty to warn you of incidents in the contract.</td><td>A significant incident: early warning to the national authority within 24 hours, full notification within 72, final report within a month. Affected customers must be informed.</td></tr>
-        <tr><td class="ctl">DORA</td><td>For financial entities: an ICT risk framework approved by the board, backup and restore policies that are actually tested, a register of ICT third parties, and resilience testing.</td><td>A report is input, not a substitute. Critical ICT providers need the contractual clauses DORA prescribes, including audit rights and an exit strategy.</td><td>A major ICT incident: initial notification to the supervisor within hours of classification, intermediate report within 72 hours, final report within a month.</td></tr>
-        <tr><td class="ctl">SOC 2</td><td>If you issue one: controls for access, change, backup and incident response are tested over a period (Type II). Every exception is printed in the report.</td><td>Check the period, the systems in scope and the exceptions. Then read the complementary user entity controls: that is the list of things you must do yourself.</td><td>The incident appears in the next report as a deviation, auditors test the response, and customers will ask for a bridge letter and your root-cause analysis.</td></tr>
-        <tr><td class="ctl">ISAE 3402</td><td>Assurance over outsourced processes relevant to financial reporting. The service organisation sets the scope, so security controls may be thin or absent.</td><td>Read the control objectives first. If backup and recovery are not among them, the report says nothing about ransomware resilience.</td><td>The service organisation must disclose the incident to the user auditors. If you are the service organisation, expect it in your opinion and in your customers’ audits.</td></tr>
+        <tr><td class="ctl">NIS2</td><td>Risk management measures covering incident handling, backup and continuity, supply chain, MFA and encryption. Management approves them, follows training, and can be held liable.</td><td>There is no NIS2 certificate. Ask how the supplier covers these measures, and put their duty to warn you of incidents in the contract.</td><td>Can count as a significant incident if it meets the thresholds. Then: early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month. Where the service is likely to be affected, inform its recipients without undue delay.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities: an ICT risk framework approved by the board, backup and restore policies that are actually tested, a register of ICT third parties, and resilience testing.</td><td>A report is input, not a substitute. ICT services supporting critical or important functions need the contractual clauses DORA prescribes, including audit rights and an exit strategy.</td><td>Classify promptly. If major: initial notification within 4 hours of classifying it (and at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>If you issue one: controls for access, change, backup and incident response are tested over a period (Type II). Every exception is printed in the report.</td><td>Check the period, the systems in scope and the exceptions. Then read the <abbr class="tip" tabindex="0" data-tip="CUECs: controls the report assumes you, the customer, operate yourself.">complementary user entity controls</abbr>: that is the list of things you are expected to do yourself.</td><td>The incident appears in the next report as a deviation, auditors test the response, and customers will ask for a <abbr class="tip" tabindex="0" data-tip="A letter from the service organisation covering the gap between the end of the last report period and today.">bridge letter</abbr> and your root-cause analysis.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Assurance over outsourced processes relevant to financial reporting. The service organisation sets the scope, so security controls may be thin or absent.</td><td>Read the control objectives first. If backup and recovery are not among them, the report says nothing about ransomware resilience.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
       </table>
 
       <table class="nl">
         <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
-        <tr><td class="ctl">NIS2</td><td>Risicobeheersmaatregelen voor incidentafhandeling, back-up en continuïteit, toeleveringsketen, MFA en versleuteling. Het bestuur keurt ze goed, volgt training en is persoonlijk aansprakelijk.</td><td>Er bestaat geen NIS2-certificaat. Vraag hoe de leverancier deze maatregelen invult, en leg zijn plicht om u bij incidenten te waarschuwen vast in het contract.</td><td>Een significant incident: vroegtijdige waarschuwing aan de toezichthouder binnen 24 uur, volledige melding binnen 72 uur, eindrapport binnen een maand. Getroffen klanten moeten worden geïnformeerd.</td></tr>
-        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: een ICT-risicokader dat het bestuur goedkeurt, back-up- en herstelbeleid dat echt wordt getest, een register van ICT-derden, en weerbaarheidstesten.</td><td>Een rapport is input, geen vervanging. Kritieke ICT-leveranciers vereisen de contractbepalingen die DORA voorschrijft, inclusief auditrechten en een exitstrategie.</td><td>Een ernstig ICT-incident: eerste melding aan de toezichthouder binnen enkele uren na classificatie, tussenrapport binnen 72 uur, eindrapport binnen een maand.</td></tr>
-        <tr><td class="ctl">SOC 2</td><td>Als u er zelf een afgeeft: maatregelen voor toegang, wijzigingen, back-up en incidentrespons worden over een periode getest (Type II). Elke afwijking staat in het rapport.</td><td>Controleer de periode, de systemen binnen scope en de afwijkingen. Lees daarna de complementary user entity controls: dat is de lijst van wat u zelf moet doen.</td><td>Het incident verschijnt in het volgende rapport als afwijking, auditors testen de respons, en klanten vragen om een bridge letter en uw oorzaakanalyse.</td></tr>
-        <tr><td class="ctl">ISAE 3402</td><td>Zekerheid over uitbestede processen die relevant zijn voor de financiële verslaggeving. De serviceorganisatie bepaalt de scope, dus beveiligingsmaatregelen kunnen mager of afwezig zijn.</td><td>Lees eerst de beheersdoelstellingen. Staan back-up en herstel er niet bij, dan zegt het rapport niets over weerbaarheid tegen ransomware.</td><td>De serviceorganisatie moet het incident melden aan de auditors van haar klanten. Bent u zelf de serviceorganisatie, verwacht het dan in uw oordeel en in de audits van uw klanten.</td></tr>
+        <tr><td class="ctl">NIS2</td><td>Risicobeheersmaatregelen voor incidentafhandeling, back-up en continuïteit, toeleveringsketen, MFA en versleuteling. Het bestuur keurt ze goed, volgt training en kan aansprakelijk worden gesteld.</td><td>Er bestaat geen NIS2-certificaat. Vraag hoe de leverancier deze maatregelen invult, en leg zijn plicht om u bij incidenten te waarschuwen vast in het contract.</td><td>Kan gelden als significant incident als het de drempels haalt. Dan: vroegtijdige waarschuwing binnen 24 uur na kennisname, incidentmelding binnen 72 uur, eindverslag binnen een maand. Raakt het waarschijnlijk de dienstverlening, informeer dan onverwijld de afnemers.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: een ICT-risicokader dat het bestuur goedkeurt, back-up- en herstelbeleid dat echt wordt getest, een register van ICT-derden, en weerbaarheidstesten.</td><td>Een rapport is input, geen vervanging. ICT-diensten die kritieke of belangrijke functies ondersteunen, vragen de contractbepalingen die DORA voorschrijft, inclusief auditrechten en een exitstrategie.</td><td>Classificeer snel. Is het ernstig: eerste melding binnen 4 uur na die classificatie (en uiterlijk 24 uur na kennisname), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Als u er zelf een afgeeft: maatregelen voor toegang, wijzigingen, back-up en incidentrespons worden over een periode getest (Type II). Elke afwijking staat in het rapport.</td><td>Controleer de periode, de systemen binnen scope en de afwijkingen. Lees daarna de <abbr class="tip" tabindex="0" data-tip="CUEC&#x27;s: maatregelen waarvan het rapport aanneemt dat u als klant ze zelf uitvoert.">complementary user entity controls</abbr>: dat is de lijst van wat van u zelf wordt verwacht.</td><td>Het incident verschijnt in het volgende rapport als afwijking, auditors testen de respons, en klanten vragen om een <abbr class="tip" tabindex="0" data-tip="Een verklaring van de serviceorganisatie over de periode tussen het einde van het laatste rapport en vandaag.">bridge letter</abbr> en uw oorzaakanalyse.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Zekerheid over uitbestede processen die relevant zijn voor de financiële verslaggeving. De serviceorganisatie bepaalt de scope, dus beveiligingsmaatregelen kunnen mager of afwezig zijn.</td><td>Lees eerst de beheersdoelstellingen. Staan back-up en herstel er niet bij, dan zegt het rapport niets over weerbaarheid tegen ransomware.</td><td>ISAE 3402 schept geen plicht om de auditors van klanten te informeren. Verwacht een afwijking in het volgende rapport, en vraag in het contract om tussentijdse melding.</td></tr>
       </table>
+      <p class="sources en">Checked against: <a href="https://www.sophos.com/en-us/blog/the-state-of-ransomware-2025">Sophos State of Ransomware 2025</a> (June 2025), NIS2 Art. 23 (Directive (EU) 2022/2555), <a href="https://www.ncsc.nl/cyberbeveiligingswet-nis2/meldplicht">NCSC-NL on Cbw reporting</a> (2026), DORA RTS on incident reporting (2025), GDPR Art. 33–34, <a href="https://ofac.treasury.gov/media/912981/download">OFAC ransomware advisory</a> (Sept 2021), <a href="https://www.nomoreransom.org/">No More Ransom</a>, <a href="https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-access-model">Microsoft Enterprise Access Model</a> (May 2026) · September 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://www.sophos.com/en-us/blog/the-state-of-ransomware-2025">Sophos State of Ransomware 2025</a> (juni 2025), NIS2 art. 23 (Richtlijn (EU) 2022/2555), <a href="https://www.ncsc.nl/cyberbeveiligingswet-nis2/meldplicht">NCSC-NL over de Cbw-meldplicht</a> (2026), DORA-RTS incidentmelding (2025), AVG art. 33–34, <a href="https://ofac.treasury.gov/media/912981/download">OFAC-advies over ransomware</a> (sept 2021), <a href="https://www.nomoreransom.org/nl/">No More Ransom</a>, <a href="https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-access-model">Microsoft Enterprise Access Model</a> (mei 2026) · september 2026.</p>
     </div>
   </div>
 </section>
 
 <div class="divider"><i></i><i></i><i></i><i></i></div>
 
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../blast-radius/"><span class="en">Blast radius</span><span class="nl">Schade beperken</span></a> ·
+  <a href="../incident-response/"><span class="en">Incident response</span><span class="nl">Incidentrespons</span></a> ·
+  <a href="../cyber-insurance/"><span class="en">Cyber insurance</span><span class="nl">Cyberverzekering</span></a></p>
 <div class="fb">
   <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=ransomware&amp;title=Missing%3A%20ransomware"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
   <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=ransomware&amp;title=Correction%3A%20ransomware"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>

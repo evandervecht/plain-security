@@ -295,6 +295,59 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 @media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
 .ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+/* ---------- sources + related ---------- */
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* diagram:regime-map */
+/* ---------- regime map (which regime applies) ---------- */
+.arch{margin:0 0 30px;background:var(--bg-lo);border:1px solid var(--line-soft);padding:12px;overflow-x:auto}
+.arch svg{display:block;width:100%;min-width:900px;height:auto}
+.arch .nd-zone{fill:var(--bg-hi);stroke:var(--line-soft)}
+.arch .nd-zlabel{font:700 11px var(--mono);letter-spacing:.24em;fill:var(--slate)}
+.arch .nd-node{fill:var(--surface);stroke:var(--line)}
+.arch .nd-s-q .nd-bar{fill:var(--brand)}
+.arch .nd-s-ok .nd-bar{fill:var(--good)}
+.arch .nd-s-warn .nd-bar{fill:var(--warn)}
+.arch .nd-s-bad .nd-bar{fill:var(--bad)}
+.arch .nd-s-bad .nd-node{stroke:rgba(255,93,115,.45)}
+.arch .nd-kick{font:500 10px var(--mono);letter-spacing:.12em;fill:var(--muted)}
+.arch .nd-name{font:600 13px var(--sans);fill:var(--white)}
+.arch .nd-st{font:400 10px var(--mono);fill:var(--prose)}
+.arch .nd-note{font:400 10px var(--mono);fill:var(--muted)}
+.arch .nd-time{font:700 12px var(--mono);letter-spacing:.04em;fill:var(--white)}
+.arch .nd-dot{fill:var(--bad)}
+.arch .nd-step{fill:none;stroke:var(--slate);stroke-width:1.2;stroke-dasharray:3 4}
+.arch .nd-legend{font:400 11px var(--mono);fill:var(--body)}
+.arch .nd-foot{font:400 10px var(--mono);letter-spacing:.06em;fill:var(--slate)}
+.arch .nd-llabel{font:700 9.5px var(--mono);letter-spacing:.12em;fill:var(--muted)}
+.arch .nd-link{fill:none;stroke:var(--slate);stroke-width:1.5;stroke-dasharray:5 5;animation:nd-flow 1.4s linear infinite}
+.arch .nd-lex{fill:none;stroke:var(--warn);stroke-width:2}
+.arch .nd-arrowhead{fill:var(--slate)}
+.arch .nd-sw-q{fill:var(--brand)}
+.arch .nd-sw-ok{fill:var(--good)}
+.arch .nd-sw-warn{fill:var(--warn)}
+.arch .nd-sw-bad{fill:var(--bad)}
+@keyframes nd-flow{to{stroke-dashoffset:-10}}
+@media (prefers-reduced-motion:reduce){.arch .nd-link{animation:none}}
+.arch .nd-svtip{visibility:hidden;pointer-events:none}
+.arch .nd-tip-bg{fill:var(--deep);stroke:var(--line)}
+.arch .nd-tip-acc{fill:var(--brand)}
+.arch .nd-tip-t0{font:700 11px var(--mono);fill:var(--white)}
+.arch .nd-tip-t{font:400 11px var(--mono);fill:var(--prose)}
+.arch [tabindex]{cursor:help;outline:none}
+.arch [tabindex]:focus-visible > rect:first-child{stroke:var(--brand);stroke-width:1.5}
+.arch svg:has(.nd-hn0:hover,.nd-hn0:focus) .nd-tn0,.arch svg:has(.nd-hn1:hover,.nd-hn1:focus) .nd-tn1,.arch svg:has(.nd-hn2:hover,.nd-hn2:focus) .nd-tn2,.arch svg:has(.nd-hn3:hover,.nd-hn3:focus) .nd-tn3,.arch svg:has(.nd-hn4:hover,.nd-hn4:focus) .nd-tn4,.arch svg:has(.nd-hn5:hover,.nd-hn5:focus) .nd-tn5,.arch svg:has(.nd-hn6:hover,.nd-hn6:focus) .nd-tn6,.arch svg:has(.nd-hn7:hover,.nd-hn7:focus) .nd-tn7,.arch svg:has(.nd-hn8:hover,.nd-hn8:focus) .nd-tn8,.arch svg:has(.nd-hn9:hover,.nd-hn9:focus) .nd-tn9{visibility:visible}
+/* /diagram:regime-map */
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -333,12 +386,12 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <span class="nl">NIS2 &amp; DORA. <em>De wet noemt nu het bestuur.</em></span>
     </h1>
     <p class="lede">
-      <span class="en">Two European rules moved cybersecurity from the IT department to the boardroom — in plain language: what changed, what it means for the people at this table, and what has to be in place.</span>
-      <span class="nl">Twee Europese regels verplaatsten cyberbeveiliging van de IT-afdeling naar de bestuurskamer — in gewone taal: wat er veranderde, wat het betekent voor de mensen aan deze tafel, en wat er moet staan.</span>
+      <span class="en">Two European rules moved cybersecurity from the IT department to the boardroom — in plain language: what changed, what it means for the people at this table, and what we suggest putting in place.</span>
+      <span class="nl">Twee Europese regels verplaatsten cyberbeveiliging van de IT-afdeling naar de bestuurskamer — in gewone taal: wat er veranderde, wat het betekent voor de mensen aan deze tafel, en wat wij aanbevelen te regelen.</span>
     </p>
     <div class="btns">
       <a class="btn solid" href="#r1"><span class="en">SEE WHAT CHANGED</span><span class="nl">BEKIJK WAT VERANDERDE</span></a>
-      <a class="btn ghost" href="#fix"><span class="en">WHAT HAS TO BE IN PLACE</span><span class="nl">WAT ER MOET STAAN</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT TO PUT IN PLACE</span><span class="nl">WAT U KUNT REGELEN</span></a>
     </div>
   </div>
 </div>
@@ -372,15 +425,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     </div>
 
     <div class="panel">
-      <p class="en">Until now, a cyber incident was an IT failure with a business consequence. NIS2 changes the subject of the sentence. The management body must approve the cybersecurity risk measures, oversee their implementation, and can be held liable when it does not. In the Netherlands the directive arrives as the Cyberbeveiligingswet; DORA applies directly to banks, insurers, investment firms and their critical ICT providers. Delegating the work is allowed. Delegating the responsibility is not.</p>
-      <p class="en"><strong>Business impact:</strong> this is a governance question before it is a technical one. Regulators can impose fines that scale with turnover, can order remedies, and for essential entities can temporarily bar individuals from management roles. “We hired a good CISO” is not a defence if the board never saw, questioned or approved what that person did.</p>
-      <p class="nl">Tot nu toe was een cyberincident een IT-storing met een bedrijfsgevolg. NIS2 verandert het onderwerp van de zin. Het bestuur moet de maatregelen voor cyberrisico's goedkeuren, toezien op de uitvoering, en kan aansprakelijk worden gesteld als het dat niet doet. In Nederland komt de richtlijn als de Cyberbeveiligingswet; DORA geldt rechtstreeks voor banken, verzekeraars, beleggingsondernemingen en hun kritieke ICT-leveranciers. Het werk delegeren mag. De verantwoordelijkheid delegeren niet.</p>
-      <p class="nl"><strong>Bedrijfsimpact:</strong> dit is een governancevraag voordat het een technische vraag is. Toezichthouders kunnen boetes opleggen die meeschalen met de omzet, herstelmaatregelen afdwingen, en bij essentiële entiteiten personen tijdelijk uit bestuursfuncties weren. “We hebben een goede CISO aangenomen” is geen verweer als het bestuur nooit heeft gezien, bevraagd of goedgekeurd wat die persoon deed.</p>
+      <p class="en">Until now, a cyber incident was an IT failure with a business consequence. <abbr class="tip" tabindex="0" data-tip="EU directive on the cybersecurity of essential and important entities. Member States had to transpose it by 17 October 2024.">NIS2</abbr> changes the subject of the sentence. NIS2 requires the management body to approve the cybersecurity risk measures and oversee them, and it can be held liable when it does not. In the Netherlands the <abbr class="tip" tabindex="0" data-tip="Cyberbeveiligingswet: the Dutch law that transposes NIS2, in force since 15 August 2026.">Cbw</abbr> has been in force since 15 August 2026, for about 8,000 organisations. <abbr class="tip" tabindex="0" data-tip="Digital Operational Resilience Act: EU regulation on ICT risk for the financial sector, applying directly since 17 January 2025.">DORA</abbr> has applied directly to banks, insurers and investment firms since 17 January 2025, and brings their critical ICT providers under EU oversight. Delegating the work is allowed. Delegating the responsibility is not.</p>
+      <p class="en"><strong>Business impact:</strong> this is a governance question before it is a technical one. Regulators can impose fines (NIS2 sets maximum fines of at least €10M or 2% of worldwide turnover for essential entities, €7M or 1.4% for important ones), order remedies, and for essential entities can temporarily bar individuals from management roles. “We hired a good <abbr class="tip" tabindex="0" data-tip="Chief Information Security Officer: the executive who runs information security day to day.">CISO</abbr>” is not a defence if the board never saw, questioned or approved what that person did.</p>
+      <p class="nl">Tot nu toe was een cyberincident een IT-storing met een bedrijfsgevolg. <abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor de cyberbeveiliging van essentiële en belangrijke entiteiten. Lidstaten moesten haar uiterlijk 17 oktober 2024 omzetten.">NIS2</abbr> verandert het onderwerp van de zin. NIS2 verplicht het bestuur de maatregelen voor cyberrisico's goed te keuren en erop toe te zien, en het kan aansprakelijk worden gesteld als het dat niet doet. In Nederland geldt sinds 15 augustus 2026 de <abbr class="tip" tabindex="0" data-tip="Cyberbeveiligingswet: de Nederlandse wet die NIS2 omzet, van kracht sinds 15 augustus 2026.">Cbw</abbr>, voor ruim 8.000 organisaties. <abbr class="tip" tabindex="0" data-tip="Digital Operational Resilience Act: EU-verordening over ICT-risico in de financiële sector, rechtstreeks van toepassing sinds 17 januari 2025.">DORA</abbr> geldt sinds 17 januari 2025 rechtstreeks voor banken, verzekeraars en beleggingsondernemingen, en brengt hun kritieke ICT-leveranciers onder EU-toezicht. Het werk delegeren mag. De verantwoordelijkheid delegeren niet.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> dit is een governancevraag voordat het een technische vraag is. Toezichthouders kunnen boetes opleggen (NIS2 stelt het maximum op minstens €10 mln of 2% van de wereldwijde omzet voor essentiële entiteiten, €7 mln of 1,4% voor belangrijke), herstelmaatregelen afdwingen, en bij essentiële entiteiten personen tijdelijk uit bestuursfuncties weren. “We hebben een goede <abbr class="tip" tabindex="0" data-tip="Chief Information Security Officer: de manager die de informatiebeveiliging dagelijks leidt.">CISO</abbr> aangenomen” is geen verweer als het bestuur nooit heeft gezien, bevraagd of goedgekeurd wat die persoon deed.</p>
     </div>
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">NAMED IN LAW · FINES SCALE WITH TURNOVER · PERSONAL</span><span class="nl">GENOEMD IN DE WET · BOETES NAAR OMZET · PERSOONLIJK</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: ONE ACCOUNTABLE EXECUTIVE + BOARD-APPROVED FRAMEWORK</span><span class="nl">OPLOSSING: ÉÉN VERANTWOORDELIJKE BESTUURDER + GOEDGEKEURD KADER</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE ACCOUNTABLE EXECUTIVE + BOARD-APPROVED FRAMEWORK</span><span class="nl">AANBEVOLEN: ÉÉN VERANTWOORDELIJKE BESTUURDER + GOEDGEKEURD KADER</span></span>
     </div>
 
     <div class="ai3">
@@ -388,7 +441,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <div class="g">
         <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An outside researcher, journalist or plaintiff's lawyer can now use AI to comb public filings, press releases and social media for evidence that a board approved nothing and asked no questions, building a liability case in hours instead of weeks.</span><span class="nl">Een journalist, onderzoeker of advocaat van een tegenpartij kan met AI snel openbare stukken, persberichten en sociale media doorzoeken naar bewijs dat het bestuur nooit iets goedkeurde of bevroeg, en zo binnen uren een aansprakelijkheidszaak opbouwen.</span></p></div>
         <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Management can use generative AI to produce a polished risk framework and training records that look complete, giving the board false assurance that oversight happened when nobody actually reviewed a single decision.</span><span class="nl">De directie kan met generatieve AI een gepolijst risicokader en trainingsregistraties opstellen die compleet ogen, waardoor het bestuur denkt dat er toezicht is geweest terwijl niemand ook maar één besluit echt heeft beoordeeld.</span></p></div>
-        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Verify oversight, don't assume it</span><span class="nl">Toezicht verifiëren, niet aannemen</span></b><p><span class="en">AI can scan board minutes, approvals and reports for gaps and templated language that signals a rubber stamp, but it cannot replace the board asking hard questions and putting a named owner and dated approval on record.</span><span class="nl">AI kan notulen, goedkeuringen en rapporten scannen op hiaten en sjabloontaal die op een blinde goedkeuring wijzen, maar het bestuur moet zelf kritische vragen stellen en een eigenaar bij naam en datum vastleggen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Verify oversight, don't assume it</span><span class="nl">Toezicht verifiëren, niet aannemen</span></b><p><span class="en">AI can scan board minutes, approvals and reports for gaps and templated language that signals a rubber stamp, but it cannot replace the board asking hard questions and putting a named owner and dated approval on record.</span><span class="nl">AI kan notulen, goedkeuringen en rapporten scannen op hiaten en sjabloontaal die op een blinde goedkeuring wijzen, maar het bestuur stelt zelf de kritische vragen en legt een eigenaar met naam en datum vast.</span></p></div>
       </div>
     </div>
   </div>
@@ -408,7 +461,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     </span>
 
     <div class="stage s2">
-      <div class="stage-label"><span class="en">FROM THE MOMENT YOU KNOW</span><span class="nl">VANAF HET MOMENT DAT JE HET WEET</span></div>
+      <div class="stage-label"><span class="en">FROM THE MOMENT YOU KNOW</span><span class="nl">VANAF HET MOMENT DAT U HET WEET</span></div>
       <div class="track">
         <div class="fill"></div>
         <div class="mark m0"><span class="lbl up"><span class="en">T=0 · AWARE</span><span class="nl">T=0 · BEKEND</span></span></div>
@@ -420,15 +473,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     </div>
 
     <div class="panel">
-      <p class="en">A significant incident is no longer something you disclose when the dust settles. Under NIS2 the sequence is roughly: an early warning within about 24 hours of becoming aware, a fuller notification within about 72 hours, and a final report within about a month. DORA has its own tight timelines for financial entities. Exact deadlines, thresholds and the regulator you report to depend on which regime you fall under — legal must confirm that in advance, not on the day.</p>
-      <p class="en"><strong>Business impact:</strong> twenty-four hours is shorter than it sounds. It has to cover detecting the incident, deciding it is “significant”, getting the facts straight enough to write down, and finding the person authorised to send it — possibly at night, possibly on a weekend. Companies that have not rehearsed this miss the window or report wrongly, and the late or inaccurate notification becomes a second offence on top of the incident.</p>
-      <p class="nl">Een significant incident is niet langer iets dat je meldt als het stof is neergedaald. Onder NIS2 is de volgorde ongeveer: een vroege waarschuwing binnen circa 24 uur nadat je ervan weet, een uitgebreidere melding binnen circa 72 uur, en een eindrapport binnen ongeveer een maand. DORA kent eigen strakke termijnen voor financiële instellingen. De exacte termijnen, drempels en de toezichthouder aan wie je meldt, hangen af van het regime waaronder je valt — dat moet juridische zaken vooraf bevestigen, niet op de dag zelf.</p>
-      <p class="nl"><strong>Bedrijfsimpact:</strong> vierentwintig uur is korter dan het klinkt. Daarin moet het incident worden ontdekt, worden besloten dat het “significant” is, moeten de feiten voldoende op een rij staan om ze op te schrijven, en moet de persoon worden gevonden die bevoegd is om te melden — mogelijk 's nachts, mogelijk in het weekend. Bedrijven die dit niet hebben geoefend, missen de termijn of melden verkeerd, en de late of onjuiste melding wordt een tweede overtreding bovenop het incident.</p>
+      <p class="en">A significant incident is no longer something you disclose when the dust settles. NIS2 requires an early warning within 24 hours of becoming aware, an incident notification within 72 hours and a final report within one month; in the Netherlands to <abbr class="tip" tabindex="0" data-tip="Nationaal Cyber Security Centrum: the Dutch national CSIRT, which keeps the Cbw register and runs the reporting portal.">NCSC</abbr> or the sector <abbr class="tip" tabindex="0" data-tip="Computer Security Incident Response Team: the national or sector team that receives incident reports and helps respond.">CSIRT</abbr>. DORA asks financial entities to classify promptly, then send an initial notification within 4 hours of classifying an incident as major (at most 24 hours after becoming aware), an intermediate report within 72 hours and a final report within one month. Thresholds and recipients depend on your regime — worth having legal confirm that in advance, not on the day.</p>
+      <p class="en"><strong>Business impact:</strong> twenty-four hours is shorter than it sounds. It has to cover detecting the incident, deciding it is “significant”, getting the facts straight enough to write down, and finding the person authorised to send it — possibly at night, possibly on a weekend. Companies that have not rehearsed this often miss the window or report wrongly, and a late or inaccurate notification can become a second offence on top of the incident.</p>
+      <p class="nl">Een significant incident is niet langer iets dat u meldt als het stof is neergedaald. NIS2 vraagt een vroege waarschuwing binnen 24 uur nadat u ervan weet, een incidentmelding binnen 72 uur en een eindrapport binnen een maand; in Nederland aan het <abbr class="tip" tabindex="0" data-tip="Nationaal Cyber Security Centrum: het nationale CSIRT, dat het Cbw-register bijhoudt en het meldportaal beheert.">NCSC</abbr> of het sectorale <abbr class="tip" tabindex="0" data-tip="Computer Security Incident Response Team: het nationale of sectorale team dat incidentmeldingen ontvangt en helpt bij de aanpak.">CSIRT</abbr>. DORA vraagt financiële instellingen snel te classificeren, en dan een eerste melding binnen 4 uur nadat het incident als ernstig is geclassificeerd (uiterlijk 24 uur nadat u ervan weet), een tussentijds rapport binnen 72 uur en een eindrapport binnen een maand. Drempels en ontvangers hangen af van uw regime — laat juridische zaken dat vooraf bevestigen, niet op de dag zelf.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> vierentwintig uur is korter dan het klinkt. Daarin moet het incident worden ontdekt, worden besloten dat het “significant” is, moeten de feiten voldoende op een rij staan om ze op te schrijven, en moet de persoon worden gevonden die bevoegd is om te melden — mogelijk 's nachts, mogelijk in het weekend. Bedrijven die dit niet hebben geoefend, missen vaak de termijn of melden verkeerd, en een late of onjuiste melding kan een tweede overtreding worden bovenop het incident.</p>
     </div>
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">~24H · ~72H · ~1 MONTH · NIGHTS AND WEEKENDS COUNT</span><span class="nl">~24U · ~72U · ~1 MAAND · NACHTEN EN WEEKENDEN TELLEN MEE</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: CLASSIFICATION + REPORTING PROCESS, REHEARSED AGAINST THE CLOCK</span><span class="nl">OPLOSSING: CLASSIFICATIE + MELDPROCES, GEOEFEND OP DE KLOK</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: CLASSIFICATION + REPORTING PROCESS, REHEARSED AGAINST THE CLOCK</span><span class="nl">AANBEVOLEN: CLASSIFICATIE + MELDPROCES, GEOEFEND OP DE KLOK</span></span>
     </div>
 
     <div class="ai3">
@@ -436,7 +489,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <div class="g">
         <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI can generate a convincing fake regulator confirmation or a spoofed legal-counsel email during the chaos of the 24-hour window, delaying or corrupting the real notification while the response team is stretched thin and racing the clock.</span><span class="nl">AI kan een overtuigend nepbericht van de toezichthouder of een vervalste e-mail van juridische zaken opstellen tijdens de chaos van het 24-uursvenster, waardoor de echte melding vertraagd of verstoord raakt terwijl het team tegen de klok werkt.</span></p></div>
         <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Under time pressure, staff paste confidential incident details, customer data and breach specifics into a public AI chatbot to draft the notification quickly, handing sensitive information about the incident to a third party outside company control.</span><span class="nl">Onder tijdsdruk plakken medewerkers vertrouwelijke incidentdetails, klantgegevens en inbraakgegevens in een openbare AI-chatbot om de melding snel op te stellen, en geven zo gevoelige incidentinformatie door aan een derde partij buiten ons toezicht.</span></p></div>
-        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Draft fast, verify facts</span><span class="nl">Snel opstellen, feiten checken</span></b><p><span class="en">AI can pre-fill the notification template and pull a timeline from logs in minutes, saving time inside the deadline, but a named person must still verify every fact before it goes to the regulator.</span><span class="nl">AI kan het meldsjabloon vast invullen en een tijdlijn uit de logs halen, wat tijd bespaart binnen de termijn, maar iemand met naam moet elk feit controleren voordat het naar de toezichthouder gaat.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Draft fast, verify facts</span><span class="nl">Snel opstellen, feiten checken</span></b><p><span class="en">AI can pre-fill the notification template and pull a timeline from logs in minutes, saving time inside the deadline, but it is still worth having a named person verify every fact before it goes to the regulator.</span><span class="nl">AI kan het meldsjabloon vast invullen en een tijdlijn uit de logs halen, wat tijd bespaart binnen de termijn, maar laat iemand met naam elk feit controleren voordat het naar de toezichthouder gaat.</span></p></div>
       </div>
     </div>
   </div>
@@ -448,7 +501,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <span class="kicker"><b>//</b> <span class="en">CHANGE 03</span><span class="nl">VERANDERING 03</span></span>
     <h2>
       <span class="en">Your suppliers' security is <em>your duty.</em></span>
-      <span class="nl">De beveiliging van je leveranciers is <em>jouw plicht.</em></span>
+      <span class="nl">De beveiliging van uw leveranciers is <em>uw plicht.</em></span>
     </h2>
     <span class="term">
       <span class="en">supply chain oversight / ICT third-party risk</span>
@@ -469,14 +522,14 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
 
     <div class="panel">
       <p class="en">Both rules make you responsible for the security of the parties you depend on: the software vendor, the hosting provider, the payroll bureau, the managed-service partner. You are expected to know who they are, to assess their risk, to put obligations in the contract, and — under DORA in particular — to have an exit plan for the ones you cannot afford to lose. When their weakness becomes your incident, “it was the supplier” is an explanation, not an excuse.</p>
-      <p class="en"><strong>Business impact:</strong> most organisations cannot produce a complete list of their ICT suppliers today, let alone say which contracts contain security, audit and notification clauses. Building that register is unglamorous procurement and legal work. It is also the first thing a regulator asks for after an incident that started at a third party.</p>
-      <p class="nl">Beide regels maken je verantwoordelijk voor de beveiliging van de partijen waarvan je afhankelijk bent: de softwareleverancier, de hostingpartij, het salarisbureau, de managed-servicepartner. Je wordt geacht te weten wie het zijn, hun risico te beoordelen, verplichtingen in het contract vast te leggen en — vooral onder DORA — een exitplan te hebben voor de partijen die je niet kunt missen. Als hun zwakte jouw incident wordt, is “het lag bij de leverancier” een verklaring, geen excuus.</p>
-      <p class="nl"><strong>Bedrijfsimpact:</strong> de meeste organisaties kunnen vandaag geen volledige lijst van hun ICT-leveranciers produceren, laat staan zeggen welke contracten clausules over beveiliging, audit en melding bevatten. Dat register opbouwen is onopvallend inkoop- en juridisch werk. Het is ook het eerste waar een toezichthouder om vraagt na een incident dat bij een derde partij begon.</p>
+      <p class="en"><strong>Business impact:</strong> most organisations cannot produce a complete list of their <abbr class="tip" tabindex="0" data-tip="Information and communication technology: hardware, software, networks and the services that run them.">ICT</abbr> suppliers today, let alone say which contracts contain security, audit and notification clauses. Building that register is unglamorous procurement and legal work. It is also the first thing a regulator asks for after an incident that started at a third party.</p>
+      <p class="nl">Beide regels maken u verantwoordelijk voor de beveiliging van de partijen waarvan u afhankelijk bent: de softwareleverancier, de hostingpartij, het salarisbureau, de managed-servicepartner. U wordt geacht te weten wie het zijn, hun risico te beoordelen, verplichtingen in het contract vast te leggen en — vooral onder DORA — een exitplan te hebben voor de partijen die u niet kunt missen. Als hun zwakte uw incident wordt, is “het lag bij de leverancier” een verklaring, geen excuus.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de meeste organisaties kunnen vandaag geen volledige lijst van hun <abbr class="tip" tabindex="0" data-tip="Informatie- en communicatietechnologie: hardware, software, netwerken en de diensten die ze draaien.">ICT</abbr>-leveranciers produceren, laat staan zeggen welke contracten clausules over beveiliging, audit en melding bevatten. Dat register opbouwen is onopvallend inkoop- en juridisch werk. Het is ook het eerste waar een toezichthouder om vraagt na een incident dat bij een derde partij begon.</p>
     </div>
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">UNKNOWN SUPPLIERS · SILENT CONTRACTS · NO EXIT</span><span class="nl">ONBEKENDE LEVERANCIERS · ZWIJGENDE CONTRACTEN · GEEN EXIT</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: SUPPLIER REGISTER + CONTRACT CLAUSES + EXIT PLANS</span><span class="nl">OPLOSSING: LEVERANCIERSREGISTER + CONTRACTCLAUSULES + EXITPLANNEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: SUPPLIER REGISTER + CONTRACT CLAUSES + EXIT PLANS</span><span class="nl">AANBEVOLEN: LEVERANCIERSREGISTER + CONTRACTCLAUSULES + EXITPLANNEN</span></span>
     </div>
 
     <div class="ai3">
@@ -495,11 +548,11 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
   <div class="wrap">
     <span class="kicker"><b>//</b> <span class="en">CHANGE 04</span><span class="nl">VERANDERING 04</span></span>
     <h2>
-      <span class="en">You have to <em>prove it, not assume it.</em></span>
-      <span class="nl">Je moet het <em>bewijzen, niet aannemen.</em></span>
+      <span class="en">The rules ask you to <em>prove it, not assume it.</em></span>
+      <span class="nl">Het draait om <em>bewijzen, niet aannemen.</em></span>
     </h2>
     <span class="term">
-      <span class="en">mandatory training and resilience testing</span>
+      <span class="en">required training and resilience testing</span>
       <span class="nl">verplichte training en weerbaarheidstesten</span>
     </span>
 
@@ -515,15 +568,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     </div>
 
     <div class="panel">
-      <p class="en">The rules do not accept a policy document as evidence. Members of the management body must follow cybersecurity training so they can judge the risks they are approving. Measures must be tested: does the backup restore, does the failover work, does the incident process hold under pressure. Financial entities face the strongest version — regular resilience testing, and for the larger ones advanced threat-led testing in which specialists attack the live organisation with the board's knowledge.</p>
+      <p class="en">The rules do not accept a policy document as evidence. NIS2 requires members of the management body to follow cybersecurity training so they can judge the risks they are approving; the Cbw gives them two years, until August 2028. Testing is how you show the measures work: does the backup restore, does the <abbr class="tip" tabindex="0" data-tip="Switching automatically to a standby system when the main one fails.">failover</abbr> work, does the incident process hold under pressure. Financial entities face the strongest version under DORA — regular resilience testing, and for the larger ones advanced threat-led testing in which specialists attack the live organisation with the board's knowledge.</p>
       <p class="en"><strong>Business impact:</strong> this is where the cost sits, and where the value sits. An untested control is a belief. Testing converts beliefs into either confidence or a to-do list, and both are worth more than the belief. For the board the practical change is small: training on the calendar, and test results — not assurances — on the agenda.</p>
-      <p class="nl">De regels accepteren een beleidsdocument niet als bewijs. Leden van het bestuur moeten cyberbeveiligingstraining volgen, zodat ze de risico's die ze goedkeuren kunnen beoordelen. Maatregelen moeten worden getest: herstelt de back-up, werkt de failover, houdt het incidentproces stand onder druk. Financiële instellingen krijgen de zwaarste variant — periodieke weerbaarheidstesten, en voor de grotere partijen geavanceerde dreigingsgestuurde testen waarbij specialisten de echte organisatie aanvallen, met medeweten van het bestuur.</p>
+      <p class="nl">De regels accepteren een beleidsdocument niet als bewijs. NIS2 verplicht bestuursleden een cyberbeveiligingstraining te volgen, zodat zij de risico's die zij goedkeuren kunnen beoordelen; de Cbw geeft hun daarvoor twee jaar, tot augustus 2028. Met testen laat u zien dat de maatregelen werken: herstelt de back-up, werkt de <abbr class="tip" tabindex="0" data-tip="Automatisch overschakelen naar een reservesysteem als het hoofdsysteem uitvalt.">failover</abbr>, houdt het incidentproces stand onder druk. Financiële instellingen krijgen onder DORA de zwaarste variant — periodieke weerbaarheidstesten, en voor de grotere partijen geavanceerde dreigingsgestuurde testen waarbij specialisten de echte organisatie aanvallen, met medeweten van het bestuur.</p>
       <p class="nl"><strong>Bedrijfsimpact:</strong> hier zitten de kosten, en hier zit de waarde. Een ongeteste maatregel is een overtuiging. Testen zet overtuigingen om in vertrouwen of in een actielijst, en beide zijn meer waard dan de overtuiging. Voor het bestuur is de praktische verandering klein: training in de kalender, en testresultaten — geen geruststellingen — op de agenda.</p>
     </div>
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">UNTESTED = UNKNOWN · POLICY IS NOT EVIDENCE</span><span class="nl">ONGETEST = ONBEKEND · BELEID IS GEEN BEWIJS</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: BOARD TRAINING + TESTING PROGRAMME + RESULTS ON THE AGENDA</span><span class="nl">OPLOSSING: BESTUURSTRAINING + TESTPROGRAMMA + RESULTATEN OP DE AGENDA</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: BOARD TRAINING + TESTING PROGRAMME + RESULTS ON THE AGENDA</span><span class="nl">AANBEVOLEN: BESTUURSTRAINING + TESTPROGRAMMA + RESULTATEN OP DE AGENDA</span></span>
     </div>
 
     <div class="ai3">
@@ -537,13 +590,296 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
   </div>
 </section>
 
+<!-- diagram:regime-map -->
+<section class="risk-block" id="regime-map">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">IN PRACTICE</span><span class="nl">IN DE PRAKTIJK</span></span>
+    <h2><span class="en">Which regime applies to you.<br><em>And whom you would report to.</em></span><span class="nl">Welk regime voor u geldt.<br><em>En aan wie u zou melden.</em></span></h2>
+    <span class="term"><span class="en">regime map / indicative, not legal advice</span><span class="nl">regimekaart / indicatief, geen juridisch advies</span></span>
+
+    <figure class="arch">
+<svg viewBox="0 0 1120 640" role="img" aria-labelledby="nd-title nd-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="nd-title">Which regime applies to us?</title>
+<desc id="nd-desc">Decision map. Question 1: are we a financial entity? If yes, DORA applies and takes precedence: classify the incident, initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours, final report within one month, to DNB or AFM. If no, question 2: are we in a Cbw sector and above the size threshold, or designated? If yes, the Cyberbeveiligingswet applies: early warning within 24 hours, notification within 72 hours, final report within one month, to NCSC or the sector CSIRT. If neither, no Cbw or DORA clock. Question 3, for everyone and in parallel: is personal data involved? If yes, notify the Autoriteit Persoonsgegevens within 72 hours under the GDPR. Indicative, not legal advice.</desc>
+<defs>
+<marker id="nd-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="nd-arrowhead"/></marker>
+</defs>
+<rect x="20" y="30" width="550" height="504" class="nd-zone"/>
+<text x="40" y="54" class="nd-zlabel en">WHICH REGIME · CONFIRM WITH LEGAL</text><text x="40" y="54" class="nd-zlabel nl">WELK REGIME · BEVESTIG MET JURISTEN</text>
+<rect x="580" y="30" width="520" height="504" class="nd-zone"/>
+<text x="596" y="54" class="nd-zlabel en">REPORTING CLOCK · FROM BECOMING AWARE</text><text x="596" y="54" class="nd-zlabel nl">MELDKLOK · VANAF KENNISNAME</text>
+<path d="M292 118.0 H337" class="nd-link" marker-end="url(#nd-arr)"/>
+<text x="302" y="111.0" class="nd-llabel en" text-anchor="start">YES</text><text x="302" y="111.0" class="nd-llabel nl" text-anchor="start">JA</text>
+<path d="M100 168 V197" class="nd-link" marker-end="url(#nd-arr)"/>
+<text x="110" y="188" class="nd-llabel en" text-anchor="start">NO</text><text x="110" y="188" class="nd-llabel nl" text-anchor="start">NEE</text>
+<path d="M292 248.0 H337" class="nd-link" marker-end="url(#nd-arr)"/>
+<text x="302" y="241.0" class="nd-llabel en" text-anchor="start">YES</text><text x="302" y="241.0" class="nd-llabel nl" text-anchor="start">JA</text>
+<path d="M200 298 V354 H337" class="nd-link" marker-end="url(#nd-arr)"/>
+<text x="210" y="314" class="nd-llabel en" text-anchor="start">NO</text><text x="210" y="314" class="nd-llabel nl" text-anchor="start">NEE</text>
+<path d="M292 468.0 H337" class="nd-link" marker-end="url(#nd-arr)"/>
+<text x="302" y="461.0" class="nd-llabel en" text-anchor="start">YES</text><text x="302" y="461.0" class="nd-llabel nl" text-anchor="start">JA</text>
+<path d="M542 118.0 H587" class="nd-link" marker-end="url(#nd-arr)"/>
+<path d="M542 248.0 H587" class="nd-link" marker-end="url(#nd-arr)"/>
+<path d="M542 468.0 H587" class="nd-link" marker-end="url(#nd-arr)"/>
+<path d="M510 168 V198" class="nd-lex"/>
+<text x="502" y="187" class="nd-llabel en" text-anchor="end">DORA FIRST</text><text x="502" y="187" class="nd-llabel nl" text-anchor="end">DORA GAAT VOOR</text>
+<g class="nd-node-g nd-s-q nd-hn0" tabindex="0">
+<rect x="40" y="70" width="250" height="96" class="nd-node"/>
+<rect x="40" y="70" width="4" height="96" class="nd-bar"/>
+<text x="56" y="92" class="nd-kick en">QUESTION 1</text><text x="56" y="92" class="nd-kick nl">VRAAG 1</text>
+<text x="56" y="114" class="nd-name en">Are we a financial entity?</text><text x="56" y="114" class="nd-name nl">Zijn wij een financiële</text>
+<text x="56" y="131" class="nd-name en"></text><text x="56" y="131" class="nd-name nl">entiteit?</text>
+<text x="56" y="154" class="nd-st en">banks, insurers and more</text><text x="56" y="154" class="nd-st nl">banken, verzekeraars en meer</text>
+</g>
+<g class="nd-node-g nd-s-q nd-hn1" tabindex="0">
+<rect x="40" y="200" width="250" height="96" class="nd-node"/>
+<rect x="40" y="200" width="4" height="96" class="nd-bar"/>
+<text x="56" y="222" class="nd-kick en">QUESTION 2</text><text x="56" y="222" class="nd-kick nl">VRAAG 2</text>
+<text x="56" y="244" class="nd-name en">In a Cbw sector and above</text><text x="56" y="244" class="nd-name nl">In een Cbw-sector en boven</text>
+<text x="56" y="261" class="nd-name en">the size threshold?</text><text x="56" y="261" class="nd-name nl">de omvangsdrempel?</text>
+<text x="56" y="284" class="nd-st en">or designated</text><text x="56" y="284" class="nd-st nl">of aangewezen</text>
+</g>
+<g class="nd-node-g nd-s-q nd-hn2" tabindex="0">
+<rect x="40" y="420" width="250" height="96" class="nd-node"/>
+<rect x="40" y="420" width="4" height="96" class="nd-bar"/>
+<text x="56" y="442" class="nd-kick en">QUESTION 3 · ALWAYS</text><text x="56" y="442" class="nd-kick nl">VRAAG 3 · ALTIJD</text>
+<text x="56" y="464" class="nd-name en">Is personal data involved?</text><text x="56" y="464" class="nd-name nl">Zijn persoonsgegevens</text>
+<text x="56" y="481" class="nd-name en"></text><text x="56" y="481" class="nd-name nl">betrokken?</text>
+<text x="56" y="504" class="nd-st en">for everyone, in parallel</text><text x="56" y="504" class="nd-st nl">voor iedereen, parallel</text>
+</g>
+<g class="nd-node-g nd-s-warn nd-hn3" tabindex="0">
+<rect x="340" y="70" width="200" height="96" class="nd-node"/>
+<rect x="340" y="70" width="4" height="96" class="nd-bar"/>
+<text x="356" y="92" class="nd-kick">LEX SPECIALIS</text>
+<text x="356" y="114" class="nd-name en">DORA applies</text><text x="356" y="114" class="nd-name nl">DORA geldt</text>
+<text x="356" y="154" class="nd-st en">since 17 Jan 2025</text><text x="356" y="154" class="nd-st nl">sinds 17 jan 2025</text>
+</g>
+<g class="nd-node-g nd-s-warn nd-hn4" tabindex="0">
+<rect x="340" y="200" width="200" height="96" class="nd-node"/>
+<rect x="340" y="200" width="4" height="96" class="nd-bar"/>
+<text x="356" y="222" class="nd-kick en">NIS2 IN THE NETHERLANDS</text><text x="356" y="222" class="nd-kick nl">NIS2 IN NEDERLAND</text>
+<text x="356" y="244" class="nd-name en">Cbw applies</text><text x="356" y="244" class="nd-name nl">Cbw geldt</text>
+<text x="356" y="284" class="nd-st en">register with NCSC</text><text x="356" y="284" class="nd-st nl">registreren bij NCSC</text>
+</g>
+<g class="nd-node-g nd-s-ok nd-hn5" tabindex="0">
+<rect x="340" y="322" width="200" height="64" class="nd-node"/>
+<rect x="340" y="322" width="4" height="64" class="nd-bar"/>
+<text x="356" y="344" class="nd-kick en">NEITHER</text><text x="356" y="344" class="nd-kick nl">GEEN VAN BEIDE</text>
+<text x="356" y="366" class="nd-name en">No Cbw or DORA clock</text><text x="356" y="366" class="nd-name nl">Geen Cbw- of DORA-klok</text>
+</g>
+<g class="nd-node-g nd-s-warn nd-hn6" tabindex="0">
+<rect x="340" y="420" width="200" height="96" class="nd-node"/>
+<rect x="340" y="420" width="4" height="96" class="nd-bar"/>
+<text x="356" y="442" class="nd-kick en">PERSONAL DATA BREACH</text><text x="356" y="442" class="nd-kick nl">DATALEK</text>
+<text x="356" y="464" class="nd-name en">GDPR applies</text><text x="356" y="464" class="nd-name nl">AVG geldt</text>
+<text x="356" y="504" class="nd-st en">Art. 33 and 34</text><text x="356" y="504" class="nd-st nl">art. 33 en 34</text>
+</g>
+<g class="nd-node-g nd-s-bad nd-hn7" tabindex="0">
+<rect x="590" y="70" width="490" height="96" class="nd-node"/>
+<rect x="590" y="70" width="4" height="96" class="nd-bar"/>
+<text x="606" y="92" class="nd-kick en">DORA · TO DNB OR AFM</text><text x="606" y="92" class="nd-kick nl">DORA · AAN DNB OF AFM</text>
+<rect x="606.0" y="104" width="7" height="7" class="nd-dot"/>
+<path d="M617.0 107.5 H714.5" class="nd-step"/>
+<text x="606.0" y="128" class="nd-time en">CLASSIFY</text><text x="606.0" y="128" class="nd-time nl">CLASSIFICEER</text>
+<text x="606.0" y="142" class="nd-st en">promptly</text><text x="606.0" y="142" class="nd-st nl">zo snel mogelijk</text>
+<rect x="720.5" y="104" width="7" height="7" class="nd-dot"/>
+<path d="M731.5 107.5 H829.0" class="nd-step"/>
+<text x="720.5" y="128" class="nd-time en">4H</text><text x="720.5" y="128" class="nd-time nl">4U</text>
+<text x="720.5" y="142" class="nd-st en">initial</text><text x="720.5" y="142" class="nd-st nl">eerste melding</text>
+<rect x="835.0" y="104" width="7" height="7" class="nd-dot"/>
+<path d="M846.0 107.5 H943.5" class="nd-step"/>
+<text x="835.0" y="128" class="nd-time en">72H</text><text x="835.0" y="128" class="nd-time nl">72U</text>
+<text x="835.0" y="142" class="nd-st en">intermediate</text><text x="835.0" y="142" class="nd-st nl">tussentijds</text>
+<rect x="949.5" y="104" width="7" height="7" class="nd-dot"/>
+<text x="949.5" y="128" class="nd-time en">1 MONTH</text><text x="949.5" y="128" class="nd-time nl">1 MAAND</text>
+<text x="949.5" y="142" class="nd-st en">final report</text><text x="949.5" y="142" class="nd-st nl">eindrapport</text>
+<text x="606" y="158" class="nd-note en">4h after classifying as major · at most 24h after becoming aware</text><text x="606" y="158" class="nd-note nl">4u na classificatie als ernstig · uiterlijk 24u na kennisname</text>
+</g>
+<g class="nd-node-g nd-s-bad nd-hn8" tabindex="0">
+<rect x="590" y="200" width="490" height="96" class="nd-node"/>
+<rect x="590" y="200" width="4" height="96" class="nd-bar"/>
+<text x="606" y="222" class="nd-kick en">CBW · TO NCSC OR SECTOR CSIRT</text><text x="606" y="222" class="nd-kick nl">CBW · AAN NCSC OF SECTOR-CSIRT</text>
+<rect x="606.0" y="234" width="7" height="7" class="nd-dot"/>
+<path d="M617.0 237.5 H752.7" class="nd-step"/>
+<text x="606.0" y="258" class="nd-time en">24H</text><text x="606.0" y="258" class="nd-time nl">24U</text>
+<text x="606.0" y="272" class="nd-st en">early warning</text><text x="606.0" y="272" class="nd-st nl">vroege waarschuwing</text>
+<rect x="758.7" y="234" width="7" height="7" class="nd-dot"/>
+<path d="M769.7 237.5 H905.4" class="nd-step"/>
+<text x="758.7" y="258" class="nd-time en">72H</text><text x="758.7" y="258" class="nd-time nl">72U</text>
+<text x="758.7" y="272" class="nd-st en">notification</text><text x="758.7" y="272" class="nd-st nl">incidentmelding</text>
+<rect x="911.3" y="234" width="7" height="7" class="nd-dot"/>
+<text x="911.3" y="258" class="nd-time en">1 MONTH</text><text x="911.3" y="258" class="nd-time nl">1 MAAND</text>
+<text x="911.3" y="272" class="nd-st en">final report</text><text x="911.3" y="272" class="nd-st nl">eindrapport</text>
+<text x="606" y="288" class="nd-note en">if it can count as significant · via the NCSC portal</text><text x="606" y="288" class="nd-note nl">als het als significant kan gelden · via het NCSC-portaal</text>
+</g>
+<g class="nd-node-g nd-s-bad nd-hn9" tabindex="0">
+<rect x="590" y="420" width="490" height="96" class="nd-node"/>
+<rect x="590" y="420" width="4" height="96" class="nd-bar"/>
+<text x="606" y="442" class="nd-kick en">GDPR · TO THE AUTORITEIT PERSOONSGEGEVENS</text><text x="606" y="442" class="nd-kick nl">AVG · AAN DE AUTORITEIT PERSOONSGEGEVENS</text>
+<rect x="606.0" y="454" width="7" height="7" class="nd-dot"/>
+<path d="M617.0 457.5 H829.0" class="nd-step"/>
+<text x="606.0" y="478" class="nd-time en">72H</text><text x="606.0" y="478" class="nd-time nl">72U</text>
+<text x="606.0" y="492" class="nd-st en">notify the AP</text><text x="606.0" y="492" class="nd-st nl">melden bij de AP</text>
+<rect x="835.0" y="454" width="7" height="7" class="nd-dot"/>
+<text x="835.0" y="478" class="nd-time en">HIGH RISK</text><text x="835.0" y="478" class="nd-time nl">HOOG RISICO</text>
+<text x="835.0" y="492" class="nd-st en">inform the people</text><text x="835.0" y="492" class="nd-st nl">betrokkenen informeren</text>
+<text x="606" y="508" class="nd-note en">unless the breach is unlikely to cause a risk</text><text x="606" y="508" class="nd-note nl">tenzij het datalek waarschijnlijk geen risico oplevert</text>
+</g>
+<rect x="40" y="561" width="14" height="14" class="nd-sw nd-sw-q"/>
+<text x="62" y="572" class="nd-legend en">Question</text><text x="62" y="572" class="nd-legend nl">Vraag</text>
+<rect x="200" y="561" width="14" height="14" class="nd-sw nd-sw-warn"/>
+<text x="222" y="572" class="nd-legend en">Regime applies</text><text x="222" y="572" class="nd-legend nl">Regime geldt</text>
+<rect x="400" y="561" width="14" height="14" class="nd-sw nd-sw-bad"/>
+<text x="422" y="572" class="nd-legend en">Reporting clock runs</text><text x="422" y="572" class="nd-legend nl">Meldklok loopt</text>
+<rect x="620" y="561" width="14" height="14" class="nd-sw nd-sw-ok"/>
+<text x="642" y="572" class="nd-legend en">No Cbw or DORA clock</text><text x="642" y="572" class="nd-legend nl">Geen Cbw- of DORA-klok</text>
+<path d="M870 568 H900" class="nd-lex"/>
+<text x="908" y="572" class="nd-legend en">takes precedence</text><text x="908" y="572" class="nd-legend nl">gaat voor</text>
+<text x="40" y="602" class="nd-foot en">Indicative — not legal advice · clocks as set in law, scope to confirm with legal · hover or tap a box for an explanation</text><text x="40" y="602" class="nd-foot nl">Indicatief — geen juridisch advies · termijnen zoals in de wet, reikwijdte bevestigen met juristen · beweeg of tik op een blok voor uitleg</text>
+<g class="nd-svtip nd-tn0" aria-hidden="true">
+<rect x="40" y="172" width="303" height="77" class="nd-tip-bg"/>
+<rect x="40" y="172" width="3" height="77" class="nd-tip-acc"/>
+<text x="54" y="190" class="nd-tip-t0 en">Financial entity · DORA Art. 2</text>
+<text x="54" y="205" class="nd-tip-t en">Banks, insurers, investment firms, payment</text>
+<text x="54" y="220" class="nd-tip-t en">and crypto-asset firms, and more. If yes,</text>
+<text x="54" y="235" class="nd-tip-t en">DORA sets your ICT rules and clocks.</text>
+<text x="54" y="190" class="nd-tip-t0 nl">Financiële entiteit · DORA art. 2</text>
+<text x="54" y="205" class="nd-tip-t nl">Banken, verzekeraars, beleggings-</text>
+<text x="54" y="220" class="nd-tip-t nl">ondernemingen, betaal- en cryptobedrijven</text>
+<text x="54" y="235" class="nd-tip-t nl">en meer. Zo ja: DORA bepaalt de regels.</text>
+</g>
+<g class="nd-svtip nd-tn1" aria-hidden="true">
+<rect x="40" y="302" width="303" height="92" class="nd-tip-bg"/>
+<rect x="40" y="302" width="3" height="92" class="nd-tip-acc"/>
+<text x="54" y="320" class="nd-tip-t0 en">Cbw sector · size threshold</text>
+<text x="54" y="335" class="nd-tip-t en">Sectors in NIS2 Annexes I and II, e.g.</text>
+<text x="54" y="350" class="nd-tip-t en">energy, health, transport, digital. Mostly</text>
+<text x="54" y="365" class="nd-tip-t en">medium-sized or larger; some entities are</text>
+<text x="54" y="380" class="nd-tip-t en">in scope regardless of size.</text>
+<text x="54" y="320" class="nd-tip-t0 nl">Cbw-sector · omvangsdrempel</text>
+<text x="54" y="335" class="nd-tip-t nl">Sectoren uit bijlage I en II van NIS2,</text>
+<text x="54" y="350" class="nd-tip-t nl">zoals energie, zorg, vervoer, digitaal.</text>
+<text x="54" y="365" class="nd-tip-t nl">Meestal middelgroot of groter; sommige</text>
+<text x="54" y="380" class="nd-tip-t nl">entiteiten vallen er altijd onder.</text>
+</g>
+<g class="nd-svtip nd-tn2" aria-hidden="true">
+<rect x="40" y="337" width="297" height="77" class="nd-tip-bg"/>
+<rect x="40" y="337" width="3" height="77" class="nd-tip-acc"/>
+<text x="54" y="355" class="nd-tip-t0 en">Personal data · GDPR</text>
+<text x="54" y="370" class="nd-tip-t en">A personal data breach has its own clock</text>
+<text x="54" y="385" class="nd-tip-t en">under the GDPR (AVG in Dutch), alongside</text>
+<text x="54" y="400" class="nd-tip-t en">any Cbw or DORA report.</text>
+<text x="54" y="355" class="nd-tip-t0 nl">Persoonsgegevens · AVG</text>
+<text x="54" y="370" class="nd-tip-t nl">Een datalek heeft een eigen termijn onder</text>
+<text x="54" y="385" class="nd-tip-t nl">de AVG, naast een eventuele melding</text>
+<text x="54" y="400" class="nd-tip-t nl">onder de Cbw of DORA.</text>
+</g>
+<g class="nd-svtip nd-tn3" aria-hidden="true">
+<rect x="340" y="172" width="290" height="92" class="nd-tip-bg"/>
+<rect x="340" y="172" width="3" height="92" class="nd-tip-acc"/>
+<text x="354" y="190" class="nd-tip-t0 en">DORA · lex specialis</text>
+<text x="354" y="205" class="nd-tip-t en">Digital Operational Resilience Act. For</text>
+<text x="354" y="220" class="nd-tip-t en">financial entities it takes precedence</text>
+<text x="354" y="235" class="nd-tip-t en">over the NIS2 rules on ICT risk and</text>
+<text x="354" y="250" class="nd-tip-t en">incident reporting (NIS2 recital 28).</text>
+<text x="354" y="190" class="nd-tip-t0 nl">DORA · lex specialis</text>
+<text x="354" y="205" class="nd-tip-t nl">Digital Operational Resilience Act. Voor</text>
+<text x="354" y="220" class="nd-tip-t nl">financiële entiteiten gaat DORA voor op</text>
+<text x="354" y="235" class="nd-tip-t nl">de NIS2-regels voor ICT-risico en</text>
+<text x="354" y="250" class="nd-tip-t nl">incidentmelding (NIS2 overweging 28).</text>
+</g>
+<g class="nd-svtip nd-tn4" aria-hidden="true">
+<rect x="340" y="302" width="297" height="77" class="nd-tip-bg"/>
+<rect x="340" y="302" width="3" height="77" class="nd-tip-acc"/>
+<text x="354" y="320" class="nd-tip-t0 en">Cbw · Cyberbeveiligingswet</text>
+<text x="354" y="335" class="nd-tip-t en">The Dutch NIS2 law, in force since</text>
+<text x="354" y="350" class="nd-tip-t en">15 August 2026: registration with NCSC,</text>
+<text x="354" y="365" class="nd-tip-t en">duty of care, reporting, board training.</text>
+<text x="354" y="320" class="nd-tip-t0 nl">Cbw · Cyberbeveiligingswet</text>
+<text x="354" y="335" class="nd-tip-t nl">De Nederlandse NIS2-wet, van kracht sinds</text>
+<text x="354" y="350" class="nd-tip-t nl">15 augustus 2026: registratie bij NCSC,</text>
+<text x="354" y="365" class="nd-tip-t nl">zorgplicht, meldplicht, bestuurstraining.</text>
+</g>
+<g class="nd-svtip nd-tn5" aria-hidden="true">
+<rect x="340" y="392" width="283" height="77" class="nd-tip-bg"/>
+<rect x="340" y="392" width="3" height="77" class="nd-tip-acc"/>
+<text x="354" y="410" class="nd-tip-t0 en">Outside Cbw and DORA</text>
+<text x="354" y="425" class="nd-tip-t en">No Cbw or DORA clock, but the GDPR,</text>
+<text x="354" y="440" class="nd-tip-t en">contracts and customer duties remain.</text>
+<text x="354" y="455" class="nd-tip-t en">Worth recording the scope decision.</text>
+<text x="354" y="410" class="nd-tip-t0 nl">Buiten Cbw en DORA</text>
+<text x="354" y="425" class="nd-tip-t nl">Geen Cbw- of DORA-termijn, maar de AVG,</text>
+<text x="354" y="440" class="nd-tip-t nl">contracten en klantafspraken blijven.</text>
+<text x="354" y="455" class="nd-tip-t nl">Leg het reikwijdtebesluit wel vast.</text>
+</g>
+<g class="nd-svtip nd-tn6" aria-hidden="true">
+<rect x="340" y="337" width="283" height="77" class="nd-tip-bg"/>
+<rect x="340" y="337" width="3" height="77" class="nd-tip-acc"/>
+<text x="354" y="355" class="nd-tip-t0 en">GDPR · AVG in Dutch</text>
+<text x="354" y="370" class="nd-tip-t en">General Data Protection Regulation.</text>
+<text x="354" y="385" class="nd-tip-t en">The controller notifies the Dutch data</text>
+<text x="354" y="400" class="nd-tip-t en">protection authority, the AP.</text>
+<text x="354" y="355" class="nd-tip-t0 nl">AVG · Algemene verordening</text>
+<text x="354" y="370" class="nd-tip-t nl">gegevensbescherming. De verwerkings-</text>
+<text x="354" y="385" class="nd-tip-t nl">verantwoordelijke meldt het datalek bij</text>
+<text x="354" y="400" class="nd-tip-t nl">de Autoriteit Persoonsgegevens (AP).</text>
+</g>
+<g class="nd-svtip nd-tn7" aria-hidden="true">
+<rect x="590" y="172" width="297" height="92" class="nd-tip-bg"/>
+<rect x="590" y="172" width="3" height="92" class="nd-tip-acc"/>
+<text x="604" y="190" class="nd-tip-t0 en">Major ICT incident · DORA</text>
+<text x="604" y="205" class="nd-tip-t en">Initial notification 4h after classifying</text>
+<text x="604" y="220" class="nd-tip-t en">as major (max 24h after aware), then</text>
+<text x="604" y="235" class="nd-tip-t en">intermediate in 72h, final in 1 month.</text>
+<text x="604" y="250" class="nd-tip-t en">To DNB or AFM, whichever supervises you.</text>
+<text x="604" y="190" class="nd-tip-t0 nl">Ernstig ICT-incident · DORA</text>
+<text x="604" y="205" class="nd-tip-t nl">Eerste melding 4u na classificatie als</text>
+<text x="604" y="220" class="nd-tip-t nl">ernstig (max. 24u na kennisname), dan</text>
+<text x="604" y="235" class="nd-tip-t nl">tussentijds in 72u, eind na 1 maand.</text>
+<text x="604" y="250" class="nd-tip-t nl">Aan DNB of AFM, wie op u toeziet.</text>
+</g>
+<g class="nd-svtip nd-tn8" aria-hidden="true">
+<rect x="590" y="302" width="297" height="77" class="nd-tip-bg"/>
+<rect x="590" y="302" width="3" height="77" class="nd-tip-acc"/>
+<text x="604" y="320" class="nd-tip-t0 en">Significant incident · Cbw / NIS2 Art. 23</text>
+<text x="604" y="335" class="nd-tip-t en">Early warning 24h, notification 72h,</text>
+<text x="604" y="350" class="nd-tip-t en">final report 1 month. The NCSC portal</text>
+<text x="604" y="365" class="nd-tip-t en">forwards it to the CSIRT and supervisor.</text>
+<text x="604" y="320" class="nd-tip-t0 nl">Significant incident · Cbw / NIS2 art. 23</text>
+<text x="604" y="335" class="nd-tip-t nl">Vroege waarschuwing 24u, melding 72u,</text>
+<text x="604" y="350" class="nd-tip-t nl">eindrapport 1 maand. Het NCSC-portaal</text>
+<text x="604" y="365" class="nd-tip-t nl">stuurt door naar CSIRT en toezichthouder.</text>
+</g>
+<g class="nd-svtip nd-tn9" aria-hidden="true">
+<rect x="590" y="337" width="290" height="77" class="nd-tip-bg"/>
+<rect x="590" y="337" width="3" height="77" class="nd-tip-acc"/>
+<text x="604" y="355" class="nd-tip-t0 en">Data breach · GDPR Art. 33–34</text>
+<text x="604" y="370" class="nd-tip-t en">Notify the AP within 72h unless a risk</text>
+<text x="604" y="385" class="nd-tip-t en">is unlikely; tell the people affected</text>
+<text x="604" y="400" class="nd-tip-t en">without undue delay if the risk is high.</text>
+<text x="604" y="355" class="nd-tip-t0 nl">Datalek · AVG art. 33–34</text>
+<text x="604" y="370" class="nd-tip-t nl">Meld binnen 72u bij de AP, tenzij een</text>
+<text x="604" y="385" class="nd-tip-t nl">risico onwaarschijnlijk is; informeer</text>
+<text x="604" y="400" class="nd-tip-t nl">betrokkenen onverwijld bij hoog risico.</text>
+</g>
+</svg>
+    </figure>
+
+    <div class="panel">
+      <p class="en"><strong>We suggest settling questions 1 and 2 with legal now, not during an incident.</strong> A financial entity reports under DORA; a breach of personal data adds a <abbr class="tip" tabindex="0" data-tip="General Data Protection Regulation (AVG in Dutch): EU law on personal data, with its own 72-hour breach notification.">GDPR</abbr> report in parallel. Indicative, not a legal deadline list or legal advice.</p>
+      <p class="nl"><strong>Wij raden aan vraag 1 en 2 nu met juristen te beantwoorden, niet tijdens een incident.</strong> Een financiële entiteit meldt onder DORA; bij een datalek komt er parallel een <abbr class="tip" tabindex="0" data-tip="Algemene verordening gegevensbescherming: EU-wet over persoonsgegevens, met een eigen meldtermijn van 72 uur voor datalekken.">AVG</abbr>-melding bij. Indicatief: geen wettelijke deadlinelijst en geen juridisch advies.</p>
+    </div>
+  </div>
+</section>
+<!-- /diagram:regime-map -->
+
 <!-- ============================ CONTROLS ============================ -->
 <section class="risk-block" id="fix">
   <div class="wrap">
     <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
     <h2>
-      <span class="en">What has to <em>be in place.</em></span>
-      <span class="nl">Wat er <em>moet staan.</em></span>
+      <span class="en">What we suggest <em>putting in place.</em></span>
+      <span class="nl">Wat wij aanbevelen <em>te regelen.</em></span>
     </h2>
     <span class="term">
       <span class="en">governance and paperwork done properly — most of it is not technical</span>
@@ -570,7 +906,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="panel">
       <table class="en">
         <tr><th>Control</th><th>Covers</th><th>In one line</th></tr>
-        <tr><td class="ctl">Scope</td><td>All four</td><td>Confirm with legal which regime applies: essential or important entity under NIS2, financial entity under DORA, or both. Everything else follows from this.</td></tr>
+        <tr><td class="ctl">Scope</td><td>All four</td><td>Confirm with legal which regime applies: essential or important entity under the Cbw, financial entity under DORA, or both. Cbw entities must register with NCSC. Everything else follows from this.</td></tr>
         <tr><td class="ctl">Named owner</td><td>Accountable (01)</td><td>One executive accountable for cybersecurity by name, reporting to the board on a fixed cadence. Not a committee.</td></tr>
         <tr><td class="ctl">Risk framework</td><td>Accountable (01)</td><td>The set of measures, the reasoning behind them, and the board's approval — written down and dated.</td></tr>
         <tr><td class="ctl">Reporting drill</td><td>The clock (02)</td><td>An incident classification, a decision tree for “significant”, pre-drafted notifications, and a rehearsal against the clock at least yearly.</td></tr>
@@ -582,13 +918,13 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
 
       <table class="nl">
         <tr><th>Maatregel</th><th>Dekt</th><th>In één zin</th></tr>
-        <tr><td class="ctl">Reikwijdte</td><td>Alle vier</td><td>Bevestig met juridische zaken welk regime geldt: essentiële of belangrijke entiteit onder NIS2, financiële instelling onder DORA, of beide. Alles volgt hieruit.</td></tr>
+        <tr><td class="ctl">Reikwijdte</td><td>Alle vier</td><td>Bevestig met juridische zaken welk regime geldt: essentiële of belangrijke entiteit onder de Cbw, financiële instelling onder DORA, of beide. Cbw-entiteiten moeten zich registreren bij het NCSC. Alles volgt hieruit.</td></tr>
         <tr><td class="ctl">Eigenaar bij naam</td><td>Aansprakelijk (01)</td><td>Eén bestuurder die bij naam verantwoordelijk is voor cyberbeveiliging en op vaste momenten aan het bestuur rapporteert. Geen commissie.</td></tr>
         <tr><td class="ctl">Risicokader</td><td>Aansprakelijk (01)</td><td>De set maatregelen, de onderbouwing en de goedkeuring van het bestuur — opgeschreven en gedateerd.</td></tr>
         <tr><td class="ctl">Meldoefening</td><td>De klok (02)</td><td>Een incidentclassificatie, een beslisboom voor “significant”, voorbereide meldingen, en minstens jaarlijks een oefening op de klok.</td></tr>
         <tr><td class="ctl">Leveranciersregister</td><td>Leveranciers (03)</td><td>Elke ICT-leverancier, de kritikaliteit, de contractclausules over beveiliging, audit en melding, en een exitplan voor de kritieke.</td></tr>
         <tr><td class="ctl">Bestuurstraining</td><td>Bewijs het (04)</td><td>Cyberbeveiligingstraining voor het bestuur, vastgelegd en herhaald. Ook de snelste manier om de andere rijen te laten landen.</td></tr>
-        <tr><td class="ctl">Testprogramma</td><td>Bewijs het (04)</td><td>Een kalender van testen — herstel, failover, incidentoefeningen, en voor financiële instellingen dreigingsgestuurde testen — met resultaten aan het bestuur.</td></tr>
+        <tr><td class="ctl">Testprogramma</td><td>Bewijs het (04)</td><td>Een planning van testen — herstel, failover, incidentoefeningen, en voor financiële instellingen dreigingsgestuurde testen — met resultaten aan het bestuur.</td></tr>
         <tr><td class="ctl">Bewijs</td><td>Alle vier</td><td>Notulen, goedkeuringen, testrapporten, trainingsregistraties, leveranciersbeoordelingen. Wat niet is vastgelegd, is voor een toezichthouder niet gebeurd.</td></tr>
       </table>
 
@@ -622,25 +958,31 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="panel">
       <table class="en">
         <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
-        <tr><td class="ctl">NIS2</td><td>Risk management measures approved and overseen by the management body, incident reporting on the roughly 24-hour, 72-hour and one-month schedule, supply chain security, and training for management.</td><td>A supplier's own NIS2 status does not discharge your duty. Ask for their measures, their incident notification commitment to you, and who their regulator is.</td><td>The incident and the notification are judged separately. A late or missing notification is its own offence, even if the incident was handled well.</td></tr>
-        <tr><td class="ctl">DORA</td><td>An ICT risk framework, incident classification and reporting, resilience testing including threat-led testing for larger firms, and a register of ICT third-party arrangements with mandatory contract clauses and exit strategies.</td><td>Critical ICT providers fall under direct oversight. Your register of information must list them and the contract must contain the mandatory clauses. A report does not replace the clauses.</td><td>Major ICT incidents go to the financial supervisor on DORA's own timelines. The classification criteria decide what counts, so have them written down before you need them.</td></tr>
-        <tr><td class="ctl">SOC 2</td><td>Nothing directly — it is an assurance report, not a law. But NIS2 and DORA expect you to assess suppliers, and SOC 2 is the evidence most suppliers offer.</td><td>Read the scope, the period, the exceptions and the complementary user entity controls. A clean SOC 2 covers what was tested, not everything you rely on.</td><td>An incident at a SOC 2 supplier appears as an exception in their next report — long after your notification deadline passed. Contract clauses, not the report, get you told in time.</td></tr>
-        <tr><td class="ctl">ISAE 3402</td><td>Nothing directly — same logic as SOC 2, and common in Europe for outsourced financial processes.</td><td>Check that the controls tested are the ones your compliance depends on, and that the period covers your reporting year.</td><td>A control failure at the service organisation is disclosed to user auditors. Your own regulatory notification duty runs regardless, and much sooner.</td></tr>
+        <tr><td class="ctl">NIS2</td><td>Risk management measures approved and overseen by the management body, incident reporting (early warning within 24 hours of becoming aware, notification within 72 hours, final report within one month), supply chain security, and training for management. In the Netherlands via the Cbw: registration with NCSC.</td><td>A supplier's own NIS2 status does not discharge your duty. Ask for their measures, their incident notification commitment to you, and who their regulator is.</td><td>The incident and the notification are judged separately. A late or missing notification is its own offence, even if the incident was handled well.</td></tr>
+        <tr><td class="ctl">DORA</td><td>An ICT risk framework, incident classification and reporting, resilience testing including threat-led testing for larger firms, and a register of ICT third-party arrangements with mandatory contract clauses and exit strategies.</td><td>Critical ICT providers fall under direct oversight. DORA requires your register of information to list them and the contract to contain the mandatory clauses. A report does not replace the clauses.</td><td>Major ICT incidents go to DNB or AFM: initial notification within 4 hours of classifying (at most 24 hours after becoming aware), intermediate report within 72 hours, final report within one month. The classification criteria decide what counts; worth writing them down before you need them.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Nothing directly — it is an assurance report, not a law. But NIS2 and DORA expect you to assess suppliers, and SOC 2 is the evidence most suppliers offer.</td><td>Read the scope, the period, the exceptions and the complementary user entity controls. A clean SOC 2 covers what was tested, not everything you rely on.</td><td>An incident at a SOC 2 supplier can appear as an exception in their next report — long after your notification deadline passed. Contract clauses, not the report, get you told in time.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Nothing directly — same logic as SOC 2, and common in Europe for outsourced financial processes.</td><td>Check that the controls tested are the ones your compliance depends on, and that the period covers your reporting year.</td><td>ISAE 3402 creates no duty to notify user auditors: expect a deviation in the next report, and ask for interim disclosure in the contract. Your own notification duty runs regardless, and much sooner.</td></tr>
       </table>
 
       <table class="nl">
         <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
-        <tr><td class="ctl">NIS2</td><td>Risicobeheersmaatregelen die door het bestuur zijn goedgekeurd en worden bewaakt, incidentmelding volgens het schema van circa 24 uur, 72 uur en een maand, ketenbeveiliging, en training voor het bestuur.</td><td>De eigen NIS2-status van een leverancier ontslaat u niet van uw plicht. Vraag naar hun maatregelen, hun meldtoezegging aan u, en wie hun toezichthouder is.</td><td>Het incident en de melding worden apart beoordeeld. Een te late of ontbrekende melding is een eigen overtreding, ook als het incident goed is afgehandeld.</td></tr>
-        <tr><td class="ctl">DORA</td><td>Een ICT-risicokader, incidentclassificatie en -melding, weerbaarheidstesten inclusief dreigingsgestuurde testen voor grotere instellingen, en een register van ICT-derdenovereenkomsten met verplichte contractclausules en exitstrategieën.</td><td>Kritieke ICT-leveranciers vallen onder direct toezicht. Uw informatieregister moet ze vermelden en het contract moet de verplichte clausules bevatten. Een rapport vervangt de clausules niet.</td><td>Ernstige ICT-incidenten gaan naar de financiële toezichthouder volgens de eigen termijnen van DORA. De classificatiecriteria bepalen wat meetelt; leg ze vast voordat u ze nodig hebt.</td></tr>
-        <tr><td class="ctl">SOC 2</td><td>Niets rechtstreeks — het is een assurancerapport, geen wet. Maar NIS2 en DORA verwachten dat u leveranciers beoordeelt, en SOC 2 is het bewijs dat de meeste leveranciers aanbieden.</td><td>Lees de reikwijdte, de periode, de afwijkingen en de aanvullende maatregelen die van u als gebruiker worden verwacht. Een schoon SOC 2-rapport dekt wat is getest, niet alles waarop u vertrouwt.</td><td>Een incident bij een SOC 2-leverancier verschijnt als afwijking in hun volgende rapport — lang nadat uw meldtermijn is verstreken. Contractclausules, niet het rapport, zorgen dat u tijdig wordt geïnformeerd.</td></tr>
-        <tr><td class="ctl">ISAE 3402</td><td>Niets rechtstreeks — dezelfde logica als SOC 2, en in Europa gebruikelijk voor uitbestede financiële processen.</td><td>Controleer of de geteste maatregelen de maatregelen zijn waarvan uw compliance afhangt, en of de periode uw rapportagejaar dekt.</td><td>Een tekortkoming bij de serviceorganisatie wordt aan de auditors van de klanten gemeld. Uw eigen meldplicht aan de toezichthouder loopt onverminderd door, en veel eerder.</td></tr>
+        <tr><td class="ctl">NIS2</td><td>Risicobeheersmaatregelen die door het bestuur zijn goedgekeurd en worden bewaakt, incidentmelding (vroege waarschuwing binnen 24 uur nadat u ervan weet, melding binnen 72 uur, eindrapport binnen een maand), ketenbeveiliging, en training voor het bestuur. In Nederland via de Cbw: registratie bij het NCSC.</td><td>De eigen NIS2-status van een leverancier ontslaat u niet van uw plicht. Vraag naar hun maatregelen, hun meldtoezegging aan u, en wie hun toezichthouder is.</td><td>Het incident en de melding worden apart beoordeeld. Een te late of ontbrekende melding is een eigen overtreding, ook als het incident goed is afgehandeld.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Een ICT-risicokader, incidentclassificatie en -melding, weerbaarheidstesten inclusief dreigingsgestuurde testen voor grotere instellingen, en een register van ICT-derdenovereenkomsten met verplichte contractclausules en exitstrategieën.</td><td>Kritieke ICT-leveranciers vallen onder direct toezicht. DORA verplicht u ze in uw informatieregister op te nemen en de verplichte clausules in het contract vast te leggen. Een rapport vervangt de clausules niet.</td><td>Ernstige ICT-incidenten gaan naar DNB of de AFM: eerste melding binnen 4 uur na classificatie (uiterlijk 24 uur nadat u ervan weet), tussentijds rapport binnen 72 uur, eindrapport binnen een maand. De classificatiecriteria bepalen wat meetelt; leg ze vast voordat u ze nodig hebt.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Niets rechtstreeks — het is een assurancerapport, geen wet. Maar NIS2 en DORA verwachten dat u leveranciers beoordeelt, en SOC 2 is het bewijs dat de meeste leveranciers aanbieden.</td><td>Lees de reikwijdte, de periode, de afwijkingen en de aanvullende maatregelen die van u als gebruiker worden verwacht. Een schoon SOC 2-rapport dekt wat is getest, niet alles waarop u vertrouwt.</td><td>Een incident bij een SOC 2-leverancier kan als afwijking in hun volgende rapport verschijnen — lang nadat uw meldtermijn is verstreken. Contractclausules, niet het rapport, zorgen dat u tijdig wordt geïnformeerd.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Niets rechtstreeks — dezelfde logica als SOC 2, en in Europa gebruikelijk voor uitbestede financiële processen.</td><td>Controleer of de geteste maatregelen de maatregelen zijn waarvan uw compliance afhangt, en of de periode uw rapportagejaar dekt.</td><td>ISAE 3402 schept geen plicht om de auditors van klanten te informeren: verwacht een afwijking in het volgende rapport, en vraag in het contract om tussentijdse melding. Uw eigen meldplicht loopt onverminderd door, en veel eerder.</td></tr>
       </table>
+      <p class="sources en">Checked against: <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 4, 20, 23, 34, 41 and recital 28 (2022), <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 2 and 64 (2022), <a href="https://eur-lex.europa.eu/eli/reg_del/2025/301/oj">Delegated Regulation (EU) 2025/301</a> (2025), <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">GDPR</a> Art. 33–34, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL on the Cbw</a> (Aug 2026), <a href="https://www.digitaleoverheid.nl/overzicht-van-alle-onderwerpen/cyberbeveiligingswet/verplichtingen-cyberbeveiligingswet/">Digitale Overheid, Cbw duties</a> (Sep 2026), <a href="https://www.dnb.nl/voor-de-sector/open-boek-toezicht/wet-regelgeving/dora/">DNB</a> and <a href="https://www.afm.nl/en/sector/themas/belangrijke-europese-wet--en-regelgeving/dora/dora-meldingen">AFM</a> on DORA reporting (2026) · September 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 4, 20, 23, 34, 41 en overweging 28 (2022), <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 2 en 64 (2022), <a href="https://eur-lex.europa.eu/eli/reg_del/2025/301/oj">Gedelegeerde Verordening (EU) 2025/301</a> (2025), <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">AVG</a> art. 33–34, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC over de Cbw</a> (aug 2026), <a href="https://www.digitaleoverheid.nl/overzicht-van-alle-onderwerpen/cyberbeveiligingswet/verplichtingen-cyberbeveiligingswet/">Digitale Overheid, verplichtingen Cbw</a> (sep 2026), <a href="https://www.dnb.nl/voor-de-sector/open-boek-toezicht/wet-regelgeving/dora/">DNB</a> en <a href="https://www.afm.nl/en/sector/themas/belangrijke-europese-wet--en-regelgeving/dora/dora-meldingen">AFM</a> over DORA-meldingen (2026) · september 2026.</p>
     </div>
   </div>
 </section>
 
 <div class="divider"><i></i><i></i><i></i><i></i></div>
 
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../incident-response/"><span class="en">Incident response</span><span class="nl">Incidentrespons</span></a> ·
+  <a href="../supply-chain/"><span class="en">Supply chain</span><span class="nl">Toeleveringsketen</span></a> ·
+  <a href="../shared-responsibility/"><span class="en">Shared responsibility</span><span class="nl">Gedeelde verantwoordelijkheid</span></a></p>
 <div class="fb">
   <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=nis2-dora&amp;title=Missing%3A%20nis2-dora"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
   <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=nis2-dora&amp;title=Correction%3A%20nis2-dora"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
