@@ -293,6 +293,54 @@ footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px
 }
 .fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
 .ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources{font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;color:var(--slate);margin:18px 0 0}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* diagram:pipeline-map */
+/* ---------- pipeline map (secure development, in practice) ---------- */
+.arch{margin:0 0 30px;background:var(--bg-lo);border:1px solid var(--line-soft);padding:12px;overflow-x:auto}
+.arch svg{display:block;width:100%;min-width:900px;height:auto}
+.arch .sd-zone{fill:var(--bg-hi);stroke:var(--line-soft)}
+.arch .sd-zlabel{font:700 11px var(--mono);letter-spacing:.28em;fill:var(--slate)}
+.arch .sd-node{fill:var(--surface);stroke:var(--line)}
+.arch .sd-s-ok .sd-bar{fill:var(--good)}
+.arch .sd-s-mid .sd-bar{fill:var(--warn)}
+.arch .sd-s-bad .sd-bar{fill:var(--bad)}
+.arch .sd-s-bad .sd-node{stroke:rgba(255,93,115,.45)}
+.arch .sd-kick{font:500 10px var(--mono);letter-spacing:.12em;fill:var(--muted)}
+.arch .sd-name{font:600 14px var(--sans);fill:var(--white)}
+.arch .sd-st{font:400 10.5px var(--mono);fill:var(--prose)}
+.arch .sd-legend{font:400 11px var(--mono);fill:var(--body)}
+.arch .sd-foot{font:400 10px var(--mono);letter-spacing:.04em;fill:var(--slate)}
+.arch .sd-llabel{font:700 10px var(--mono);letter-spacing:.12em;fill:var(--muted)}
+.arch .sd-link{fill:none;stroke:var(--slate);stroke-width:1.5;stroke-dasharray:5 5;animation:sd-flow 1.4s linear infinite}
+.arch .sd-arrowhead{fill:var(--slate)}
+.arch .sd-u-ok{color:var(--good)}
+.arch .sd-u-mid{color:var(--warn)}
+.arch .sd-u-bad{color:var(--bad)}
+.arch .sd-tag rect{fill:rgba(90,200,250,.10);stroke:rgba(90,200,250,.45)}
+.arch .sd-tag text{font:700 10px var(--mono);letter-spacing:.08em;fill:var(--brand)}
+@keyframes sd-flow{to{stroke-dashoffset:-10}}
+@media (prefers-reduced-motion:reduce){.arch .sd-link{animation:none}}
+.arch .sd-svtip{visibility:hidden;pointer-events:none}
+.arch .sd-tip-bg{fill:var(--deep);stroke:var(--line)}
+.arch .sd-tip-acc{fill:var(--brand)}
+.arch .sd-tip-t0{font:700 11px var(--mono);fill:var(--white)}
+.arch .sd-tip-t{font:400 11px var(--mono);fill:var(--prose)}
+.arch [tabindex]{cursor:help;outline:none}
+.arch [tabindex]:focus-visible > rect:first-child{stroke:var(--brand);stroke-width:1.5}
+.arch svg:has(.sd-hs0:hover,.sd-hs0:focus) .sd-ts0,.arch svg:has(.sd-hs1:hover,.sd-hs1:focus) .sd-ts1,.arch svg:has(.sd-hs2:hover,.sd-hs2:focus) .sd-ts2,.arch svg:has(.sd-hs3:hover,.sd-hs3:focus) .sd-ts3,.arch svg:has(.sd-hs4:hover,.sd-hs4:focus) .sd-ts4,.arch svg:has(.sd-hs5:hover,.sd-hs5:focus) .sd-ts5,.arch svg:has(.sd-hs6:hover,.sd-hs6:focus) .sd-ts6,.arch svg:has(.sd-hs7:hover,.sd-hs7:focus) .sd-ts7,.arch svg:has(.sd-hs8:hover,.sd-hs8:focus) .sd-ts8,.arch svg:has(.sd-hs9:hover,.sd-hs9:focus) .sd-ts9,.arch svg:has(.sd-hs10:hover,.sd-hs10:focus) .sd-ts10,.arch svg:has(.sd-hs11:hover,.sd-hs11:focus) .sd-ts11{visibility:visible}
+/* /diagram:pipeline-map */
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0}
 </style>
 </head>
 <body>
@@ -373,15 +421,15 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     </div>
 
     <div class="panel">
-      <p class="en">Developers need passwords and keys to make software talk to databases and cloud services. The fastest way to make it work is to type them straight into the code. That code is copied to every developer's laptop, to the build server, to backups, and often to an external agency. If the repository is ever made public by accident, or one laptop is stolen, automated bots find the keys within minutes and try them. Keys committed years ago usually still work.</p>
-      <p class="en"><strong>Business impact:</strong> a single leaked key can be direct access to the production database or the cloud account, with no password guessing and no alarm. The fix is not discipline but plumbing: a vault that hands out secrets at run time, and a scanner that blocks a commit containing one.</p>
-      <p class="nl">Ontwikkelaars hebben wachtwoorden en sleutels nodig om software met databases en clouddiensten te laten praten. De snelste manier om het werkend te krijgen is ze rechtstreeks in de code te typen. Die code wordt gekopieerd naar elke ontwikkelaarslaptop, naar de bouwserver, naar back-ups en vaak naar een extern bureau. Wordt de repository per ongeluk openbaar, of wordt één laptop gestolen, dan vinden geautomatiseerde bots de sleutels binnen minuten en proberen ze uit. Sleutels van jaren geleden werken meestal nog.</p>
-      <p class="nl"><strong>Bedrijfsimpact:</strong> één gelekte sleutel kan directe toegang tot de productiedatabase of het cloudaccount betekenen, zonder wachtwoorden raden en zonder alarm. De oplossing is geen discipline maar loodgieterswerk: een kluis die geheimen pas tijdens het draaien uitgeeft, en een scanner die een commit met een geheim erin blokkeert.</p>
+      <p class="en">Developers need passwords and keys to make software talk to databases and cloud services. The fastest way to make it work is to type them straight into the code. That code is copied to every developer's laptop, to the build server, to backups, and often to an external agency. If the <abbr class="tip" tabindex="0" data-tip="The central store of a program&#x27;s source code and its full change history, usually in Git.">repository</abbr> is ever made public by accident, or one laptop is stolen, automated bots find the keys within minutes and try them. Keys committed years ago usually still work.</p>
+      <p class="en"><strong>Business impact:</strong> a single leaked key can be direct access to the production database or the cloud account, with no password guessing and no alarm. What tends to work is not discipline but plumbing: a vault that hands out secrets at run time, and a scanner that blocks a <abbr class="tip" tabindex="0" data-tip="One saved change to the code, recorded with its author and time. Once pushed, it stays in the history.">commit</abbr> containing one.</p>
+      <p class="nl">Ontwikkelaars hebben wachtwoorden en sleutels nodig om software met databases en clouddiensten te laten praten. De snelste manier om het werkend te krijgen is ze rechtstreeks in de code te typen. Die code wordt gekopieerd naar elke ontwikkelaarslaptop, naar de bouwserver, naar back-ups en vaak naar een extern bureau. Wordt de <abbr class="tip" tabindex="0" data-tip="De centrale opslag van de broncode van een programma met de volledige wijzigingsgeschiedenis, meestal in Git.">repository</abbr> per ongeluk openbaar, of wordt één laptop gestolen, dan vinden geautomatiseerde bots de sleutels binnen minuten en proberen ze uit. Sleutels van jaren geleden werken meestal nog.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> één gelekte sleutel kan directe toegang tot de productiedatabase of het cloudaccount betekenen, zonder wachtwoorden raden en zonder alarm. Wat meestal werkt is geen discipline maar loodgieterswerk: een kluis die geheimen pas tijdens het draaien uitgeeft, en een scanner die een <abbr class="tip" tabindex="0" data-tip="Eén opgeslagen wijziging in de code, met auteur en tijdstip. Eenmaal gepusht blijft die in de geschiedenis staan.">commit</abbr> met een geheim erin blokkeert.</p>
     </div>
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">DIRECT ACCESS · NO ALARM · YEARS OLD</span><span class="nl">DIRECTE TOEGANG · GEEN ALARM · JAREN OUD</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: SECRET SCANNING + A VAULT, NO SECRETS IN CODE</span><span class="nl">OPLOSSING: SECRET SCANNING + EEN KLUIS, GEEN GEHEIMEN IN CODE</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: SECRET SCANNING + A VAULT, NO SECRETS IN CODE</span><span class="nl">AANBEVOLEN: SECRET SCANNING + EEN KLUIS, GEEN GEHEIMEN IN CODE</span></span>
     </div>
 
     <div class="ai3">
@@ -423,14 +471,14 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
 
     <div class="panel">
       <p class="en">Between the code and the customer sits a chain of machines that compile, test, package and publish every release. It runs unattended, with broad rights, and rarely gets the attention the production systems get. An attacker who controls it does not need to break our software: they add a few lines during the build. The result is signed with our certificate, installed by every customer, and trusted by every security product on their side.</p>
-      <p class="en"><strong>Business impact:</strong> we become the supply chain attack on our own customers. Liability, recall of a release, and a loss of trust that outlasts the technical fix. The pipeline deserves the same protection as production: MFA on every account, least privilege for build jobs, and releases that are signed and verified, not just uploaded.</p>
+      <p class="en"><strong>Business impact:</strong> we become the supply chain attack on our own customers. Liability, recall of a release, and a loss of trust that outlasts the technical fix. We suggest giving the pipeline the same protection as production: <abbr class="tip" tabindex="0" data-tip="Multi-factor authentication: a second proof besides the password, such as an app prompt or a security key.">MFA</abbr> on every account, <abbr class="tip" tabindex="0" data-tip="Each account, job or tool gets only the rights it needs for its task, and nothing more.">least privilege</abbr> for build jobs, and releases signed with <abbr class="tip" tabindex="0" data-tip="Supply-chain Levels for Software Artifacts: an OpenSSF framework (v1.2) for trustworthy builds and their provenance.">SLSA</abbr> build provenance.</p>
       <p class="nl">Tussen de code en de klant staat een keten van machines die elke release compileert, test, verpakt en publiceert. Die draait onbeheerd, met ruime rechten, en krijgt zelden de aandacht die productiesystemen krijgen. Een aanvaller die haar beheerst hoeft onze software niet te kraken: hij voegt tijdens het bouwen een paar regels toe. Het resultaat is ondertekend met ons certificaat, geïnstalleerd door elke klant en vertrouwd door elk beveiligingsproduct aan hun kant.</p>
-      <p class="nl"><strong>Bedrijfsimpact:</strong> wij worden de supply-chainaanval op onze eigen klanten. Aansprakelijkheid, het terugroepen van een release, en een vertrouwensbreuk die de technische fix overleeft. De pipeline verdient dezelfde bescherming als productie: MFA op elk account, minimale rechten voor bouwtaken, en releases die ondertekend en geverifieerd worden, niet alleen geüpload.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> wij worden de supply-chainaanval op onze eigen klanten. Aansprakelijkheid, het terugroepen van een release, en een vertrouwensbreuk die de technische fix overleeft. Wij raden aan de pipeline dezelfde bescherming te geven als productie: <abbr class="tip" tabindex="0" data-tip="Meervoudige authenticatie: een tweede bewijs naast het wachtwoord, zoals een app-melding of een hardwaresleutel.">MFA</abbr> op elk account, <abbr class="tip" tabindex="0" data-tip="Elk account, elke taak of tool krijgt alleen de rechten die nodig zijn, en niets meer.">minimale rechten</abbr> voor bouwtaken, en releases ondertekend met <abbr class="tip" tabindex="0" data-tip="Supply-chain Levels for Software Artifacts: een OpenSSF-raamwerk (v1.2) voor betrouwbare builds en hun herkomst.">SLSA</abbr>-herkomstgegevens.</p>
     </div>
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">OUR SIGNATURE ON THEIR MALWARE · EVERY CUSTOMER AT ONCE</span><span class="nl">ONZE HANDTEKENING OP HUN MALWARE · ALLE KLANTEN TEGELIJK</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: PROTECTED PIPELINE + SIGNED BUILDS + LEAST PRIVILEGE</span><span class="nl">OPLOSSING: BESCHERMDE PIPELINE + ONDERTEKENDE BUILDS + MINIMALE RECHTEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: PROTECTED PIPELINE + SIGNED BUILDS + LEAST PRIVILEGE</span><span class="nl">AANBEVOLEN: BESCHERMDE PIPELINE + ONDERTEKENDE BUILDS + MINIMALE RECHTEN</span></span>
     </div>
 
     <div class="ai3">
@@ -438,7 +486,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <div class="g">
         <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Once inside, AI helps an attacker write convincing build-step changes and hide them in normal-looking commits, but reaching the pipeline still requires a stolen account or a real misconfiguration to exploit first.</span><span class="nl">Eenmaal binnen helpt AI een aanvaller overtuigende wijzigingen in bouwstappen te schrijven en te verbergen in gewoon ogende commits, maar de pipeline bereiken vereist nog steeds een gestolen account of een echte misconfiguratie.</span></p></div>
         <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI coding agents wired into the pipeline can be tricked by a crafted pull request or issue comment into running commands with build-server rights, turning a helpful automation into an attacker's own foothold.</span><span class="nl">AI-codeeragents die in de pipeline zijn gekoppeld, kunnen door een geprepareerde pull request of issuecomment worden verleid tot het uitvoeren van commando's met bouwserverrechten, waardoor een handige automatisering een bruggenhoofd voor de aanvaller wordt.</span></p></div>
-        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Watch agent behaviour</span><span class="nl">Gedrag van agents bewaken</span></b><p><span class="en">AI-based monitoring flags a build job doing something it has never done before, such as reaching a new server or account. The real fix stays MFA, least privilege and signed releases, not smarter alarms alone.</span><span class="nl">AI-gebaseerde monitoring signaleert een bouwtaak die iets doet wat nooit eerder gebeurde, zoals een nieuwe server of account benaderen. De echte oplossing blijft MFA, minimale rechten en ondertekende releases, niet alleen slimmere alarmen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Watch agent behaviour</span><span class="nl">Gedrag van agents bewaken</span></b><p><span class="en">AI-based monitoring flags a build job doing something it has never done before, such as reaching a new server or account. The real fix stays MFA, signed releases and a least-privilege token per coding agent, not smarter alarms alone.</span><span class="nl">AI-gebaseerde monitoring signaleert een bouwtaak die iets doet wat nooit eerder gebeurde, zoals een nieuwe server of account benaderen. De echte oplossing blijft MFA, ondertekende releases en een token met minimale rechten per codeeragent, niet alleen slimmere alarmen.</span></p></div>
       </div>
     </div>
   </div>
@@ -475,14 +523,14 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
 
     <div class="panel">
       <p class="en">Many organisations test security the way they pass a driving test: once, formally, after the fact. A penetration test months after release finds the flaws that were cheap to fix during design and are now expensive: the code is live, customers depend on it, and the team has moved on. Meanwhile the flaws have been reachable from the internet the whole time.</p>
-      <p class="en"><strong>Business impact:</strong> the same defect costs a fraction to fix when it is found at design time, and multiples once it is in production with data behind it. Security has to move into the way software is built: requirements in the definition of done, automated checks on every change, and a short threat-modelling session for any feature that handles money or personal data. The yearly pentest then confirms instead of discovers.</p>
+      <p class="en"><strong>Business impact:</strong> the same defect costs a fraction to fix when it is found at design time, and multiples once it is in production with data behind it. Security works best inside the way software is built: requirements in the definition of done, automated checks on every change, and a short threat-modelling session for any feature that handles money or personal data. The yearly pentest then confirms instead of discovers.</p>
       <p class="nl">Veel organisaties testen beveiliging zoals je een rijexamen doet: één keer, formeel, achteraf. Een penetratietest maanden na de release vindt de fouten die tijdens het ontwerp goedkoop te herstellen waren en nu duur zijn: de code is live, klanten zijn ervan afhankelijk en het team is doorgegaan. Ondertussen waren de fouten de hele tijd vanaf internet bereikbaar.</p>
-      <p class="nl"><strong>Bedrijfsimpact:</strong> hetzelfde gebrek kost een fractie om te herstellen als het bij het ontwerp wordt gevonden, en een veelvoud zodra het in productie staat met data erachter. Beveiliging moet in de manier van bouwen zitten: eisen in de definition of done, geautomatiseerde controles op elke wijziging, en een korte threat-modellingsessie voor elke functie die geld of persoonsgegevens verwerkt. De jaarlijkse pentest bevestigt dan in plaats van ontdekt.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> hetzelfde gebrek kost een fractie om te herstellen als het bij het ontwerp wordt gevonden, en een veelvoud zodra het in productie staat met data erachter. Beveiliging werkt het best binnen de manier van bouwen: eisen in de definition of done, geautomatiseerde controles op elke wijziging, en een korte threat-modellingsessie voor elke functie die geld of persoonsgegevens verwerkt. De jaarlijkse pentest bevestigt dan in plaats van ontdekt.</p>
     </div>
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">EXPOSED FOR MONTHS · TEN TIMES THE FIX COST</span><span class="nl">MAANDEN BLOOTGESTELD · TIEN KEER DE HERSTELKOSTEN</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: SECURITY IN THE DEFINITION OF DONE + AUTOMATED CHECKS</span><span class="nl">OPLOSSING: BEVEILIGING IN DE DEFINITION OF DONE + AUTOMATISCHE CONTROLES</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: SECURITY IN THE DEFINITION OF DONE + AUTOMATED CHECKS</span><span class="nl">AANBEVOLEN: BEVEILIGING IN DE DEFINITION OF DONE + AUTOMATISCHE CONTROLES</span></span>
     </div>
 
     <div class="ai3">
@@ -490,7 +538,7 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <div class="g">
         <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Between the yearly pentest, AI-assisted scanning tools let an outside attacker probe a live application for known flaw patterns far faster than a human ever could, closing the gap a once-a-year test leaves open.</span><span class="nl">Tussen de jaarlijkse pentest door kan een buitenstaander met AI-ondersteunde scantools een live applicatie veel sneller op bekende foutpatronen doorzoeken dan een mens ooit kon, waardoor het gat van jaarlijks testen sneller wordt gevonden.</span></p></div>
         <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI coding assistants let developers ship features far faster than security review capacity grows, so more code reaches production untested between the yearly pentests, and the flaws pile up exactly where nobody is looking.</span><span class="nl">AI-codeerassistenten laten ontwikkelaars functies veel sneller opleveren dan de reviewcapaciteit meegroeit, waardoor meer code ongetest in productie komt tussen de jaarlijkse pentests door, precies waar niemand kijkt.</span></p></div>
-        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Scan every change, not once</span><span class="nl">Elke wijziging scannen, niet één keer</span></b><p><span class="en">AI-assisted code and dependency scanning can run on every change instead of once a year, flagging likely flaws before release. It still needs the boring part: a rule that a flagged feature is not done yet.</span><span class="nl">AI-ondersteunde code- en afhankelijkheidsscans kunnen op elke wijziging draaien in plaats van eenmaal per jaar, en waarschijnlijke fouten vóór release signaleren. De saaie regel blijft nodig: een gesignaleerde functie is nog niet klaar.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Scan every change, not once</span><span class="nl">Elke wijziging scannen, niet één keer</span></b><p><span class="en">AI-assisted code and dependency scanning can run on every change instead of once a year, flagging likely flaws before release. AI-written code gets the same review and scans as human code, and a flagged feature is not done yet.</span><span class="nl">AI-ondersteunde code- en afhankelijkheidsscans kunnen op elke wijziging draaien in plaats van eenmaal per jaar, en waarschijnlijke fouten vóór release signaleren. Door AI geschreven code krijgt dezelfde review en scans als mensenwerk, en een gesignaleerde functie is nog niet klaar.</span></p></div>
       </div>
     </div>
   </div>
@@ -528,14 +576,14 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
 
     <div class="panel">
       <p class="en">Software is bought like a project and behaves like a pet. The agency delivers, the contract ends, the internal sponsor changes jobs, and the application keeps running for years with nobody assigned to it. Its components age, security advisories pile up unread, and when a fix is finally needed nobody can safely change the code. The portal still holds every customer record it ever collected.</p>
-      <p class="en"><strong>Business impact:</strong> an orphaned application is an unpatchable system with a public face. Every piece of software that runs in production needs a named owner, a maintenance budget that survives the project, and an exit plan: either it is maintained or it is switched off. “Nobody owns it” is the finding an auditor writes down first.</p>
+      <p class="en"><strong>Business impact:</strong> an orphaned application is an unpatchable system with a public face. We suggest that every piece of software in production has a named owner, a maintenance budget that survives the project, and an exit plan: either it is maintained or it is switched off. “Nobody owns it” is the finding an auditor writes down first.</p>
       <p class="nl">Software wordt gekocht als een project en gedraagt zich als een huisdier. Het bureau levert op, het contract loopt af, de interne opdrachtgever wisselt van baan, en de applicatie draait jaren door zonder dat iemand ervoor verantwoordelijk is. De onderdelen verouderen, beveiligingswaarschuwingen stapelen zich ongelezen op, en als er eindelijk iets gerepareerd moet worden kan niemand de code veilig aanpassen. Het portaal bevat nog steeds elk klantrecord dat het ooit verzamelde.</p>
-      <p class="nl"><strong>Bedrijfsimpact:</strong> een verweesde applicatie is een onpatchbaar systeem met een publiek gezicht. Elk stuk software dat in productie draait heeft een eigenaar met naam nodig, een onderhoudsbudget dat het project overleeft, en een exitplan: óf het wordt onderhouden, óf het gaat uit. “Niemand is eigenaar” is de bevinding die een auditor als eerste opschrijft.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een verweesde applicatie is een onpatchbaar systeem met een publiek gezicht. Wij raden aan dat elk stuk software in productie een eigenaar met naam heeft, een onderhoudsbudget dat het project overleeft, en een exitplan: óf het wordt onderhouden, óf het gaat uit. “Niemand is eigenaar” is de bevinding die een auditor als eerste opschrijft.</p>
     </div>
 
     <div class="pills">
       <span class="pill risk">⚠ <span class="en">UNPATCHABLE · PUBLIC · FULL OF DATA</span><span class="nl">ONPATCHBAAR · PUBLIEK · VOL DATA</span></span>
-      <span class="pill fix">✔ <span class="en">FIX: A NAMED OWNER + A MAINTENANCE BUDGET PER APPLICATION</span><span class="nl">OPLOSSING: EEN EIGENAAR MET NAAM + ONDERHOUDSBUDGET PER APPLICATIE</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: A NAMED OWNER + A MAINTENANCE BUDGET PER APPLICATION</span><span class="nl">AANBEVOLEN: EEN EIGENAAR MET NAAM + ONDERHOUDSBUDGET PER APPLICATIE</span></span>
     </div>
 
     <div class="ai3">
@@ -548,6 +596,275 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     </div>
   </div>
 </section>
+
+<!-- diagram:pipeline-map -->
+<section class="risk-block" id="pipeline-map">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">IN PRACTICE</span><span class="nl">IN DE PRAKTIJK</span></span>
+    <h2><span class="en">From laptop to production.<br><em>Where signing could fit.</em></span><span class="nl">Van laptop tot productie.<br><em>Waar ondertekening past.</em></span></h2>
+    <span class="term"><span class="en">software delivery pipeline / reference design</span><span class="nl">softwareleverketen / referentieontwerp</span></span>
+
+    <figure class="arch">
+<svg viewBox="0 0 1120 500" role="img" aria-labelledby="sd-title sd-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="sd-title">From laptop to production: a protected software pipeline</title>
+<desc id="sd-desc">Reference pipeline in six steps: developer with MFA and signed commits, repository with branch protection and secret scanning, CI build with code and dependency scans, SBOM, isolated runners and short-lived credentials, signing with Sigstore and SLSA provenance, an artifact registry, and production that deploys only signed artifacts. Beside it, an AI coding agent with a least-privilege token and a secrets vault that feeds production at run time. Signing and signature checks at deploy, and agent tokens, are often missing.</desc>
+<defs>
+<marker id="sd-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="sd-arrowhead"/></marker>
+<symbol id="sd-ok" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 7.3 L6.1 9.4 L10.2 4.9" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+<symbol id="sd-mid" viewBox="0 0 14 14"><circle cx="7" cy="7" r="6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 1 A6 6 0 0 1 7 13 Z" fill="currentColor"/></symbol>
+<symbol id="sd-bad" viewBox="0 0 14 14"><path d="M7 1.2 L13.2 12.6 H0.8 Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 5.2 V8.6" stroke="currentColor" stroke-width="1.6"/><circle cx="7" cy="10.6" r="0.9" fill="currentColor"/></symbol>
+</defs>
+<rect x="16" y="40" width="1088" height="196" class="sd-zone"/>
+<text x="30" y="62" class="sd-zlabel en">PIPELINE · FROM CODE TO CUSTOMER</text><text x="30" y="62" class="sd-zlabel nl">PIPELINE · VAN CODE TOT KLANT</text>
+<rect x="16" y="256" width="1088" height="146" class="sd-zone"/>
+<text x="30" y="278" class="sd-zlabel en">AROUND THE PIPELINE</text><text x="30" y="278" class="sd-zlabel nl">RONDOM DE PIPELINE</text>
+<path d="M188 148.0 H209" class="sd-link" marker-end="url(#sd-arr)"/>
+<path d="M370 148.0 H391" class="sd-link" marker-end="url(#sd-arr)"/>
+<path d="M552 148.0 H573" class="sd-link" marker-end="url(#sd-arr)"/>
+<path d="M734 148.0 H755" class="sd-link" marker-end="url(#sd-arr)"/>
+<path d="M916 148.0 H937" class="sd-link" marker-end="url(#sd-arr)"/>
+<path d="M252 292 V221" class="sd-link" marker-end="url(#sd-arr)"/>
+<text x="260" y="282" class="sd-llabel">PULL REQUEST</text>
+<path d="M1000 292 V221" class="sd-link" marker-end="url(#sd-arr)"/>
+<text x="1008" y="282" class="sd-llabel en">SECRETS</text><text x="1008" y="282" class="sd-llabel nl">GEHEIMEN</text>
+<g class="sd-node-g sd-s-mid sd-hs0" tabindex="0">
+<rect x="30" y="78" width="156" height="140" class="sd-node"/>
+<rect x="30" y="78" width="4" height="140" class="sd-bar"/>
+<text x="44" y="98" class="sd-kick">01 · CODE</text>
+<text x="44" y="120" class="sd-name en">Developer</text><text x="44" y="120" class="sd-name nl">Ontwikkelaar</text>
+<use href="#sd-mid" class="sd-u-mid" x="162" y="87" width="14" height="14"/>
+<text x="44" y="140" class="sd-st en">MFA on every account</text><text x="44" y="140" class="sd-st nl">MFA op elk account</text>
+<text x="44" y="154" class="sd-st en">signed commits</text><text x="44" y="154" class="sd-st nl">ondertekende commits</text>
+</g>
+<g class="sd-tag sd-hs1" tabindex="0"><rect x="44" y="192" width="31" height="16"/><text x="59.5" y="203.5" text-anchor="middle">MFA</text></g>
+<g class="sd-node-g sd-s-ok sd-hs2" tabindex="0">
+<rect x="212" y="78" width="156" height="140" class="sd-node"/>
+<rect x="212" y="78" width="4" height="140" class="sd-bar"/>
+<text x="226" y="98" class="sd-kick">02 · REVIEW</text>
+<text x="226" y="120" class="sd-name">Repository</text>
+<use href="#sd-ok" class="sd-u-ok" x="344" y="87" width="14" height="14"/>
+<text x="226" y="140" class="sd-st en">branch protection:</text><text x="226" y="140" class="sd-st nl">branchbeveiliging:</text>
+<text x="226" y="154" class="sd-st en">review before merge</text><text x="226" y="154" class="sd-st nl">review vóór merge</text>
+<text x="226" y="168" class="sd-st">secret scanning</text>
+</g>
+<g class="sd-node-g sd-s-mid sd-hs3" tabindex="0">
+<rect x="394" y="78" width="156" height="140" class="sd-node"/>
+<rect x="394" y="78" width="4" height="140" class="sd-bar"/>
+<text x="408" y="98" class="sd-kick">03 · BUILD</text>
+<text x="408" y="120" class="sd-name en">CI build</text><text x="408" y="120" class="sd-name nl">CI-build</text>
+<use href="#sd-mid" class="sd-u-mid" x="526" y="87" width="14" height="14"/>
+<text x="408" y="140" class="sd-st en">SAST + SCA scans</text><text x="408" y="140" class="sd-st nl">SAST- + SCA-scans</text>
+<text x="408" y="154" class="sd-st">SBOM per release</text>
+<text x="408" y="168" class="sd-st en">isolated runners</text><text x="408" y="168" class="sd-st nl">geïsoleerde runners</text>
+<text x="408" y="182" class="sd-st en">short-lived keys</text><text x="408" y="182" class="sd-st nl">kortlevende sleutels</text>
+</g>
+<g class="sd-tag sd-hs4" tabindex="0"><rect x="408" y="192" width="38" height="16"/><text x="427.0" y="203.5" text-anchor="middle">SBOM</text></g>
+<g class="sd-tag sd-hs5" tabindex="0"><rect x="452" y="192" width="38" height="16"/><text x="471.0" y="203.5" text-anchor="middle">OIDC</text></g>
+<g class="sd-node-g sd-s-bad sd-hs6" tabindex="0">
+<rect x="576" y="78" width="156" height="140" class="sd-node"/>
+<rect x="576" y="78" width="4" height="140" class="sd-bar"/>
+<text x="590" y="98" class="sd-kick en">04 · SIGN</text><text x="590" y="98" class="sd-kick nl">04 · TEKEN</text>
+<text x="590" y="120" class="sd-name en">Sign &amp; attest</text><text x="590" y="120" class="sd-name nl">Ondertekenen</text>
+<use href="#sd-bad" class="sd-u-bad" x="708" y="87" width="14" height="14"/>
+<text x="590" y="140" class="sd-st en">Sigstore signature</text><text x="590" y="140" class="sd-st nl">Sigstore-handtekening</text>
+<text x="590" y="154" class="sd-st en">SLSA provenance</text><text x="590" y="154" class="sd-st nl">SLSA-herkomstdata</text>
+</g>
+<g class="sd-tag sd-hs7" tabindex="0"><rect x="590" y="192" width="38" height="16"/><text x="609.0" y="203.5" text-anchor="middle">SLSA</text></g>
+<g class="sd-node-g sd-s-ok sd-hs8" tabindex="0">
+<rect x="758" y="78" width="156" height="140" class="sd-node"/>
+<rect x="758" y="78" width="4" height="140" class="sd-bar"/>
+<text x="772" y="98" class="sd-kick en">05 · STORE</text><text x="772" y="98" class="sd-kick nl">05 · BEWAAR</text>
+<text x="772" y="120" class="sd-name en">Artifact registry</text><text x="772" y="120" class="sd-name nl">Artefactregister</text>
+<use href="#sd-ok" class="sd-u-ok" x="890" y="87" width="14" height="14"/>
+<text x="772" y="140" class="sd-st en">unchangeable versions</text><text x="772" y="140" class="sd-st nl">onwijzigbare versies</text>
+<text x="772" y="154" class="sd-st en">signature + SBOM kept</text><text x="772" y="154" class="sd-st nl">handtekening + SBOM</text>
+</g>
+<g class="sd-node-g sd-s-bad sd-hs9" tabindex="0">
+<rect x="940" y="78" width="156" height="140" class="sd-node"/>
+<rect x="940" y="78" width="4" height="140" class="sd-bar"/>
+<text x="954" y="98" class="sd-kick en">06 · RUN</text><text x="954" y="98" class="sd-kick nl">06 · DRAAI</text>
+<text x="954" y="120" class="sd-name en">Production</text><text x="954" y="120" class="sd-name nl">Productie</text>
+<use href="#sd-bad" class="sd-u-bad" x="1072" y="87" width="14" height="14"/>
+<text x="954" y="140" class="sd-st en">deploys only signed,</text><text x="954" y="140" class="sd-st nl">draait alleen onder-</text>
+<text x="954" y="154" class="sd-st en">verified artifacts</text><text x="954" y="154" class="sd-st nl">tekende artefacten</text>
+</g>
+<g class="sd-node-g sd-s-bad sd-hs10" tabindex="0">
+<rect x="70" y="294" width="260" height="86" class="sd-node"/>
+<rect x="70" y="294" width="4" height="86" class="sd-bar"/>
+<text x="84" y="314" class="sd-kick">AI · PULL REQUESTS</text>
+<text x="84" y="336" class="sd-name en">AI coding agent</text><text x="84" y="336" class="sd-name nl">AI-codeeragent</text>
+<use href="#sd-bad" class="sd-u-bad" x="306" y="303" width="14" height="14"/>
+<text x="84" y="356" class="sd-st en">least-privilege token ·</text><text x="84" y="356" class="sd-st nl">token met minimale rechten ·</text>
+<text x="84" y="370" class="sd-st en">same review + scans as people</text><text x="84" y="370" class="sd-st nl">zelfde review + scans als mensen</text>
+</g>
+<g class="sd-node-g sd-s-mid sd-hs11" tabindex="0">
+<rect x="798" y="294" width="260" height="86" class="sd-node"/>
+<rect x="798" y="294" width="4" height="86" class="sd-bar"/>
+<text x="812" y="314" class="sd-kick en">AT RUN TIME</text><text x="812" y="314" class="sd-kick nl">TIJDENS HET DRAAIEN</text>
+<text x="812" y="336" class="sd-name en">Secrets vault</text><text x="812" y="336" class="sd-name nl">Kluis voor geheimen</text>
+<use href="#sd-mid" class="sd-u-mid" x="1034" y="303" width="14" height="14"/>
+<text x="812" y="356" class="sd-st en">hands out keys at run time ·</text><text x="812" y="356" class="sd-st nl">geeft sleutels pas bij gebruik ·</text>
+<text x="812" y="370" class="sd-st en">rotated, never in code</text><text x="812" y="370" class="sd-st nl">gewisseld, nooit in code</text>
+</g>
+<use href="#sd-ok" class="sd-u-ok" x="30" y="429" width="14" height="14"/>
+<text x="52" y="440" class="sd-legend en">Usually in place — check it is on</text><text x="52" y="440" class="sd-legend nl">Meestal aanwezig — controleer of het aanstaat</text>
+<use href="#sd-mid" class="sd-u-mid" x="390" y="429" width="14" height="14"/>
+<text x="412" y="440" class="sd-legend en">Often partial — worth closing</text><text x="412" y="440" class="sd-legend nl">Vaak half — de moeite waard om af te maken</text>
+<use href="#sd-bad" class="sd-u-bad" x="730" y="429" width="14" height="14"/>
+<text x="752" y="440" class="sd-legend en">Often missing — worth a plan</text><text x="752" y="440" class="sd-legend nl">Vaak afwezig — een plan waard</text>
+<text x="30" y="468" class="sd-foot en">Reference design, not a legal requirement · colours show a typical starting point · hover or tap a box or tag for an explanation</text><text x="30" y="468" class="sd-foot nl">Referentieontwerp, geen wettelijke eis · kleuren tonen een gangbaar startpunt · beweeg of tik op een blok of label voor uitleg</text>
+<g class="sd-svtip sd-ts0" aria-hidden="true">
+<rect x="30" y="224" width="290" height="77" class="sd-tip-bg"/>
+<rect x="30" y="224" width="3" height="77" class="sd-tip-acc"/>
+<text x="44" y="242" class="sd-tip-t0 en">Developer · the first link</text>
+<text x="44" y="257" class="sd-tip-t en">MFA stops a stolen password from pushing</text>
+<text x="44" y="272" class="sd-tip-t en">code. Signed commits show who really</text>
+<text x="44" y="287" class="sd-tip-t en">wrote a change.</text>
+<text x="44" y="242" class="sd-tip-t0 nl">Ontwikkelaar · de eerste schakel</text>
+<text x="44" y="257" class="sd-tip-t nl">MFA voorkomt dat een gestolen wachtwoord</text>
+<text x="44" y="272" class="sd-tip-t nl">code kan pushen. Ondertekende commits</text>
+<text x="44" y="287" class="sd-tip-t nl">tonen wie een wijziging echt schreef.</text>
+</g>
+<g class="sd-svtip sd-ts1" aria-hidden="true">
+<rect x="44" y="214" width="297" height="62" class="sd-tip-bg"/>
+<rect x="44" y="214" width="3" height="62" class="sd-tip-acc"/>
+<text x="58" y="232" class="sd-tip-t0 en">MFA · multi-factor authentication</text>
+<text x="58" y="247" class="sd-tip-t en">A second proof besides the password, such</text>
+<text x="58" y="262" class="sd-tip-t en">as an app prompt or a security key.</text>
+<text x="58" y="232" class="sd-tip-t0 nl">MFA · meervoudige authenticatie</text>
+<text x="58" y="247" class="sd-tip-t nl">Een tweede bewijs naast het wachtwoord,</text>
+<text x="58" y="262" class="sd-tip-t nl">zoals een app-melding of hardwaresleutel.</text>
+</g>
+<g class="sd-svtip sd-ts2" aria-hidden="true">
+<rect x="212" y="224" width="303" height="77" class="sd-tip-bg"/>
+<rect x="212" y="224" width="3" height="77" class="sd-tip-acc"/>
+<text x="226" y="242" class="sd-tip-t0 en">Repository · where the code lives</text>
+<text x="226" y="257" class="sd-tip-t en">Branch protection: no change reaches the</text>
+<text x="226" y="272" class="sd-tip-t en">main branch without review. Secret</text>
+<text x="226" y="287" class="sd-tip-t en">scanning blocks commits with keys in them.</text>
+<text x="226" y="242" class="sd-tip-t0 nl">Repository · waar de code staat</text>
+<text x="226" y="257" class="sd-tip-t nl">Branchbeveiliging: geen wijziging komt</text>
+<text x="226" y="272" class="sd-tip-t nl">zonder review op de hoofdbranch. Secret</text>
+<text x="226" y="287" class="sd-tip-t nl">scanning blokkeert commits met sleutels.</text>
+</g>
+<g class="sd-svtip sd-ts3" aria-hidden="true">
+<rect x="394" y="224" width="303" height="77" class="sd-tip-bg"/>
+<rect x="394" y="224" width="3" height="77" class="sd-tip-acc"/>
+<text x="408" y="242" class="sd-tip-t0 en">CI · continuous integration</text>
+<text x="408" y="257" class="sd-tip-t en">SAST reads our code for flaws; SCA checks</text>
+<text x="408" y="272" class="sd-tip-t en">third-party packages for known ones. Each</text>
+<text x="408" y="287" class="sd-tip-t en">build runs on a fresh, isolated runner.</text>
+<text x="408" y="242" class="sd-tip-t0 nl">CI · continuous integration</text>
+<text x="408" y="257" class="sd-tip-t nl">SAST zoekt fouten in onze code; SCA toetst</text>
+<text x="408" y="272" class="sd-tip-t nl">externe pakketten op bekende lekken. Elke</text>
+<text x="408" y="287" class="sd-tip-t nl">build draait op een schone, losse runner.</text>
+</g>
+<g class="sd-svtip sd-ts4" aria-hidden="true">
+<rect x="408" y="214" width="310" height="77" class="sd-tip-bg"/>
+<rect x="408" y="214" width="3" height="77" class="sd-tip-acc"/>
+<text x="422" y="232" class="sd-tip-t0 en">SBOM · software bill of materials</text>
+<text x="422" y="247" class="sd-tip-t en">The ingredient list of a release: every</text>
+<text x="422" y="262" class="sd-tip-t en">component and version. The EU CRA makes</text>
+<text x="422" y="277" class="sd-tip-t en">it a manufacturer duty from Dec 2027.</text>
+<text x="422" y="232" class="sd-tip-t0 nl">SBOM · software bill of materials</text>
+<text x="422" y="247" class="sd-tip-t nl">De ingrediëntenlijst van een release: elk</text>
+<text x="422" y="262" class="sd-tip-t nl">onderdeel en elke versie. De CRA maakt het</text>
+<text x="422" y="277" class="sd-tip-t nl">vanaf dec 2027 een plicht voor fabrikanten.</text>
+</g>
+<g class="sd-svtip sd-ts5" aria-hidden="true">
+<rect x="452" y="214" width="303" height="77" class="sd-tip-bg"/>
+<rect x="452" y="214" width="3" height="77" class="sd-tip-acc"/>
+<text x="466" y="232" class="sd-tip-t0 en">OIDC · short-lived credentials</text>
+<text x="466" y="247" class="sd-tip-t en">The build proves its identity to the cloud</text>
+<text x="466" y="262" class="sd-tip-t en">and gets a key valid for minutes: no</text>
+<text x="466" y="277" class="sd-tip-t en">long-lived secret stored in the pipeline.</text>
+<text x="466" y="232" class="sd-tip-t0 nl">OIDC · kortlevende toegang</text>
+<text x="466" y="247" class="sd-tip-t nl">De build bewijst zijn identiteit aan de</text>
+<text x="466" y="262" class="sd-tip-t nl">cloud en krijgt een sleutel voor minuten:</text>
+<text x="466" y="277" class="sd-tip-t nl">geen blijvend geheim in de pipeline.</text>
+</g>
+<g class="sd-svtip sd-ts6" aria-hidden="true">
+<rect x="576" y="224" width="297" height="77" class="sd-tip-bg"/>
+<rect x="576" y="224" width="3" height="77" class="sd-tip-acc"/>
+<text x="590" y="242" class="sd-tip-t0 en">Sign &amp; attest · proof of origin</text>
+<text x="590" y="257" class="sd-tip-t en">Sigstore signs the build; SLSA provenance</text>
+<text x="590" y="272" class="sd-tip-t en">records how and where it was built, so</text>
+<text x="590" y="287" class="sd-tip-t en">tampering shows.</text>
+<text x="590" y="242" class="sd-tip-t0 nl">Ondertekenen · bewijs van herkomst</text>
+<text x="590" y="257" class="sd-tip-t nl">Sigstore ondertekent de build; SLSA-</text>
+<text x="590" y="272" class="sd-tip-t nl">herkomstdata legt vast hoe en waar die</text>
+<text x="590" y="287" class="sd-tip-t nl">is gebouwd, zodat manipulatie opvalt.</text>
+</g>
+<g class="sd-svtip sd-ts7" aria-hidden="true">
+<rect x="590" y="214" width="290" height="77" class="sd-tip-bg"/>
+<rect x="590" y="214" width="3" height="77" class="sd-tip-acc"/>
+<text x="604" y="232" class="sd-tip-t0 en">SLSA · supply-chain levels</text>
+<text x="604" y="247" class="sd-tip-t en">OpenSSF framework (v1.2) with levels for</text>
+<text x="604" y="262" class="sd-tip-t en">how trustworthy a build and its</text>
+<text x="604" y="277" class="sd-tip-t en">provenance record are.</text>
+<text x="604" y="232" class="sd-tip-t0 nl">SLSA · supply-chain levels</text>
+<text x="604" y="247" class="sd-tip-t nl">OpenSSF-raamwerk (v1.2) met niveaus voor</text>
+<text x="604" y="262" class="sd-tip-t nl">hoe betrouwbaar een build en zijn</text>
+<text x="604" y="277" class="sd-tip-t nl">herkomstgegevens zijn.</text>
+</g>
+<g class="sd-svtip sd-ts8" aria-hidden="true">
+<rect x="758" y="224" width="316" height="77" class="sd-tip-bg"/>
+<rect x="758" y="224" width="3" height="77" class="sd-tip-acc"/>
+<text x="772" y="242" class="sd-tip-t0 en">Artifact registry</text>
+<text x="772" y="257" class="sd-tip-t en">Stores each release once, unchangeable,</text>
+<text x="772" y="272" class="sd-tip-t en">with its signature and SBOM next to it.</text>
+<text x="772" y="287" class="sd-tip-t en">Production pulls only from here.</text>
+<text x="772" y="242" class="sd-tip-t0 nl">Artefactregister</text>
+<text x="772" y="257" class="sd-tip-t nl">Bewaart elke release één keer, onwijzigbaar,</text>
+<text x="772" y="272" class="sd-tip-t nl">met handtekening en SBOM ernaast.</text>
+<text x="772" y="287" class="sd-tip-t nl">Productie haalt alleen hier op.</text>
+</g>
+<g class="sd-svtip sd-ts9" aria-hidden="true">
+<rect x="806" y="224" width="290" height="77" class="sd-tip-bg"/>
+<rect x="806" y="224" width="3" height="77" class="sd-tip-acc"/>
+<text x="820" y="242" class="sd-tip-t0 en">Production · verify before deploy</text>
+<text x="820" y="257" class="sd-tip-t en">The platform checks the signature and</text>
+<text x="820" y="272" class="sd-tip-t en">refuses anything unsigned or built</text>
+<text x="820" y="287" class="sd-tip-t en">outside the pipeline.</text>
+<text x="820" y="242" class="sd-tip-t0 nl">Productie · controleren vóór uitrol</text>
+<text x="820" y="257" class="sd-tip-t nl">Het platform controleert de handtekening</text>
+<text x="820" y="272" class="sd-tip-t nl">en weigert alles wat niet ondertekend is</text>
+<text x="820" y="287" class="sd-tip-t nl">of buiten de pipeline is gebouwd.</text>
+</g>
+<g class="sd-svtip sd-ts10" aria-hidden="true">
+<rect x="70" y="211" width="310" height="77" class="sd-tip-bg"/>
+<rect x="70" y="211" width="3" height="77" class="sd-tip-acc"/>
+<text x="84" y="229" class="sd-tip-t0 en">AI coding agent</text>
+<text x="84" y="244" class="sd-tip-t en">Treated like a new developer: its own token</text>
+<text x="84" y="259" class="sd-tip-t en">with only the rights it needs, and every</text>
+<text x="84" y="274" class="sd-tip-t en">change reviewed and scanned like ours.</text>
+<text x="84" y="229" class="sd-tip-t0 nl">AI-codeeragent</text>
+<text x="84" y="244" class="sd-tip-t nl">Behandeld als een nieuwe ontwikkelaar: een</text>
+<text x="84" y="259" class="sd-tip-t nl">eigen token met alleen de nodige rechten,</text>
+<text x="84" y="274" class="sd-tip-t nl">elke wijziging gereviewd en gescand.</text>
+</g>
+<g class="sd-svtip sd-ts11" aria-hidden="true">
+<rect x="793" y="211" width="303" height="77" class="sd-tip-bg"/>
+<rect x="793" y="211" width="3" height="77" class="sd-tip-acc"/>
+<text x="807" y="229" class="sd-tip-t0 en">Secrets vault</text>
+<text x="807" y="244" class="sd-tip-t en">Hands passwords and keys to software at</text>
+<text x="807" y="259" class="sd-tip-t en">run time, rotates them and logs every use.</text>
+<text x="807" y="274" class="sd-tip-t en">Nothing secret sits in the code.</text>
+<text x="807" y="229" class="sd-tip-t0 nl">Kluis voor geheimen</text>
+<text x="807" y="244" class="sd-tip-t nl">Geeft wachtwoorden en sleutels pas tijdens</text>
+<text x="807" y="259" class="sd-tip-t nl">het draaien af, wisselt ze en logt elk</text>
+<text x="807" y="274" class="sd-tip-t nl">gebruik. Geen geheim staat in de code.</text>
+</g>
+</svg>
+    </figure>
+
+    <div class="panel">
+      <p class="en"><strong>A reference, not a checklist.</strong> Signing at the build and checking that signature at deploy tie the two ends together: production then runs only what your pipeline built. The red boxes are often the most effective place to start.</p>
+      <p class="nl"><strong>Een referentie, geen afvinklijst.</strong> Ondertekenen bij de build en die handtekening controleren bij de uitrol verbinden de twee uiteinden: productie draait dan alleen wat uw pipeline heeft gebouwd. De rode blokken zijn vaak de meest effectieve plek om te beginnen.</p>
+    </div>
+  </div>
+</section>
+<!-- /diagram:pipeline-map -->
 
 <!-- ============================ CONTROLS ============================ -->
 <section class="risk-block" id="fix">
@@ -583,25 +900,27 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
       <table class="en">
         <tr><th>Control</th><th>Closes</th><th>In one line</th></tr>
         <tr><td class="ctl">Secret scanning + vault</td><td>Secrets (01)</td><td>A scanner blocks any commit that contains a key, and a vault hands secrets to software at run time. No secret lives in code.</td></tr>
-        <tr><td class="ctl">Protected pipeline</td><td>Pipeline (02)</td><td>MFA on every account that can touch the build, least privilege for build jobs, and every release signed and verified before it ships.</td></tr>
-        <tr><td class="ctl">Definition of done</td><td>Testing (03)</td><td>Security requirements are part of “finished”, not a separate phase. A feature with an open security finding is not done.</td></tr>
-        <tr><td class="ctl">Checks in the pipeline</td><td>Testing (03)</td><td>Automated dependency and code scanning on every change. Findings block the release above an agreed severity.</td></tr>
+        <tr><td class="ctl">Protected pipeline</td><td>Pipeline (02)</td><td>MFA on every account that can touch the build, least privilege for build jobs, and every release signed with <abbr class="tip" tabindex="0" data-tip="Supply-chain Levels for Software Artifacts: an OpenSSF framework for trustworthy builds and their provenance.">SLSA</abbr> provenance and verified before it ships.</td></tr>
+        <tr><td class="ctl">Definition of done</td><td>Testing (03)</td><td>Security requirements, for example from <abbr class="tip" tabindex="0" data-tip="OWASP&#x27;s checklist of testable security requirements for applications (May 2025).">OWASP ASVS 5.0</abbr>, are part of “finished”. A feature with an open security finding is not done.</td></tr>
+        <tr><td class="ctl">Checks in the pipeline</td><td>Testing (03)</td><td>Automated code and dependency scans on every change, covering at least the <abbr class="tip" tabindex="0" data-tip="OWASP&#x27;s list of the ten most critical web application risks; software supply chain failures rank third (A03).">OWASP Top 10:2025</abbr>. Findings above an agreed severity block the release.</td></tr>
         <tr><td class="ctl">Threat modelling</td><td>Testing (03)</td><td>One hour with the team before building a feature that handles money or personal data: what could go wrong, and what do we do about it.</td></tr>
         <tr><td class="ctl">Named owner + budget</td><td>Ownership (04)</td><td>Every application in production has a person and a maintenance budget line. No owner means a switch-off date.</td></tr>
-        <tr><td class="ctl">Pentest + disclosure</td><td>All four</td><td>An independent test before every major release, and a public address where researchers can report a flaw to us first.</td></tr>
+        <tr><td class="ctl">Pentest</td><td>All four</td><td>An independent test before every major release.</td></tr>
+        <tr><td class="ctl">security.txt + disclosure policy</td><td>All four</td><td>A published policy and a <abbr class="tip" tabindex="0" data-tip="A small file at /.well-known/security.txt (RFC 9116) that tells researchers how to report a flaw.">security.txt</abbr> file, so researchers can report a flaw to us first.</td></tr>
         <tr><td class="ctl">Developer training</td><td>All four</td><td>Short, in the tools they use, about the mistakes that actually occurred here. Not a yearly slide deck.</td></tr>
       </table>
 
       <table class="nl">
         <tr><th>Maatregel</th><th>Sluit</th><th>In één zin</th></tr>
         <tr><td class="ctl">Secret scanning + kluis</td><td>Geheimen (01)</td><td>Een scanner blokkeert elke commit met een sleutel erin, en een kluis geeft geheimen pas tijdens het draaien aan de software. Geen geheim staat in code.</td></tr>
-        <tr><td class="ctl">Beschermde pipeline</td><td>Pipeline (02)</td><td>MFA op elk account dat bij de build kan, minimale rechten voor bouwtaken, en elke release ondertekend en geverifieerd voordat ze uitgaat.</td></tr>
-        <tr><td class="ctl">Definition of done</td><td>Testen (03)</td><td>Beveiligingseisen horen bij “klaar”, niet bij een aparte fase. Een functie met een open beveiligingsbevinding is niet klaar.</td></tr>
-        <tr><td class="ctl">Controles in de pipeline</td><td>Testen (03)</td><td>Automatische scans van afhankelijkheden en code bij elke wijziging. Bevindingen boven een afgesproken ernst blokkeren de release.</td></tr>
+        <tr><td class="ctl">Beschermde pipeline</td><td>Pipeline (02)</td><td>MFA op elk account dat bij de build kan, minimale rechten voor bouwtaken, en elke release ondertekend met <abbr class="tip" tabindex="0" data-tip="Supply-chain Levels for Software Artifacts: een OpenSSF-raamwerk voor betrouwbare builds en hun herkomst.">SLSA</abbr>-herkomstgegevens en geverifieerd voordat ze uitgaat.</td></tr>
+        <tr><td class="ctl">Definition of done</td><td>Testen (03)</td><td>Beveiligingseisen, bijvoorbeeld uit <abbr class="tip" tabindex="0" data-tip="De OWASP-lijst met toetsbare beveiligingseisen voor applicaties (mei 2025).">OWASP ASVS 5.0</abbr>, horen bij “klaar”. Een functie met een open beveiligingsbevinding is niet klaar.</td></tr>
+        <tr><td class="ctl">Controles in de pipeline</td><td>Testen (03)</td><td>Automatische scans van code en afhankelijkheden bij elke wijziging, minstens op de <abbr class="tip" tabindex="0" data-tip="De OWASP-lijst van de tien grootste risico&#x27;s voor webapplicaties; falen in de softwareketen staat op drie (A03).">OWASP Top 10:2025</abbr>. Bevindingen boven een afgesproken ernst blokkeren de release.</td></tr>
         <tr><td class="ctl">Threat modelling</td><td>Testen (03)</td><td>Eén uur met het team vóór het bouwen van een functie die geld of persoonsgegevens verwerkt: wat kan er misgaan, en wat doen we eraan.</td></tr>
         <tr><td class="ctl">Eigenaar + budget</td><td>Eigenaarschap (04)</td><td>Elke applicatie in productie heeft een persoon en een onderhoudsbudgetpost. Geen eigenaar betekent een uitzetdatum.</td></tr>
-        <tr><td class="ctl">Pentest + disclosure</td><td>Alle vier</td><td>Een onafhankelijke test vóór elke grote release, en een publiek adres waar onderzoekers een fout eerst aan ons kunnen melden.</td></tr>
-        <tr><td class="ctl">Training ontwikkelaars</td><td>Alle vier</td><td>Kort, in de tools die ze gebruiken, over de fouten die hier echt zijn gemaakt. Geen jaarlijkse slidedeck.</td></tr>
+        <tr><td class="ctl">Pentest</td><td>Alle vier</td><td>Een onafhankelijke test vóór elke grote release.</td></tr>
+        <tr><td class="ctl">security.txt + meldbeleid</td><td>Alle vier</td><td>Een gepubliceerd beleid en een <abbr class="tip" tabindex="0" data-tip="Een klein bestand op /.well-known/security.txt (RFC 9116) dat onderzoekers vertelt hoe ze een fout melden.">security.txt</abbr>-bestand, zodat onderzoekers een fout eerst aan ons kunnen melden.</td></tr>
+        <tr><td class="ctl">Training ontwikkelaars</td><td>Alle vier</td><td>Kort, in de tools die ze gebruiken, over de fouten die hier echt zijn gemaakt. Geen jaarlijkse presentatie.</td></tr>
       </table>
 
       <div class="callout">
@@ -634,25 +953,33 @@ document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventList
     <div class="panel">
       <table class="en">
         <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
-        <tr><td class="ctl">NIS2</td><td>Security in the acquisition, development and maintenance of systems is a named measure, including how vulnerabilities are handled and disclosed. Management approves the approach and is accountable.</td><td>Ask the agency or vendor how they handle vulnerabilities in what they built for you, and put maintenance, patching and a disclosure route in the contract. A finished project is not a finished obligation.</td><td>A leaked key or a poisoned release that affects customers is a significant incident: early warning within 24 hours, notification within 72, final report within a month. Customers who received the release must be warned. Confirm with legal.</td></tr>
-        <tr><td class="ctl">DORA</td><td>For financial entities: a policy for acquisition, development and maintenance of ICT systems, testing before deployment, and source-code security for critical functions.</td><td>Outsourced development is an ICT third-party arrangement: it belongs in the register with the prescribed clauses, including access to the code and an exit plan if the developer disappears.</td><td>A compromised release or exposed data in a critical function is a major ICT incident: initial notification within hours of classification, intermediate report within 72 hours, final report within a month. Confirm with legal.</td></tr>
-        <tr><td class="ctl">SOC 2</td><td>Change management and the development lifecycle are core: code review, separation between development and production, controlled deployment, and vulnerability management, all tested over the period.</td><td>Read the change-management controls and their exceptions. Emergency changes and access to the pipeline are where deviations hide. The complementary user entity controls tell you what you must approve yourself.</td><td>An unauthorised change or a leaked credential becomes an exception in the next report. Auditors trace how it entered the pipeline, and customers ask for a bridge letter and a root-cause analysis.</td></tr>
-        <tr><td class="ctl">ISAE 3402</td><td>Relevant where the software touches financial reporting: program changes must be authorised, tested and approved, and access to production code restricted.</td><td>Check whether program-change controls cover the application you rely on. The report often expects you to approve changes yourself; if nobody does, that is your gap, not theirs.</td><td>An unauthorised or untested change becomes a control deficiency in the period and must be disclosed to the user auditors, who will ask what it did to the numbers.</td></tr>
+        <tr><td class="ctl">NIS2</td><td>Security in the acquisition, development and maintenance of systems is a named measure, including how vulnerabilities are handled and disclosed. NIS2 requires management to approve the approach, and it can be held liable.</td><td>Ask the agency or vendor how they handle vulnerabilities in what they built for you, and put maintenance, patching and a disclosure route in the contract. A finished project is not a finished obligation.</td><td>A leaked key or a poisoned release that affects customers can count as a significant incident if it meets the thresholds: early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month. NIS2 may also require you to warn affected customers. Confirm with legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities: a policy for acquisition, development and maintenance of ICT systems, testing before deployment, and source-code security for critical functions.</td><td>Outsourced development is an ICT third-party arrangement: it belongs in the register with the prescribed clauses, including access to the code and an exit plan if the developer disappears.</td><td>A compromised release or exposed data in a critical function can count as a major ICT-related incident: initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month. Confirm with legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Change management and the development lifecycle are core: code review, separation between development and production, controlled deployment, and vulnerability management, all tested over the period.</td><td>Read the change-management controls and their exceptions. Emergency changes and access to the pipeline are where deviations hide. The complementary user entity controls tell you what you are expected to approve yourself.</td><td>An unauthorised change or a leaked credential becomes an exception in the next report. Auditors trace how it entered the pipeline, and customers ask for a bridge letter and a root-cause analysis.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant where the software touches financial reporting: auditors expect program changes to be authorised, tested and approved, and access to production code restricted.</td><td>Check whether program-change controls cover the application you rely on. The report often expects you to approve changes yourself; if nobody does, that is your gap, not theirs.</td><td>An unauthorised or untested change is likely to show as a deviation in the next report; ISAE 3402 itself creates no duty to notify user auditors. Ask for interim disclosure in the contract.</td></tr>
+        <tr><td class="ctl">CRA</td><td>For manufacturers of software or connected products: reporting from 11 September 2026; security by design, vulnerability handling, an <abbr class="tip" tabindex="0" data-tip="Software bill of materials: the ingredient list of a release, every component and its version.">SBOM</abbr> and a defined support period from 11 December 2027. <abbr class="tip" tabindex="0" data-tip="Secure Software Development Framework, NIST SP 800-218 v1.1 (2022); v1.2 is in draft since December 2025.">NIST SSDF</abbr> helps show security by design.</td><td>Ask whether the product falls under the CRA, how the vendor will show conformity, and how long it will receive security updates.</td><td>An actively exploited vulnerability in your product: early warning within 24 hours, notification within 72 hours, via the ENISA Single Reporting Platform. Confirm with legal.</td></tr>
       </table>
 
       <table class="nl">
         <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
-        <tr><td class="ctl">NIS2</td><td>Beveiliging bij het verwerven, ontwikkelen en onderhouden van systemen is een benoemde maatregel, inclusief hoe kwetsbaarheden worden afgehandeld en gemeld. Het bestuur keurt de aanpak goed en is aansprakelijk.</td><td>Vraag het bureau of de leverancier hoe zij omgaan met kwetsbaarheden in wat zij voor u bouwden, en leg onderhoud, patching en een meldroute vast in het contract. Een afgerond project is geen afgeronde verplichting.</td><td>Een gelekte sleutel of een vergiftigde release die klanten raakt is een significant incident: vroegtijdige waarschuwing binnen 24 uur, melding binnen 72 uur, eindrapport binnen een maand. Klanten die de release ontvingen moeten worden gewaarschuwd. Bevestig met legal.</td></tr>
-        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: beleid voor het verwerven, ontwikkelen en onderhouden van ICT-systemen, testen vóór ingebruikname, en beveiliging van broncode voor kritieke functies.</td><td>Uitbestede ontwikkeling is een ICT-derdenovereenkomst: die hoort in het register met de voorgeschreven bepalingen, inclusief toegang tot de code en een exitplan als de ontwikkelaar verdwijnt.</td><td>Een gecompromitteerde release of blootgestelde data in een kritieke functie is een ernstig ICT-incident: eerste melding binnen enkele uren na classificatie, tussenrapport binnen 72 uur, eindrapport binnen een maand. Bevestig met legal.</td></tr>
-        <tr><td class="ctl">SOC 2</td><td>Wijzigingsbeheer en de ontwikkelcyclus zijn kern: codereview, scheiding tussen ontwikkeling en productie, beheerste uitrol en kwetsbaarheidsbeheer, allemaal over de periode getest.</td><td>Lees de maatregelen voor wijzigingsbeheer en hun afwijkingen. Noodwijzigingen en toegang tot de pipeline zijn waar afwijkingen zich verbergen. De complementary user entity controls zeggen wat u zelf moet goedkeuren.</td><td>Een ongeautoriseerde wijziging of een gelekt wachtwoord wordt een afwijking in het volgende rapport. Auditors volgen hoe het de pipeline binnenkwam, en klanten vragen om een bridge letter en een oorzaakanalyse.</td></tr>
-        <tr><td class="ctl">ISAE 3402</td><td>Relevant waar de software de financiële verslaggeving raakt: programmawijzigingen moeten geautoriseerd, getest en goedgekeurd zijn, en toegang tot productiecode beperkt.</td><td>Controleer of de maatregelen voor programmawijzigingen de applicatie dekken waarop u vertrouwt. Het rapport verwacht vaak dat u wijzigingen zelf goedkeurt; doet niemand dat, dan is dat uw gat, niet het hunne.</td><td>Een ongeautoriseerde of ongeteste wijziging wordt een tekortkoming in de periode en moet aan de auditors van de klanten worden gemeld, die vragen wat het met de cijfers heeft gedaan.</td></tr>
+        <tr><td class="ctl">NIS2</td><td>Beveiliging bij het verwerven, ontwikkelen en onderhouden van systemen is een benoemde maatregel, inclusief hoe kwetsbaarheden worden afgehandeld en gemeld. NIS2 eist dat het bestuur de aanpak goedkeurt; het kan aansprakelijk worden gesteld.</td><td>Vraag het bureau of de leverancier hoe zij omgaan met kwetsbaarheden in wat zij voor u bouwden, en leg onderhoud, patching en een meldroute vast in het contract. Een afgerond project is geen afgeronde verplichting.</td><td>Een gelekte sleutel of een vergiftigde release die klanten raakt, kan een significant incident zijn als het de drempels haalt: vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindrapport binnen een maand. NIS2 kan ook eisen dat u getroffen klanten waarschuwt. Stem af met legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen: beleid voor het verwerven, ontwikkelen en onderhouden van ICT-systemen, testen vóór ingebruikname, en beveiliging van broncode voor kritieke functies.</td><td>Uitbestede ontwikkeling is een ICT-derdenovereenkomst: die hoort in het register met de voorgeschreven bepalingen, inclusief toegang tot de code en een exitplan als de ontwikkelaar verdwijnt.</td><td>Een gecompromitteerde release of blootgestelde data in een kritieke functie kan een ernstig ICT-gerelateerd incident zijn: eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand. Stem af met legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Wijzigingsbeheer en de ontwikkelcyclus zijn kern: codereview, scheiding tussen ontwikkeling en productie, beheerste uitrol en kwetsbaarheidsbeheer, allemaal over de periode getest.</td><td>Lees de maatregelen voor wijzigingsbeheer en hun afwijkingen. Noodwijzigingen en toegang tot de pipeline zijn waar afwijkingen zich verbergen. De complementary user entity controls zeggen wat u zelf hoort goed te keuren.</td><td>Een ongeautoriseerde wijziging of een gelekt wachtwoord wordt een afwijking in het volgende rapport. Auditors volgen hoe het de pipeline binnenkwam, en klanten vragen om een bridge letter en een oorzaakanalyse.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant waar de software de financiële verslaggeving raakt: auditors verwachten dat programmawijzigingen geautoriseerd, getest en goedgekeurd zijn, en dat toegang tot productiecode beperkt is.</td><td>Controleer of de maatregelen voor programmawijzigingen de applicatie dekken waarop u vertrouwt. Het rapport verwacht vaak dat u wijzigingen zelf goedkeurt; doet niemand dat, dan is dat uw gat, niet het hunne.</td><td>Een ongeautoriseerde of ongeteste wijziging komt waarschijnlijk als afwijking in het volgende rapport; ISAE 3402 zelf verplicht niet tot melden aan de auditors van klanten. Vraag in het contract om tussentijdse melding.</td></tr>
+        <tr><td class="ctl">CRA</td><td>Voor fabrikanten van software of verbonden producten: meldplicht vanaf 11 september 2026; security by design, kwetsbaarheidsbeheer, een <abbr class="tip" tabindex="0" data-tip="Software bill of materials: de ingrediëntenlijst van een release, elk onderdeel met zijn versie.">SBOM</abbr> en een vaste ondersteuningsperiode vanaf 11 december 2027. <abbr class="tip" tabindex="0" data-tip="Secure Software Development Framework, NIST SP 800-218 v1.1 (2022); v1.2 is sinds december 2025 in concept.">NIST SSDF</abbr> helpt security by design aan te tonen.</td><td>Vraag of het product onder de CRA valt, hoe de leverancier conformiteit aantoont en hoe lang het beveiligingsupdates krijgt.</td><td>Een actief misbruikte kwetsbaarheid in uw product: vroegtijdige waarschuwing binnen 24 uur, melding binnen 72 uur, via het Single Reporting Platform van ENISA. Stem af met legal.</td></tr>
       </table>
+      <p class="sources en">Checked against: <a href="https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng">CRA (EU) 2024/2847</a> and the <a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">Commission CRA reporting page</a> (2026), NIS2 Art. 20, 21 and 23, <a href="https://eur-lex.europa.eu/eli/reg_del/2025/301/oj/eng">DORA RTS (EU) 2025/301</a> (Feb 2025), <a href="https://top10.owasp.org/2025">OWASP Top 10:2025</a>, <a href="https://owasp.org/www-project-application-security-verification-standard/">OWASP ASVS 5.0</a> (May 2025), <a href="https://csrc.nist.gov/pubs/sp/800/218/final">NIST SP 800-218</a> (Feb 2022; v1.2 draft Dec 2025), <a href="https://slsa.dev/spec/">SLSA v1.2</a>, <a href="https://www.rfc-editor.org/rfc/rfc9116">RFC 9116</a> (2022) · September 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://eur-lex.europa.eu/eli/reg/2024/2847/oj/nld">CRA (EU) 2024/2847</a> en de <a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">CRA-meldpagina van de Commissie</a> (2026), NIS2 art. 20, 21 en 23, <a href="https://eur-lex.europa.eu/eli/reg_del/2025/301/oj/nld">DORA-RTS (EU) 2025/301</a> (feb 2025), <a href="https://top10.owasp.org/2025">OWASP Top 10:2025</a>, <a href="https://owasp.org/www-project-application-security-verification-standard/">OWASP ASVS 5.0</a> (mei 2025), <a href="https://csrc.nist.gov/pubs/sp/800/218/final">NIST SP 800-218</a> (feb 2022; v1.2-concept dec 2025), <a href="https://slsa.dev/spec/">SLSA v1.2</a>, <a href="https://www.rfc-editor.org/rfc/rfc9116">RFC 9116</a> (2022) · september 2026.</p>
     </div>
   </div>
 </section>
 
 <div class="divider"><i></i><i></i><i></i><i></i></div>
 
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../supply-chain/"><span class="en">Supply chain attacks</span><span class="nl">Aanvallen via de toeleveringsketen</span></a> ·
+  <a href="../ai-security/"><span class="en">AI at work</span><span class="nl">AI op de werkvloer</span></a> ·
+  <a href="../patching/"><span class="en">The unpatched server</span><span class="nl">De ongepatchte server</span></a></p>
 <div class="fb">
   <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=secure-development&amp;title=Missing%3A%20secure-development"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
   <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=secure-development&amp;title=Correction%3A%20secure-development"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
