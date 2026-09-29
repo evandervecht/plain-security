@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Encrypted at rest // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   ENCRYPTION AT REST // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 7s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+
+/* --- scene 1 : disk vs login --- */
+.s1 .row{position:absolute;left:24px;right:24px;height:76px;display:flex;align-items:center;gap:14px}
+.s1 .row.a{top:42px}.s1 .row.b{top:134px}
+.s1 .who{flex:none;width:128px;height:64px;display:grid;place-items:center;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;background:var(--surface);border:1px solid var(--line);line-height:1.3}
+.s1 .who b{display:block;font-size:22px}
+.s1 .row.b .who{background:#3a1430;border-color:rgba(255,93,115,.55);color:var(--bad-soft)}
+.s1 .path{flex:1;position:relative;height:1px;background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+.s1 .path::after{content:"";position:absolute;top:-4px;left:0;width:9px;height:9px;background:var(--white);animation:travel 6s linear infinite}
+@keyframes travel{0%{left:0;opacity:0}5%{opacity:1}35%{left:calc(100% - 9px);opacity:1}40%,100%{left:calc(100% - 9px);opacity:0}}
+.s1 .out{flex:none;width:190px;padding:10px 12px;font-size:11px;letter-spacing:.06em;line-height:1.45;border:1px solid;opacity:0;animation:reveal 6s ease-in-out infinite}
+.s1 .out.good{color:#8ff0cd;border-color:rgba(55,211,155,.5);background:rgba(55,211,155,.07)}
+.s1 .out.bad{color:var(--bad-soft);border-color:rgba(255,93,115,.55);background:rgba(255,93,115,.1)}
+@keyframes reveal{0%,35%{opacity:0}45%,100%{opacity:1}}
+.s1 .banner{animation-duration:6s}
+
+/* --- scene 2 : key next to the data --- */
+.s2 .bk{position:absolute;left:10%;top:50%;transform:translateY(-50%);width:128px;height:104px;display:grid;place-items:center;font-size:28px;background:var(--surface);border:1px solid rgba(255,200,87,.6);z-index:2}
+.s2 .bk > span{position:absolute;top:100%;margin-top:7px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.s2 .actor{right:44px;top:50%;margin-top:-31px}
+.s2 .it{position:absolute;top:50%;width:40px;height:32px;display:grid;place-items:center;font-size:16px;background:var(--white);border:1px solid #9fb3c0;color:var(--deep);z-index:3;opacity:0;animation:grab 5s linear infinite}
+.s2 .it.d{margin-top:-38px}.s2 .it.k{margin-top:6px;animation-delay:.4s}
+@keyframes grab{0%{left:calc(10% + 44px);opacity:0}10%{opacity:1}80%{opacity:1}90%,100%{left:calc(100% - 150px);opacity:0}}
+.s2 .banner{animation-duration:5s}
+
+/* --- scene 3 : the unencrypted copy --- */
+.s3 .shelf{position:absolute;left:40px;right:40px;top:56px;display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.s3 .loc{position:relative;height:118px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;font-size:26px}
+.s3 .loc i{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-style:normal;font-size:9px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.s3 .loc b{position:absolute;top:6px;right:7px;font-size:12px}
+.s3 .loc.open{border-color:rgba(255,93,115,.55)}
+.s3 .loc.open::after{content:"!";position:absolute;inset:0;display:grid;place-items:center;font-family:var(--sans);font-weight:800;font-size:46px;color:var(--bad);background:rgba(58,20,48,.85);opacity:0;animation:flag 6s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes flag{0%,20%{opacity:0}30%,80%{opacity:1}90%,100%{opacity:0}}
+.s3 .banner{animation-duration:6s}
+
+/* --- scene 4 : what quantum breaks --- */
+.s4 .bx{position:absolute;top:84px;width:38%;height:120px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 10px}
+.s4 .bx b{display:block;font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--white);text-transform:none}
+.s4 .bx.a{left:6%;border-color:rgba(55,211,155,.5)}
+.s4 .bx.b{right:6%}
+.s4 .bx.b::after{content:"";position:absolute;inset:0;background:rgba(255,93,115,.3);border:1px solid var(--bad);opacity:0;animation:expose 7s ease-in-out infinite}
+@keyframes expose{0%,55%{opacity:0}62%,90%{opacity:1}96%,100%{opacity:0}}
+.s4 .q{position:absolute;top:34px;left:0;font-size:24px;z-index:3;animation:sweep 7s ease-in-out infinite}
+@keyframes sweep{0%{left:4%;opacity:0}8%{opacity:1}70%{left:calc(94% - 24px);opacity:1}80%,100%{left:calc(94% - 24px);opacity:0}}
+.s4 .banner{animation-duration:7s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .s1 .out{opacity:1}
+  .s2 .it.d{left:calc(100% - 150px);opacity:1}.s2 .it.k{left:calc(100% - 150px);opacity:1}
+  .s3 .loc.open::after{opacity:1}
+  .s4 .bx.b::after{opacity:1}.s4 .q{display:none}
+  .banner{opacity:1}.shield .tick{stroke-dashoffset:0}
+}
+@media (max-width:820px){
+  .s1 .row{left:12px;right:12px;gap:8px}
+  .s1 .who{width:86px;font-size:8.5px;letter-spacing:.08em}
+  .s1 .out{width:128px;font-size:9.5px;padding:8px}
+  .s2 .bk{left:6%;width:96px}
+  .s3 .shelf{left:12px;right:12px;gap:6px}
+  .s3 .loc i{font-size:7.5px;letter-spacing:.04em}
+  .s4 .bx{width:42%;font-size:8.5px;letter-spacing:.06em}.s4 .bx.a{left:4%}.s4 .bx.b{right:4%}
+  .stage .banner{white-space:normal;text-align:center;width:calc(100% - 24px);line-height:1.4}
+  .s4 .bx b{font-size:14px}
+}
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> <span class="en">ENCRYPTION</span><span class="nl">VERSLEUTELING</span></a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">LOGIN</span><span class="nl">INLOG</span></a>
+      <a href="#r2"><span class="en">KEYS</span><span class="nl">SLEUTELS</span></a>
+      <a href="#r3"><span class="en">COPIES</span><span class="nl">KOPIEËN</span></a>
+      <a href="#r4">QUANTUM</a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Encrypted at rest. <em>So who can still read it?</em></span>
+      <span class="nl">Versleuteld opgeslagen. <em>Wie kan het dan nog lezen?</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">If someone steals our encrypted data, can they read it? Usually not, if they took a disk or a backup. Usually yes, if they took a login or the key. Four questions decide which, including what a quantum computer changes.</span>
+      <span class="nl">Als iemand onze versleutelde data steelt, kan hij die dan lezen? Meestal niet als hij een schijf of back-up meenam. Meestal wel als hij een inlog of de sleutel meenam. Vier vragen bepalen welke van de twee, inclusief wat een quantumcomputer verandert.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FOUR</span><span class="nl">BEKIJK DE VIER</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT KEEPS IT UNREADABLE</span><span class="nl">WAT HET ONLEESBAAR HOUDT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">Locked on the disk, <em>open at login.</em></span>
+      <span class="nl">Op slot op de schijf, <em>open na inloggen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">encryption at rest / what it does and does not stop</span>
+      <span class="nl">versleuteling van opgeslagen data / wat het wel en niet tegenhoudt</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">THE SAME CUSTOMER FILE</span><span class="nl">HETZELFDE KLANTENBESTAND</span></div>
+      <div class="row a"><div class="who"><b>💽</b><span class="en">Disk stolen</span><span class="nl">Schijf gestolen</span></div><div class="path"></div><div class="out good">9f3a c71e 04bd e2…<br><span class="en">unreadable</span><span class="nl">onleesbaar</span></div></div>
+      <div class="row b"><div class="who"><b>🕵️</b><span class="en">Login stolen</span><span class="nl">Inlog gestolen</span></div><div class="path"></div><div class="out bad">J. Jansen · NL91 ABNA…<br><span class="en">plain text</span><span class="nl">leesbaar</span></div></div>
+      <div class="banner"><span class="en">SAME DATA · DIFFERENT THIEF · DIFFERENT OUTCOME</span><span class="nl">ZELFDE DATA · ANDERE DIEF · ANDERE UITKOMST</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Encryption at rest scrambles data where it is stored: on the disk, in the database, in the backup. Most cloud storage now does this by default. Amazon <abbr class="tip" tabindex="0" data-tip="Amazon Simple Storage Service: Amazon's cloud storage for files and backups.">S3</abbr> encrypts every new upload since January 2023, and Microsoft Azure Storage encryption cannot be switched off. But the system unlocks the data for every user and application that logs in. A stolen laptop that was switched off, or a disk taken from a data centre, yields nothing readable. A phished account, a leaked access key or ransomware running on the server reads everything in plain text.</p>
+      <p class="en"><strong>Business impact:</strong> "encrypted at rest" in a supplier questionnaire answers the stolen-disk question, not the stolen-login question. What protects the running system is who can log in and whether anyone notices unusual reading.</p>
+      <p class="nl">Versleuteling van opgeslagen data maakt gegevens onleesbaar waar ze staan: op de schijf, in de database, in de back-up. De meeste cloudopslag doet dit inmiddels standaard. Amazon <abbr class="tip" tabindex="0" data-tip="Amazon Simple Storage Service: de cloudopslag van Amazon voor bestanden en back-ups.">S3</abbr> versleutelt sinds januari 2023 elke nieuwe upload, en de versleuteling van Microsoft Azure Storage kunt u niet uitzetten. Maar het systeem ontsleutelt de data voor elke gebruiker en applicatie die inlogt. Een gestolen laptop die uit stond, of een schijf uit een datacenter, levert niets leesbaars op. Een gephisht account, een uitgelekte toegangssleutel of ransomware op de server leest alles gewoon.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> "versleuteld opgeslagen" in een leveranciersvragenlijst beantwoordt de vraag over een gestolen schijf, niet die over een gestolen inlog. Wat het draaiende systeem beschermt, is wie kan inloggen en of iemand opmerkt dat er ongebruikelijk veel wordt gelezen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ENCRYPTED ≠ UNREADABLE AFTER LOGIN</span><span class="nl">VERSLEUTELD ≠ ONLEESBAAR NA INLOGGEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ASK WHO CAN READ IT WHILE IT RUNS</span><span class="nl">AANBEVOLEN: VRAAG WIE HET KAN LEZEN TERWIJL HET DRAAIT</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Not the cipher, the login</span><span class="nl">Niet de versleuteling, de inlog</span></b><p><span class="en">AI does not break the encryption itself. It makes the easy route faster: convincing phishing for exactly the login the system decrypts for.</span><span class="nl">AI breekt de versleuteling zelf niet. Het maakt de makkelijke route sneller: overtuigende phishing voor precies de inlog waarvoor het systeem ontsleutelt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">An AI assistant with broad read rights sees the decrypted data like any other user. Encryption at rest does nothing to limit what it can find and summarise.</span><span class="nl">Een AI-assistent met ruime leesrechten ziet de ontsleutelde data zoals elke andere gebruiker. Versleuteling van opgeslagen data beperkt niet wat hij kan vinden en samenvatten.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Spot the bulk read</span><span class="nl">Zie het massale lezen</span></b><p><span class="en">AI-based detection can flag one account suddenly reading far more than usual, which is what theft through a valid login looks like.</span><span class="nl">Detectie met AI kan signaleren dat één account ineens veel meer leest dan normaal, en zo ziet diefstal via een geldige inlog eruit.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">Whoever holds the key <em>holds the data.</em></span>
+      <span class="nl">Wie de sleutel heeft, <em>heeft de data.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">key management / where the keys live and who can use them</span>
+      <span class="nl">sleutelbeheer / waar de sleutels staan en wie ze kan gebruiken</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">THE NIGHTLY BACKUP</span><span class="nl">DE NACHTELIJKE BACK-UP</span></div>
+      <div class="bk">🗄️<span><span class="en">Backup + key file</span><span class="nl">Back-up + sleutelbestand</span></span></div>
+      <div class="it d">📦</div><div class="it k">🔑</div>
+      <div class="actor pulse">🕵️<span class="tag"><span class="en">THIEF</span><span class="nl">DIEF</span></span></div>
+      <div class="banner"><span class="en">KEY STORED WITH THE DATA · ONE THEFT GETS BOTH</span><span class="nl">SLEUTEL BIJ DE DATA · ÉÉN DIEFSTAL, ALLEBEI</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Encryption does not remove the secret; it moves it into the key. A key stored next to the data, in the same backup, a configuration file or a script, is a safe with the key taped to the door. Cloud providers manage keys for you by default. That is convenient, but anyone with enough admin rights in your cloud account can then use the key. For the most sensitive data, consider a key you manage in a <abbr class="tip" tabindex="0" data-tip="Key management service: a cloud service that stores keys and logs every use, so data and key stay apart.">KMS</abbr> or <abbr class="tip" tabindex="0" data-tip="Hardware security module: tamper-resistant hardware that uses keys without ever letting them out.">HSM</abbr>, with different people managing keys and data.</p>
+      <p class="en"><strong>Business impact:</strong> a stolen backup with its key is simply a readable backup. The <abbr class="tip" tabindex="0" data-tip="General Data Protection Regulation: the EU privacy law.">GDPR</abbr> relief for encrypted data only helps if the data stays unintelligible to the thief, so not if the key went too. The reverse also bites: lose the key and you lose the data yourself. The key backup deserves the same care as the data backup.</p>
+      <p class="nl">Versleuteling haalt het geheim niet weg; het verplaatst het naar de sleutel. Een sleutel die naast de data staat, in dezelfde back-up, een configuratiebestand of een script, is een kluis met de sleutel op de deur geplakt. Cloudleveranciers beheren de sleutels standaard voor u. Dat is handig, maar dan kan iedereen met genoeg beheerrechten in uw cloudaccount de sleutel gebruiken. Overweeg voor de gevoeligste data een sleutel die u zelf beheert in een <abbr class="tip" tabindex="0" data-tip="Key management service: een clouddienst die sleutels bewaart en elk gebruik logt, zodat data en sleutel gescheiden blijven.">KMS</abbr> of <abbr class="tip" tabindex="0" data-tip="Hardware security module: manipulatiebestendige hardware die sleutels gebruikt zonder ze ooit naar buiten te laten.">HSM</abbr>, met verschillende mensen voor het beheer van sleutels en van data.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een gestolen back-up met de sleutel erbij is gewoon een leesbare back-up. De verlichting die de <abbr class="tip" tabindex="0" data-tip="Algemene verordening gegevensbescherming: de Europese privacywet.">AVG</abbr> biedt voor versleutelde data helpt alleen als de data onleesbaar blijft voor de dief, dus niet als de sleutel ook weg is. Omgekeerd geldt het ook: raakt u de sleutel kwijt, dan bent u de data zelf kwijt. De back-up van de sleutel verdient dezelfde zorg als die van de data.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">KEY NEXT TO THE DATA · ONE THEFT, BOTH</span><span class="nl">SLEUTEL NAAST DE DATA · ÉÉN DIEFSTAL, ALLEBEI</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: KEYS APART FROM DATA + SEPARATE ADMINS</span><span class="nl">AANBEVOLEN: SLEUTELS APART VAN DATA + APARTE BEHEERDERS</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Attackers use AI tools to search stolen code, file shares and chat history for keys and passwords in minutes. A key left in a script is found first.</span><span class="nl">Aanvallers doorzoeken met AI in minuten gestolen code, bestandsshares en chatgeschiedenis op sleutels en wachtwoorden. Een sleutel in een script wordt als eerste gevonden.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Developers paste code with a key into an AI coding assistant or chatbot, and the key now sits in a system you do not control.</span><span class="nl">Ontwikkelaars plakken code met een sleutel erin in een AI-codeassistent of chatbot, en de sleutel staat dan in een systeem dat u niet beheert.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Find keys before attackers do</span><span class="nl">Vind sleutels eerder dan aanvallers</span></b><p><span class="en">Secret-scanning tools, increasingly AI-assisted, block keys from entering code and alert when a key is used from an unusual place.</span><span class="nl">Tools die naar geheimen scannen, steeds vaker met AI, houden sleutels uit de code en waarschuwen als een sleutel vanaf een ongebruikelijke plek wordt gebruikt.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">The copy <em>nobody encrypted.</em></span>
+      <span class="nl">De kopie <em>die niemand versleutelde.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">coverage / exports, removable media, test copies</span>
+      <span class="nl">dekking / exports, usb-sticks, testkopieën</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">WHERE THE DATA LIVES</span><span class="nl">WAAR DE DATA STAAT</span></div>
+      <div class="shelf">
+        <div class="loc">🗃️<b>🔒</b><i>Database</i></div>
+        <div class="loc">💾<b>🔒</b><i><span class="en">Backup</span><span class="nl">Back-up</span></i></div>
+        <div class="loc">💻<b>🔒</b><i>Laptop</i></div>
+        <div class="loc open" style="--d:0s">📊<b>🔓</b><i>Export</i></div>
+        <div class="loc open" style="--d:.6s">🔌<b>🔓</b><i><span class="en">USB stick</span><span class="nl">Usb-stick</span></i></div>
+        <div class="loc open" style="--d:1.2s">🧪<b>🔓</b><i><span class="en">Test copy</span><span class="nl">Testkopie</span></i></div>
+      </div>
+      <div class="banner"><span class="en">THE SYSTEM IS ENCRYPTED · THE COPIES MAY NOT BE</span><span class="nl">HET SYSTEEM IS VERSLEUTELD · DE KOPIEËN MISSCHIEN NIET</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Encryption at rest is a setting of the place where data is stored, not a property of the data. The database is encrypted. The nightly export to a file share, the spreadsheet on a USB stick, the old laptop without disk encryption and the test system loaded with real data may not be. Once data is copied, the copy gets whatever protection the new place has.</p>
+      <p class="en"><strong>Business impact:</strong> the report says "all systems encrypted", and the incident happens on the copy that was not a system. Because that copy was readable, the encryption relief does not apply, and when the risk is high you inform the people affected. Checking coverage per storage location, including laptops and removable media, closes the gap.</p>
+      <p class="nl">Versleuteling van opgeslagen data is een instelling van de plek waar data staat, geen eigenschap van de data zelf. De database is versleuteld. De nachtelijke export naar een bestandsshare, het spreadsheet op een usb-stick, de oude laptop zonder schijfversleuteling en het testsysteem met echte data misschien niet. Zodra data wordt gekopieerd, krijgt de kopie de bescherming van de nieuwe plek.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> het rapport zegt "alle systemen versleuteld", en het incident gebeurt op de kopie die geen systeem was. Omdat die kopie leesbaar was, geldt de verlichting voor versleutelde data niet, en bij een hoog risico informeert u de betrokkenen. Controleer de dekking per opslagplek, inclusief laptops en usb-sticks; dat dicht het gat.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ONE READABLE COPY IS ENOUGH</span><span class="nl">ÉÉN LEESBARE KOPIE IS GENOEG</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: CHECK COVERAGE PER LOCATION, NOT PER SYSTEM</span><span class="nl">AANBEVOLEN: CONTROLEER DEKKING PER PLEK, NIET PER SYSTEEM</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Once inside, attackers let AI sift a file share in minutes for the one readable export among thousands of encrypted files.</span><span class="nl">Eenmaal binnen laten aanvallers AI in minuten een bestandsshare doorzoeken naar die ene leesbare export tussen duizenden versleutelde bestanden.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Staff upload an export to a public AI chatbot to analyse it, creating one more readable copy outside every control you have.</span><span class="nl">Medewerkers uploaden een export naar een publieke AI-chatbot om die te analyseren, en zo ontstaat nog een leesbare kopie buiten al uw maatregelen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Find the copies</span><span class="nl">Vind de kopieën</span></b><p><span class="en">Data-discovery tools recognise sensitive content across drives, mailboxes and cloud storage, and report which locations are not encrypted.</span><span class="nl">Datadiscoverytools herkennen gevoelige inhoud op schijven, in mailboxen en in cloudopslag, en melden welke plekken niet zijn versleuteld.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">The quantum question: <em>stored data is not the weak spot.</em></span>
+      <span class="nl">De quantumvraag: <em>opgeslagen data is niet de zwakke plek.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">post-quantum / symmetric versus public-key encryption</span>
+      <span class="nl">post-quantum / symmetrische versus publieke-sleutelversleuteling</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">WHAT A QUANTUM COMPUTER BREAKS</span><span class="nl">WAT EEN QUANTUMCOMPUTER BREEKT</span></div>
+      <div class="q">⚛️</div>
+      <div class="bx a"><b>AES-256</b><span class="en">stored data</span><span class="nl">opgeslagen data</span></div>
+      <div class="bx b"><b>RSA / ECC</b><span class="en">network traffic · files encrypted to a public key</span><span class="nl">netwerkverkeer · bestanden versleuteld met een publieke sleutel</span></div>
+      <div class="banner"><span class="en">AES HOLDS · PUBLIC-KEY CRYPTO NEEDS A PLAN</span><span class="nl">AES HOUDT STAND · PUBLIEKE SLEUTELS VRAGEN EEN PLAN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Stored data is almost always encrypted with <abbr class="tip" tabindex="0" data-tip="Advanced Encryption Standard: the common cipher for stored data; the same key locks and unlocks.">AES</abbr>, and 256-bit AES is the cloud default. <abbr class="tip" tabindex="0" data-tip="National Institute of Standards and Technology: the US body that sets widely used encryption standards.">NIST</abbr> expects even 128-bit AES to remain secure for decades, quantum computers included. What a large enough quantum computer would break is public-key encryption such as <abbr class="tip" tabindex="0" data-tip="RSA and elliptic-curve cryptography: public-key methods used to exchange keys and sign data.">RSA and ECC</abbr>. For stored data that matters in two places: traffic that was recorded on the way to storage (harvest now, decrypt later), and files or backups encrypted to someone's public key, such as encrypted email archives.</p>
+      <p class="en"><strong>Business impact:</strong> for secrets that must stay secret for ten years or more, the quantum risk sits in the network and in public-key encrypted archives, not in the database disk. Knowing where public-key encryption protects your data is the first step. The <a href="../quantum-and-ai/" style="color:var(--white)">quantum briefing</a> covers the suggested timelines.</p>
+      <p class="nl">Opgeslagen data wordt vrijwel altijd versleuteld met <abbr class="tip" tabindex="0" data-tip="Advanced Encryption Standard: de gangbare versleuteling voor opgeslagen data; dezelfde sleutel sluit en opent.">AES</abbr>, en 256-bits AES is de standaard in de cloud. Het <abbr class="tip" tabindex="0" data-tip="National Institute of Standards and Technology: de Amerikaanse instantie die veelgebruikte versleutelingsstandaarden opstelt.">NIST</abbr> verwacht dat zelfs 128-bits AES nog decennia veilig blijft, ook tegen quantumcomputers. Wat een voldoende krachtige quantumcomputer wel zou breken, is versleuteling met publieke sleutels, zoals <abbr class="tip" tabindex="0" data-tip="RSA en elliptische-curvecryptografie: methoden met publieke sleutels om sleutels uit te wisselen en te ondertekenen.">RSA en ECC</abbr>. Voor opgeslagen data speelt dat op twee plekken: verkeer dat onderweg naar de opslag is opgenomen (nu buitmaken, later ontsleutelen), en bestanden of back-ups die met iemands publieke sleutel zijn versleuteld, zoals versleutelde e-mailarchieven.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> voor geheimen die tien jaar of langer geheim moeten blijven, zit het quantumrisico in het netwerk en in archieven met publieke-sleutelversleuteling, niet in de databaseschijf. Weten waar publieke-sleutelversleuteling uw data beschermt, is de eerste stap. De <a href="../quantum-and-ai/" style="color:var(--white)">quantumbriefing</a> behandelt de voorgestelde tijdlijnen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">RECORDED TRAFFIC + PUBLIC-KEY ARCHIVES</span><span class="nl">OPGENOMEN VERKEER + ARCHIEVEN MET PUBLIEKE SLEUTELS</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: AES-256 AT REST + LIST PUBLIC-KEY USE</span><span class="nl">AANBEVOLEN: AES-256 VOOR OPSLAG + BRENG PUBLIEKE SLEUTELS IN KAART</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">No shortcut</span><span class="nl">Geen kortere weg</span></b><p><span class="en">AI does not make breaking AES practical. The quantum threat is separate, and aimed at public-key encryption.</span><span class="nl">AI maakt het breken van AES niet haalbaar. De quantumdreiging staat daar los van, en richt zich op publieke-sleutelversleuteling.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI-generated code can still pick outdated algorithms or hard-code keys. It works, passes a demo, and quietly weakens what is stored.</span><span class="nl">Door AI geschreven code kan nog steeds verouderde algoritmen kiezen of sleutels in de code zetten. Het werkt, slaagt in de demo, en verzwakt stilletjes wat wordt opgeslagen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Build the inventory faster</span><span class="nl">Sneller een overzicht</span></b><p><span class="en">Tools can scan code, configurations and certificates to list where RSA and ECC protect your data, the inventory that every quantum plan starts with.</span><span class="nl">Tools kunnen code, configuraties en certificaten scannen om te laten zien waar RSA en ECC uw data beschermen: het overzicht waarmee elk quantumplan begint.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>keeps it unreadable.</em></span>
+      <span class="nl">Wat het <em>onleesbaar houdt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">most of this is a setting or a habit, not a new product</span>
+      <span class="nl">het meeste is een instelling of een gewoonte, geen nieuw product</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">ACCESS</span><span class="nl">TOEGANG</span></span>
+        <span class="chip c2"><span class="en">KEYS APART</span><span class="nl">SLEUTELS APART</span></span>
+        <span class="chip c3"><span class="en">COVERAGE</span><span class="nl">DEKKING</span></span>
+        <span class="chip c4"><span class="en">KEY BACKUP</span><span class="nl">SLEUTELBACK-UP</span></span>
+        <span class="chip c5"><span class="en">CRYPTO INVENTORY</span><span class="nl">CRYPTO-OVERZICHT</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Addresses</th><th>In one line</th></tr>
+        <tr><td class="ctl">Access first</td><td>Login (01)</td><td><abbr class="tip" tabindex="0" data-tip="Multi-factor authentication: a second proof, such as an app or key, on top of the password.">MFA</abbr>, least privilege and alerts on bulk reading. These protect the running system; encryption at rest does not.</td></tr>
+        <tr><td class="ctl">Field-level encryption</td><td>Login (01)</td><td>For the few most sensitive fields, encrypt inside the application, so a database administrator sees only scrambled values.</td></tr>
+        <tr><td class="ctl">Keys apart from data</td><td>Keys (02)</td><td>No keys in backups, scripts or config files. Keys live in a <abbr class="tip" tabindex="0" data-tip="Key management service: a cloud service that stores keys and logs every use.">KMS</abbr> or vault, and every use is logged.</td></tr>
+        <tr><td class="ctl">Your own key for crown jewels</td><td>Keys (02)</td><td>Consider customer-managed keys for the datasets that would hurt most. Provider-managed keys are fine for the rest.</td></tr>
+        <tr><td class="ctl">Separate key admins</td><td>Keys (02)</td><td>The people who manage keys are not the people who can read the data.</td></tr>
+        <tr><td class="ctl">Tested key recovery</td><td>Keys (02)</td><td>A key backup kept apart from the data backup, and a restore that is actually tested.</td></tr>
+        <tr><td class="ctl">Coverage check</td><td>Copies (03)</td><td>Once a year, per storage location: encrypted or not. Include laptops, removable media, exports and test systems.</td></tr>
+        <tr><td class="ctl">Crypto inventory</td><td>Quantum (04)</td><td>A list of where public-key encryption protects stored or transported data. The start of any quantum plan.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Pakt aan</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Eerst toegang</td><td>Inlog (01)</td><td><abbr class="tip" tabindex="0" data-tip="Multifactorauthenticatie: een tweede bewijs, zoals een app of sleutel, naast het wachtwoord.">MFA</abbr>, minimale rechten en meldingen bij massaal lezen. Die beschermen het draaiende systeem; versleuteling van opgeslagen data doet dat niet.</td></tr>
+        <tr><td class="ctl">Versleuteling per veld</td><td>Inlog (01)</td><td>Versleutel de paar gevoeligste velden in de applicatie zelf, zodat een databasebeheerder alleen onleesbare waarden ziet.</td></tr>
+        <tr><td class="ctl">Sleutels apart van data</td><td>Sleutels (02)</td><td>Geen sleutels in back-ups, scripts of configuratiebestanden. Sleutels staan in een <abbr class="tip" tabindex="0" data-tip="Key management service: een clouddienst die sleutels bewaart en elk gebruik logt.">KMS</abbr> of kluis, en elk gebruik wordt gelogd.</td></tr>
+        <tr><td class="ctl">Eigen sleutel voor kroonjuwelen</td><td>Sleutels (02)</td><td>Overweeg zelfbeheerde sleutels voor de datasets die het meeste pijn doen. Sleutels van de leverancier volstaan voor de rest.</td></tr>
+        <tr><td class="ctl">Aparte sleutelbeheerders</td><td>Sleutels (02)</td><td>Wie de sleutels beheert, is niet wie de data kan lezen.</td></tr>
+        <tr><td class="ctl">Getest sleutelherstel</td><td>Sleutels (02)</td><td>Een back-up van de sleutel, apart van de data-back-up, en een herstel dat echt is getest.</td></tr>
+        <tr><td class="ctl">Dekkingscontrole</td><td>Kopieën (03)</td><td>Eén keer per jaar, per opslagplek: versleuteld of niet. Inclusief laptops, usb-sticks, exports en testsystemen.</td></tr>
+        <tr><td class="ctl">Crypto-overzicht</td><td>Quantum (04)</td><td>Een lijst van waar publieke-sleutelversleuteling opgeslagen of verzonden data beschermt. Het begin van elk quantumplan.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> "is it encrypted?" is the wrong question, because the answer is nearly always yes. We suggest asking three others. Who can read it while the system runs? Where are the keys, and who can use them? Which copies are not encrypted? On quantum, stored data under <abbr class="tip" tabindex="0" data-tip="Advanced Encryption Standard: the common cipher for stored data.">AES</abbr>-256 is not the urgent part; recorded network traffic and public-key encrypted archives are. How far to go per dataset is your call.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> "is het versleuteld?" is de verkeerde vraag, want het antwoord is bijna altijd ja. Wij raden aan drie andere vragen te stellen. Wie kan het lezen terwijl het systeem draait? Waar staan de sleutels, en wie kan ze gebruiken? Welke kopieën zijn niet versleuteld? Wat quantum betreft: opgeslagen data onder <abbr class="tip" tabindex="0" data-tip="Advanced Encryption Standard: de gangbare versleuteling voor opgeslagen data.">AES</abbr>-256 is niet het urgente deel; opgenomen netwerkverkeer en archieven met publieke-sleutelversleuteling wel. Hoe ver u per dataset gaat, is uw keuze.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">Breaking the encryption is unlikely. Walking around it, through a login, a key left next to the data or an unencrypted copy, is not.</span><span class="nl">De versleuteling breken is onwaarschijnlijk. Eromheen lopen, via een inlog, een sleutel naast de data of een onversleutelde kopie, is dat niet.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Readable stolen data can mean notifying the regulator and, when the risk is high, the people affected. A lost key without a backup means the data is gone for you too.</span><span class="nl">Leesbare gestolen data kan betekenen: melden bij de toezichthouder en, bij een hoog risico, bij de betrokkenen. Een verloren sleutel zonder back-up betekent dat de data ook voor u weg is.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low</span><span class="nl">Laag</span></span><p><span class="en">With keys apart from the data, coverage checked and access tightened, stolen media stay unreadable and a stolen login reaches less.</span><span class="nl">Met sleutels apart van de data, gecontroleerde dekking en strakkere toegang blijven gestolen media onleesbaar en bereikt een gestolen inlog minder.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CISO</span><span class="nl">CISO</span></span><p><span class="en">The <abbr class="tip" tabindex="0" data-tip="Chief information security officer: the executive responsible for information security.">CISO</abbr> owns the encryption and key policy. The data owners decide which datasets deserve their own keys.</span><span class="nl">De <abbr class="tip" tabindex="0" data-tip="Chief information security officer: de bestuurder die verantwoordelijk is voor informatiebeveiliging.">CISO</abbr> is eigenaar van het versleutelings- en sleutelbeleid. De data-eigenaren bepalen welke datasets een eigen sleutel verdienen.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">% of storage locations with encryption confirmed · crown-jewel datasets on keys you manage · people who can both manage keys and read data · date of the last tested key restore.</span><span class="nl">% opslagplekken waarvan versleuteling is bevestigd · kroonjuwelen op sleutels die u zelf beheert · mensen die zowel sleutels beheren als data kunnen lezen · datum van het laatst geteste sleutelherstel.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Encrypted data becomes readable when a login, a key stored with the data, or an unencrypted copy is compromised, which can become a notifiable breach.”</span><span class="nl">“Versleutelde data wordt leesbaar als een inlog, een sleutel die bij de data staat of een onversleutelde kopie wordt buitgemaakt, wat een meldplichtig datalek kan worden.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">GDPR</td><td>Encryption is named among the appropriate security measures (Art. 32(1)(a)). Whether you use it depends on the risk.</td><td>A supplier that processes your personal data needs a processing agreement (Art. 28). Ask where the keys are and who at the supplier can use them.</td><td>Notify the Autoriteit Persoonsgegevens within 72 hours (Art. 33); inform the people affected when the risk is high (Art. 34). That second duty can fall away if the data was unintelligible to the thief, for example encrypted with the key still safe (Art. 34(3)(a)).</td></tr>
+        <tr><td class="ctl">NIS2</td><td>NIS2 requires policies and procedures on cryptography and, where appropriate, encryption (Art. 21(2)(h)). In the Netherlands this runs through the Cyberbeveiligingswet, in force since 15 August 2026.</td><td>Ask for their encryption policy and who holds the keys. "Encrypted at rest" alone answers only the stolen-disk question.</td><td>A theft of readable data can count as a significant incident if it meets the thresholds. Early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month.</td></tr>
+        <tr><td class="ctl">DORA</td><td>The <abbr class="tip" tabindex="0" data-tip="Regulatory technical standards: detailed EU rules under DORA, here Delegated Regulation (EU) 2024/1774.">RTS</abbr> on ICT risk require a policy for encrypting data at rest and in transit, key management over the whole key lifecycle, and updating cryptography as cryptanalysis develops (Art. 6–7).</td><td>Every <abbr class="tip" tabindex="0" data-tip="Information and communication technology: in DORA, any digital or data service a financial entity relies on.">ICT</abbr> third party holding your data belongs in the register. Ask where its keys live and whether you can revoke them.</td><td>Classify promptly. Initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterion CC6.1 covers protecting information assets. Its points of focus include encrypting data at rest where the risk calls for it and protecting encryption keys.</td><td>Check that key protection is tested, not only "encryption enabled". Check whether the cloud provider underneath is carved out of the report.</td><td>A compromised key or an unencrypted copy of in-scope data will likely appear as an exception in the next report.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>The focus is financial reporting. Encryption only appears where it protects data that feeds the financial process.</td><td>The report rarely tells you who holds the keys. Ask for it in the contract instead.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">AVG</td><td>Versleuteling wordt genoemd als passende beveiligingsmaatregel (art. 32 lid 1 onder a). Of u het inzet, hangt af van het risico.</td><td>Een leverancier die uw persoonsgegevens verwerkt, heeft een verwerkersovereenkomst nodig (art. 28). Vraag waar de sleutels staan en wie bij de leverancier ze kan gebruiken.</td><td>Meld het binnen 72 uur bij de Autoriteit Persoonsgegevens (art. 33); informeer de betrokkenen als het risico hoog is (art. 34). Die tweede plicht kan vervallen als de data onbegrijpelijk was voor de dief, bijvoorbeeld versleuteld met de sleutel nog veilig (art. 34 lid 3 onder a).</td></tr>
+        <tr><td class="ctl">NIS2</td><td>NIS2 vraagt beleid en procedures voor cryptografie en, waar passend, versleuteling (art. 21 lid 2 onder h). In Nederland loopt dit via de Cyberbeveiligingswet, van kracht sinds 15 augustus 2026.</td><td>Vraag naar hun versleutelingsbeleid en wie de sleutels heeft. "Versleuteld opgeslagen" beantwoordt alleen de vraag over een gestolen schijf.</td><td>Diefstal van leesbare data kan als significant incident gelden als het de drempels haalt. Vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindverslag binnen een maand.</td></tr>
+        <tr><td class="ctl">DORA</td><td>De <abbr class="tip" tabindex="0" data-tip="Technische reguleringsnormen: gedetailleerde EU-regels onder DORA, hier Gedelegeerde Verordening (EU) 2024/1774.">RTS</abbr> over ICT-risico vragen beleid voor versleuteling van opgeslagen en verzonden data, sleutelbeheer over de hele levenscyclus van sleutels, en het bijwerken van cryptografie naarmate de cryptoanalyse zich ontwikkelt (art. 6–7).</td><td>Elke <abbr class="tip" tabindex="0" data-tip="Informatie- en communicatietechnologie: onder DORA elke digitale of datadienst waarop een financiële instelling leunt.">ICT</abbr>-derde die uw data bewaart, hoort in het register. Vraag waar zijn sleutels staan en of u ze kunt intrekken.</td><td>Classificeer snel. Eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterium CC6.1 gaat over het beschermen van informatieassets. De aandachtspunten omvatten versleuteling van opgeslagen data waar het risico daarom vraagt, en bescherming van sleutels.</td><td>Controleer of sleutelbescherming wordt getest, niet alleen "versleuteling aan". Controleer of de onderliggende cloudleverancier buiten het rapport is gelaten.</td><td>Een gecompromitteerde sleutel of een onversleutelde kopie van data binnen scope komt waarschijnlijk als afwijking in het volgende rapport.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>De focus ligt op de financiële verslaggeving. Versleuteling komt alleen aan bod waar het data beschermt die het financiële proces voedt.</td><td>Het rapport vertelt zelden wie de sleutels heeft. Vraag daar in het contract naar.</td><td>ISAE 3402 schept geen meldplicht aan de auditors van gebruikers. Verwacht een afwijking in het volgende rapport en vraag in het contract om tussentijdse melding.</td></tr>
+      </table>
+      <p class="sources en">Checked against: <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">GDPR</a> Art. 28, 32–34, <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 21 and 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 19 and <a href="https://eur-lex.europa.eu/eli/reg_del/2024/1774/oj">RTS (EU) 2024/1774</a> Art. 6–7, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL</a> (Aug 2026), <a href="https://csrc.nist.gov/projects/post-quantum-cryptography/faqs">NIST PQC FAQ</a>, <a href="https://csrc.nist.gov/pubs/ir/8547/ipd">NIST IR 8547</a> (draft, Nov 2024), AICPA Trust Services Criteria CC6.1 (2017, points of focus 2020), <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html">AWS S3</a> and <a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-service-encryption">Azure Storage</a> documentation (2026) · September 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">AVG</a> art. 28, 32–34, <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 21 en 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 19 en <a href="https://eur-lex.europa.eu/eli/reg_del/2024/1774/oj">RTS (EU) 2024/1774</a> art. 6–7, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL</a> (aug 2026), <a href="https://csrc.nist.gov/projects/post-quantum-cryptography/faqs">NIST PQC FAQ</a>, <a href="https://csrc.nist.gov/pubs/ir/8547/ipd">NIST IR 8547</a> (concept, nov 2024), AICPA Trust Services Criteria CC6.1 (2017, aandachtspunten 2020), documentatie van <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingServerSideEncryption.html">AWS S3</a> en <a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-service-encryption">Azure Storage</a> (2026) · september 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../quantum-and-ai/"><span class="en">Quantum and AI</span><span class="nl">Quantum en AI</span></a> ·
+  <a href="../data/"><span class="en">Knowing what to protect</span><span class="nl">Weten wat u beschermt</span></a> ·
+  <a href="../cloud/"><span class="en">Cloud misconfiguration</span><span class="nl">Cloudmisconfiguratie</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=encryption-at-rest&amp;title=Missing%3A%20encryption-at-rest"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=encryption-at-rest&amp;title=Correction%3A%20encryption-at-rest"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">ENCRYPTION BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">VERSLEUTELING BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>
