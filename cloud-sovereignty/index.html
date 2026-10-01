@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Cloud sovereignty // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   CLOUD SOVEREIGNTY // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:120px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;line-height:1.35}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:24px}
+.node.right{right:24px}
+.node.right .box{border-color:rgba(255,93,115,.55)}
+
+.wire{position:absolute;left:150px;right:150px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700;border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 7s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+
+/* --- scene 1 : the SEAL ladder --- */
+.s1 .lad{position:absolute;left:40px;right:40px;top:78px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.s1 .lv{position:relative;height:104px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;align-content:center;gap:5px;font-size:9.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;text-align:center;padding:0 8px;line-height:1.3}
+.s1 .lv b{font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--white);text-transform:none}
+.s1 .lv::after{content:"";position:absolute;inset:0;border:1px solid var(--bad);background:rgba(255,93,115,.16);opacity:0;animation:lvfill 8s ease-in-out infinite;animation-delay:var(--d)}
+.s1 .lv.w::after{border-color:var(--warn);background:rgba(255,200,87,.16)}
+.s1 .lv.g::after{border-color:var(--good);background:rgba(55,211,155,.14)}
+@keyframes lvfill{0%,8%{opacity:0}16%,84%{opacity:1}92%,100%{opacity:0}}
+.s1 .pin{position:absolute;bottom:100%;margin-bottom:9px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.18em;font-weight:700;color:var(--deep);background:var(--warn);padding:4px 9px;opacity:0;animation:pin 8s ease-in-out infinite;z-index:3}
+.s1 .pin::after{content:"";position:absolute;top:100%;left:50%;margin-left:-5px;border:5px solid transparent;border-top-color:var(--warn)}
+@keyframes pin{0%,36%{opacity:0;transform:translate(-50%,-10px)}44%,88%{opacity:1;transform:translate(-50%,0)}96%,100%{opacity:0}}
+.s1 .banner{animation-duration:8s}
+
+/* --- scene 2 : the order reaches the company --- */
+.s2 .actor{right:250px;top:14px}
+.s2 .env.order{right:256px;top:84px;margin-top:0;width:44px;height:30px;font-size:15px;opacity:0;animation:order 7s linear infinite}
+@keyframes order{0%{right:256px;top:84px;opacity:0}6%{opacity:1}28%{right:60px;top:124px;opacity:1}34%,100%{right:60px;top:124px;opacity:0}}
+.s2 .env.data{left:150px;opacity:0;animation:pull 7s linear infinite}
+@keyframes pull{0%,36%{left:150px;opacity:0}42%{opacity:1}80%{left:calc(100% - 150px);opacity:1}88%,100%{left:calc(100% - 150px);opacity:0}}
+.s2 .flag{position:absolute;left:24px;top:36px;font-size:9.5px;letter-spacing:.18em;font-weight:700;color:#8ff0cd;background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);padding:3px 9px}
+.s2 .banner{animation-duration:7s}
+
+/* --- scene 3 : what leaves with the SaaS --- */
+.s3 .side{position:absolute;top:44px;bottom:52px;width:25%;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;background:var(--surface);border:1px solid var(--line);padding:0 10px;line-height:1.35}
+.s3 .side b{font-size:26px;display:block}
+.s3 .side.l{left:24px;border-color:rgba(55,211,155,.5)}
+.s3 .side.r{right:24px;border-color:rgba(255,93,115,.55)}
+.s3 .pk{position:absolute;top:var(--t);left:calc(25% + 34px);white-space:nowrap;font-size:9.5px;letter-spacing:.14em;font-weight:700;padding:4px 9px;background:var(--white);color:var(--deep);opacity:0;animation:pk 6s linear infinite;animation-delay:var(--d);z-index:3}
+@keyframes pk{0%{left:calc(25% + 34px);opacity:0}8%{opacity:1}72%{left:calc(75% - 128px);opacity:1}82%,100%{left:calc(75% - 128px);opacity:0}}
+.s3 .pk.stay{animation:none;opacity:1;background:rgba(55,211,155,.15);color:#8ff0cd;border:1px solid rgba(55,211,155,.5)}
+.s3 .pk.stay::after{content:"⊣";margin-left:8px}
+.s3 .banner{animation-duration:6s}
+
+/* --- scene 4 : the switch-off --- */
+.s4 .prov{position:absolute;right:30px;top:50%;transform:translateY(-50%);width:150px;height:118px;display:grid;place-items:center;align-content:center;gap:8px;text-align:center;background:var(--surface);border:1px solid rgba(255,93,115,.55);font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;line-height:1.35}
+.s4 .sw{width:54px;height:26px;border:1px solid var(--line);background:var(--bg-lo);position:relative}
+.s4 .sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;background:var(--good);animation:flip 7s ease-in-out infinite}
+@keyframes flip{0%,30%{left:3px;background:var(--good)}38%,100%{left:31px;background:var(--bad)}}
+.s4 .apps{position:absolute;left:30px;top:50%;transform:translateY(-50%);display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:calc(100% - 240px)}
+.s4 .app{height:84px;display:grid;place-items:center;align-content:center;gap:4px;background:var(--surface);border:1px solid var(--line);font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;text-align:center;padding:0 6px;line-height:1.3;animation:dim 7s ease-in-out infinite;animation-delay:var(--d)}
+.s4 .app b{font-size:22px;display:block}
+@keyframes dim{0%,38%{opacity:1;filter:none}48%,100%{opacity:.28;filter:grayscale(1)}}
+.s4 .ctr{position:absolute;left:30px;top:30px;font-size:9.5px;letter-spacing:.18em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);padding:3px 9px;opacity:0;animation:ctr 7s ease-in-out infinite}
+@keyframes ctr{0%,50%{opacity:0}58%,100%{opacity:1}}
+.s4 .banner{animation-duration:7s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .s1 .lv::after,.s1 .pin{opacity:1}
+  .s2 .env.data{left:calc(100% - 150px);opacity:1}.s2 .env.order{display:none}
+  .s3 .pk{left:calc(75% - 128px);opacity:1}
+  .s4 .sw::after{left:31px;background:var(--bad)}.s4 .app{opacity:.28;filter:grayscale(1)}.s4 .ctr{opacity:1}
+  .banner{opacity:1}.shield .tick{stroke-dashoffset:0}
+}
+@media (max-width:820px){
+  .s1 .lad{left:12px;right:12px;gap:5px;top:70px}
+  .s1 .lv{height:96px;font-size:7.5px;letter-spacing:.04em;padding:0 3px}
+  .s1 .lv b{font-size:13px}
+  .s1 .pin{font-size:8px;letter-spacing:.1em}
+  .s2 .node{width:92px;font-size:8.5px}
+  .s2 .wire{left:116px;right:116px}
+  .s2 .env.data{left:116px}
+  .s2 .flag{top:30px}
+  .s2 .actor{right:112px;top:10px;width:46px;height:46px;font-size:18px}
+  .s2 .actor .tag{font-size:8px;letter-spacing:.1em;bottom:-22px}
+  .s2 .env.order{right:116px;top:64px;width:36px;height:26px;font-size:13px}
+  @keyframes order{0%{right:116px;top:64px;opacity:0}6%{opacity:1}28%{right:52px;top:100px;opacity:1}34%,100%{right:52px;top:100px;opacity:0}}
+  @keyframes pull{0%,36%{left:116px;opacity:0}42%{opacity:1}80%{left:calc(100% - 130px);opacity:1}88%,100%{left:calc(100% - 130px);opacity:0}}
+  .s3 .side{width:27%;font-size:8px;letter-spacing:.06em}
+  .s3 .pk{font-size:8px;padding:3px 6px}
+  .s4 .prov{width:110px;right:12px;font-size:8px}
+  .s4 .apps{left:12px;width:calc(100% - 140px);gap:6px}
+  .s4 .app{font-size:7.5px;letter-spacing:.04em;height:76px}
+  .stage .banner{white-space:normal;text-align:center;width:calc(100% - 24px);line-height:1.4}
+}
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+.callout .disclaimer{margin-top:12px;font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;color:var(--muted)}
+body:has(#lang-en:checked) .callout .disclaimer.en,body:has(#lang-nl:checked) .callout .disclaimer.nl{display:block}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+/* diagram:sov-map */
+/* ---------- sovereignty map (what still leaves) ---------- */
+.arch{margin:0 0 30px;background:var(--bg-lo);border:1px solid var(--line-soft);padding:12px;overflow-x:auto}
+.arch svg{display:block;width:100%;min-width:900px;height:auto}
+.arch .sv-zone{fill:var(--bg-hi);stroke:var(--line-soft)}
+.arch .sv-zone-l{stroke:rgba(55,211,155,.35)}
+.arch .sv-zone-r{stroke:rgba(255,93,115,.35)}
+.arch .sv-zlabel{font:700 11px var(--mono);letter-spacing:.24em;fill:var(--slate)}
+.arch .sv-node{fill:var(--surface);stroke:var(--line)}
+.arch .sv-s-good .sv-bar{fill:var(--good)}
+.arch .sv-s-warn .sv-bar{fill:var(--warn)}
+.arch .sv-s-bad .sv-bar{fill:var(--bad)}
+.arch .sv-s-bad .sv-node{stroke:rgba(255,93,115,.45)}
+.arch .sv-kick{font:500 10px var(--mono);letter-spacing:.12em;fill:var(--muted)}
+.arch .sv-name{font:600 13px var(--sans);fill:var(--white)}
+.arch .sv-fname{font:700 11px var(--mono);letter-spacing:.14em;fill:var(--white)}
+.arch .sv-st{font:400 10px var(--mono);fill:var(--prose)}
+.arch .sv-legend{font:400 11px var(--mono);fill:var(--body)}
+.arch .sv-foot{font:400 10px var(--mono);letter-spacing:.06em;fill:var(--slate)}
+.arch .sv-link{fill:none;stroke:var(--slate);stroke-width:1.5;stroke-dasharray:5 5;animation:sv-flow 1.4s linear infinite}
+.arch .sv-s-bad .sv-link{stroke:rgba(255,93,115,.7)}
+.arch .sv-s-warn .sv-link{stroke:rgba(255,200,87,.7)}
+.arch .sv-link-stay{fill:none;stroke:var(--good);stroke-width:1.5}
+.arch .sv-stop{fill:none;stroke:var(--good);stroke-width:3}
+.arch .sv-arrowhead{fill:var(--slate)}
+.arch .sv-sw-good{fill:var(--good)}
+.arch .sv-sw-warn{fill:var(--warn)}
+.arch .sv-sw-bad{fill:var(--bad)}
+@keyframes sv-flow{to{stroke-dashoffset:-10}}
+@media (prefers-reduced-motion:reduce){.arch .sv-link{animation:none}}
+.arch .sv-svtip{visibility:hidden;pointer-events:none}
+.arch .sv-tip-bg{fill:var(--deep);stroke:var(--line)}
+.arch .sv-tip-acc{fill:var(--brand)}
+.arch .sv-tip-t0{font:700 11px var(--mono);fill:var(--white)}
+.arch .sv-tip-t{font:400 11px var(--mono);fill:var(--prose)}
+.arch [tabindex]{cursor:help;outline:none}
+.arch [tabindex]:focus-visible > rect:first-child{stroke:var(--brand);stroke-width:1.5}
+.arch svg:has(.sv-hs0:hover,.sv-hs0:focus) .sv-ts0,.arch svg:has(.sv-hs1:hover,.sv-hs1:focus) .sv-ts1,.arch svg:has(.sv-hs2:hover,.sv-hs2:focus) .sv-ts2,.arch svg:has(.sv-hs3:hover,.sv-hs3:focus) .sv-ts3,.arch svg:has(.sv-hs4:hover,.sv-hs4:focus) .sv-ts4,.arch svg:has(.sv-hs5:hover,.sv-hs5:focus) .sv-ts5,.arch svg:has(.sv-hs6:hover,.sv-hs6:focus) .sv-ts6,.arch svg:has(.sv-hs7:hover,.sv-hs7:focus) .sv-ts7,.arch svg:has(.sv-hs8:hover,.sv-hs8:focus) .sv-ts8,.arch svg:has(.sv-hs9:hover,.sv-hs9:focus) .sv-ts9,.arch svg:has(.sv-hs10:hover,.sv-hs10:focus) .sv-ts10,.arch svg:has(.sv-hs11:hover,.sv-hs11:focus) .sv-ts11,.arch svg:has(.sv-hs12:hover,.sv-hs12:focus) .sv-ts12,.arch svg:has(.sv-hs13:hover,.sv-hs13:focus) .sv-ts13{visibility:visible}
+/* /diagram:sov-map */
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> <span class="en">SOVEREIGNTY</span><span class="nl">SOEVEREINITEIT</span></a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">LEVELS</span><span class="nl">NIVEAUS</span></a>
+      <a href="#r2"><span class="en">LAW</span><span class="nl">RECHT</span></a>
+      <a href="#r3">SAAS</a>
+      <a href="#r4">EXIT</a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Sovereign cloud. <em>Sovereign from whom?</em></span>
+      <span class="nl">Soevereine cloud. <em>Soeverein ten opzichte van wie?</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">"Is our cloud sovereign?" has no yes-or-no answer. It has a level per question: who can be ordered to hand over our data, who can switch us off, and what still leaves when our applications run in Europe but our SaaS does not. Four questions, measured with the EU's own yardstick.</span>
+      <span class="nl">"Is onze cloud soeverein?" heeft geen ja-of-nee-antwoord. Het heeft een niveau per vraag: wie kan worden bevolen onze data af te geven, wie kan ons uitschakelen, en wat vertrekt er toch als onze applicaties in Europa draaien maar onze SaaS niet. Vier vragen, gemeten met de maatstaf van de EU zelf.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FOUR</span><span class="nl">BEKIJK DE VIER</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT RAISES THE LEVEL</span><span class="nl">WAT HET NIVEAU VERHOOGT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">Sovereign is not one thing. <em>It is eight questions and a level.</em></span>
+      <span class="nl">Soeverein is niet één ding. <em>Het zijn acht vragen en een niveau.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">the EU cloud sovereignty framework / the Commission's yardstick for its own purchasing</span>
+      <span class="nl">het EU-kader voor cloudsoevereiniteit / de maatstaf van de Commissie voor haar eigen inkoop</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">FIVE LEVELS, ONE WORD</span><span class="nl">VIJF NIVEAUS, ÉÉN WOORD</span></div>
+      <div class="lad">
+        <div class="lv" style="--d:0s"><b>SEAL-0</b><span class="en">no sovereignty</span><span class="nl">geen soevereiniteit</span></div>
+        <div class="lv" style="--d:.5s"><b>SEAL-1</b><span class="en">EU law applies on paper</span><span class="nl">EU-recht geldt op papier</span></div>
+        <div class="lv w" style="--d:1s"><b>SEAL-2</b><span class="en">data sovereignty</span><span class="nl">datasoevereiniteit</span><span class="pin"><span class="en">MOST "SOVEREIGN" OFFERS</span><span class="nl">DE MEESTE "SOEVEREINE" AANBIEDINGEN</span></span></div>
+        <div class="lv g" style="--d:1.5s"><b>SEAL-3</b><span class="en">EU actors in control</span><span class="nl">EU-partijen aan het stuur</span></div>
+        <div class="lv g" style="--d:2s"><b>SEAL-4</b><span class="en">full digital sovereignty</span><span class="nl">volledige digitale soevereiniteit</span></div>
+      </div>
+      <div class="banner"><span class="en">SAME WORD · FIVE LEVELS · ASK WHICH ONE</span><span class="nl">ZELFDE WOORD · VIJF NIVEAUS · VRAAG WELK</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">In October 2025 the European Commission published a Cloud Sovereignty Framework for its own cloud purchasing. It splits "sovereign" into eight objectives: strategic (who owns and finances the provider), legal (which foreign laws reach it), data and AI (who holds the keys, where data stays), operational (who runs and supports it), supply chain (where hardware and software come from), technology (open standards, no lock-in), security and compliance (security operations run in the EU) and sustainability. On each, a provider gets a level from <abbr class="tip" tabindex="0" data-tip="Sovereignty Effectiveness Assurance Level: the Commission's 0-to-4 scale for how far a cloud service is under EU control and EU law.">SEAL</abbr>-0 to SEAL-4, and the overall level is the lowest of the eight. For its own tender the Commission set SEAL-2, "data sovereignty", as the minimum. It also writes that SEAL-4 is out of reach for every provider today, because chips and hardware come from outside the EU. The framework is a procurement tool, not a law. A proposal to turn it into one EU-wide framework, the Cloud and AI Development Act of 3 June 2026, is now with the legislator.</p>
+      <p class="en"><strong>Business impact:</strong> a supplier that says "sovereign" may mean a data centre in Frankfurt (SEAL-1 or 2) or an EU-owned, EU-run service under EU law only (SEAL-3). Asking for the level per objective turns a slogan into a comparable answer. Which level you need for which data is your call.</p>
+      <p class="nl">In oktober 2025 publiceerde de Europese Commissie een Cloud Sovereignty Framework voor haar eigen cloudinkoop. Het splitst "soeverein" op in acht doelen: strategisch (wie de aanbieder bezit en financiert), juridisch (welk buitenlands recht hem bereikt), data en AI (wie de sleutels heeft, waar data blijft), operationeel (wie de dienst draait en ondersteunt), toeleveringsketen (waar hardware en software vandaan komen), technologie (open standaarden, geen lock-in), beveiliging en compliance (beveiligingsoperaties in de EU) en duurzaamheid. Op elk doel krijgt een aanbieder een niveau van <abbr class="tip" tabindex="0" data-tip="Sovereignty Effectiveness Assurance Level: de schaal van 0 tot 4 van de Commissie voor hoever een clouddienst onder EU-controle en EU-recht valt.">SEAL</abbr>-0 tot SEAL-4, en het totaalniveau is het laagste van de acht. Voor haar eigen aanbesteding stelde de Commissie SEAL-2, "datasoevereiniteit", als minimum. Zij schrijft ook dat SEAL-4 vandaag voor geen enkele aanbieder haalbaar is, omdat chips en hardware van buiten de EU komen. Het kader is een inkoopinstrument, geen wet. Een voorstel om er één EU-breed kader van te maken, de Cloud and AI Development Act van 3 juni 2026, ligt nu bij de wetgever.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een leverancier die "soeverein" zegt, kan een datacenter in Frankfurt bedoelen (SEAL-1 of 2) of een dienst in EU-handen, door EU-mensen gedraaid en alleen onder EU-recht (SEAL-3). Door het niveau per doel te vragen, wordt een slogan een vergelijkbaar antwoord. Welk niveau u voor welke data nodig heeft, is uw keuze.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">"SOVEREIGN" IS A SLOGAN UNTIL YOU ASK THE LEVEL</span><span class="nl">"SOEVEREIN" IS EEN SLOGAN TOT U HET NIVEAU VRAAGT</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: SCORE SUPPLIERS ON THE EIGHT OBJECTIVES</span><span class="nl">AANBEVOLEN: SCOOR LEVERANCIERS OP DE ACHT DOELEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">AI lowers the level</span><span class="nl">AI verlaagt het niveau</span></b><p><span class="en">The framework scores AI separately for a reason: an AI feature bolted onto a sovereign stack often runs on a non-EU model in another region, and the lowest objective sets the level.</span><span class="nl">Het kader scoort AI niet voor niets apart: een AI-functie bovenop een soevereine omgeving draait vaak op een niet-EU-model in een andere regio, en het laagste doel bepaalt het niveau.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Staff paste contracts and customer data into a public chatbot. Whatever the level of your cloud, that data is now at SEAL-0.</span><span class="nl">Medewerkers plakken contracten en klantdata in een publieke chatbot. Welk niveau uw cloud ook heeft, die data zit nu op SEAL-0.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Score faster</span><span class="nl">Sneller scoren</span></b><p><span class="en">The Commission's questionnaire has 43 questions per supplier. AI-assisted review of contracts and public documentation gets you a first score in hours, not weeks.</span><span class="nl">De vragenlijst van de Commissie telt 43 vragen per leverancier. Met AI-ondersteunde analyse van contracten en publieke documentatie heeft u in uren een eerste score, niet in weken.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">Jurisdiction follows the company, <em>not the server.</em></span>
+      <span class="nl">Rechtsmacht volgt het bedrijf, <em>niet de server.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">legal and jurisdictional sovereignty / the CLOUD Act question</span>
+      <span class="nl">juridische soevereiniteit / de CLOUD Act-vraag</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">AN ORDER FROM OUTSIDE THE EU</span><span class="nl">EEN BEVEL VAN BUITEN DE EU</span></div>
+      <span class="flag"><span class="en">DATA IN THE EU</span><span class="nl">DATA IN DE EU</span></span>
+      <div class="node left"><div class="box">🏢</div><span class="en">EU data centre</span><span class="nl">EU-datacenter</span></div>
+      <div class="wire"></div>
+      <div class="env data">📦</div>
+      <div class="actor pulse">⚖️<span class="tag"><span class="en">FOREIGN ORDER</span><span class="nl">BUITENLANDS BEVEL</span></span></div>
+      <div class="env order">📄</div>
+      <div class="node right"><div class="box">🏛️</div><span class="en">Head office · non-EU</span><span class="nl">Hoofdkantoor · niet-EU</span></div>
+      <div class="banner"><span class="en">THE ORDER REACHES THE COMPANY · THE DATA FOLLOWS</span><span class="nl">HET BEVEL BEREIKT HET BEDRIJF · DE DATA VOLGT</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Where the server stands matters less than who can be ordered. The US <abbr class="tip" tabindex="0" data-tip="Clarifying Lawful Overseas Use of Data Act (US, 2018): US providers hand over data in their custody or control, wherever it is stored.">CLOUD Act</abbr> requires a US provider to hand over data in its "possession, custody, or control", whether stored inside or outside the United States. The EU's answer is in the <abbr class="tip" tabindex="0" data-tip="General Data Protection Regulation: the EU privacy law.">GDPR</abbr>: a foreign order to disclose personal data is only enforceable in the EU if it rests on an international agreement, such as a legal assistance treaty (Art. 48). The provider sits between two laws. Asked under oath by the French Senate in June 2025 whether French citizens' data in its cloud would never be passed to US authorities without French consent, Microsoft France's head of legal affairs answered that he could not guarantee it, adding that it had never happened. The Commission's framework names this exposure, to the US CLOUD Act and the Chinese Cybersecurity Law, under its legal objective. Separate EU companies, EU-only staff and customer-held keys reduce it: AWS opened a separately run European Sovereign Cloud in Germany in January 2026, and Microsoft completed its EU Data Boundary. In the Commission's guidance, separate EU entities count as "data sovereignty" (SEAL-2); full insulation from non-EU law is the level above.</p>
+      <p class="en"><strong>Business impact:</strong> for most data this risk is small, and EU data protection law still applies. For data where foreign access is itself the harm, such as state or defence work, negotiations and trade secrets, the question is "which law can compel our provider, and what can we do about it", not "where is the server".</p>
+      <p class="nl">Waar de server staat, telt minder dan wie een bevel kan krijgen. De Amerikaanse <abbr class="tip" tabindex="0" data-tip="Clarifying Lawful Overseas Use of Data Act (VS, 2018): Amerikaanse aanbieders geven data onder hun beheer of controle af, waar die ook staat.">CLOUD Act</abbr> verplicht een Amerikaanse aanbieder data af te geven die hij "in bezit, bewaring of onder controle" heeft, of die nu binnen of buiten de Verenigde Staten staat. Het antwoord van de EU staat in de <abbr class="tip" tabindex="0" data-tip="Algemene verordening gegevensbescherming: de Europese privacywet.">AVG</abbr>: een buitenlands bevel om persoonsgegevens af te geven is in de EU alleen afdwingbaar als het steunt op een internationaal verdrag, zoals een rechtshulpverdrag (art. 48). De aanbieder zit tussen twee wetten in. Op de vraag van de Franse Senaat in juni 2025, onder ede, of de data van Franse burgers in zijn cloud nooit zonder Franse toestemming aan Amerikaanse autoriteiten zou worden overgedragen, antwoordde het hoofd juridische zaken van Microsoft France dat hij dat niet kon garanderen, en dat het nog nooit was gebeurd. Het kader van de Commissie noemt precies deze blootstelling, aan de Amerikaanse CLOUD Act en de Chinese Cybersecurity Law, onder het juridische doel. Aparte EU-vennootschappen, uitsluitend EU-personeel en sleutels in eigen hand verkleinen haar: AWS opende in januari 2026 een apart gedraaide European Sovereign Cloud in Duitsland, en Microsoft rondde zijn EU Data Boundary af. In de toelichting van de Commissie tellen aparte EU-entiteiten als "datasoevereiniteit" (SEAL-2); volledige afscherming van niet-EU-recht is het niveau erboven.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> voor de meeste data is dit risico klein, en het Europese gegevensbeschermingsrecht blijft gelden. Voor data waarbij buitenlandse toegang zelf de schade is, zoals overheids- of defensiewerk, onderhandelingen en bedrijfsgeheimen, is de vraag "welk recht kan onze aanbieder dwingen, en wat kunnen wij daaraan doen", niet "waar staat de server".</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">EU SERVER · NON-EU PARENT · THE ORDER STILL ARRIVES</span><span class="nl">EU-SERVER · NIET-EU-MOEDER · HET BEVEL KOMT TOCH</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: CLASSIFY DATA BY WHO MUST NEVER SEE IT</span><span class="nl">AANBEVOLEN: DEEL DATA IN NAAR WIE HET NOOIT MAG ZIEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Same law, faster use</span><span class="nl">Zelfde wet, sneller gebruik</span></b><p><span class="en">AI does not change who can be ordered. It does make a handed-over data set searchable and summarised in minutes, so the harm of one disclosure is larger.</span><span class="nl">AI verandert niet wie een bevel kan krijgen. Het maakt een afgegeven dataset wel in minuten doorzoekbaar en samengevat, dus de schade van één afgifte is groter.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">The model provider is a provider too</span><span class="nl">De modelaanbieder is ook een aanbieder</span></b><p><span class="en">Prompts, uploaded documents and outputs are data in the AI vendor's custody. The same jurisdiction question applies to it, and it is rarely asked.</span><span class="nl">Prompts, geüploade documenten en uitvoer zijn data onder beheer van de AI-leverancier. Dezelfde rechtsmachtvraag geldt daar, en wordt zelden gesteld.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Watch the keys</span><span class="nl">Let op de sleutels</span></b><p><span class="en">With keys you hold, an order yields ciphertext. AI-based monitoring of key use flags the unusual request before the data leaves.</span><span class="nl">Met sleutels in eigen hand levert een bevel versleutelde tekst op. Monitoring van sleutelgebruik met AI signaleert het ongebruikelijke verzoek voordat de data vertrekt.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">Sovereign infrastructure, foreign SaaS: <em>what still leaves.</em></span>
+      <span class="nl">Soevereine infrastructuur, buitenlandse SaaS: <em>wat er toch vertrekt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">the hybrid estate / your apps in Europe, your people in someone else's cloud</span>
+      <span class="nl">de hybride omgeving / uw apps in Europa, uw mensen in andermans cloud</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">WHERE THE WORK ACTUALLY HAPPENS</span><span class="nl">WAAR HET WERK ECHT GEBEURT</span></div>
+      <div class="side l"><b>🏢</b><span class="en">Your sovereign estate</span><span class="nl">Uw soevereine omgeving</span></div>
+      <span class="pk" style="--t:44px;--d:0s"><span class="en">CONTENT</span><span class="nl">INHOUD</span></span>
+      <span class="pk" style="--t:76px;--d:.8s"><span class="en">IDENTITIES</span><span class="nl">IDENTITEITEN</span></span>
+      <span class="pk" style="--t:108px;--d:1.6s">METADATA</span>
+      <span class="pk" style="--t:140px;--d:2.4s"><span class="en">SUPPORT ACCESS</span><span class="nl">SUPPORTTOEGANG</span></span>
+      <span class="pk" style="--t:172px;--d:3.2s"><span class="en">AI PROMPTS</span><span class="nl">AI-PROMPTS</span></span>
+      <span class="pk stay" style="--t:204px"><span class="en">YOUR KEYS</span><span class="nl">UW SLEUTELS</span></span>
+      <div class="side r"><b>☁️</b><span class="en">SaaS · non-EU parent</span><span class="nl">SaaS · niet-EU-moeder</span></div>
+      <div class="banner"><span class="en">THE APPS STAYED · THE WORK LEFT</span><span class="nl">DE APPS BLEVEN · HET WERK VERTROK</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Many organisations now run their own applications on a sovereign or EU-operated cloud, and keep their collaboration suite, <abbr class="tip" tabindex="0" data-tip="Customer relationship management: the system that holds customer records, contacts and sales history.">CRM</abbr>, ticketing, HR system and AI assistant as <abbr class="tip" tabindex="0" data-tip="Software as a service: an application you rent and use through the browser; the vendor runs it in its own cloud.">SaaS</abbr>. Then the sovereignty level of the estate is set by the SaaS, because that is where the people work. Six things go with it. The content: mail, documents, tickets, customer records. The identities, because the SaaS is usually also the login for everything else. Metadata and telemetry, who talked to whom and when, which most "EU data residency" promises cover only partly. Support and engineering access from outside the EU, which providers list themselves as an exception. AI features, which may process data where the model runs. And the keys, if the provider holds them. Microsoft's EU Data Boundary documentation, for example, commits to storing and processing customer data in the EU and EFTA "subject to limited circumstances" in which data is still transferred outside.</p>
+      <p class="en"><strong>Business impact:</strong> "our infrastructure is sovereign" is true and misleading at the same time. Sovereignty is per data flow, not per building. The honest statement is a short list per SaaS: what stays, what leaves, under which law, and whether you could still read your data if the provider stopped.</p>
+      <p class="nl">Veel organisaties draaien hun eigen applicaties inmiddels op een soevereine of EU-beheerde cloud, en houden hun samenwerkingssuite, <abbr class="tip" tabindex="0" data-tip="Customer relationship management: het systeem met klantgegevens, contacten en verkoophistorie.">CRM</abbr>, ticketsysteem, HR-systeem en AI-assistent als <abbr class="tip" tabindex="0" data-tip="Software as a service: een applicatie die u huurt en via de browser gebruikt; de leverancier draait haar in zijn eigen cloud.">SaaS</abbr>. Dan bepaalt de SaaS het soevereiniteitsniveau van het geheel, want daar werken de mensen. Zes dingen gaan mee. De inhoud: mail, documenten, tickets, klantgegevens. De identiteiten, want de SaaS is meestal ook de inlog voor al het andere. Metadata en telemetrie, wie met wie sprak en wanneer, die de meeste beloftes over "EU-dataresidentie" maar deels dekken. Support- en engineeringtoegang van buiten de EU, die aanbieders zelf als uitzondering noemen. AI-functies, die data mogelijk verwerken waar het model draait. En de sleutels, als de aanbieder die heeft. De documentatie van Microsofts EU Data Boundary bijvoorbeeld belooft klantdata in de EU en EFTA op te slaan en te verwerken, "behoudens beperkte omstandigheden" waarin data toch naar buiten gaat.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> "onze infrastructuur is soeverein" is tegelijk waar en misleidend. Soevereiniteit geldt per datastroom, niet per gebouw. De eerlijke uitspraak is een kort lijstje per SaaS: wat blijft, wat vertrekt, onder welk recht, en of u uw data nog kunt lezen als de aanbieder stopt.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">THE SAAS SETS YOUR LEVEL, NOT THE DATA CENTRE</span><span class="nl">DE SAAS BEPAALT UW NIVEAU, NIET HET DATACENTER</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: MAP EVERY FLOW THAT LEAVES, AND WHO CAN READ IT</span><span class="nl">AANBEVOLEN: BRENG ELKE VERTREKKENDE STROOM IN KAART, EN WIE HAAR KAN LEZEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Telemetry is the quiet exit</span><span class="nl">Telemetrie is de stille uitgang</span></b><p><span class="en">AI-era SaaS collects more usage data to tune its features. It is the flow least likely to be in the residency promise and the one nobody maps.</span><span class="nl">SaaS uit het AI-tijdperk verzamelt meer gebruiksdata om functies bij te sturen. Het is de stroom die het minst vaak in de opslagbelofte zit en die niemand in kaart brengt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Assistants follow the data</span><span class="nl">Assistenten volgen de data</span></b><p><span class="en">An assistant with the user's rights indexes everything the user can see, including files synced from the sovereign side, and may process it in another region.</span><span class="nl">Een assistent met de rechten van de gebruiker indexeert alles wat die kan zien, ook bestanden die vanuit de soevereine kant zijn gesynchroniseerd, en verwerkt ze mogelijk in een andere regio.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Classify at the boundary</span><span class="nl">Classificeer op de grens</span></b><p><span class="en">AI-based classification and <abbr class="tip" tabindex="0" data-tip="Data loss prevention: tooling that recognises sensitive content and blocks or flags it when it leaves.">DLP</abbr> at the SaaS boundary can keep the few data classes that must not leave on the sovereign side.</span><span class="nl">Classificatie met AI en <abbr class="tip" tabindex="0" data-tip="Data loss prevention: tooling die gevoelige inhoud herkent en blokkeert of signaleert als die vertrekt.">DLP</abbr> op de SaaS-grens kunnen de paar dataklassen die niet mogen vertrekken aan de soevereine kant houden.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">Could you leave? <em>Could they switch you off?</em></span>
+      <span class="nl">Kunt u weg? <em>Kunnen zij u uitschakelen?</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">operational sovereignty / exit, continuity and the switch-off scenario</span>
+      <span class="nl">operationele soevereiniteit / exit, continuïteit en het uitschakelscenario</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">THE SERVICE STOPS TOMORROW</span><span class="nl">DE DIENST STOPT MORGEN</span></div>
+      <span class="ctr"><span class="en">DAYS UNTIL YOU WORK AGAIN: ?</span><span class="nl">DAGEN TOT U WEER WERKT: ?</span></span>
+      <div class="apps">
+        <div class="app" style="--d:0s"><b>✉️</b><span class="en">Mail &amp; files</span><span class="nl">Mail &amp; bestanden</span></div>
+        <div class="app" style="--d:.3s"><b>🪪</b><span class="en">Logins</span><span class="nl">Inlogs</span></div>
+        <div class="app" style="--d:.6s"><b>🗂️</b><span class="en">Customer records</span><span class="nl">Klantgegevens</span></div>
+      </div>
+      <div class="prov"><span class="sw"></span><span class="en">Provider · sanction, court, bankruptcy, sales decision</span><span class="nl">Aanbieder · sanctie, rechter, faillissement, commercieel besluit</span></div>
+      <div class="banner"><span class="en">NO TESTED EXIT · NO REAL CHOICE</span><span class="nl">GEEN GETESTE EXIT · GEEN ECHTE KEUZE</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The other half of sovereignty is continuity. If a sanction, a court order, a bankruptcy or a commercial decision ended the service tomorrow, how long until you work again elsewhere? The EU Data Act (a law, applying since 12 September 2025) helps: cloud contracts allow switching with a notice period of at most two months and a transition of 30 days, and from 12 January 2027 providers may no longer charge for switching. It also requires providers to take measures against foreign government access to non-personal data where that conflicts with EU law (Art. 32). <abbr class="tip" tabindex="0" data-tip="Digital Operational Resilience Act: the EU law on ICT risk for banks, insurers and other financial entities, applying since January 2025.">DORA</abbr> (a law) goes further for financial entities: a register of all ICT suppliers, contract clauses naming the countries where data is processed, and exit strategies for critical services. The Commission's framework scores the same thing under operational sovereignty: can EU staff run it without the vendor, is the documentation available, could you migrate? For SaaS the practical test is simple. Export everything, open it elsewhere, time it.</p>
+      <p class="en"><strong>Business impact:</strong> a provider you cannot leave is a provider that takes your decisions for you. An exit you have tested once a year is the cheapest sovereignty you can buy, and it also answers the auditor's question about continuity.</p>
+      <p class="nl">De andere helft van soevereiniteit is continuïteit. Als een sanctie, een rechterlijk bevel, een faillissement of een commercieel besluit de dienst morgen zou beëindigen, hoelang duurt het dan tot u elders weer werkt? De Europese Dataverordening (een wet, van toepassing sinds 12 september 2025) helpt: cloudcontracten staan overstappen toe met een opzegtermijn van hoogstens twee maanden en een overgang van 30 dagen, en vanaf 12 januari 2027 mogen aanbieders geen overstapkosten meer rekenen. Zij verplicht aanbieders ook maatregelen te nemen tegen toegang door buitenlandse overheden tot niet-persoonsgebonden data als die in strijd is met EU-recht (art. 32). <abbr class="tip" tabindex="0" data-tip="Digital Operational Resilience Act: de EU-wet over ICT-risico voor banken, verzekeraars en andere financiële instellingen, van toepassing sinds januari 2025.">DORA</abbr> (een wet) gaat verder voor financiële instellingen: een register van alle ICT-leveranciers, contractbepalingen die de landen noemen waar data wordt verwerkt, en exitstrategieën voor kritieke diensten. Het kader van de Commissie scoort hetzelfde onder operationele soevereiniteit: kunnen EU-mensen het draaien zonder de leverancier, is de documentatie beschikbaar, kunt u migreren? Voor SaaS is de praktijktest simpel. Exporteer alles, open het elders, klok de tijd.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een aanbieder waar u niet weg kunt, neemt uw beslissingen voor u. Een exit die u één keer per jaar heeft getest, is de goedkoopste soevereiniteit die u kunt kopen, en beantwoordt meteen de vraag van de auditor over continuïteit.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NO TESTED EXIT · NO REAL CHOICE</span><span class="nl">GEEN GETESTE EXIT · GEEN ECHTE KEUZE</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE TIMED EXPORT PER CRITICAL SAAS, EVERY YEAR</span><span class="nl">AANBEVOLEN: ÉÉN GEKLOKTE EXPORT PER KRITIEKE SAAS, ELK JAAR</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Lock-in moves to the model</span><span class="nl">Lock-in verhuist naar het model</span></b><p><span class="en">Documents export; a fine-tuned model, its prompts and its history usually do not. The more work runs through one vendor's AI, the harder the exit.</span><span class="nl">Documenten exporteert u; een bijgetraind model, zijn prompts en zijn geschiedenis meestal niet. Hoe meer werk door de AI van één leverancier loopt, hoe moeilijker de exit.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Teams adopt AI tools outside procurement. Each one is a dependency nobody registered and nobody can exit, because nobody knows it is there.</span><span class="nl">Teams nemen AI-tools in gebruik buiten inkoop om. Elk ervan is een afhankelijkheid die niemand heeft geregistreerd en waar niemand uit kan, omdat niemand weet dat hij er is.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Cheaper migrations</span><span class="nl">Goedkopere migraties</span></b><p><span class="en">AI-assisted translation of code, configuration and data formats makes moving a workload cheaper than it was, which makes the exit test realistic rather than theoretical.</span><span class="nl">AI-ondersteunde vertaling van code, configuratie en dataformaten maakt het verplaatsen van een workload goedkoper dan voorheen, waardoor de exittest realistisch wordt in plaats van theoretisch.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- diagram:sov-map -->
+<section class="risk-block" id="sov-map">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">IN PRACTICE</span><span class="nl">IN DE PRAKTIJK</span></span>
+    <h2><span class="en">Sovereign infrastructure, SaaS outside it.<br><em>What still leaves.</em></span><span class="nl">Soevereine infrastructuur, SaaS erbuiten.<br><em>Wat er toch vertrekt.</em></span></h2>
+    <span class="term"><span class="en">the hybrid estate / one map per SaaS, indicative</span><span class="nl">de hybride omgeving / één kaart per SaaS, indicatief</span></span>
+
+    <figure class="arch">
+<svg viewBox="0 0 1120 560" role="img" aria-labelledby="sv-title sv-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="sv-title">Sovereign infrastructure with SaaS outside it: what still leaves</title>
+<desc id="sv-desc">Left: your sovereign estate in the EU, with your applications, databases and files, your identity provider and your keys. Right: SaaS with a non-EU parent, such as a collaboration suite, business SaaS, an AI assistant, and the provider’s support, engineering and telemetry. In the middle, six flows. Content, identities and metadata leave and come under the provider’s law. Support access and AI processing leave under conditions you can set in the contract. Keys you hold yourself stay with you. Indicative, hover or tap a box for an explanation.</desc>
+<defs>
+<marker id="sv-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="sv-arrowhead"/></marker>
+</defs>
+<rect x="20" y="30" width="350" height="434" class="sv-zone sv-zone-l"/>
+<text x="36" y="54" class="sv-zlabel en">YOUR SOVEREIGN ESTATE · EU</text><text x="36" y="54" class="sv-zlabel nl">UW SOEVEREINE OMGEVING · EU</text>
+<rect x="750" y="30" width="350" height="434" class="sv-zone sv-zone-r"/>
+<text x="766" y="54" class="sv-zlabel en">SAAS · NON-EU PARENT</text><text x="766" y="54" class="sv-zlabel nl">SAAS · NIET-EU-MOEDER</text>
+<text x="416" y="54" class="sv-zlabel en">WHAT FLOWS BETWEEN THEM</text><text x="416" y="54" class="sv-zlabel nl">WAT ERTUSSEN STROOMT</text>
+<g class="sv-node-g sv-s-good sv-hs0" tabindex="0">
+<rect x="30" y="78" width="330" height="62" class="sv-node"/>
+<rect x="30" y="78" width="4" height="62" class="sv-bar"/>
+<text x="46" y="98" class="sv-kick en">IAAS / PAAS · EU-OPERATED</text><text x="46" y="98" class="sv-kick nl">IAAS / PAAS · EU-BEHEERD</text>
+<text x="46" y="118" class="sv-name en">Your applications</text><text x="46" y="118" class="sv-name nl">Uw applicaties</text>
+<text x="46" y="131" class="sv-st en">sovereign cloud or own data centre</text><text x="46" y="131" class="sv-st nl">soevereine cloud of eigen datacenter</text>
+</g>
+<g class="sv-node-g sv-s-good sv-hs1" tabindex="0">
+<rect x="30" y="158" width="330" height="62" class="sv-node"/>
+<rect x="30" y="158" width="4" height="62" class="sv-bar"/>
+<text x="46" y="178" class="sv-kick">DATA</text>
+<text x="46" y="198" class="sv-name en">Databases and files</text><text x="46" y="198" class="sv-name nl">Databases en bestanden</text>
+<text x="46" y="211" class="sv-st en">stay in the EU, under EU law</text><text x="46" y="211" class="sv-st nl">blijven in de EU, onder EU-recht</text>
+</g>
+<g class="sv-node-g sv-s-warn sv-hs2" tabindex="0">
+<rect x="30" y="238" width="330" height="62" class="sv-node"/>
+<rect x="30" y="238" width="4" height="62" class="sv-bar"/>
+<text x="46" y="258" class="sv-kick en">LOGIN</text><text x="46" y="258" class="sv-kick nl">INLOG</text>
+<text x="46" y="278" class="sv-name en">Identity provider</text><text x="46" y="278" class="sv-name nl">Identiteitsprovider</text>
+<text x="46" y="291" class="sv-st en">often the SaaS itself</text><text x="46" y="291" class="sv-st nl">vaak de SaaS zelf</text>
+</g>
+<g class="sv-node-g sv-s-good sv-hs3" tabindex="0">
+<rect x="30" y="318" width="330" height="62" class="sv-node"/>
+<rect x="30" y="318" width="4" height="62" class="sv-bar"/>
+<text x="46" y="338" class="sv-kick en">KEYS</text><text x="46" y="338" class="sv-kick nl">SLEUTELS</text>
+<text x="46" y="358" class="sv-name en">Your keys (HSM or KMS)</text><text x="46" y="358" class="sv-name nl">Uw sleutels (HSM of KMS)</text>
+<text x="46" y="371" class="sv-st en">held outside every provider</text><text x="46" y="371" class="sv-st nl">buiten elke aanbieder bewaard</text>
+</g>
+<g class="sv-node-g sv-s-bad sv-hs4" tabindex="0">
+<rect x="760" y="78" width="330" height="62" class="sv-node"/>
+<rect x="760" y="78" width="4" height="62" class="sv-bar"/>
+<text x="776" y="98" class="sv-kick">SAAS</text>
+<text x="776" y="118" class="sv-name en">Collaboration suite</text><text x="776" y="118" class="sv-name nl">Samenwerkingssuite</text>
+<text x="776" y="131" class="sv-st en">mail, documents, chat, meetings</text><text x="776" y="131" class="sv-st nl">mail, documenten, chat, vergaderingen</text>
+</g>
+<g class="sv-node-g sv-s-bad sv-hs5" tabindex="0">
+<rect x="760" y="158" width="330" height="62" class="sv-node"/>
+<rect x="760" y="158" width="4" height="62" class="sv-bar"/>
+<text x="776" y="178" class="sv-kick">SAAS</text>
+<text x="776" y="198" class="sv-name en">Business SaaS</text><text x="776" y="198" class="sv-name nl">Bedrijfs-SaaS</text>
+<text x="776" y="211" class="sv-st en">CRM, tickets, HR, finance</text><text x="776" y="211" class="sv-st nl">CRM, tickets, HR, financiën</text>
+</g>
+<g class="sv-node-g sv-s-warn sv-hs6" tabindex="0">
+<rect x="760" y="238" width="330" height="62" class="sv-node"/>
+<rect x="760" y="238" width="4" height="62" class="sv-bar"/>
+<text x="776" y="258" class="sv-kick">AI</text>
+<text x="776" y="278" class="sv-name en">AI assistant</text><text x="776" y="278" class="sv-name nl">AI-assistent</text>
+<text x="776" y="291" class="sv-st en">may process in another region</text><text x="776" y="291" class="sv-st nl">verwerkt mogelijk in een andere regio</text>
+</g>
+<g class="sv-node-g sv-s-warn sv-hs7" tabindex="0">
+<rect x="760" y="318" width="330" height="62" class="sv-node"/>
+<rect x="760" y="318" width="4" height="62" class="sv-bar"/>
+<text x="776" y="338" class="sv-kick en">PROVIDER</text><text x="776" y="338" class="sv-kick nl">AANBIEDER</text>
+<text x="776" y="358" class="sv-name en">Support, engineering, telemetry</text><text x="776" y="358" class="sv-name nl">Support, engineering, telemetrie</text>
+<text x="776" y="371" class="sv-st en">listed exceptions to EU residency</text><text x="776" y="371" class="sv-st nl">genoemde uitzonderingen op EU-opslag</text>
+</g>
+<g class="sv-node-g sv-s-bad sv-hs8" tabindex="0">
+<rect x="410" y="78" width="300" height="46" class="sv-node"/>
+<rect x="410" y="78" width="4" height="46" class="sv-bar"/>
+<text x="426" y="97" class="sv-fname en">CONTENT</text><text x="426" y="97" class="sv-fname nl">INHOUD</text>
+<text x="426" y="114" class="sv-st en">leaves · provider&#x27;s law applies</text><text x="426" y="114" class="sv-st nl">verlaat · recht van de aanbieder geldt</text>
+<path d="M362 101.0 H407" class="sv-link"/>
+<path d="M712 101.0 H756" class="sv-link" marker-end="url(#sv-arr)"/>
+</g>
+<g class="sv-node-g sv-s-bad sv-hs9" tabindex="0">
+<rect x="410" y="142" width="300" height="46" class="sv-node"/>
+<rect x="410" y="142" width="4" height="46" class="sv-bar"/>
+<text x="426" y="161" class="sv-fname en">IDENTITIES</text><text x="426" y="161" class="sv-fname nl">IDENTITEITEN</text>
+<text x="426" y="178" class="sv-st en">leaves · who, when, from where</text><text x="426" y="178" class="sv-st nl">verlaat · wie, wanneer, vanwaar</text>
+<path d="M362 165.0 H407" class="sv-link"/>
+<path d="M712 165.0 H756" class="sv-link" marker-end="url(#sv-arr)"/>
+</g>
+<g class="sv-node-g sv-s-bad sv-hs10" tabindex="0">
+<rect x="410" y="206" width="300" height="46" class="sv-node"/>
+<rect x="410" y="206" width="4" height="46" class="sv-bar"/>
+<text x="426" y="225" class="sv-fname">METADATA</text>
+<text x="426" y="242" class="sv-st en">leaves · rarely in the residency promise</text><text x="426" y="242" class="sv-st nl">verlaat · zelden in de opslagbelofte</text>
+<path d="M362 229.0 H407" class="sv-link"/>
+<path d="M712 229.0 H756" class="sv-link" marker-end="url(#sv-arr)"/>
+</g>
+<g class="sv-node-g sv-s-warn sv-hs11" tabindex="0">
+<rect x="410" y="270" width="300" height="46" class="sv-node"/>
+<rect x="410" y="270" width="4" height="46" class="sv-bar"/>
+<text x="426" y="289" class="sv-fname en">SUPPORT ACCESS</text><text x="426" y="289" class="sv-fname nl">SUPPORTTOEGANG</text>
+<text x="426" y="306" class="sv-st en">conditional · set it in the contract</text><text x="426" y="306" class="sv-st nl">voorwaardelijk · leg het vast in het contract</text>
+<path d="M362 293.0 H407" class="sv-link"/>
+<path d="M712 293.0 H756" class="sv-link" marker-end="url(#sv-arr)"/>
+</g>
+<g class="sv-node-g sv-s-warn sv-hs12" tabindex="0">
+<rect x="410" y="334" width="300" height="46" class="sv-node"/>
+<rect x="410" y="334" width="4" height="46" class="sv-bar"/>
+<text x="426" y="353" class="sv-fname en">AI PROCESSING</text><text x="426" y="353" class="sv-fname nl">AI-VERWERKING</text>
+<text x="426" y="370" class="sv-st en">conditional · region and training terms</text><text x="426" y="370" class="sv-st nl">voorwaardelijk · regio en trainingsvoorwaarden</text>
+<path d="M362 357.0 H407" class="sv-link"/>
+<path d="M712 357.0 H756" class="sv-link" marker-end="url(#sv-arr)"/>
+</g>
+<g class="sv-node-g sv-s-good sv-hs13" tabindex="0">
+<rect x="410" y="398" width="300" height="46" class="sv-node"/>
+<rect x="410" y="398" width="4" height="46" class="sv-bar"/>
+<text x="426" y="417" class="sv-fname en">KEYS YOU HOLD</text><text x="426" y="417" class="sv-fname nl">SLEUTELS IN EIGEN HAND</text>
+<text x="426" y="434" class="sv-st en">stays · an order yields ciphertext</text><text x="426" y="434" class="sv-st nl">blijft · een bevel levert versleutelde tekst</text>
+<path d="M408 421.0 H364" class="sv-link-stay"/>
+<path d="M722 406 V436" class="sv-stop"/>
+</g>
+<rect x="30" y="489" width="14" height="14" class="sv-sw sv-sw-good"/>
+<text x="52" y="500" class="sv-legend en">Stays under your control</text><text x="52" y="500" class="sv-legend nl">Blijft onder uw controle</text>
+<rect x="300" y="489" width="14" height="14" class="sv-sw sv-sw-warn"/>
+<text x="322" y="500" class="sv-legend en">Leaves under conditions you set</text><text x="322" y="500" class="sv-legend nl">Verlaat onder uw voorwaarden</text>
+<rect x="620" y="489" width="14" height="14" class="sv-sw sv-sw-bad"/>
+<text x="642" y="500" class="sv-legend en">Leaves · the provider&#x27;s law applies</text><text x="642" y="500" class="sv-legend nl">Verlaat · recht van de aanbieder geldt</text>
+<text x="30" y="530" class="sv-foot en">Indicative — the level of the estate is the level of its weakest flow · hover or tap a box for an explanation</text><text x="30" y="530" class="sv-foot nl">Indicatief — het niveau van het geheel is het niveau van de zwakste stroom · beweeg of tik op een blok voor uitleg</text>
+<g class="sv-svtip sv-ts0" aria-hidden="true">
+<rect x="30" y="146" width="316" height="77" class="sv-tip-bg"/>
+<rect x="30" y="146" width="3" height="77" class="sv-tip-acc"/>
+<text x="44" y="164" class="sv-tip-t0 en">Your applications · the sovereign part</text>
+<text x="44" y="179" class="sv-tip-t en">Run by an EU-operated provider or on your</text>
+<text x="44" y="194" class="sv-tip-t en">own hardware. This is what most &#x27;we are</text>
+<text x="44" y="209" class="sv-tip-t en">sovereign&#x27; statements actually describe.</text>
+<text x="44" y="164" class="sv-tip-t0 nl">Uw applicaties · het soevereine deel</text>
+<text x="44" y="179" class="sv-tip-t nl">Draaien bij een EU-beheerde aanbieder of</text>
+<text x="44" y="194" class="sv-tip-t nl">op eigen hardware. Dit is wat de meeste</text>
+<text x="44" y="209" class="sv-tip-t nl">&#x27;wij zijn soeverein&#x27;-uitspraken beschrijven.</text>
+</g>
+<g class="sv-svtip sv-ts1" aria-hidden="true">
+<rect x="30" y="226" width="316" height="77" class="sv-tip-bg"/>
+<rect x="30" y="226" width="3" height="77" class="sv-tip-acc"/>
+<text x="44" y="244" class="sv-tip-t0 en">Databases and files</text>
+<text x="44" y="259" class="sv-tip-t en">Stored and processed in the EU by an EU</text>
+<text x="44" y="274" class="sv-tip-t en">operator. Still check backups, logging</text>
+<text x="44" y="289" class="sv-tip-t en">and the operator&#x27;s own suppliers.</text>
+<text x="44" y="244" class="sv-tip-t0 nl">Databases en bestanden</text>
+<text x="44" y="259" class="sv-tip-t nl">Opgeslagen en verwerkt in de EU door een</text>
+<text x="44" y="274" class="sv-tip-t nl">EU-beheerder. Controleer ook back-ups,</text>
+<text x="44" y="289" class="sv-tip-t nl">logging en de leveranciers van de beheerder.</text>
+</g>
+<g class="sv-svtip sv-ts2" aria-hidden="true">
+<rect x="30" y="306" width="297" height="92" class="sv-tip-bg"/>
+<rect x="30" y="306" width="3" height="92" class="sv-tip-acc"/>
+<text x="44" y="324" class="sv-tip-t0 en">Identity provider</text>
+<text x="44" y="339" class="sv-tip-t en">Who signs your people in? If the</text>
+<text x="44" y="354" class="sv-tip-t en">collaboration suite is also the login for</text>
+<text x="44" y="369" class="sv-tip-t en">the sovereign apps, the SaaS can see and</text>
+<text x="44" y="384" class="sv-tip-t en">stop every session.</text>
+<text x="44" y="324" class="sv-tip-t0 nl">Identiteitsprovider</text>
+<text x="44" y="339" class="sv-tip-t nl">Wie logt uw mensen in? Als de samenwerk-</text>
+<text x="44" y="354" class="sv-tip-t nl">suite ook de inlog is voor de soevereine</text>
+<text x="44" y="369" class="sv-tip-t nl">apps, ziet en stopt de SaaS elke sessie.</text>
+</g>
+<g class="sv-svtip sv-ts3" aria-hidden="true">
+<rect x="30" y="220" width="349" height="92" class="sv-tip-bg"/>
+<rect x="30" y="220" width="3" height="92" class="sv-tip-acc"/>
+<text x="44" y="238" class="sv-tip-t0 en">Keys you hold</text>
+<text x="44" y="253" class="sv-tip-t en">Encryption keys in your own HSM or KMS.</text>
+<text x="44" y="268" class="sv-tip-t en">A foreign order to the provider then yields</text>
+<text x="44" y="283" class="sv-tip-t en">ciphertext. Note: SaaS search and AI</text>
+<text x="44" y="298" class="sv-tip-t en">features usually need the plain text.</text>
+<text x="44" y="238" class="sv-tip-t0 nl">Sleutels in eigen hand</text>
+<text x="44" y="253" class="sv-tip-t nl">Sleutels in uw eigen HSM of KMS. Een</text>
+<text x="44" y="268" class="sv-tip-t nl">buitenlands bevel aan de aanbieder levert</text>
+<text x="44" y="283" class="sv-tip-t nl">dan versleutelde tekst op. Let op: SaaS-</text>
+<text x="44" y="298" class="sv-tip-t nl">zoeken en AI hebben meestal leesbare tekst nodig.</text>
+</g>
+<g class="sv-svtip sv-ts4" aria-hidden="true">
+<rect x="760" y="146" width="303" height="77" class="sv-tip-bg"/>
+<rect x="760" y="146" width="3" height="77" class="sv-tip-acc"/>
+<text x="774" y="164" class="sv-tip-t0 en">Collaboration suite</text>
+<text x="774" y="179" class="sv-tip-t en">Mail, documents, chat and meetings: the</text>
+<text x="774" y="194" class="sv-tip-t en">place where the people actually work.</text>
+<text x="774" y="209" class="sv-tip-t en">Its level sets the level of the estate.</text>
+<text x="774" y="164" class="sv-tip-t0 nl">Samenwerkingssuite</text>
+<text x="774" y="179" class="sv-tip-t nl">Mail, documenten, chat en vergaderingen:</text>
+<text x="774" y="194" class="sv-tip-t nl">waar de mensen echt werken. Het niveau</text>
+<text x="774" y="209" class="sv-tip-t nl">hiervan bepaalt het niveau van het geheel.</text>
+</g>
+<g class="sv-svtip sv-ts5" aria-hidden="true">
+<rect x="760" y="226" width="310" height="77" class="sv-tip-bg"/>
+<rect x="760" y="226" width="3" height="77" class="sv-tip-acc"/>
+<text x="774" y="244" class="sv-tip-t0 en">Business SaaS</text>
+<text x="774" y="259" class="sv-tip-t en">Customer records, tickets, HR and finance</text>
+<text x="774" y="274" class="sv-tip-t en">data live in the vendor&#x27;s tenant, under</text>
+<text x="774" y="289" class="sv-tip-t en">the vendor&#x27;s law and its sub-processors.</text>
+<text x="774" y="244" class="sv-tip-t0 nl">Bedrijfs-SaaS</text>
+<text x="774" y="259" class="sv-tip-t nl">Klantgegevens, tickets, HR- en financiële</text>
+<text x="774" y="274" class="sv-tip-t nl">data staan in de tenant van de leverancier,</text>
+<text x="774" y="289" class="sv-tip-t nl">onder diens recht en subverwerkers.</text>
+</g>
+<g class="sv-svtip sv-ts6" aria-hidden="true">
+<rect x="760" y="306" width="316" height="77" class="sv-tip-bg"/>
+<rect x="760" y="306" width="3" height="77" class="sv-tip-acc"/>
+<text x="774" y="324" class="sv-tip-t0 en">AI assistant</text>
+<text x="774" y="339" class="sv-tip-t en">Assistants index what the user can see and</text>
+<text x="774" y="354" class="sv-tip-t en">may process it where the model runs.</text>
+<text x="774" y="369" class="sv-tip-t en">Check the region and the training terms.</text>
+<text x="774" y="324" class="sv-tip-t0 nl">AI-assistent</text>
+<text x="774" y="339" class="sv-tip-t nl">Assistenten indexeren wat de gebruiker kan</text>
+<text x="774" y="354" class="sv-tip-t nl">zien en verwerken het waar het model draait.</text>
+<text x="774" y="369" class="sv-tip-t nl">Controleer regio en trainingsvoorwaarden.</text>
+</g>
+<g class="sv-svtip sv-ts7" aria-hidden="true">
+<rect x="760" y="220" width="323" height="92" class="sv-tip-bg"/>
+<rect x="760" y="220" width="3" height="92" class="sv-tip-acc"/>
+<text x="774" y="238" class="sv-tip-t0 en">Support, engineering, telemetry</text>
+<text x="774" y="253" class="sv-tip-t en">Providers list these as exceptions to</text>
+<text x="774" y="268" class="sv-tip-t en">their EU data commitments: remote access</text>
+<text x="774" y="283" class="sv-tip-t en">for support and security, and usage data.</text>
+<text x="774" y="298" class="sv-tip-t en">Ask what, who, from where.</text>
+<text x="774" y="238" class="sv-tip-t0 nl">Support, engineering, telemetrie</text>
+<text x="774" y="253" class="sv-tip-t nl">Aanbieders noemen dit als uitzondering op</text>
+<text x="774" y="268" class="sv-tip-t nl">hun EU-toezeggingen: toegang op afstand</text>
+<text x="774" y="283" class="sv-tip-t nl">voor support en beveiliging, en gebruiksdata.</text>
+<text x="774" y="298" class="sv-tip-t nl">Vraag wat, wie, vanwaar.</text>
+</g>
+<g class="sv-svtip sv-ts8" aria-hidden="true">
+<rect x="410" y="130" width="323" height="92" class="sv-tip-bg"/>
+<rect x="410" y="130" width="3" height="92" class="sv-tip-acc"/>
+<text x="424" y="148" class="sv-tip-t0 en">Content</text>
+<text x="424" y="163" class="sv-tip-t en">Mail, files, records and chat sit in the</text>
+<text x="424" y="178" class="sv-tip-t en">SaaS. A US provider must hand over data in</text>
+<text x="424" y="193" class="sv-tip-t en">its &#x27;possession, custody or control&#x27;,</text>
+<text x="424" y="208" class="sv-tip-t en">wherever stored (CLOUD Act, 18 U.S.C. 2713).</text>
+<text x="424" y="148" class="sv-tip-t0 nl">Inhoud</text>
+<text x="424" y="163" class="sv-tip-t nl">Mail, bestanden, dossiers en chat staan in</text>
+<text x="424" y="178" class="sv-tip-t nl">de SaaS. Een Amerikaanse aanbieder moet data</text>
+<text x="424" y="193" class="sv-tip-t nl">onder zijn &#x27;beheer of controle&#x27; afgeven, waar</text>
+<text x="424" y="208" class="sv-tip-t nl">die ook staat (CLOUD Act, 18 U.S.C. 2713).</text>
+</g>
+<g class="sv-svtip sv-ts9" aria-hidden="true">
+<rect x="410" y="194" width="349" height="77" class="sv-tip-bg"/>
+<rect x="410" y="194" width="3" height="77" class="sv-tip-acc"/>
+<text x="424" y="212" class="sv-tip-t0 en">Identities</text>
+<text x="424" y="227" class="sv-tip-t en">Accounts, groups, roles and sign-in logs.</text>
+<text x="424" y="242" class="sv-tip-t en">If the SaaS is your identity provider, it</text>
+<text x="424" y="257" class="sv-tip-t en">also governs access to the sovereign apps.</text>
+<text x="424" y="212" class="sv-tip-t0 nl">Identiteiten</text>
+<text x="424" y="227" class="sv-tip-t nl">Accounts, groepen, rollen en inloglogs.</text>
+<text x="424" y="242" class="sv-tip-t nl">Is de SaaS uw identiteitsprovider, dan</text>
+<text x="424" y="257" class="sv-tip-t nl">regelt hij ook de toegang tot de soevereine apps.</text>
+</g>
+<g class="sv-svtip sv-ts10" aria-hidden="true">
+<rect x="410" y="258" width="310" height="92" class="sv-tip-bg"/>
+<rect x="410" y="258" width="3" height="92" class="sv-tip-acc"/>
+<text x="424" y="276" class="sv-tip-t0 en">Metadata and telemetry</text>
+<text x="424" y="291" class="sv-tip-t en">Who talked to whom, when, how often, from</text>
+<text x="424" y="306" class="sv-tip-t en">which device. Usage and diagnostic data</text>
+<text x="424" y="321" class="sv-tip-t en">are often outside &#x27;customer data&#x27; in the</text>
+<text x="424" y="336" class="sv-tip-t en">residency commitment.</text>
+<text x="424" y="276" class="sv-tip-t0 nl">Metadata en telemetrie</text>
+<text x="424" y="291" class="sv-tip-t nl">Wie met wie sprak, wanneer, hoe vaak,</text>
+<text x="424" y="306" class="sv-tip-t nl">vanaf welk apparaat. Gebruiks- en</text>
+<text x="424" y="321" class="sv-tip-t nl">diagnosedata vallen vaak buiten &#x27;klantdata&#x27;</text>
+<text x="424" y="336" class="sv-tip-t nl">in de opslagtoezegging.</text>
+</g>
+<g class="sv-svtip sv-ts11" aria-hidden="true">
+<rect x="410" y="322" width="310" height="92" class="sv-tip-bg"/>
+<rect x="410" y="322" width="3" height="92" class="sv-tip-acc"/>
+<text x="424" y="340" class="sv-tip-t0 en">Support access</text>
+<text x="424" y="355" class="sv-tip-t en">Engineers outside the EU may access data</text>
+<text x="424" y="370" class="sv-tip-t en">to fix or secure the service. Approval</text>
+<text x="424" y="385" class="sv-tip-t en">workflows and EU-only support are options</text>
+<text x="424" y="400" class="sv-tip-t en">most large providers offer.</text>
+<text x="424" y="340" class="sv-tip-t0 nl">Supporttoegang</text>
+<text x="424" y="355" class="sv-tip-t nl">Engineers buiten de EU kunnen bij data om</text>
+<text x="424" y="370" class="sv-tip-t nl">de dienst te herstellen of te beveiligen.</text>
+<text x="424" y="385" class="sv-tip-t nl">Goedkeuringsstappen en EU-only support zijn</text>
+<text x="424" y="400" class="sv-tip-t nl">opties die grote aanbieders bieden.</text>
+</g>
+<g class="sv-svtip sv-ts12" aria-hidden="true">
+<rect x="410" y="386" width="290" height="92" class="sv-tip-bg"/>
+<rect x="410" y="386" width="3" height="92" class="sv-tip-acc"/>
+<text x="424" y="404" class="sv-tip-t0 en">AI processing</text>
+<text x="424" y="419" class="sv-tip-t en">Prompts, documents and outputs may be</text>
+<text x="424" y="434" class="sv-tip-t en">processed where the model runs. Check</text>
+<text x="424" y="449" class="sv-tip-t en">the region, retention and whether your</text>
+<text x="424" y="464" class="sv-tip-t en">data trains the model.</text>
+<text x="424" y="404" class="sv-tip-t0 nl">AI-verwerking</text>
+<text x="424" y="419" class="sv-tip-t nl">Prompts, documenten en uitvoer worden</text>
+<text x="424" y="434" class="sv-tip-t nl">mogelijk verwerkt waar het model draait.</text>
+<text x="424" y="449" class="sv-tip-t nl">Controleer regio, bewaartermijn en of uw</text>
+<text x="424" y="464" class="sv-tip-t nl">data het model traint.</text>
+</g>
+<g class="sv-svtip sv-ts13" aria-hidden="true">
+<rect x="410" y="450" width="303" height="92" class="sv-tip-bg"/>
+<rect x="410" y="450" width="3" height="92" class="sv-tip-acc"/>
+<text x="424" y="468" class="sv-tip-t0 en">Keys you hold</text>
+<text x="424" y="483" class="sv-tip-t en">With customer-held keys, data handed over</text>
+<text x="424" y="498" class="sv-tip-t en">under an order is unreadable. The SaaS</text>
+<text x="424" y="513" class="sv-tip-t en">features that need plain text (search, AI)</text>
+<text x="424" y="528" class="sv-tip-t en">are the trade-off.</text>
+<text x="424" y="468" class="sv-tip-t0 nl">Sleutels in eigen hand</text>
+<text x="424" y="483" class="sv-tip-t nl">Met eigen sleutels is data die onder een</text>
+<text x="424" y="498" class="sv-tip-t nl">bevel wordt afgegeven onleesbaar. SaaS-</text>
+<text x="424" y="513" class="sv-tip-t nl">functies die leesbare tekst nodig hebben</text>
+<text x="424" y="528" class="sv-tip-t nl">(zoeken, AI) zijn de afweging.</text>
+</g>
+</svg>
+    </figure>
+
+    <div class="panel">
+      <p class="en"><strong>We suggest drawing this map once per SaaS you depend on.</strong> Three flows usually leave outright: content, identities and metadata. Two leave under conditions you can negotiate: support access and AI processing. Keys you hold stay. The sovereignty level of the whole estate is the level of the weakest flow, which is why <abbr class="tip" tabindex="0" data-tip="Software as a service: an application you rent and use through the browser; the vendor runs it in its own cloud.">SaaS</abbr> with a non-EU parent, not the data centre, usually sets it.</p>
+      <p class="nl"><strong>Wij raden aan deze kaart één keer te tekenen per SaaS waarvan u afhankelijk bent.</strong> Drie stromen vertrekken meestal gewoon: inhoud, identiteiten en metadata. Twee vertrekken onder voorwaarden waarover u kunt onderhandelen: supporttoegang en AI-verwerking. Sleutels in eigen hand blijven. Het soevereiniteitsniveau van het geheel is dat van de zwakste stroom. Daarom bepaalt meestal de <abbr class="tip" tabindex="0" data-tip="Software as a service: een applicatie die u huurt en via de browser gebruikt; de leverancier draait haar in zijn eigen cloud.">SaaS</abbr> met een niet-EU-moeder het niveau, niet het datacenter.</p>
+    </div>
+  </div>
+</section>
+<!-- /diagram:sov-map -->
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>raises the level.</em></span>
+      <span class="nl">Wat <em>het niveau verhoogt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">most of this is a question, a contract clause or a yearly test, not a new cloud</span>
+      <span class="nl">het meeste is een vraag, een contractbepaling of een jaarlijkse test, geen nieuwe cloud</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">SCORE</span><span class="nl">SCORE</span></span>
+        <span class="chip c2"><span class="en">DATA CLASSES</span><span class="nl">DATAKLASSEN</span></span>
+        <span class="chip c3"><span class="en">YOUR KEYS</span><span class="nl">EIGEN SLEUTELS</span></span>
+        <span class="chip c4"><span class="en">FLOW MAP</span><span class="nl">STROOMKAART</span></span>
+        <span class="chip c5"><span class="en">TESTED EXIT</span><span class="nl">GETESTE EXIT</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Addresses</th><th>In one line</th></tr>
+        <tr><td class="ctl">Sovereignty score per supplier</td><td>Levels (01)</td><td>Score your key suppliers on the Commission's eight objectives and SEAL levels, and set your own minimum per data class.</td></tr>
+        <tr><td class="ctl">Data classes by exposure</td><td>Law (02)</td><td>Three classes are enough: may leave the EU · may leave with keys you hold · must not be reachable by a foreign order at all.</td></tr>
+        <tr><td class="ctl">EU entity, EU operations</td><td>Law (02)</td><td>For the most sensitive class, prefer services run by an EU company with EU staff, and still ask which law reaches the parent.</td></tr>
+        <tr><td class="ctl">Keys you hold</td><td>Law (02) · SaaS (03)</td><td>Keys in your own <abbr class="tip" tabindex="0" data-tip="Hardware security module or key management service: where keys are stored and used without leaving your control.">HSM or KMS</abbr>, so an order to the provider yields ciphertext. Expect SaaS search and AI features to need the plain text.</td></tr>
+        <tr><td class="ctl">Flow map per SaaS</td><td>SaaS (03)</td><td>Content, identities, metadata, support access, AI processing, keys: stays or leaves, under which law. One page per SaaS.</td></tr>
+        <tr><td class="ctl">Identity at home</td><td>SaaS (03)</td><td>Run or federate your identity provider so that one SaaS is not the login, and the off switch, for everything else.</td></tr>
+        <tr><td class="ctl">Contract clauses</td><td>Law (02) · Exit (04)</td><td>Countries of processing and storage, notice of changes, EU-only support, a duty to challenge and report foreign orders, and exit assistance. DORA Art. 30 is a usable template for everyone.</td></tr>
+        <tr><td class="ctl">Tested exit</td><td>Exit (04)</td><td>Once a year per critical SaaS: export everything, open it elsewhere, record how long it took. The Data Act's switching rules back you up.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Pakt aan</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Soevereiniteitsscore per leverancier</td><td>Niveaus (01)</td><td>Scoor uw belangrijkste leveranciers op de acht doelen en SEAL-niveaus van de Commissie, en stel uw eigen minimum per dataklasse vast.</td></tr>
+        <tr><td class="ctl">Dataklassen naar blootstelling</td><td>Recht (02)</td><td>Drie klassen zijn genoeg: mag de EU verlaten · mag weg met sleutels in eigen hand · mag voor een buitenlands bevel helemaal niet bereikbaar zijn.</td></tr>
+        <tr><td class="ctl">EU-entiteit, EU-operaties</td><td>Recht (02)</td><td>Kies voor de gevoeligste klasse diensten die een EU-vennootschap met EU-personeel draait, en vraag toch welk recht de moeder bereikt.</td></tr>
+        <tr><td class="ctl">Sleutels in eigen hand</td><td>Recht (02) · SaaS (03)</td><td>Sleutels in uw eigen <abbr class="tip" tabindex="0" data-tip="Hardware security module of key management service: waar sleutels worden bewaard en gebruikt zonder uw controle te verlaten.">HSM of KMS</abbr>, zodat een bevel aan de aanbieder versleutelde tekst oplevert. Reken erop dat SaaS-zoeken en AI-functies leesbare tekst nodig hebben.</td></tr>
+        <tr><td class="ctl">Stroomkaart per SaaS</td><td>SaaS (03)</td><td>Inhoud, identiteiten, metadata, supporttoegang, AI-verwerking, sleutels: blijft of vertrekt, onder welk recht. Eén pagina per SaaS.</td></tr>
+        <tr><td class="ctl">Identiteit in eigen huis</td><td>SaaS (03)</td><td>Draai of federeer uw identiteitsprovider zelf, zodat één SaaS niet de inlog, en de uitknop, voor al het andere is.</td></tr>
+        <tr><td class="ctl">Contractbepalingen</td><td>Recht (02) · Exit (04)</td><td>Landen van verwerking en opslag, melding van wijzigingen, EU-only support, een plicht om buitenlandse bevelen aan te vechten en te melden, en exithulp. DORA art. 30 is voor iedereen een bruikbaar sjabloon.</td></tr>
+        <tr><td class="ctl">Geteste exit</td><td>Exit (04)</td><td>Eén keer per jaar per kritieke SaaS: exporteer alles, open het elders, noteer hoelang het duurde. De overstapregels van de Dataverordening steunen u daarbij.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> "sovereign" is not yes or no. It is a level per objective and per data flow, and infrastructure in Europe with <abbr class="tip" tabindex="0" data-tip="Software as a service: an application you rent and use through the browser; the vendor runs it in its own cloud.">SaaS</abbr> outside gives you the level of the SaaS. We suggest three decisions: which data must never be reachable by a foreign order, which level you accept for the rest, and a tested exit for every critical service. How far to go per data class is your call.</span>
+        <span class="en disclaimer">Indicative. The Commission's framework is a procurement tool, not a law; the Data Act and DORA are law; the Cloud and AI Development Act is a proposal.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> "soeverein" is geen ja of nee. Het is een niveau per doel en per datastroom, en infrastructuur in Europa met <abbr class="tip" tabindex="0" data-tip="Software as a service: een applicatie die u huurt en via de browser gebruikt; de leverancier draait haar in zijn eigen cloud.">SaaS</abbr> erbuiten geeft u het niveau van de SaaS. Wij raden drie besluiten aan: welke data nooit bereikbaar mag zijn voor een buitenlands bevel, welk niveau u voor de rest accepteert, en een geteste exit voor elke kritieke dienst. Hoe ver u per dataklasse gaat, is uw keuze.</span>
+        <span class="nl disclaimer">Indicatief. Het kader van de Commissie is een inkoopinstrument, geen wet; de Dataverordening en DORA zijn wet; de Cloud and AI Development Act is een voorstel.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">A foreign order for your data is rare. An unmapped flow, a dependency nobody registered and a service that stops are not.</span><span class="nl">Een buitenlands bevel om uw data is zeldzaam. Een niet in kaart gebrachte stroom, een afhankelijkheid die niemand registreerde en een dienst die stopt zijn dat niet.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Disclosure of data that should never have been reachable, or weeks without mail, logins and customer records while you migrate under pressure.</span><span class="nl">Afgifte van data die nooit bereikbaar had mogen zijn, of weken zonder mail, inlogs en klantgegevens terwijl u onder druk migreert.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">While a provider's parent sits under non-EU law, the goal is a known and accepted level per data class, not zero exposure.</span><span class="nl">Zolang de moeder van een aanbieder onder niet-EU-recht valt, is het doel een bekend en geaccepteerd niveau per dataklasse, niet nul blootstelling.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CIO</span><span class="nl">CIO</span></span><p><span class="en">The <abbr class="tip" tabindex="0" data-tip="Chief information officer: the executive responsible for IT sourcing and operations.">CIO</abbr> owns sourcing and exit. Legal owns the jurisdiction question. Data owners decide which class their data is in.</span><span class="nl">De <abbr class="tip" tabindex="0" data-tip="Chief information officer: de bestuurder die verantwoordelijk is voor IT-inkoop en -operaties.">CIO</abbr> is eigenaar van inkoop en exit. Legal is eigenaar van de rechtsmachtvraag. Data-eigenaren bepalen in welke klasse hun data valt.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">% of critical suppliers with a scored sovereignty level · data flows leaving the EU without a known legal basis · critical SaaS with an exit tested in the last 12 months · share of the most sensitive class on keys you hold.</span><span class="nl">% kritieke leveranciers met een gescoord soevereiniteitsniveau · datastromen die de EU verlaten zonder bekende rechtsgrond · kritieke SaaS met een in de laatste 12 maanden geteste exit · aandeel van de gevoeligste klasse op sleutels in eigen hand.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Data and operations depend on providers under non-EU law and on SaaS outside the sovereign estate, so a foreign order, a switch-off or vendor lock-in can expose data or halt the business.”</span><span class="nl">“Data en bedrijfsvoering hangen af van aanbieders onder niet-EU-recht en van SaaS buiten de soevereine omgeving, waardoor een buitenlands bevel, een uitschakeling of lock-in data kan blootleggen of het bedrijf kan stilleggen.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">GDPR</td><td>Every transfer of personal data outside the EU needs a legal basis (Chapter V): an adequacy decision such as the EU-US Data Privacy Framework (2023, upheld by the General Court in September 2025, appeal pending) or standard contractual clauses. A foreign order to disclose is only enforceable if it rests on an international agreement (Art. 48).</td><td>Ask for the transfer mechanism, the sub-processor list with countries, and the policy on government requests. A processing agreement is required (Art. 28).</td><td>A disclosure to a foreign authority without an EU legal basis can count as a personal data breach. Notify the Autoriteit Persoonsgegevens within 72 hours (Art. 33); inform the people affected when the risk is high (Art. 34).</td></tr>
+        <tr><td class="ctl">NIS2</td><td>NIS2 requires supply chain security, including the relationship with each direct supplier and service provider (Art. 21(2)(d)), taking account of each supplier's specific vulnerabilities (Art. 21(3)). In the Netherlands this runs through the Cyberbeveiligingswet, in force since 15 August 2026.</td><td>Ask which laws can compel the provider and its parent, and where support and security operations run. The Commission's eight objectives make a usable questionnaire.</td><td>A provider switch-off or disclosure that disrupts your service can count as a significant incident if it meets the thresholds. Early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month.</td></tr>
+        <tr><td class="ctl">DORA</td><td>DORA requires a register of all <abbr class="tip" tabindex="0" data-tip="Information and communication technology: in DORA, any digital or data service a financial entity relies on.">ICT</abbr> third-party arrangements (Art. 28(3)), contract clauses naming the countries where services are provided and data is processed and stored (Art. 30(2)(b)), and exit strategies for critical or important functions (Art. 28(8)).</td><td>Check the countries and subcontractors in the contract against the report, and ask how exit assistance has been tested.</td><td>Classify promptly. Initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterion CC9.2 covers managing risks from vendors and business partners. A SOC 2 report describes where and how controls operate, not which foreign law reaches the entity.</td><td>Check which subservice organisations are carved out, the data centre countries, and whether remote support access is in scope.</td><td>A disclosure or outage at the provider will likely appear as an exception in the next report, if it is in scope at all.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>The focus is financial reporting. Jurisdiction and exit are outside its scope unless they affect the financial process.</td><td>The report rarely names the parent's law or the support locations. Ask for it in the contract instead.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">AVG</td><td>Elke doorgifte van persoonsgegevens buiten de EU heeft een rechtsgrond nodig (hoofdstuk V): een adequaatheidsbesluit zoals het EU-VS Data Privacy Framework (2023, in september 2025 overeind gehouden door het Gerecht, hoger beroep loopt) of standaardcontractbepalingen. Een buitenlands bevel tot afgifte is alleen afdwingbaar als het steunt op een internationaal verdrag (art. 48).</td><td>Vraag naar het doorgiftemechanisme, de lijst van subverwerkers met landen, en het beleid bij verzoeken van overheden. Een verwerkersovereenkomst is verplicht (art. 28).</td><td>Afgifte aan een buitenlandse autoriteit zonder Europese rechtsgrond kan als datalek gelden. Meld het binnen 72 uur bij de Autoriteit Persoonsgegevens (art. 33); informeer de betrokkenen als het risico hoog is (art. 34).</td></tr>
+        <tr><td class="ctl">NIS2</td><td>NIS2 vraagt beveiliging van de toeleveringsketen, inclusief de relatie met elke directe leverancier en dienstverlener (art. 21 lid 2 onder d), rekening houdend met de specifieke kwetsbaarheden van elke leverancier (art. 21 lid 3). In Nederland loopt dit via de Cyberbeveiligingswet, van kracht sinds 15 augustus 2026.</td><td>Vraag welk recht de aanbieder en zijn moeder kan dwingen, en waar support en beveiligingsoperaties draaien. De acht doelen van de Commissie vormen een bruikbare vragenlijst.</td><td>Een uitschakeling of afgifte bij een aanbieder die uw dienstverlening verstoort, kan als significant incident gelden als het de drempels haalt. Vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindverslag binnen een maand.</td></tr>
+        <tr><td class="ctl">DORA</td><td>DORA vraagt een register van alle <abbr class="tip" tabindex="0" data-tip="Informatie- en communicatietechnologie: onder DORA elke digitale of datadienst waarop een financiële instelling leunt.">ICT</abbr>-overeenkomsten met derden (art. 28 lid 3), contractbepalingen die de landen noemen waar diensten worden geleverd en data wordt verwerkt en opgeslagen (art. 30 lid 2 onder b), en exitstrategieën voor kritieke of belangrijke functies (art. 28 lid 8).</td><td>Leg de landen en onderaannemers in het contract naast het rapport, en vraag hoe de exithulp is getest.</td><td>Classificeer snel. Eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterium CC9.2 gaat over het beheersen van risico's van leveranciers en zakenpartners. Een SOC 2-rapport beschrijft waar en hoe maatregelen werken, niet welk buitenlands recht de entiteit bereikt.</td><td>Controleer welke onderliggende dienstverleners buiten het rapport zijn gelaten, de landen van de datacenters, en of supporttoegang op afstand binnen scope valt.</td><td>Een afgifte of storing bij de aanbieder komt waarschijnlijk als afwijking in het volgende rapport, als die al binnen scope valt.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>De focus ligt op de financiële verslaggeving. Rechtsmacht en exit vallen buiten de scope, tenzij ze het financiële proces raken.</td><td>Het rapport noemt zelden het recht van de moeder of de supportlocaties. Vraag daar in het contract naar.</td><td>ISAE 3402 schept geen meldplicht aan de auditors van gebruikers. Verwacht een afwijking in het volgende rapport en vraag in het contract om tussentijdse melding.</td></tr>
+      </table>
+      <p class="sources en">Checked against: European Commission <a href="https://commission.europa.eu/document/download/09579818-64a6-4dd5-9577-446ab6219113_en">Cloud Sovereignty Framework v1.2.1</a> (Oct 2025) and <a href="https://commission.europa.eu/document/download/2ad80a48-166f-4c77-a513-80c53ca2a128_en">implementation guidance</a> (June 2026), <a href="https://digital-strategy.ec.europa.eu/en/library/proposal-cloud-and-ai-development-act-cada">Cloud and AI Development Act proposal</a> COM(2026) 502 (3 June 2026), <a href="https://www.law.cornell.edu/uscode/text/18/2713">18 U.S.C. §2713</a> (CLOUD Act, 2018), <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">GDPR</a> Art. 28, 33–34, 44–49, <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 21 and 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 19, 28–30, <a href="https://eur-lex.europa.eu/eli/reg/2023/2854/oj">Data Act</a> Art. 25, 29, 32, 50, <a href="https://www.senat.fr/compte-rendu-commissions/20250609/ce_commande_publique.html">Sénat</a> hearing of Microsoft France (10 June 2025), <a href="https://curia.europa.eu/site/upload/docs/application/pdf/2025-09/cp250106en.pdf">General Court</a> T-553/23 (3 Sep 2025), <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL</a> (Aug 2026), <a href="https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn">Microsoft EU Data Boundary</a> documentation (Feb 2025), <a href="https://press.aboutamazon.com/aws/2026/1/aws-launches-aws-european-sovereign-cloud-and-announces-expansion-across-europe">AWS</a> press release (15 Jan 2026), AICPA Trust Services Criteria CC9.2 (2017, points of focus 2022) · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: Europese Commissie <a href="https://commission.europa.eu/document/download/09579818-64a6-4dd5-9577-446ab6219113_en">Cloud Sovereignty Framework v1.2.1</a> (okt 2025) en <a href="https://commission.europa.eu/document/download/2ad80a48-166f-4c77-a513-80c53ca2a128_en">implementatieleidraad</a> (juni 2026), voorstel <a href="https://digital-strategy.ec.europa.eu/en/library/proposal-cloud-and-ai-development-act-cada">Cloud and AI Development Act</a> COM(2026) 502 (3 juni 2026), <a href="https://www.law.cornell.edu/uscode/text/18/2713">18 U.S.C. §2713</a> (CLOUD Act, 2018), <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">AVG</a> art. 28, 33–34, 44–49, <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 21 en 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 19, 28–30, <a href="https://eur-lex.europa.eu/eli/reg/2023/2854/oj">Dataverordening</a> art. 25, 29, 32, 50, <a href="https://www.senat.fr/compte-rendu-commissions/20250609/ce_commande_publique.html">Sénat</a>, verhoor Microsoft France (10 juni 2025), <a href="https://curia.europa.eu/site/upload/docs/application/pdf/2025-09/cp250106en.pdf">Gerecht</a> T-553/23 (3 sep 2025), <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL</a> (aug 2026), documentatie <a href="https://learn.microsoft.com/en-us/privacy/eudb/eu-data-boundary-learn">Microsoft EU Data Boundary</a> (feb 2025), persbericht <a href="https://press.aboutamazon.com/aws/2026/1/aws-launches-aws-european-sovereign-cloud-and-announces-expansion-across-europe">AWS</a> (15 jan 2026), AICPA Trust Services Criteria CC9.2 (2017, aandachtspunten 2022) · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../shared-responsibility/"><span class="en">Shared responsibility</span><span class="nl">Gedeelde verantwoordelijkheid</span></a> ·
+  <a href="../encryption-at-rest/"><span class="en">Encryption at rest</span><span class="nl">Versleutelde opslag</span></a> ·
+  <a href="../supply-chain/"><span class="en">Supply chain</span><span class="nl">Toeleveringsketen</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=cloud-sovereignty&amp;title=Missing%3A%20cloud-sovereignty"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=cloud-sovereignty&amp;title=Correction%3A%20cloud-sovereignty"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">CLOUD SOVEREIGNTY BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">CLOUDSOEVEREINITEIT BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>
