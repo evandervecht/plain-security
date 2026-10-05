@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>CADA vs. the Cloud Sovereignty Framework // Plain Security</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   CADA VS. THE CLOUD SOVEREIGNTY FRAMEWORK // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:120px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;line-height:1.35}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:24px}
+.node.right{right:24px}
+.node.right .box{border-color:rgba(90,200,250,.55)}
+
+.wire{position:absolute;left:150px;right:150px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700;border:1px solid #9fb3c0}
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 7s ease-in-out infinite}
+.banner.ok{color:#8ff0cd;background:rgba(55,211,155,.12);border-color:rgba(55,211,155,.45)}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+
+/* --- scene 1 : two ladders --- */
+.s1 .rl{position:absolute;left:40px;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--slate);z-index:3}
+.s1 .rl.a{top:28px}.s1 .rl.b{top:132px}
+.s1 .lad{position:absolute;left:40px;right:40px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.s1 .lad.a{top:46px}.s1 .lad.b{top:150px}
+.s1 .lv{position:relative;height:72px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;align-content:center;gap:4px;font-size:9.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;text-align:center;padding:0 8px;line-height:1.3}
+.s1 .lv b{font-family:var(--sans);font-size:15px;letter-spacing:0;color:var(--white);text-transform:none}
+.s1 .lv.e{visibility:hidden}
+.s1 .lv::after{content:"";position:absolute;inset:0;border:1px solid var(--bad);background:rgba(255,93,115,.16);opacity:0;animation:lvfill 8s ease-in-out infinite;animation-delay:var(--d)}
+.s1 .lv.w::after{border-color:var(--warn);background:rgba(255,200,87,.16)}
+.s1 .lv.g::after{border-color:var(--good);background:rgba(55,211,155,.14)}
+.s1 .lv.c::after{border-color:var(--brand);background:rgba(90,200,250,.14)}
+@keyframes lvfill{0%,8%{opacity:0}16%,84%{opacity:1}92%,100%{opacity:0}}
+.s1 .pin{position:absolute;bottom:100%;margin-bottom:7px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9px;letter-spacing:.16em;font-weight:700;color:var(--deep);background:var(--warn);padding:3px 8px;opacity:0;animation:pin 8s ease-in-out infinite;z-index:3}
+.s1 .pin.c{background:var(--brand)}
+.s1 .pin::after{content:"";position:absolute;top:100%;left:50%;margin-left:-5px;border:5px solid transparent;border-top-color:var(--warn)}
+.s1 .pin.c::after{border-top-color:var(--brand)}
+@keyframes pin{0%,36%{opacity:0;transform:translate(-50%,-10px)}44%,88%{opacity:1;transform:translate(-50%,0)}96%,100%{opacity:0}}
+.s1 .banner{animation-duration:8s}
+
+/* --- scene 2 : recognition --- */
+.s2 .env.data{left:150px;opacity:0;animation:pull 7s linear infinite}
+@keyframes pull{0%,6%{left:150px;opacity:0}12%{opacity:1}60%{left:calc(100% - 150px);opacity:1}68%,100%{left:calc(100% - 150px);opacity:0}}
+.s2 .flag{position:absolute;left:24px;top:36px;font-size:9.5px;letter-spacing:.18em;font-weight:700;color:#8ff0cd;background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);padding:3px 9px}
+.s2 .stamp{position:absolute;right:24px;top:36px;font-size:9.5px;letter-spacing:.18em;font-weight:700;color:var(--deep);background:var(--brand);padding:3px 9px;opacity:0;animation:stamp 7s ease-in-out infinite;z-index:3}
+@keyframes stamp{0%,70%{opacity:0;transform:scale(1.2)}78%,100%{opacity:1;transform:none}}
+.s2 .banner{animation-duration:7s}
+
+/* --- scene 3 : the level follows the activity --- */
+.s3 .apps{position:absolute;left:30px;right:30px;top:50%;transform:translateY(-50%);display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.s3 .app{height:126px;display:grid;place-items:center;align-content:center;gap:5px;background:var(--surface);border:1px solid var(--line);font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;text-align:center;padding:0 8px;line-height:1.3}
+.s3 .app b{font-size:24px;display:block}
+.s3 .lvl{margin-top:5px;font-size:9px;letter-spacing:.16em;font-weight:700;padding:3px 8px;color:var(--deep);background:var(--warn);opacity:0;animation:lvlin 7s ease-in-out infinite;animation-delay:var(--d)}
+.s3 .lvl.g{background:var(--good)}
+@keyframes lvlin{0%,20%{opacity:0;transform:translateY(6px)}30%,88%{opacity:1;transform:none}96%,100%{opacity:0}}
+.s3 .banner{animation-duration:7s}
+
+/* --- scene 4 : the wrong level --- */
+.s4 .prov{position:absolute;right:30px;top:50%;transform:translateY(-50%);width:150px;height:118px;display:grid;place-items:center;align-content:center;gap:8px;text-align:center;background:var(--surface);border:1px solid rgba(255,93,115,.55);font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;line-height:1.35}
+.s4 .sw{width:54px;height:26px;border:1px solid var(--line);background:var(--bg-lo);position:relative}
+.s4 .sw::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;background:var(--good);animation:flip 7s ease-in-out infinite}
+@keyframes flip{0%,30%{left:3px;background:var(--good)}38%,100%{left:31px;background:var(--bad)}}
+.s4 .apps{position:absolute;left:30px;top:50%;transform:translateY(-50%);display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:calc(100% - 240px)}
+.s4 .app{height:84px;display:grid;place-items:center;align-content:center;gap:4px;background:var(--surface);border:1px solid var(--line);font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;text-align:center;padding:0 6px;line-height:1.3;animation:dim 7s ease-in-out infinite;animation-delay:var(--d)}
+.s4 .app b{font-size:22px;display:block}
+@keyframes dim{0%,38%{opacity:1;filter:none}48%,100%{opacity:.28;filter:grayscale(1)}}
+.s4 .ctr{position:absolute;left:30px;top:30px;font-size:9.5px;letter-spacing:.18em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);padding:3px 9px;opacity:0;animation:ctr 7s ease-in-out infinite}
+@keyframes ctr{0%,50%{opacity:0}58%,100%{opacity:1}}
+.s4 .banner{animation-duration:7s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .s1 .lv::after,.s1 .pin{opacity:1}
+  .s2 .env.data{left:calc(100% - 150px);opacity:1}.s2 .stamp{opacity:1}
+  .s3 .lvl{opacity:1}
+  .s4 .sw::after{left:31px;background:var(--bad)}.s4 .app{opacity:.28;filter:grayscale(1)}.s4 .ctr{opacity:1}
+  .banner{opacity:1}.shield .tick{stroke-dashoffset:0}
+}
+@media (max-width:820px){
+  .s1 .lad{left:12px;right:12px;gap:5px}
+  .s1 .rl{left:12px}
+  .s1 .lv{font-size:7.5px;letter-spacing:.04em;padding:0 3px}
+  .s1 .lv b{font-size:12px}
+  .s1 .pin{display:none}
+  .s2 .node{width:92px;font-size:8.5px}
+  .s2 .wire{left:116px;right:116px}
+  .s2 .env.data{left:116px}
+  .s2 .flag,.s2 .stamp{top:30px;font-size:8px;letter-spacing:.1em}
+  @keyframes pull{0%,6%{left:116px;opacity:0}12%{opacity:1}60%{left:calc(100% - 130px);opacity:1}68%,100%{left:calc(100% - 130px);opacity:0}}
+  .s3 .apps{left:12px;right:12px;gap:6px}
+  .s3 .app{font-size:7.5px;letter-spacing:.04em;height:118px}
+  .s3 .lvl{font-size:7.5px;letter-spacing:.08em}
+  .s4 .prov{width:110px;right:12px;font-size:8px}
+  .s4 .apps{left:12px;width:calc(100% - 140px);gap:6px}
+  .s4 .app{font-size:7.5px;letter-spacing:.04em;height:76px}
+  .stage .banner{white-space:normal;text-align:center;width:calc(100% - 24px);line-height:1.4}
+}
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+.callout .disclaimer{margin-top:12px;font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;color:var(--muted)}
+body:has(#lang-en:checked) .callout .disclaimer.en,body:has(#lang-nl:checked) .callout .disclaimer.nl{display:block}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+/* diagram:cada-map */
+/* ---------- two ladders (framework vs CADA) ---------- */
+.arch{margin:0 0 30px;background:var(--bg-lo);border:1px solid var(--line-soft);padding:12px;overflow-x:auto}
+.arch svg{display:block;width:100%;min-width:900px;height:auto}
+.arch .cd-zone{fill:var(--bg-hi);stroke:var(--line-soft)}
+.arch .cd-zone-l{stroke:rgba(255,200,87,.35)}
+.arch .cd-zone-r{stroke:rgba(90,200,250,.35)}
+.arch .cd-zlabel{font:700 11px var(--mono);letter-spacing:.24em;fill:var(--slate)}
+.arch .cd-node{fill:var(--surface);stroke:var(--line)}
+.arch .cd-s-good .cd-bar{fill:var(--good)}
+.arch .cd-s-warn .cd-bar{fill:var(--warn)}
+.arch .cd-s-bad .cd-bar{fill:var(--bad)}
+.arch .cd-s-bad .cd-node{stroke:rgba(255,93,115,.45)}
+.arch .cd-kick{font:500 10px var(--mono);letter-spacing:.12em;fill:var(--muted)}
+.arch .cd-name{font:600 13px var(--sans);fill:var(--white)}
+.arch .cd-fname{font:700 11px var(--mono);letter-spacing:.14em;fill:var(--white)}
+.arch .cd-st{font:400 10px var(--mono);fill:var(--prose)}
+.arch .cd-legend{font:400 11px var(--mono);fill:var(--body)}
+.arch .cd-foot{font:400 10px var(--mono);letter-spacing:.06em;fill:var(--slate)}
+.arch .cd-link{fill:none;stroke:var(--slate);stroke-width:1.5;stroke-dasharray:5 5}
+.arch .cd-s-good .cd-link{stroke:rgba(55,211,155,.6)}
+.arch .cd-s-warn .cd-link{stroke:rgba(255,200,87,.6)}
+.arch .cd-sw-good{fill:var(--good)}
+.arch .cd-sw-warn{fill:var(--warn)}
+.arch .cd-sw-bad{fill:var(--bad)}
+.arch .cd-svtip{visibility:hidden;pointer-events:none}
+.arch .cd-tip-bg{fill:var(--deep);stroke:var(--line)}
+.arch .cd-tip-acc{fill:var(--brand)}
+.arch .cd-tip-t0{font:700 11px var(--mono);fill:var(--white)}
+.arch .cd-tip-t{font:400 11px var(--mono);fill:var(--prose)}
+.arch [tabindex]{cursor:help;outline:none}
+.arch [tabindex]:focus-visible > rect:first-child{stroke:var(--brand);stroke-width:1.5}
+.arch svg:has(.cd-hc0:hover,.cd-hc0:focus) .cd-tc0,.arch svg:has(.cd-hc1:hover,.cd-hc1:focus) .cd-tc1,.arch svg:has(.cd-hc2:hover,.cd-hc2:focus) .cd-tc2,.arch svg:has(.cd-hc3:hover,.cd-hc3:focus) .cd-tc3,.arch svg:has(.cd-hc4:hover,.cd-hc4:focus) .cd-tc4,.arch svg:has(.cd-hc5:hover,.cd-hc5:focus) .cd-tc5,.arch svg:has(.cd-hc6:hover,.cd-hc6:focus) .cd-tc6,.arch svg:has(.cd-hc7:hover,.cd-hc7:focus) .cd-tc7,.arch svg:has(.cd-hc8:hover,.cd-hc8:focus) .cd-tc8,.arch svg:has(.cd-hc9:hover,.cd-hc9:focus) .cd-tc9,.arch svg:has(.cd-hc10:hover,.cd-hc10:focus) .cd-tc10,.arch svg:has(.cd-hc11:hover,.cd-hc11:focus) .cd-tc11,.arch svg:has(.cd-hc12:hover,.cd-hc12:focus) .cd-tc12{visibility:visible}
+/* /diagram:cada-map */
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> <span class="en">CADA VS. FRAMEWORK</span><span class="nl">CADA VS. KADER</span></a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">WHAT</span><span class="nl">WAT</span></a>
+      <a href="#r2"><span class="en">LEVELS</span><span class="nl">NIVEAUS</span></a>
+      <a href="#r3"><span class="en">WHO</span><span class="nl">WIE</span></a>
+      <a href="#r4"><span class="en">EXAMPLES</span><span class="nl">VOORBEELDEN</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">CADA or the framework? <em>Same ladder, different rules.</em></span>
+      <span class="nl">CADA of het kader? <em>Dezelfde ladder, andere regels.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">The European Commission has two answers to "is this cloud sovereign?". A framework it used to buy its own cloud, with five SEAL levels, and a proposed law, the Cloud and AI Development Act, with four Union assurance levels that public buyers would have to respect. What each is, how the levels work, who would have to comply, and three worked examples.</span>
+      <span class="nl">De Europese Commissie heeft twee antwoorden op "is deze cloud soeverein?". Een kader waarmee zij haar eigen cloud inkocht, met vijf SEAL-niveaus, en een wetsvoorstel, de Cloud and AI Development Act, met vier zekerheidsniveaus waaraan publieke inkopers zich zouden moeten houden. Wat elk is, hoe de niveaus werken, wie eraan zou moeten voldoen, en drie uitgewerkte voorbeelden.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE TWO</span><span class="nl">BEKIJK DE TWEE</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT TO DO NOW</span><span class="nl">WAT U NU KUNT DOEN</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">Two yardsticks, one word. <em>One of them may become law.</em></span>
+      <span class="nl">Twee maatstaven, één woord. <em>Eén ervan kan wet worden.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">the Cloud Sovereignty Framework (a procurement tool) and the Cloud and AI Development Act (a proposal)</span>
+      <span class="nl">het Cloud Sovereignty Framework (een inkoopinstrument) en de Cloud and AI Development Act (een voorstel)</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">TWO LADDERS</span><span class="nl">TWEE LADDERS</span></div>
+      <span class="rl a"><span class="en">FRAMEWORK · SEAL · 2025</span><span class="nl">KADER · SEAL · 2025</span></span>
+      <div class="lad a">
+        <div class="lv" style="--d:0s"><b>SEAL-0</b><span class="en">no sovereignty</span><span class="nl">geen soevereiniteit</span></div>
+        <div class="lv" style="--d:.4s"><b>SEAL-1</b><span class="en">EU law on paper</span><span class="nl">EU-recht op papier</span></div>
+        <div class="lv w" style="--d:.8s"><b>SEAL-2</b><span class="en">data sovereignty</span><span class="nl">datasoevereiniteit</span><span class="pin"><span class="en">TENDER MINIMUM</span><span class="nl">MINIMUM TENDER</span></span></div>
+        <div class="lv g" style="--d:1.2s"><b>SEAL-3</b><span class="en">EU actors in control</span><span class="nl">EU-partijen aan het stuur</span></div>
+        <div class="lv g" style="--d:1.6s"><b>SEAL-4</b><span class="en">full sovereignty</span><span class="nl">volledige soevereiniteit</span></div>
+      </div>
+      <span class="rl b"><span class="en">CADA · ASSURANCE LEVELS · 2026</span><span class="nl">CADA · ZEKERHEIDSNIVEAUS · 2026</span></span>
+      <div class="lad b">
+        <div class="lv e"></div>
+        <div class="lv c" style="--d:2s"><b>LEVEL 1</b><span class="en">self-assessed</span><span class="nl">zelfbeoordeling</span><span class="pin c"><span class="en">EVERY PUBLIC BUYER</span><span class="nl">ELKE PUBLIEKE INKOPER</span></span></div>
+        <div class="lv c" style="--d:2.4s"><b>LEVEL 2</b><span class="en">audited</span><span class="nl">geaudit</span></div>
+        <div class="lv c" style="--d:2.8s"><b>LEVEL 3</b><span class="en">no non-EU control</span><span class="nl">geen niet-EU-zeggenschap</span></div>
+        <div class="lv c" style="--d:3.2s"><b>LEVEL 4</b><span class="en">highest</span><span class="nl">hoogste</span></div>
+      </div>
+      <div class="banner"><span class="en">A TOOL YOU CAN USE TODAY · A LAW THAT MAY BIND TOMORROW</span><span class="nl">EEN INSTRUMENT VOOR VANDAAG · EEN WET DIE MORGEN KAN BINDEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">In October 2025 the European Commission published a Cloud Sovereignty Framework to buy cloud for its own institutions. It is a procurement tool: eight sovereignty objectives, a <abbr class="tip" tabindex="0" data-tip="Sovereignty Effectiveness Assurance Level: the Commission's 0-to-4 scale for how far a cloud service is under EU control and EU law.">SEAL</abbr> level from 0 to 4 on each, the lowest sets the overall level, and a weighted score ranks the offers that clear the minimum. It was used once so far, in the tender awarded in April 2026 (EUR 180 million, four providers), with SEAL-2 as the minimum. On 3 June 2026 the Commission proposed the Cloud and AI Development Act (<abbr class="tip" tabindex="0" data-tip="Cloud and AI Development Act: the Commission's proposed regulation of 3 June 2026 on data centres, AI capacity and a Union cloud sovereignty framework.">CADA</abbr>). Among much else, from data-centre permits to AI capacity, it would turn the idea into law: four Union assurance levels with fixed criteria, recognised by a national authority, listed in an EU repository, and binding on every public buyer in the EU. The framework asks "how sovereign is this service?". The proposal asks "may a public body buy it?". The first is guidance you can use today. The second is now with the European Parliament and the Council, and would apply one year after it enters into force.</p>
+      <p class="en"><strong>Business impact:</strong> if you sell to governments, or run a service that governments depend on, the proposal would make your level a condition of market access. If you buy cloud, the framework gives you a free, Commission-made questionnaire today. Neither tells you which level you need. That is your call, per activity.</p>
+      <p class="nl">In oktober 2025 publiceerde de Europese Commissie een Cloud Sovereignty Framework om cloud in te kopen voor haar eigen instellingen. Het is een inkoopinstrument: acht soevereiniteitsdoelen, op elk een <abbr class="tip" tabindex="0" data-tip="Sovereignty Effectiveness Assurance Level: de schaal van 0 tot 4 van de Commissie voor hoever een clouddienst onder EU-controle en EU-recht valt.">SEAL</abbr>-niveau van 0 tot 4, het laagste bepaalt het totaal, en een gewogen score rangschikt de aanbiedingen die het minimum halen. Het is tot nu toe één keer gebruikt, in de aanbesteding die in april 2026 werd gegund (180 miljoen euro, vier aanbieders), met SEAL-2 als minimum. Op 3 juni 2026 stelde de Commissie de Cloud and AI Development Act (<abbr class="tip" tabindex="0" data-tip="Cloud and AI Development Act: het Commissievoorstel van 3 juni 2026 over datacenters, AI-capaciteit en een EU-kader voor cloudsoevereiniteit.">CADA</abbr>) voor. Naast veel anders, van datacentervergunningen tot AI-capaciteit, zou die het idee tot wet maken: vier zekerheidsniveaus met vaste criteria, erkend door een nationale autoriteit, opgenomen in een EU-register, en bindend voor elke publieke inkoper in de EU. Het kader vraagt "hoe soeverein is deze dienst?". Het voorstel vraagt "mag een publiek orgaan hem kopen?". Het eerste is een leidraad die u vandaag kunt gebruiken. Het tweede ligt nu bij het Europees Parlement en de Raad, en zou een jaar na inwerkingtreding gaan gelden.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> verkoopt u aan overheden, of draait u een dienst waarvan overheden afhankelijk zijn, dan zou het voorstel uw niveau tot een voorwaarde voor markttoegang maken. Koopt u cloud in, dan geeft het kader u vandaag een gratis vragenlijst van de Commissie zelf. Geen van beide zegt welk niveau u nodig heeft. Dat is uw keuze, per activiteit.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ONE WORD · TWO SCALES · ONE MAY BECOME LAW</span><span class="nl">ÉÉN WOORD · TWEE SCHALEN · ÉÉN KAN WET WORDEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: USE THE FRAMEWORK NOW, TRACK THE PROPOSAL</span><span class="nl">AANBEVOLEN: GEBRUIK HET KADER NU, VOLG HET VOORSTEL</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">AI is scored on its own</span><span class="nl">AI wordt apart gescoord</span></b><p><span class="en">The framework scores AI under its data objective; the proposal bans training non-EU AI on your data from level 2. An AI feature on a sovereign stack is where both are most often lost.</span><span class="nl">Het kader scoort AI onder het datadoel; het voorstel verbiedt vanaf niveau 2 het trainen van niet-EU-AI op uw data. Een AI-functie op een soevereine omgeving is waar beide het vaakst sneuvelen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">A chatbot is SEAL-0</span><span class="nl">Een chatbot is SEAL-0</span></b><p><span class="en">Staff paste case files into a public chatbot. Whatever level your cloud has, or would be recognised at, that data is at level zero on both ladders.</span><span class="nl">Medewerkers plakken dossiers in een publieke chatbot. Welk niveau uw cloud ook heeft, of zou krijgen, die data staat op beide ladders op nul.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Score faster</span><span class="nl">Sneller scoren</span></b><p><span class="en">The framework's questionnaire has 43 questions per supplier. AI-assisted review of contracts and public documentation gives a first SEAL per objective in hours.</span><span class="nl">De vragenlijst van het kader telt 43 vragen per leverancier. Met AI-ondersteunde analyse van contracten en publieke documentatie heeft u in uren een eerste SEAL per doel.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">How the levels work: <em>the lowest wins, and an auditor decides.</em></span>
+      <span class="nl">Hoe de niveaus werken: <em>het laagste telt, en een auditor beslist.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">SEAL-0 to SEAL-4 / Union assurance levels 1 to 4 / who checks what</span>
+      <span class="nl">SEAL-0 tot SEAL-4 / zekerheidsniveaus 1 tot 4 / wie wat controleert</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">RECOGNITION UNDER THE PROPOSAL</span><span class="nl">ERKENNING VOLGENS HET VOORSTEL</span></div>
+      <span class="flag"><span class="en">LEVELS 2–4 · INDEPENDENT AUDIT</span><span class="nl">NIVEAU 2–4 · ONAFHANKELIJKE AUDIT</span></span>
+      <span class="stamp"><span class="en">RECOGNISED EU-WIDE</span><span class="nl">EU-BREED ERKEND</span></span>
+      <div class="node left"><div class="box">🏢</div><span class="en">Provider · audit report</span><span class="nl">Aanbieder · auditrapport</span></div>
+      <div class="wire"></div>
+      <div class="env data">📄</div>
+      <div class="node right"><div class="box">🏛️</div><span class="en">National authority</span><span class="nl">Nationale autoriteit</span></div>
+      <div class="banner ok"><span class="en">60-DAY REVIEW BY THE OTHER MEMBER STATES · THEN ONE EU REPOSITORY</span><span class="nl">60 DAGEN TOETSING DOOR DE ANDERE LIDSTATEN · DAN ÉÉN EU-REGISTER</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Under the framework, a provider is scored per objective on its answers, its evidence and its public documentation. The overall SEAL is the lowest of the eight, and the Commission's own guidance says SEAL-4 is out of reach today, because chips and hardware come from outside the EU. The proposal replaces scoring with four cumulative sets of criteria. <strong>Level 1:</strong> established in the EU, infrastructure in the EU, customer data including metadata and telemetry stays in the EU, support may be outsourced outside the EU under controls. The provider checks itself and publishes an EU statement of conformity. <strong>Level 2:</strong> staff in the EU, support only from the EU, a European cybersecurity certificate of at least "substantial" once that scheme exists, your data never trains non-EU AI, a software bill of materials. A non-EU parent is allowed, if it is legally and technically unable to read your data, halt the service or impose its own sanctions. <strong>Level 3:</strong> no non-EU control at all, unless the Commission lists that country as safe; EU-citizen staff, cleared where needed. <strong>Level 4:</strong> certificate "high", no exception for listed countries, and no non-EU hold on the software components either. Levels 2 to 4 need an independent audit at the provider's expense. The national authority where the provider is established decides, the other Member States get 60 days to object, and the service is then recognised EU-wide and listed in a central repository.</p>
+      <p class="en"><strong>Business impact:</strong> a "sovereign" claim becomes checkable: which level, recognised by whom, listed where. Until the proposal is law, the framework's eight objectives are the question list, and the proposal's criteria tell you which answers will matter.</p>
+      <p class="nl">Onder het kader wordt een aanbieder per doel gescoord op zijn antwoorden, zijn bewijs en zijn publieke documentatie. Het totale SEAL-niveau is het laagste van de acht, en de leidraad van de Commissie zelf zegt dat SEAL-4 vandaag onhaalbaar is, omdat chips en hardware van buiten de EU komen. Het voorstel vervangt scoren door vier cumulatieve sets criteria. <strong>Niveau 1:</strong> gevestigd in de EU, infrastructuur in de EU, klantdata inclusief metadata en telemetrie blijft in de EU, support mag onder voorwaarden buiten de EU worden uitbesteed. De aanbieder controleert zichzelf en publiceert een EU-conformiteitsverklaring. <strong>Niveau 2:</strong> personeel in de EU, support alleen uit de EU, een Europees cyberbeveiligingscertificaat van ten minste "substantieel" zodra dat stelsel bestaat, uw data traint nooit niet-EU-AI, een softwarestuklijst. Een niet-EU-moeder is toegestaan, mits zij juridisch en technisch niet in staat is uw data te lezen, de dienst stil te leggen of haar eigen sancties op te leggen. <strong>Niveau 3:</strong> helemaal geen niet-EU-zeggenschap, tenzij de Commissie dat land als veilig aanwijst; personeel met EU-burgerschap, gescreend waar nodig. <strong>Niveau 4:</strong> certificaat "hoog", geen uitzondering voor aangewezen landen, en ook geen niet-EU-greep op de softwarecomponenten. Niveau 2 tot 4 vragen een onafhankelijke audit op kosten van de aanbieder. De nationale autoriteit van het land van vestiging beslist, de andere lidstaten krijgen 60 dagen om bezwaar te maken, en de dienst wordt daarna EU-breed erkend en opgenomen in een centraal register.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een "soevereine" claim wordt controleerbaar: welk niveau, erkend door wie, waar opgenomen. Tot het voorstel wet is, zijn de acht doelen van het kader uw vragenlijst, en zeggen de criteria van het voorstel welke antwoorden straks tellen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">A HIGH LEVEL IS AN AUDIT, NOT A BROCHURE</span><span class="nl">EEN HOOG NIVEAU IS EEN AUDIT, GEEN BROCHURE</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ASK WHICH LEVEL, AND WHO CHECKED IT</span><span class="nl">AANBEVOLEN: VRAAG WELK NIVEAU, EN WIE HET CONTROLEERDE</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Your data in their model</span><span class="nl">Uw data in hun model</span></b><p><span class="en">From level 2 the proposal forbids using service data, telemetry included, to train non-EU AI. Few SaaS contracts say that today. Ask every vendor the same question.</span><span class="nl">Vanaf niveau 2 verbiedt het voorstel het gebruik van dienstdata, telemetrie incluis, om niet-EU-AI te trainen. Weinig SaaS-contracten zeggen dat vandaag. Stel elke leverancier dezelfde vraag.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Audit theatre</span><span class="nl">Audittheater</span></b><p><span class="en">AI writes a convincing evidence pack in an afternoon. The proposal's evidence list asks for payroll records, access logs and the ownership chain to the ultimate owners. Ask for those.</span><span class="nl">AI schrijft in een middag een overtuigend bewijsdossier. De bewijslijst van het voorstel vraagt om loonadministratie, toegangslogs en de eigendomsketen tot de uiteindelijke eigenaren. Vraag daarnaar.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Evidence on demand</span><span class="nl">Bewijs op afroep</span></b><p><span class="en">The same evidence list, software inventory, data-flow diagram and subcontractor register, is a usable due-diligence template. AI assembles a first draft from your own records.</span><span class="nl">Dezelfde bewijslijst, software-inventaris, datastroomdiagram en onderaannemersregister, is een bruikbaar sjabloon voor due diligence. AI maakt een eerste versie uit uw eigen administratie.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">Who would have to comply, <em>and who merely should.</em></span>
+      <span class="nl">Wie eraan zou moeten voldoen, <em>en wie er alleen verstandig aan doet.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">public buyers, NIS2 sectors, providers / the proposal's Articles 29 to 31</span>
+      <span class="nl">publieke inkopers, NIS2-sectoren, aanbieders / artikel 29 tot 31 van het voorstel</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">THE LEVEL FOLLOWS THE ACTIVITY</span><span class="nl">HET NIVEAU VOLGT DE ACTIVITEIT</span></div>
+      <div class="apps">
+        <div class="app"><b>🏘️</b><span class="en">Municipality · HR, finance, portal</span><span class="nl">Gemeente · HR, financiën, portaal</span><span class="lvl" style="--d:0s"><span class="en">LEVEL 1</span><span class="nl">NIVEAU 1</span></span></div>
+        <div class="app"><b>🏥</b><span class="en">Hospital · patient care</span><span class="nl">Ziekenhuis · patiëntenzorg</span><span class="lvl" style="--d:.5s"><span class="en">LEVEL 2 OR 3</span><span class="nl">NIVEAU 2 OF 3</span></span></div>
+        <div class="app"><b>⚖️</b><span class="en">Justice · case files</span><span class="nl">Justitie · dossiers</span><span class="lvl g" style="--d:1s"><span class="en">LEVEL 3 OR 4</span><span class="nl">NIVEAU 3 OF 4</span></span></div>
+      </div>
+      <div class="banner"><span class="en">SET BY A NATIONAL RISK ASSESSMENT · NOT BY THE SUPPLIER</span><span class="nl">BEPAALD DOOR EEN NATIONALE RISICOBEOORDELING · NIET DOOR DE LEVERANCIER</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en"><strong>Public bodies.</strong> Within a year of the Act entering into force, and every two years after, each Member State and each EU institution would assess which of its activities count as "public order": activities in the <abbr class="tip" tabindex="0" data-tip="The EU's second network and information security directive: the cybersecurity law for essential and important entities in 18 sectors.">NIS2</abbr> sectors and in national security, borders, defence, justice and law enforcement, and at which level, 2, 3 or 4. Those activities would only buy services recognised at that level. Everything else would buy level 1 as a minimum. Exceptions exist: no recognised service available, no suitable tender last year, disproportionate cost. If the assessment forces a move, the deadline would be 12 months. <strong>Private sector.</strong> Not bound. Entities in NIS2's high-criticality sectors, such as energy, transport, banking, health, water and digital infrastructure, <em>may</em> run the same assessment, the Commission may later require it for those sectors, and the proposal openly expects regulated industries to mirror public buyers. <strong>Providers.</strong> Recognition is voluntary, but without it there would be no public contract, false statements would carry penalties, and material changes would have to be reported. In the Netherlands the NIS2 sectors are set by the <abbr class="tip" tabindex="0" data-tip="Cyberbeveiligingswet: the Dutch law implementing NIS2, in force since 15 August 2026.">Cbw</abbr>, in force since 15 August 2026.</p>
+      <p class="en"><strong>Business impact:</strong> three questions for the board. Do we sell to public bodies? Then recognition would become a sales condition. Are we a NIS2 high-criticality entity? Then the voluntary assessment is the next-likely duty. Do we depend on a provider that would not reach level 2? Then the public sector may leave it, and prices and roadmaps tend to follow the public sector.</p>
+      <p class="nl"><strong>Publieke organen.</strong> Binnen een jaar na inwerkingtreding, en daarna elke twee jaar, zou elke lidstaat en elke EU-instelling beoordelen welke van haar activiteiten als "openbare orde" gelden: activiteiten in de <abbr class="tip" tabindex="0" data-tip="De tweede EU-richtlijn netwerk- en informatiebeveiliging: de cyberbeveiligingswet voor essentiële en belangrijke entiteiten in 18 sectoren.">NIS2</abbr>-sectoren en in nationale veiligheid, grenzen, defensie, justitie en opsporing, en op welk niveau, 2, 3 of 4. Die activiteiten zouden alleen diensten kopen die op dat niveau zijn erkend. Al het andere zou minimaal niveau 1 kopen. Er zijn uitzonderingen: geen erkende dienst beschikbaar, vorig jaar geen geschikte inschrijving, onevenredige kosten. Dwingt de beoordeling tot een overstap, dan zou de termijn 12 maanden zijn. <strong>Private sector.</strong> Niet gebonden. Entiteiten in de zeer kritieke NIS2-sectoren, zoals energie, vervoer, bankwezen, zorg, water en digitale infrastructuur, <em>mogen</em> dezelfde beoordeling doen, de Commissie kan die voor die sectoren later verplichten, en het voorstel verwacht openlijk dat gereguleerde sectoren de publieke inkopers volgen. <strong>Aanbieders.</strong> Erkenning is vrijwillig, maar zonder erkenning zou er geen overheidscontract zijn, valse verklaringen zouden worden beboet, en wezenlijke wijzigingen zouden gemeld moeten worden. In Nederland bepaalt de <abbr class="tip" tabindex="0" data-tip="Cyberbeveiligingswet: de Nederlandse wet die NIS2 omzet, van kracht sinds 15 augustus 2026.">Cbw</abbr>, van kracht sinds 15 augustus 2026, welke sectoren dat zijn.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> drie vragen voor de directie. Verkopen wij aan publieke organen? Dan zou erkenning een verkoopvoorwaarde worden. Zijn wij een zeer kritieke NIS2-entiteit? Dan is de vrijwillige beoordeling de meest waarschijnlijke volgende plicht. Hangen wij af van een aanbieder die niveau 2 niet zou halen? Dan kan de overheid daar weggaan, en prijzen en roadmaps volgen doorgaans de overheid.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">BINDING FOR PUBLIC BUYERS · OPTIONAL FOR YOU · FOR NOW</span><span class="nl">BINDEND VOOR PUBLIEKE INKOPERS · VRIJWILLIG VOOR U · VOORLOPIG</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: RUN THE VOLUNTARY ASSESSMENT BEFORE YOU HAVE TO</span><span class="nl">AANBEVOLEN: DOE DE VRIJWILLIGE BEOORDELING VOORDAT HET MOET</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">The assistant is the weak link</span><span class="nl">De assistent is de zwakke schakel</span></b><p><span class="en">A public-order activity at level 3 with an AI assistant from a non-EU provider has a level-1 flow in it. The level is per activity, so the assistant drags the activity down.</span><span class="nl">Een openbare-orde-activiteit op niveau 3 met een AI-assistent van een niet-EU-aanbieder heeft een stroom op niveau 1 in zich. Het niveau geldt per activiteit, dus de assistent trekt de activiteit omlaag.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Shadow AI stays unseen</span><span class="nl">Schaduw-AI blijft onzichtbaar</span></b><p><span class="en">The proposal only reaches what procurement sees. AI tools adopted by teams outside procurement are the activities nobody assessed.</span><span class="nl">Het voorstel reikt alleen tot wat inkoop ziet. AI-tools die teams buiten inkoop om gebruiken, zijn de activiteiten die niemand heeft beoordeeld.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Map activities faster</span><span class="nl">Sneller activiteiten in kaart</span></b><p><span class="en">The proposal's three criteria, data sensitivity, harm of foreign access, harm of disruption, fit an AI-assisted inventory. A first map of activities and levels takes days, not months.</span><span class="nl">De drie criteria van het voorstel, gevoeligheid van data, schade van buitenlandse toegang, schade van uitval, passen in een AI-ondersteunde inventarisatie. Een eerste kaart van activiteiten en niveaus kost dagen, geen maanden.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">Three organisations, <em>three levels.</em></span>
+      <span class="nl">Drie organisaties, <em>drie niveaus.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">worked examples / a municipality, a hospital, a court / indicative</span>
+      <span class="nl">uitgewerkte voorbeelden / een gemeente, een ziekenhuis, een rechtbank / indicatief</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">THE WRONG LEVEL</span><span class="nl">HET VERKEERDE NIVEAU</span></div>
+      <span class="ctr"><span class="en">MIGRATE WITHIN 12 MONTHS</span><span class="nl">MIGREREN BINNEN 12 MAANDEN</span></span>
+      <div class="apps">
+        <div class="app" style="--d:0s"><b>📁</b><span class="en">Case files</span><span class="nl">Dossiers</span></div>
+        <div class="app" style="--d:.3s"><b>🪪</b><span class="en">Logins</span><span class="nl">Inlogs</span></div>
+        <div class="app" style="--d:.6s"><b>🤖</b><span class="en">AI assistant</span><span class="nl">AI-assistent</span></div>
+      </div>
+      <div class="prov"><span class="sw"></span><span class="en">Provider · recognised at level 1 · activity needs level 3</span><span class="nl">Aanbieder · erkend op niveau 1 · activiteit vraagt niveau 3</span></div>
+      <div class="banner"><span class="en">RIGHT CLOUD FOR HR · WRONG CLOUD FOR THE COURT</span><span class="nl">GOEDE CLOUD VOOR HR · VERKEERDE CLOUD VOOR DE RECHTBANK</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en"><strong>A municipality</strong> runs HR, finance and a citizen portal. None of that is a public-order activity, so under the proposal level 1 would do: an EU-established provider, hosted in the EU, data including telemetry in the EU. The EU subsidiary of a global provider could qualify. On the framework's ladder that is SEAL-1 or SEAL-2, so the question to ask today is about the parent company and who holds the keys. <strong>A hospital</strong> is in a NIS2 high-criticality sector. If the national assessment marks patient care as public order, level 2 would be the floor: staff in the EU, support only from the EU, an independent audit, and a non-EU parent only if ring-fenced. Today, the hospital can ask for SEAL-2 as the Commission did, knowing that a non-EU parent caps most offers there in practice. <strong>A court</strong> handles case files and, at times, classified information. Level 3 would apply: no non-EU control, EU-citizen staff cleared where needed. That is SEAL-3 on the framework, which few offers reach; defence would sit at level 4, and SEAL-4 nobody reaches today. If any of the three sits on the wrong service when the assessment lands, the clock would be 12 months.</p>
+      <p class="en"><strong>Business impact:</strong> the level is per activity, not per organisation. One body can rightly have level 1 for HR and level 3 for case files. Pricing that difference now beats being surprised by the assessment, and it is the same exercise a private company does when it decides which data a foreign order must never reach.</p>
+      <p class="nl"><strong>Een gemeente</strong> draait HR, financiën en een burgerportaal. Niets daarvan is een openbare-orde-activiteit, dus onder het voorstel zou niveau 1 volstaan: een in de EU gevestigde aanbieder, gehost in de EU, data inclusief telemetrie in de EU. De EU-dochter van een wereldwijde aanbieder zou daarvoor in aanmerking kunnen komen. Op de ladder van het kader is dat SEAL-1 of SEAL-2, dus de vraag van vandaag gaat over de moedermaatschappij en wie de sleutels heeft. <strong>Een ziekenhuis</strong> zit in een zeer kritieke NIS2-sector. Merkt de nationale beoordeling patiëntenzorg aan als openbare orde, dan zou niveau 2 de ondergrens zijn: personeel in de EU, support alleen uit de EU, een onafhankelijke audit, en een niet-EU-moeder alleen als die is afgeschermd. Vandaag kan het ziekenhuis SEAL-2 vragen, zoals de Commissie deed, wetend dat een niet-EU-moeder de meeste aanbiedingen daar in de praktijk op vastzet. <strong>Een rechtbank</strong> verwerkt dossiers en soms gerubriceerde informatie. Niveau 3 zou gelden: geen niet-EU-zeggenschap, personeel met EU-burgerschap, gescreend waar nodig. Dat is SEAL-3 op het kader, dat weinig aanbiedingen halen; defensie zou op niveau 4 zitten, en SEAL-4 haalt vandaag niemand. Zit een van de drie op de verkeerde dienst als de beoordeling landt, dan zou de klok op 12 maanden staan.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> het niveau geldt per activiteit, niet per organisatie. Eén orgaan kan terecht niveau 1 hebben voor HR en niveau 3 voor dossiers. Dat verschil nu al beprijzen is beter dan verrast worden door de beoordeling, en het is dezelfde oefening die een privaat bedrijf doet als het bepaalt welke data een buitenlands bevel nooit mag bereiken.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">WRONG LEVEL TODAY · 12 MONTHS TO MOVE TOMORROW</span><span class="nl">VERKEERD NIVEAU VANDAAG · 12 MAANDEN OM TE VERHUIZEN MORGEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE LEVEL PER ACTIVITY, WRITTEN DOWN THIS YEAR</span><span class="nl">AANBEVOLEN: ÉÉN NIVEAU PER ACTIVITEIT, DIT JAAR OP PAPIER</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">The model sets the level</span><span class="nl">Het model bepaalt het niveau</span></b><p><span class="en">The court's case-file system can be at level 3 while its AI summariser runs with a non-EU provider. The summariser then sets the level of the case files.</span><span class="nl">Het dossiersysteem van de rechtbank kan op niveau 3 staan terwijl de AI-samenvatter bij een niet-EU-aanbieder draait. Dan bepaalt de samenvatter het niveau van de dossiers.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A hospital department buys an AI transcription tool on a credit card. It is now the lowest level in a public-order activity, and nobody assessed it.</span><span class="nl">Een ziekenhuisafdeling koopt met een creditcard een AI-transcriptietool. Die is nu het laagste niveau in een openbare-orde-activiteit, en niemand heeft hem beoordeeld.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Twelve months is doable</span><span class="nl">Twaalf maanden is haalbaar</span></b><p><span class="en">AI-assisted migration of code, configuration and data formats makes a forced move within a year realistic rather than theoretical. Test it before you need it.</span><span class="nl">AI-ondersteunde migratie van code, configuratie en dataformaten maakt een gedwongen overstap binnen een jaar realistisch in plaats van theoretisch. Test het voordat u het nodig heeft.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- diagram:cada-map -->
+<section class="risk-block" id="cada-map">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">IN PRACTICE</span><span class="nl">IN DE PRAKTIJK</span></span>
+    <h2><span class="en">Two ladders, side by side.<br><em>Where would you land?</em></span><span class="nl">Twee ladders naast elkaar.<br><em>Waar zou u uitkomen?</em></span></h2>
+    <span class="term"><span class="en">the framework's SEAL levels, the proposal's assurance levels, and who would use which / indicative</span><span class="nl">de SEAL-niveaus van het kader, de zekerheidsniveaus van het voorstel, en wie welk zou gebruiken / indicatief</span></span>
+
+    <figure class="arch">
+<svg viewBox="0 0 1120 560" role="img" aria-labelledby="cd-title cd-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="cd-title">Two ladders: the Cloud Sovereignty Framework and the proposed Cloud and AI Development Act</title>
+<desc id="cd-desc">Left: the Commission’s Cloud Sovereignty Framework, a procurement tool with five levels, SEAL-0 no sovereignty to SEAL-4 full digital sovereignty; SEAL-2 was the minimum in the Commission’s own tender and SEAL-4 is out of reach today. Right: the four Union assurance levels of the proposed Cloud and AI Development Act; level 1 is a self-assessment, levels 2 to 4 need an independent audit. In the middle, who would have to use each level once the proposal becomes law, with one example each: every public buyer at level 1, public-order activities such as hospitals and utilities at level 2 or higher, justice and classified information at level 3, the most critical activities such as defence at level 4. Indicative: the two scales are not formally mapped onto each other. Hover or tap a box for an explanation.</desc>
+<rect x="20" y="30" width="350" height="514" class="cd-zone cd-zone-l"/>
+<text x="36" y="54" class="cd-zlabel en">FRAMEWORK · PROCUREMENT TOOL · 2025</text><text x="36" y="54" class="cd-zlabel nl">KADER · INKOOPINSTRUMENT · 2025</text>
+<rect x="750" y="30" width="350" height="514" class="cd-zone cd-zone-r"/>
+<text x="766" y="54" class="cd-zlabel en">CADA · PROPOSAL · 2026</text><text x="766" y="54" class="cd-zlabel nl">CADA · VOORSTEL · 2026</text>
+<text x="416" y="54" class="cd-zlabel en">WHO WOULD USE IT · EXAMPLE</text><text x="416" y="54" class="cd-zlabel nl">WIE HET ZOU GEBRUIKEN · VOORBEELD</text>
+<g class="cd-node-g cd-s-bad cd-hc0" tabindex="0">
+<rect x="30" y="78" width="330" height="62" class="cd-node"/>
+<rect x="30" y="78" width="4" height="62" class="cd-bar"/>
+<text x="46" y="98" class="cd-kick">SEAL-0</text>
+<text x="46" y="118" class="cd-name en">No sovereignty</text><text x="46" y="118" class="cd-name nl">Geen soevereiniteit</text>
+<text x="46" y="131" class="cd-st en">non-EU control, non-EU law</text><text x="46" y="131" class="cd-st nl">niet-EU-zeggenschap, niet-EU-recht</text>
+</g>
+<g class="cd-node-g cd-s-bad cd-hc1" tabindex="0">
+<rect x="30" y="158" width="330" height="62" class="cd-node"/>
+<rect x="30" y="158" width="4" height="62" class="cd-bar"/>
+<text x="46" y="178" class="cd-kick">SEAL-1</text>
+<text x="46" y="198" class="cd-name en">EU law on paper</text><text x="46" y="198" class="cd-name nl">EU-recht op papier</text>
+<text x="46" y="211" class="cd-st en">limited enforceability · non-EU control</text><text x="46" y="211" class="cd-st nl">beperkt afdwingbaar · niet-EU-zeggenschap</text>
+</g>
+<g class="cd-node-g cd-s-warn cd-hc2" tabindex="0">
+<rect x="30" y="238" width="330" height="62" class="cd-node"/>
+<rect x="30" y="238" width="4" height="62" class="cd-bar"/>
+<text x="46" y="258" class="cd-kick en">SEAL-2 · DATA SOVEREIGNTY</text><text x="46" y="258" class="cd-kick nl">SEAL-2 · DATASOEVEREINITEIT</text>
+<text x="46" y="278" class="cd-name en">EU law enforceable</text><text x="46" y="278" class="cd-name nl">EU-recht afdwingbaar</text>
+<text x="46" y="291" class="cd-st en">non-EU dependencies remain · tender minimum</text><text x="46" y="291" class="cd-st nl">niet-EU-afhankelijkheden blijven · minimum tender</text>
+</g>
+<g class="cd-node-g cd-s-good cd-hc3" tabindex="0">
+<rect x="30" y="318" width="330" height="62" class="cd-node"/>
+<rect x="30" y="318" width="4" height="62" class="cd-bar"/>
+<text x="46" y="338" class="cd-kick">SEAL-3</text>
+<text x="46" y="358" class="cd-name en">EU actors in control</text><text x="46" y="358" class="cd-name nl">EU-partijen aan het stuur</text>
+<text x="46" y="371" class="cd-st en">marginal non-EU control</text><text x="46" y="371" class="cd-st nl">marginale niet-EU-zeggenschap</text>
+</g>
+<g class="cd-node-g cd-s-good cd-hc4" tabindex="0">
+<rect x="30" y="398" width="330" height="62" class="cd-node"/>
+<rect x="30" y="398" width="4" height="62" class="cd-bar"/>
+<text x="46" y="418" class="cd-kick">SEAL-4</text>
+<text x="46" y="438" class="cd-name en">Full digital sovereignty</text><text x="46" y="438" class="cd-name nl">Volledige digitale soevereiniteit</text>
+<text x="46" y="451" class="cd-st en">no critical non-EU dependency · not reachable today</text><text x="46" y="451" class="cd-st nl">geen kritieke niet-EU-afhankelijkheid · onhaalbaar</text>
+</g>
+<g class="cd-node-g cd-s-warn cd-hc5" tabindex="0">
+<rect x="760" y="158" width="330" height="62" class="cd-node"/>
+<rect x="760" y="158" width="4" height="62" class="cd-bar"/>
+<text x="776" y="178" class="cd-kick en">LEVEL 1 · SELF-ASSESSMENT</text><text x="776" y="178" class="cd-kick nl">NIVEAU 1 · ZELFBEOORDELING</text>
+<text x="776" y="198" class="cd-name en">Established and hosted in the EU</text><text x="776" y="198" class="cd-name nl">Gevestigd en gehost in de EU</text>
+<text x="776" y="211" class="cd-st en">data, metadata and telemetry stay in the EU</text><text x="776" y="211" class="cd-st nl">data, metadata en telemetrie blijven in de EU</text>
+</g>
+<g class="cd-node-g cd-s-warn cd-hc6" tabindex="0">
+<rect x="760" y="238" width="330" height="62" class="cd-node"/>
+<rect x="760" y="238" width="4" height="62" class="cd-bar"/>
+<text x="776" y="258" class="cd-kick en">LEVEL 2 · INDEPENDENT AUDIT</text><text x="776" y="258" class="cd-kick nl">NIVEAU 2 · ONAFHANKELIJKE AUDIT</text>
+<text x="776" y="278" class="cd-name en">EU staff, EU-only support</text><text x="776" y="278" class="cd-name nl">EU-personeel, support alleen uit de EU</text>
+<text x="776" y="291" class="cd-st en">non-EU parent allowed if ring-fenced</text><text x="776" y="291" class="cd-st nl">niet-EU-moeder toegestaan mits afgeschermd</text>
+</g>
+<g class="cd-node-g cd-s-good cd-hc7" tabindex="0">
+<rect x="760" y="318" width="330" height="62" class="cd-node"/>
+<rect x="760" y="318" width="4" height="62" class="cd-bar"/>
+<text x="776" y="338" class="cd-kick en">LEVEL 3 · INDEPENDENT AUDIT</text><text x="776" y="338" class="cd-kick nl">NIVEAU 3 · ONAFHANKELIJKE AUDIT</text>
+<text x="776" y="358" class="cd-name en">No non-EU control</text><text x="776" y="358" class="cd-name nl">Geen niet-EU-zeggenschap</text>
+<text x="776" y="371" class="cd-st en">EU citizens, cleared where needed</text><text x="776" y="371" class="cd-st nl">EU-burgers, gescreend waar nodig</text>
+</g>
+<g class="cd-node-g cd-s-good cd-hc8" tabindex="0">
+<rect x="760" y="398" width="330" height="62" class="cd-node"/>
+<rect x="760" y="398" width="4" height="62" class="cd-bar"/>
+<text x="776" y="418" class="cd-kick en">LEVEL 4 · INDEPENDENT AUDIT</text><text x="776" y="418" class="cd-kick nl">NIVEAU 4 · ONAFHANKELIJKE AUDIT</text>
+<text x="776" y="438" class="cd-name en">Highest · certificate &#x27;high&#x27;</text><text x="776" y="438" class="cd-name nl">Hoogste · certificaat &#x27;hoog&#x27;</text>
+<text x="776" y="451" class="cd-st en">no non-EU hold on the software either</text><text x="776" y="451" class="cd-st nl">ook geen niet-EU-greep op de software</text>
+</g>
+<g class="cd-node-g cd-s-warn cd-hc9" tabindex="0">
+<rect x="410" y="166" width="300" height="46" class="cd-node"/>
+<rect x="410" y="166" width="4" height="46" class="cd-bar"/>
+<text x="426" y="185" class="cd-fname en">EVERY PUBLIC BUYER</text><text x="426" y="185" class="cd-fname nl">ELKE PUBLIEKE INKOPER</text>
+<text x="426" y="202" class="cd-st en">e.g. a municipality&#x27;s HR system</text><text x="426" y="202" class="cd-st nl">bijv. het HR-systeem van een gemeente</text>
+<path d="M362 189.0 H407" class="cd-link"/>
+<path d="M712 189.0 H756" class="cd-link"/>
+</g>
+<g class="cd-node-g cd-s-warn cd-hc10" tabindex="0">
+<rect x="410" y="246" width="300" height="46" class="cd-node"/>
+<rect x="410" y="246" width="4" height="46" class="cd-bar"/>
+<text x="426" y="265" class="cd-fname en">PUBLIC-ORDER ACTIVITIES</text><text x="426" y="265" class="cd-fname nl">ACTIVITEITEN VAN OPENBARE ORDE</text>
+<text x="426" y="282" class="cd-st en">e.g. hospital, water utility</text><text x="426" y="282" class="cd-st nl">bijv. ziekenhuis, waterbedrijf</text>
+<path d="M362 269.0 H407" class="cd-link"/>
+<path d="M712 269.0 H756" class="cd-link"/>
+</g>
+<g class="cd-node-g cd-s-good cd-hc11" tabindex="0">
+<rect x="410" y="326" width="300" height="46" class="cd-node"/>
+<rect x="410" y="326" width="4" height="46" class="cd-bar"/>
+<text x="426" y="345" class="cd-fname en">JUSTICE · POLICE · CLASSIFIED</text><text x="426" y="345" class="cd-fname nl">JUSTITIE · POLITIE · GERUBRICEERD</text>
+<text x="426" y="362" class="cd-st en">e.g. EU classified information</text><text x="426" y="362" class="cd-st nl">bijv. gerubriceerde EU-informatie</text>
+<path d="M362 349.0 H407" class="cd-link"/>
+<path d="M712 349.0 H756" class="cd-link"/>
+</g>
+<g class="cd-node-g cd-s-good cd-hc12" tabindex="0">
+<rect x="410" y="406" width="300" height="46" class="cd-node"/>
+<rect x="410" y="406" width="4" height="46" class="cd-bar"/>
+<text x="426" y="425" class="cd-fname en">MOST CRITICAL · DEFENCE</text><text x="426" y="425" class="cd-fname nl">MEEST KRITIEK · DEFENSIE</text>
+<text x="426" y="442" class="cd-st en">set by the national risk assessment</text><text x="426" y="442" class="cd-st nl">bepaald door de nationale risicobeoordeling</text>
+<path d="M362 429.0 H407" class="cd-link"/>
+<path d="M712 429.0 H756" class="cd-link"/>
+</g>
+<rect x="30" y="489" width="14" height="14" class="cd-sw cd-sw-good"/>
+<text x="52" y="500" class="cd-legend en">Non-EU control excluded</text><text x="52" y="500" class="cd-legend nl">Niet-EU-zeggenschap uitgesloten</text>
+<rect x="300" y="489" width="14" height="14" class="cd-sw cd-sw-warn"/>
+<text x="322" y="500" class="cd-legend en">Non-EU parent allowed under conditions</text><text x="322" y="500" class="cd-legend nl">Niet-EU-moeder toegestaan onder voorwaarden</text>
+<rect x="660" y="489" width="14" height="14" class="cd-sw cd-sw-bad"/>
+<text x="682" y="500" class="cd-legend en">Non-EU law decides in practice</text><text x="682" y="500" class="cd-legend nl">Niet-EU-recht beslist in de praktijk</text>
+<text x="30" y="530" class="cd-foot en">Indicative — the two scales are not formally mapped onto each other, and CADA is a proposal · hover or tap a box for an explanation</text><text x="30" y="530" class="cd-foot nl">Indicatief — de twee schalen zijn niet formeel op elkaar gelegd, en CADA is een voorstel · beweeg of tik op een blok voor uitleg</text>
+<g class="cd-svtip cd-tc0" aria-hidden="true">
+<rect x="30" y="146" width="349" height="77" class="cd-tip-bg"/>
+<rect x="30" y="146" width="3" height="77" class="cd-tip-acc"/>
+<text x="44" y="164" class="cd-tip-t0 en">SEAL-0 · no sovereignty</text>
+<text x="44" y="179" class="cd-tip-t en">Service, technology and operations under</text>
+<text x="44" y="194" class="cd-tip-t en">exclusive non-EU control, governed entirely</text>
+<text x="44" y="209" class="cd-tip-t en">by non-EU law. A public chatbot, for example.</text>
+<text x="44" y="164" class="cd-tip-t0 nl">SEAL-0 · geen soevereiniteit</text>
+<text x="44" y="179" class="cd-tip-t nl">Dienst, techniek en operatie onder exclu-</text>
+<text x="44" y="194" class="cd-tip-t nl">sieve niet-EU-zeggenschap, geheel onder</text>
+<text x="44" y="209" class="cd-tip-t nl">niet-EU-recht. Bijvoorbeeld een publieke chatbot.</text>
+</g>
+<g class="cd-svtip cd-tc1" aria-hidden="true">
+<rect x="30" y="226" width="316" height="92" class="cd-tip-bg"/>
+<rect x="30" y="226" width="3" height="92" class="cd-tip-acc"/>
+<text x="44" y="244" class="cd-tip-t0 en">SEAL-1 · jurisdictional sovereignty</text>
+<text x="44" y="259" class="cd-tip-t en">EU law formally applies but is hard to</text>
+<text x="44" y="274" class="cd-tip-t en">enforce; the provider stays under exclusive</text>
+<text x="44" y="289" class="cd-tip-t en">non-EU control. An EU region of a global</text>
+<text x="44" y="304" class="cd-tip-t en">cloud without a separate EU entity.</text>
+<text x="44" y="244" class="cd-tip-t0 nl">SEAL-1 · juridische soevereiniteit</text>
+<text x="44" y="259" class="cd-tip-t nl">EU-recht geldt formeel maar is moeilijk af</text>
+<text x="44" y="274" class="cd-tip-t nl">te dwingen; de aanbieder blijft onder exclu-</text>
+<text x="44" y="289" class="cd-tip-t nl">sieve niet-EU-zeggenschap. Een EU-regio van</text>
+<text x="44" y="304" class="cd-tip-t nl">een wereldwijde cloud zonder EU-entiteit.</text>
+</g>
+<g class="cd-svtip cd-tc2" aria-hidden="true">
+<rect x="30" y="306" width="343" height="92" class="cd-tip-bg"/>
+<rect x="30" y="306" width="3" height="92" class="cd-tip-acc"/>
+<text x="44" y="324" class="cd-tip-t0 en">SEAL-2 · data sovereignty</text>
+<text x="44" y="339" class="cd-tip-t en">EU law applies and is enforceable; non-EU</text>
+<text x="44" y="354" class="cd-tip-t en">parties have indirect control and material</text>
+<text x="44" y="369" class="cd-tip-t en">dependencies remain. Separate EU entities,</text>
+<text x="44" y="384" class="cd-tip-t en">customer-held keys. The Commission&#x27;s minimum.</text>
+<text x="44" y="324" class="cd-tip-t0 nl">SEAL-2 · datasoevereiniteit</text>
+<text x="44" y="339" class="cd-tip-t nl">EU-recht geldt en is afdwingbaar; niet-EU-</text>
+<text x="44" y="354" class="cd-tip-t nl">partijen hebben indirecte zeggenschap en er</text>
+<text x="44" y="369" class="cd-tip-t nl">blijven wezenlijke afhankelijkheden. Aparte</text>
+<text x="44" y="384" class="cd-tip-t nl">EU-entiteiten, eigen sleutels. Commissieminimum.</text>
+</g>
+<g class="cd-svtip cd-tc3" aria-hidden="true">
+<rect x="30" y="386" width="323" height="92" class="cd-tip-bg"/>
+<rect x="30" y="386" width="3" height="92" class="cd-tip-acc"/>
+<text x="44" y="404" class="cd-tip-t0 en">SEAL-3 · EU actors in control</text>
+<text x="44" y="419" class="cd-tip-t en">EU actors exercise meaningful but not full</text>
+<text x="44" y="434" class="cd-tip-t en">influence; non-EU control is marginal.</text>
+<text x="44" y="449" class="cd-tip-t en">Decision-making in the EU, EU-run operations,</text>
+<text x="44" y="464" class="cd-tip-t en">non-EU law insulated by design.</text>
+<text x="44" y="404" class="cd-tip-t0 nl">SEAL-3 · EU-partijen aan het stuur</text>
+<text x="44" y="419" class="cd-tip-t nl">EU-partijen hebben wezenlijke maar geen</text>
+<text x="44" y="434" class="cd-tip-t nl">volledige invloed; niet-EU-zeggenschap is</text>
+<text x="44" y="449" class="cd-tip-t nl">marginaal. Besluitvorming in de EU, EU-</text>
+<text x="44" y="464" class="cd-tip-t nl">operatie, niet-EU-recht bewust afgeschermd.</text>
+</g>
+<g class="cd-svtip cd-tc4" aria-hidden="true">
+<rect x="30" y="300" width="323" height="92" class="cd-tip-bg"/>
+<rect x="30" y="300" width="3" height="92" class="cd-tip-acc"/>
+<text x="44" y="318" class="cd-tip-t0 en">SEAL-4 · full digital sovereignty</text>
+<text x="44" y="333" class="cd-tip-t en">Complete EU control, EU law only, no</text>
+<text x="44" y="348" class="cd-tip-t en">critical non-EU dependency. The Commission&#x27;s</text>
+<text x="44" y="363" class="cd-tip-t en">own guidance calls it out of reach today</text>
+<text x="44" y="378" class="cd-tip-t en">because chips and hardware come from outside.</text>
+<text x="44" y="318" class="cd-tip-t0 nl">SEAL-4 · volledige digitale soevereiniteit</text>
+<text x="44" y="333" class="cd-tip-t nl">Volledige EU-zeggenschap, alleen EU-recht,</text>
+<text x="44" y="348" class="cd-tip-t nl">geen kritieke niet-EU-afhankelijkheid. De</text>
+<text x="44" y="363" class="cd-tip-t nl">Commissie noemt het vandaag onhaalbaar omdat</text>
+<text x="44" y="378" class="cd-tip-t nl">chips en hardware van buiten komen.</text>
+</g>
+<g class="cd-svtip cd-tc5" aria-hidden="true">
+<rect x="760" y="226" width="336" height="92" class="cd-tip-bg"/>
+<rect x="760" y="226" width="3" height="92" class="cd-tip-acc"/>
+<text x="774" y="244" class="cd-tip-t0 en">Level 1 · the baseline for every public buyer</text>
+<text x="774" y="259" class="cd-tip-t en">EU-established provider, infrastructure in</text>
+<text x="774" y="274" class="cd-tip-t en">the EU, customer data incl. metadata and</text>
+<text x="774" y="289" class="cd-tip-t en">telemetry in the EU. A non-EU parent is</text>
+<text x="774" y="304" class="cd-tip-t en">allowed. Self-assessed statement of conformity.</text>
+<text x="774" y="244" class="cd-tip-t0 nl">Niveau 1 · de basis voor elke publieke inkoper</text>
+<text x="774" y="259" class="cd-tip-t nl">In de EU gevestigde aanbieder, infrastructuur</text>
+<text x="774" y="274" class="cd-tip-t nl">in de EU, klantdata incl. metadata en tele-</text>
+<text x="774" y="289" class="cd-tip-t nl">metrie in de EU. Niet-EU-moeder toegestaan.</text>
+<text x="774" y="304" class="cd-tip-t nl">Zelf opgestelde EU-conformiteitsverklaring.</text>
+</g>
+<g class="cd-svtip cd-tc6" aria-hidden="true">
+<rect x="740" y="306" width="356" height="92" class="cd-tip-bg"/>
+<rect x="740" y="306" width="3" height="92" class="cd-tip-acc"/>
+<text x="754" y="324" class="cd-tip-t0 en">Level 2 · audited; ring-fenced parent allowed</text>
+<text x="754" y="339" class="cd-tip-t en">Staff in the EU, support only from the EU,</text>
+<text x="754" y="354" class="cd-tip-t en">EU security certificate &#x27;substantial&#x27;, your</text>
+<text x="754" y="369" class="cd-tip-t en">data never trains non-EU AI, SBOM. A non-EU</text>
+<text x="754" y="384" class="cd-tip-t en">parent must be unable to read, stop or sanction.</text>
+<text x="754" y="324" class="cd-tip-t0 nl">Niveau 2 · geaudit; afgeschermde moeder mag</text>
+<text x="754" y="339" class="cd-tip-t nl">Personeel in de EU, support alleen uit de EU,</text>
+<text x="754" y="354" class="cd-tip-t nl">EU-certificaat &#x27;substantieel&#x27;, uw data traint</text>
+<text x="754" y="369" class="cd-tip-t nl">nooit niet-EU-AI, SBOM. Een niet-EU-moeder</text>
+<text x="754" y="384" class="cd-tip-t nl">mag niet kunnen meelezen, stoppen of sanctioneren.</text>
+</g>
+<g class="cd-svtip cd-tc7" aria-hidden="true">
+<rect x="760" y="386" width="323" height="92" class="cd-tip-bg"/>
+<rect x="760" y="386" width="3" height="92" class="cd-tip-acc"/>
+<text x="774" y="404" class="cd-tip-t0 en">Level 3 · no non-EU control</text>
+<text x="774" y="419" class="cd-tip-t en">Provider and subcontractors not controlled</text>
+<text x="774" y="434" class="cd-tip-t en">from outside the EU, unless the Commission</text>
+<text x="774" y="449" class="cd-tip-t en">lists that country. EU-citizen staff, cleared</text>
+<text x="774" y="464" class="cd-tip-t en">where needed. Fit for EU classified data.</text>
+<text x="774" y="404" class="cd-tip-t0 nl">Niveau 3 · geen niet-EU-zeggenschap</text>
+<text x="774" y="419" class="cd-tip-t nl">Aanbieder en onderaannemers niet van buiten</text>
+<text x="774" y="434" class="cd-tip-t nl">de EU bestuurd, tenzij de Commissie dat land</text>
+<text x="774" y="449" class="cd-tip-t nl">aanwijst. EU-burgers, gescreend waar nodig.</text>
+<text x="774" y="464" class="cd-tip-t nl">Geschikt voor gerubriceerde EU-informatie.</text>
+</g>
+<g class="cd-svtip cd-tc8" aria-hidden="true">
+<rect x="760" y="300" width="316" height="92" class="cd-tip-bg"/>
+<rect x="760" y="300" width="3" height="92" class="cd-tip-acc"/>
+<text x="774" y="318" class="cd-tip-t0 en">Level 4 · the highest level</text>
+<text x="774" y="333" class="cd-tip-t en">Everything of level 3, no exception for</text>
+<text x="774" y="348" class="cd-tip-t en">listed countries, EU security certificate</text>
+<text x="774" y="363" class="cd-tip-t en">&#x27;high&#x27;, and no non-EU entity may effectively</text>
+<text x="774" y="378" class="cd-tip-t en">control the software components either.</text>
+<text x="774" y="318" class="cd-tip-t0 nl">Niveau 4 · het hoogste niveau</text>
+<text x="774" y="333" class="cd-tip-t nl">Alles van niveau 3, geen uitzondering voor</text>
+<text x="774" y="348" class="cd-tip-t nl">aangewezen landen, EU-certificaat &#x27;hoog&#x27;, en</text>
+<text x="774" y="363" class="cd-tip-t nl">ook geen niet-EU-partij met effectieve greep</text>
+<text x="774" y="378" class="cd-tip-t nl">op de softwarecomponenten.</text>
+</g>
+<g class="cd-svtip cd-tc9" aria-hidden="true">
+<rect x="410" y="218" width="323" height="92" class="cd-tip-bg"/>
+<rect x="410" y="218" width="3" height="92" class="cd-tip-acc"/>
+<text x="424" y="236" class="cd-tip-t0 en">Every public buyer · level 1 as a minimum</text>
+<text x="424" y="251" class="cd-tip-t en">Under the proposal, public bodies whose</text>
+<text x="424" y="266" class="cd-tip-t en">activity is not &#x27;public order&#x27; would only buy</text>
+<text x="424" y="281" class="cd-tip-t en">recognised level-1 services. Routine systems:</text>
+<text x="424" y="296" class="cd-tip-t en">HR, finance, a citizen portal.</text>
+<text x="424" y="236" class="cd-tip-t0 nl">Elke publieke inkoper · minimaal niveau 1</text>
+<text x="424" y="251" class="cd-tip-t nl">Volgens het voorstel kopen publieke organen</text>
+<text x="424" y="266" class="cd-tip-t nl">zonder &#x27;openbare orde&#x27;-activiteit alleen</text>
+<text x="424" y="281" class="cd-tip-t nl">erkende niveau-1-diensten. Routinesystemen:</text>
+<text x="424" y="296" class="cd-tip-t nl">HR, financiën, een burgerportaal.</text>
+</g>
+<g class="cd-svtip cd-tc10" aria-hidden="true">
+<rect x="410" y="298" width="349" height="92" class="cd-tip-bg"/>
+<rect x="410" y="298" width="3" height="92" class="cd-tip-acc"/>
+<text x="424" y="316" class="cd-tip-t0 en">Public-order activities · level 2 or higher</text>
+<text x="424" y="331" class="cd-tip-t en">Activities in NIS2 sectors that a national</text>
+<text x="424" y="346" class="cd-tip-t en">risk assessment marks as public order would</text>
+<text x="424" y="361" class="cd-tip-t en">only buy level 2, 3 or 4. The level is set</text>
+<text x="424" y="376" class="cd-tip-t en">per activity, not per organisation.</text>
+<text x="424" y="316" class="cd-tip-t0 nl">Openbare orde · niveau 2 of hoger</text>
+<text x="424" y="331" class="cd-tip-t nl">Activiteiten in NIS2-sectoren die een natio-</text>
+<text x="424" y="346" class="cd-tip-t nl">nale risicobeoordeling als openbare orde</text>
+<text x="424" y="361" class="cd-tip-t nl">aanmerkt, kopen alleen niveau 2, 3 of 4. Het</text>
+<text x="424" y="376" class="cd-tip-t nl">niveau geldt per activiteit, niet per organisatie</text>
+</g>
+<g class="cd-svtip cd-tc11" aria-hidden="true">
+<rect x="410" y="378" width="356" height="92" class="cd-tip-bg"/>
+<rect x="410" y="378" width="3" height="92" class="cd-tip-acc"/>
+<text x="424" y="396" class="cd-tip-t0 en">Justice, police, classified · often level 3</text>
+<text x="424" y="411" class="cd-tip-t en">The proposal names justice, law enforcement,</text>
+<text x="424" y="426" class="cd-tip-t en">borders and internal security. Levels 3 and 4</text>
+<text x="424" y="441" class="cd-tip-t en">should allow EU classified information.</text>
+<text x="424" y="456" class="cd-tip-t en">The exact level follows the risk assessment.</text>
+<text x="424" y="396" class="cd-tip-t0 nl">Justitie, politie, gerubriceerd · vaak niveau 3</text>
+<text x="424" y="411" class="cd-tip-t nl">Het voorstel noemt justitie, opsporing, grens-</text>
+<text x="424" y="426" class="cd-tip-t nl">bewaking en binnenlandse veiligheid. Niveau 3</text>
+<text x="424" y="441" class="cd-tip-t nl">en 4 moeten gerubriceerde EU-informatie aankunnen.</text>
+<text x="424" y="456" class="cd-tip-t nl">Het precieze niveau volgt uit de risicobeoordeling</text>
+</g>
+<g class="cd-svtip cd-tc12" aria-hidden="true">
+<rect x="410" y="308" width="330" height="92" class="cd-tip-bg"/>
+<rect x="410" y="308" width="3" height="92" class="cd-tip-acc"/>
+<text x="424" y="326" class="cd-tip-t0 en">Most critical · defence · level 4</text>
+<text x="424" y="341" class="cd-tip-t en">The Commission&#x27;s methodology would say how</text>
+<text x="424" y="356" class="cd-tip-t en">Member States use the highest level for the</text>
+<text x="424" y="371" class="cd-tip-t en">most critical activities, defence included.</text>
+<text x="424" y="386" class="cd-tip-t en">Migration, if needed, within 12 months.</text>
+<text x="424" y="326" class="cd-tip-t0 nl">Meest kritiek · defensie · niveau 4</text>
+<text x="424" y="341" class="cd-tip-t nl">De methodiek van de Commissie zou bepalen hoe</text>
+<text x="424" y="356" class="cd-tip-t nl">lidstaten het hoogste niveau inzetten voor de</text>
+<text x="424" y="371" class="cd-tip-t nl">meest kritieke activiteiten, defensie incluis.</text>
+<text x="424" y="386" class="cd-tip-t nl">Migratie, indien nodig, binnen 12 maanden.</text>
+</g>
+</svg>
+    </figure>
+
+    <div class="panel">
+      <p class="en"><strong>We suggest reading the ladders from the middle.</strong> Find the activity that looks most like yours, then read left for the question to ask a supplier today and right for the level the proposal would attach to it. The scales are not formally mapped onto each other: <abbr class="tip" tabindex="0" data-tip="Sovereignty Effectiveness Assurance Level: the Commission&#x27;s 0-to-4 scale for how far a cloud service is under EU control and EU law.">SEAL</abbr> scores how sovereign a service is, the proposal's levels say what a public buyer would be allowed to buy. Most organisations will find themselves on the two middle rows.</p>
+      <p class="nl"><strong>Wij raden aan de ladders vanuit het midden te lezen.</strong> Zoek de activiteit die het meest op de uwe lijkt, lees dan links welke vraag u een leverancier vandaag stelt en rechts welk niveau het voorstel eraan zou koppelen. De schalen zijn niet formeel op elkaar gelegd: <abbr class="tip" tabindex="0" data-tip="Sovereignty Effectiveness Assurance Level: de schaal van 0 tot 4 van de Commissie voor hoever een clouddienst onder EU-controle en EU-recht valt.">SEAL</abbr> meet hoe soeverein een dienst is, de niveaus van het voorstel zeggen wat een publieke inkoper zou mogen kopen. De meeste organisaties komen op de twee middelste rijen uit.</p>
+    </div>
+  </div>
+</section>
+<!-- /diagram:cada-map -->
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What to do <em>before anyone makes you.</em></span>
+      <span class="nl">Wat u kunt doen <em>voordat iemand het u oplegt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">most of this is a list, a question to a supplier or a contract clause, not a new cloud</span>
+      <span class="nl">het meeste is een lijst, een vraag aan een leverancier of een contractbepaling, geen nieuwe cloud</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">ACTIVITY MAP</span><span class="nl">ACTIVITEITENKAART</span></span>
+        <span class="chip c2"><span class="en">BOTH SCORES</span><span class="nl">BEIDE SCORES</span></span>
+        <span class="chip c3"><span class="en">CONTRACT</span><span class="nl">CONTRACT</span></span>
+        <span class="chip c4"><span class="en">EVIDENCE</span><span class="nl">BEWIJS</span></span>
+        <span class="chip c5"><span class="en">TESTED EXIT</span><span class="nl">GETESTE EXIT</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Addresses</th><th>In one line</th></tr>
+        <tr><td class="ctl">Activity map with a level</td><td>Who (03) · Examples (04)</td><td>List your systems by activity, mark those in NIS2 sectors or in security, justice and defence, and attach a level using the proposal's three tests: data sensitivity, harm of foreign access, harm of disruption.</td></tr>
+        <tr><td class="ctl">Both scores per supplier</td><td>What (01) · Levels (02)</td><td>Ask for a SEAL per objective today, and whether and at which level the provider intends to seek recognition once the Act applies.</td></tr>
+        <tr><td class="ctl">Level-2 clauses in the contract</td><td>Levels (02) · Who (03)</td><td>Data including metadata and telemetry in the EU, support only from the EU, no training of non-EU AI on your data, a subcontractor register, notice of a change of control, exit assistance. Cheaper now than at renewal under pressure.</td></tr>
+        <tr><td class="ctl">Evidence file</td><td>Levels (02)</td><td>Use the proposal's evidence list as your due-diligence template: ownership chain to the ultimate owners, data-flow diagram including backups and logs, <abbr class="tip" tabindex="0" data-tip="Software bill of materials: the list of components a piece of software is built from, with their origin and version.">SBOM</abbr>, support access paths.</td></tr>
+        <tr><td class="ctl">Keys you hold</td><td>Levels (02)</td><td>Customer-held keys score under the framework's data objective and make a foreign order yield ciphertext. Expect SaaS search and AI features to need the plain text.</td></tr>
+        <tr><td class="ctl">Tested exit</td><td>Examples (04)</td><td>Twelve months is the proposal's clock. Once a year per critical service: export everything, open it elsewhere, record how long it took. The Data Act's switching rules back you up.</td></tr>
+        <tr><td class="ctl">Watch the file</td><td>What (01)</td><td>The proposal is with Parliament and Council; levels, criteria and dates can still change, and once law the criteria would be reviewed every 18 months. One owner, one check per quarter.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Pakt aan</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Activiteitenkaart met niveau</td><td>Wie (03) · Voorbeelden (04)</td><td>Zet uw systemen op een rij per activiteit, markeer die in NIS2-sectoren of in veiligheid, justitie en defensie, en hang er een niveau aan met de drie toetsen van het voorstel: gevoeligheid van data, schade van buitenlandse toegang, schade van uitval.</td></tr>
+        <tr><td class="ctl">Beide scores per leverancier</td><td>Wat (01) · Niveaus (02)</td><td>Vraag vandaag een SEAL per doel, en of en op welk niveau de aanbieder erkenning wil aanvragen zodra de wet geldt.</td></tr>
+        <tr><td class="ctl">Niveau-2-bepalingen in het contract</td><td>Niveaus (02) · Wie (03)</td><td>Data inclusief metadata en telemetrie in de EU, support alleen uit de EU, geen training van niet-EU-AI op uw data, een onderaannemersregister, melding bij wijziging van zeggenschap, exithulp. Goedkoper nu dan bij verlenging onder druk.</td></tr>
+        <tr><td class="ctl">Bewijsdossier</td><td>Niveaus (02)</td><td>Gebruik de bewijslijst van het voorstel als uw sjabloon voor due diligence: eigendomsketen tot de uiteindelijke eigenaren, datastroomdiagram inclusief back-ups en logs, <abbr class="tip" tabindex="0" data-tip="Software bill of materials: de lijst van componenten waaruit software is opgebouwd, met herkomst en versie.">SBOM</abbr>, toegangspaden voor support.</td></tr>
+        <tr><td class="ctl">Sleutels in eigen hand</td><td>Niveaus (02)</td><td>Eigen sleutels scoren onder het datadoel van het kader en laten een buitenlands bevel versleutelde tekst opleveren. Reken erop dat SaaS-zoeken en AI-functies leesbare tekst nodig hebben.</td></tr>
+        <tr><td class="ctl">Geteste exit</td><td>Voorbeelden (04)</td><td>Twaalf maanden is de klok van het voorstel. Eén keer per jaar per kritieke dienst: exporteer alles, open het elders, noteer hoelang het duurde. De overstapregels van de Dataverordening steunen u daarbij.</td></tr>
+        <tr><td class="ctl">Volg het dossier</td><td>Wat (01)</td><td>Het voorstel ligt bij Parlement en Raad; niveaus, criteria en data kunnen nog veranderen, en eenmaal wet zouden de criteria elke 18 maanden worden herzien. Eén eigenaar, één controle per kwartaal.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> the framework is a yardstick you can use today; the proposal would turn a similar ladder into a purchase condition for the public sector, and the market tends to follow. We suggest three decisions: which of your activities would count as public order, which level you want from each critical supplier, and whether to run the voluntary assessment before anyone asks for it. How far to go is your call.</span>
+        <span class="en disclaimer">Indicative. The Cloud Sovereignty Framework is a procurement tool, not a law. The Cloud and AI Development Act is a proposal (COM(2026) 502); its levels, criteria and dates can change before adoption. Suggested timeline, not a legal deadline.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> het kader is een maatstaf die u vandaag kunt gebruiken; het voorstel zou een vergelijkbare ladder tot inkoopvoorwaarde voor de publieke sector maken, en de markt volgt doorgaans. Wij raden drie besluiten aan: welke van uw activiteiten als openbare orde zouden gelden, welk niveau u van elke kritieke leverancier wilt, en of u de vrijwillige beoordeling doet voordat iemand erom vraagt. Hoe ver u gaat, is uw keuze.</span>
+        <span class="nl disclaimer">Indicatief. Het Cloud Sovereignty Framework is een inkoopinstrument, geen wet. De Cloud and AI Development Act is een voorstel (COM(2026) 502); niveaus, criteria en data kunnen vóór aanname nog veranderen. Voorgestelde tijdlijn, geen wettelijke deadline.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">The proposal can change in Parliament and Council. The direction has not: the Commission already buys by sovereignty level, and public buyers set the market.</span><span class="nl">Het voorstel kan in Parlement en Raad veranderen. De richting niet: de Commissie koopt al op soevereiniteitsniveau, en publieke inkopers bepalen de markt.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Losing eligibility for public contracts, or a forced migration of a critical activity on a 12-month clock.</span><span class="nl">Verlies van toegang tot overheidsopdrachten, of een gedwongen migratie van een kritieke activiteit met een klok van 12 maanden.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">With activities mapped and contracts aligned, what remains is the final text of the law and the market's ability to supply level 3 at all.</span><span class="nl">Met in kaart gebrachte activiteiten en aangepaste contracten blijft over: de definitieve wettekst en of de markt niveau 3 überhaupt kan leveren.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CIO</span><span class="nl">CIO</span></span><p><span class="en">The <abbr class="tip" tabindex="0" data-tip="Chief information officer: the executive responsible for IT sourcing and operations.">CIO</abbr> owns sourcing and the activity map. Legal owns the ownership and control questions. For providers, the bid team owns recognition.</span><span class="nl">De <abbr class="tip" tabindex="0" data-tip="Chief information officer: de bestuurder die verantwoordelijk is voor IT-inkoop en -operaties.">CIO</abbr> is eigenaar van inkoop en de activiteitenkaart. Legal is eigenaar van de vragen over eigendom en zeggenschap. Bij aanbieders is het bidteam eigenaar van de erkenning.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">% of critical suppliers with a scored SEAL or a stated target level · % of activities mapped to a level · % of critical contracts with the level-2 clauses · critical services with an exit tested in the last 12 months.</span><span class="nl">% kritieke leveranciers met een gescoord SEAL-niveau of een uitgesproken doelniveau · % activiteiten met een toegekend niveau · % kritieke contracten met de niveau-2-bepalingen · kritieke diensten met een in de laatste 12 maanden geteste exit.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Eligibility for public-sector business and the continuity of critical activities depend on the sovereignty level of our cloud providers, so a new EU requirement, a failed recognition or a forced migration can cost contracts or halt services.”</span><span class="nl">“Toegang tot overheidsopdrachten en de continuïteit van kritieke activiteiten hangen af van het soevereiniteitsniveau van onze cloudaanbieders, waardoor een nieuwe EU-eis, een mislukte erkenning of een gedwongen migratie contracten kan kosten of diensten kan stilleggen.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">GDPR</td><td>Every transfer of personal data outside the EU needs a legal basis (Chapter V), and a foreign order to disclose is only enforceable if it rests on an international agreement (Art. 48). The proposal's levels add "data stays in the EU" on top; GDPR applies either way.</td><td>Ask for the transfer mechanism and the sub-processor list with countries. A processing agreement is required (Art. 28).</td><td>A disclosure to a foreign authority without an EU legal basis can count as a personal data breach. Notify the Autoriteit Persoonsgegevens within 72 hours (Art. 33); inform the people affected when the risk is high (Art. 34).</td></tr>
+        <tr><td class="ctl">NIS2</td><td>NIS2 requires supply chain security, including the relationship with each direct supplier (Art. 21(2)(d)). The proposal borrows NIS2's sector lists to define public-order activities and opens the voluntary assessment to high-criticality entities. In the Netherlands this runs through the Cyberbeveiligingswet, in force since 15 August 2026.</td><td>Ask which laws can compel the provider and its parent, where support runs, and which level it targets. The framework's eight objectives make a usable questionnaire.</td><td>A provider switch-off or disclosure that disrupts your service can count as a significant incident if it meets the thresholds. Early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month.</td></tr>
+        <tr><td class="ctl">DORA</td><td>DORA requires a register of all <abbr class="tip" tabindex="0" data-tip="Information and communication technology: in DORA, any digital or data service a financial entity relies on.">ICT</abbr> third-party arrangements (Art. 28(3)), contract clauses naming the countries where data is processed and stored (Art. 30(2)(b)), and exit strategies for critical functions (Art. 28(8)). Banking is a NIS2 high-criticality sector, so the proposal's voluntary assessment would be open to financial entities.</td><td>Check the countries and subcontractors in the contract against the report, and ask how exit assistance has been tested.</td><td>Classify promptly. Initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterion CC9.2 covers managing risks from vendors and business partners. A SOC 2 report describes where controls operate, not who controls the company; the proposal's audit would trace ownership to the ultimate owners.</td><td>Check which subservice organisations are carved out, the data centre countries, and whether remote support access is in scope.</td><td>A disclosure or outage at the provider will likely appear as an exception in the next report, if it is in scope at all.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>The focus is financial reporting. Jurisdiction, ownership and sovereignty level are outside its scope unless they affect the financial process.</td><td>The report rarely names the parent's law or the support locations. Ask for it in the contract instead.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">AVG</td><td>Elke doorgifte van persoonsgegevens buiten de EU heeft een rechtsgrond nodig (hoofdstuk V), en een buitenlands bevel tot afgifte is alleen afdwingbaar als het steunt op een internationaal verdrag (art. 48). De niveaus van het voorstel leggen daar "data blijft in de EU" bovenop; de AVG geldt hoe dan ook.</td><td>Vraag naar het doorgiftemechanisme en de lijst van subverwerkers met landen. Een verwerkersovereenkomst is verplicht (art. 28).</td><td>Afgifte aan een buitenlandse autoriteit zonder Europese rechtsgrond kan als datalek gelden. Meld het binnen 72 uur bij de Autoriteit Persoonsgegevens (art. 33); informeer de betrokkenen als het risico hoog is (art. 34).</td></tr>
+        <tr><td class="ctl">NIS2</td><td>NIS2 vraagt beveiliging van de toeleveringsketen, inclusief de relatie met elke directe leverancier (art. 21 lid 2 onder d). Het voorstel leent de sectorlijsten van NIS2 om openbare-orde-activiteiten af te bakenen en stelt de vrijwillige beoordeling open voor zeer kritieke entiteiten. In Nederland loopt dit via de Cyberbeveiligingswet, van kracht sinds 15 augustus 2026.</td><td>Vraag welk recht de aanbieder en zijn moeder kan dwingen, waar support draait, en op welk niveau hij mikt. De acht doelen van het kader vormen een bruikbare vragenlijst.</td><td>Een uitschakeling of afgifte bij een aanbieder die uw dienstverlening verstoort, kan als significant incident gelden als het de drempels haalt. Vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindverslag binnen een maand.</td></tr>
+        <tr><td class="ctl">DORA</td><td>DORA vraagt een register van alle <abbr class="tip" tabindex="0" data-tip="Informatie- en communicatietechnologie: onder DORA elke digitale of datadienst waarop een financiële instelling leunt.">ICT</abbr>-overeenkomsten met derden (art. 28 lid 3), contractbepalingen die de landen noemen waar data wordt verwerkt en opgeslagen (art. 30 lid 2 onder b), en exitstrategieën voor kritieke functies (art. 28 lid 8). Bankwezen is een zeer kritieke NIS2-sector, dus de vrijwillige beoordeling van het voorstel zou openstaan voor financiële instellingen.</td><td>Leg de landen en onderaannemers in het contract naast het rapport, en vraag hoe de exithulp is getest.</td><td>Classificeer snel. Eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterium CC9.2 gaat over het beheersen van risico's van leveranciers en zakenpartners. Een SOC 2-rapport beschrijft waar maatregelen werken, niet wie het bedrijf bestuurt; de audit van het voorstel zou het eigendom tot de uiteindelijke eigenaren herleiden.</td><td>Controleer welke onderliggende dienstverleners buiten het rapport zijn gelaten, de landen van de datacenters, en of supporttoegang op afstand binnen scope valt.</td><td>Een afgifte of storing bij de aanbieder komt waarschijnlijk als afwijking in het volgende rapport, als die al binnen scope valt.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>De focus ligt op de financiële verslaggeving. Rechtsmacht, eigendom en soevereiniteitsniveau vallen buiten de scope, tenzij ze het financiële proces raken.</td><td>Het rapport noemt zelden het recht van de moeder of de supportlocaties. Vraag daar in het contract naar.</td><td>ISAE 3402 schept geen meldplicht aan de auditors van gebruikers. Verwacht een afwijking in het volgende rapport en vraag in het contract om tussentijdse melding.</td></tr>
+      </table>
+      <p class="sources en">Checked against: European Commission <a href="https://commission.europa.eu/document/download/09579818-64a6-4dd5-9577-446ab6219113_en">Cloud Sovereignty Framework v1.2.1</a> (Oct 2025), <a href="https://commission.europa.eu/document/download/2ad80a48-166f-4c77-a513-80c53ca2a128_en">implementation guidance</a> (2026) and <a href="https://commission.europa.eu/news-and-media/news/sovereign-cloud-framework-explained-2026-06-01_en">"Sovereign Cloud Framework explained"</a> (1 Jun 2026), <a href="https://digital-strategy.ec.europa.eu/en/library/proposal-cloud-and-ai-development-act-cada">Cloud and AI Development Act proposal</a> COM(2026) 502 with Annexes II–III (3 Jun 2026), European Parliament <a href="https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2026/0138(COD)">procedure file 2026/0138(COD)</a> (referral 17 Sep 2026), <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">GDPR</a> Art. 28, 33–34, 45, 48, <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 21, 23 and Annexes I–II, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 19, 28–30, <a href="https://eur-lex.europa.eu/eli/reg/2023/2854/oj">Data Act</a> Art. 23–32, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL</a> (Aug 2026), AICPA Trust Services Criteria CC9.2 (2017, points of focus 2022) · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: Europese Commissie <a href="https://commission.europa.eu/document/download/09579818-64a6-4dd5-9577-446ab6219113_en">Cloud Sovereignty Framework v1.2.1</a> (okt 2025), <a href="https://commission.europa.eu/document/download/2ad80a48-166f-4c77-a513-80c53ca2a128_en">implementatieleidraad</a> (2026) en <a href="https://commission.europa.eu/news-and-media/news/sovereign-cloud-framework-explained-2026-06-01_en">"Sovereign Cloud Framework explained"</a> (1 jun 2026), voorstel <a href="https://digital-strategy.ec.europa.eu/en/library/proposal-cloud-and-ai-development-act-cada">Cloud and AI Development Act</a> COM(2026) 502 met bijlagen II–III (3 jun 2026), Europees Parlement <a href="https://oeil.europarl.europa.eu/oeil/en/procedure-file?reference=2026/0138(COD)">proceduredossier 2026/0138(COD)</a> (verwijzing 17 sep 2026), <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">AVG</a> art. 28, 33–34, 45, 48, <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 21, 23 en bijlagen I–II, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 19, 28–30, <a href="https://eur-lex.europa.eu/eli/reg/2023/2854/oj">Dataverordening</a> art. 23–32, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL</a> (aug 2026), AICPA Trust Services Criteria CC9.2 (2017, aandachtspunten 2022) · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../cloud-sovereignty/"><span class="en">Cloud sovereignty</span><span class="nl">Cloudsoevereiniteit</span></a> ·
+  <a href="../nis2-dora/"><span class="en">NIS2 and DORA</span><span class="nl">NIS2 en DORA</span></a> ·
+  <a href="../supply-chain/"><span class="en">Supply chain</span><span class="nl">Toeleveringsketen</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=cada-vs-sovereignty-framework&amp;title=Missing%3A%20cada-vs-sovereignty-framework"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=cada-vs-sovereignty-framework&amp;title=Correction%3A%20cada-vs-sovereignty-framework"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">CADA VS. FRAMEWORK BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">CADA VS. KADER BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>

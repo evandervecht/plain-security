@@ -73,5 +73,7 @@ sponsor:
   - '(encryption at rest|encrypted at rest|data at rest|versleuteld opgeslagen|versleutelde opslag|key management|sleutelbeheer|bitlocker|kms|hsm)'
 'page: cloud-sovereignty':
   - '(sovereign|soeverein|cloud act|data residency|dataresidentie|digital autonomy|digitale autonomie|seal-?[0-4])'
+'page: cada-vs-sovereignty-framework':
+  - '(cada|cloud and ai development act|cloud sovereignty framework|union assurance level|assurance level|zekerheidsniveau)'
 'page: quantum-and-ai':
   - '(quantum|quantumcomputer|pqc|post-quantum|postquantum|cryptography|cryptografie|encryptie|encryption|harvest now|decrypt later|hndl|hnlo|post-quantum migration)'
