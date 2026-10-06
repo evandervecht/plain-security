@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>The board as a target // Plain Security</title>
+<meta name="description" content="Board members are a route in: private mail and phones, a cloned voice on a call, the board pack, and travel. Four routes, and what closes each.">
+<link rel="canonical" href="https://plain-security.fyi/board-as-target/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The board as a target // Plain Security">
+<meta property="og:description" content="Board members are a route in: private mail and phones, a cloned voice on a call, the board pack, and travel. Four routes, and what closes each.">
+<meta property="og:url" content="https://plain-security.fyi/board-as-target/">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="nl_NL">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   THE BOARD AS A TARGET // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 7s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : what IT protects and what it cannot (also route 04) --- */
+.s1 .shelf{position:absolute;left:40px;right:40px;top:56px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.s1 .loc{position:relative;height:118px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;font-size:26px}
+.s1 .loc i{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-style:normal;font-size:9px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.s1 .loc b{position:absolute;top:6px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.1em;color:#8ff0cd;font-weight:700;text-transform:uppercase}
+.s1 .loc.open{border-color:rgba(255,93,115,.55)}
+.s1 .loc.open b{color:var(--bad-soft)}
+.s1 .loc.open::after{content:"?";position:absolute;inset:0;display:grid;place-items:center;font-family:var(--sans);font-weight:800;font-size:46px;color:var(--bad);background:rgba(58,20,48,.85);opacity:0;animation:flag 6s ease-in-out infinite}
+@keyframes flag{0%,20%{opacity:0}30%,80%{opacity:1}90%,100%{opacity:0}}
+.s1 .banner{animation-duration:6s}
+
+/* --- scene 3 : from the stage to the finance team --- */
+.s3 .bx{position:absolute;top:84px;width:38%;height:120px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 10px}
+.s3 .bx b{display:block;font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--white);text-transform:none}
+.s3 .bx.a{left:6%}
+.s3 .bx.b{right:6%}
+.s3 .bx::after{content:"";position:absolute;inset:0;background:rgba(255,93,115,.3);border:1px solid var(--bad);opacity:0;animation:expose 7s ease-in-out infinite}
+.s3 .bx.b::after{animation-delay:1.2s}
+@keyframes expose{0%,55%{opacity:0}62%,90%{opacity:1}96%,100%{opacity:0}}
+.s3 .q{position:absolute;top:34px;left:0;font-size:24px;z-index:3;animation:sweep 7s ease-in-out infinite}
+@keyframes sweep{0%{left:4%;opacity:0}8%{opacity:1}70%{left:calc(94% - 24px);opacity:1}80%,100%{left:calc(94% - 24px);opacity:0}}
+.s3 .banner{animation-duration:7s}
+
+/* --- scene 4 : the same pack, two places --- */
+.s4 .bx{position:absolute;top:84px;width:38%;height:120px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 10px}
+.s4 .bx b{display:block;font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--white);text-transform:none}
+.s4 .bx.a{left:6%}
+.s4 .bx.a::after{content:"";position:absolute;inset:0;background:rgba(255,93,115,.3);border:1px solid var(--bad);opacity:0;animation:expose 7s ease-in-out infinite}
+.s4 .bx.b{right:6%;border-color:rgba(55,211,155,.5)}
+.s4 .q{position:absolute;top:34px;left:0;font-size:24px;z-index:3;animation:sweep4 7s ease-in-out infinite}
+@keyframes sweep4{0%{left:4%;opacity:0}8%{opacity:1}45%{left:calc(44% - 24px);opacity:1}55%,100%{left:calc(44% - 24px);opacity:0}}
+.s4 .banner{animation-duration:7s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .s1 .loc.open::after{opacity:1}
+  .s3 .bx::after{opacity:1}.s3 .q{display:none}
+  .s4 .bx.a::after{opacity:1}.s4 .q{display:none}
+  .banner{opacity:1}.shield .tick{stroke-dashoffset:0}
+}
+@media (max-width:820px){
+  .s1 .shelf{left:12px;right:12px;gap:6px}
+  .s1 .loc i,.s1 .loc b{font-size:7.5px;letter-spacing:.04em}
+  .s3 .bx,.s4 .bx{width:42%;font-size:8.5px;letter-spacing:.06em}.s3 .bx.a,.s4 .bx.a{left:4%}.s3 .bx.b,.s4 .bx.b{right:4%}
+  .s3 .bx b,.s4 .bx b{font-size:14px}
+  .stage .banner{white-space:normal;text-align:center;width:calc(100% - 24px);line-height:1.4}
+}
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> <span class="en">THE BOARD AS A TARGET</span><span class="nl">DE DIRECTIE ALS DOELWIT</span></a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">PRIVATE</span><span class="nl">PRIVÉ</span></a>
+      <a href="#r2"><span class="en">VOICE &amp; FACE</span><span class="nl">STEM &amp; GEZICHT</span></a>
+      <a href="#r3"><span class="en">BOARD PACK</span><span class="nl">VERGADERSTUKKEN</span></a>
+      <a href="#r4"><span class="en">TRAVEL</span><span class="nl">REIZEN</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">You are the target. <em>Not only your company.</em></span>
+      <span class="nl">U bent het doelwit. <em>Niet alleen uw bedrijf.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Board members hold the keys and sign the payments, and their names, faces and voices are public. That makes the people at the top a route in: through personal mail and phones, through a cloned voice on a call, through the board pack, and on the road. This briefing is about you, not about IT. Four routes, and what closes each.</span>
+      <span class="nl">Bestuurders hebben de sleutels, tekenen de betalingen, en hun naam, gezicht en stem zijn openbaar. Dat maakt de top zelf een ingang: via privémail en telefoons, via een gekloonde stem aan de telefoon, via de vergaderstukken, en onderweg. Deze briefing gaat over u, niet over IT. Vier routes, en wat elke route sluit.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FOUR ROUTES</span><span class="nl">BEKIJK DE VIER ROUTES</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT CLOSES THEM</span><span class="nl">WAT ZE SLUIT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">ROUTE 01</span><span class="nl">ROUTE 01</span></span>
+    <h2>
+      <span class="en">The company is well defended. <em>You, at home, are not.</em></span>
+      <span class="nl">Het bedrijf is goed verdedigd. <em>U, thuis, niet.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">personal accounts and devices / family as a route</span>
+      <span class="nl">privéaccounts en -apparaten / familie als route</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">WHAT IT PROTECTS, AND WHAT IT CANNOT</span><span class="nl">WAT IT BESCHERMT, EN WAT NIET</span></div>
+      <div class="shelf">
+        <div class="loc">💻<b>IT</b><i><span class="en">Work laptop</span><span class="nl">Werklaptop</span></i></div>
+        <div class="loc">📧<b>IT</b><i><span class="en">Work mail</span><span class="nl">Werkmail</span></i></div>
+        <div class="loc open">✉️<b>?</b><i><span class="en">Private mail</span><span class="nl">Privémail</span></i></div>
+        <div class="loc open">📱<b>?</b><i><span class="en">Own phone</span><span class="nl">Eigen telefoon</span></i></div>
+        <div class="loc open">🏠<b>?</b><i><span class="en">Partner, children</span><span class="nl">Partner, kinderen</span></i></div>
+      </div>
+      <div class="banner"><span class="en">THE ATTACKER PICKS THE DOOR WITHOUT A GUARD</span><span class="nl">DE AANVALLER KIEST DE DEUR ZONDER BEWAKER</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Your work laptop and mailbox are patched, monitored and protected with <abbr class="tip" tabindex="0" data-tip="Multi-factor authentication: a second proof, such as an app or a key, on top of the password.">MFA</abbr>. Your private mailbox, your own phone, the family tablet and your partner's accounts are not, and they hold a lot: travel plans, the board pack you forwarded to read on holiday, password resets for everything else. <abbr class="tip" tabindex="0" data-tip="National Cyber Security Centre: the UK government's cybersecurity centre, part of GCHQ.">NCSC UK</abbr> calls people whose role gives them access to sensitive information "high-risk individuals" and has written guidance for exactly this (2023, reviewed 2024): attackers go for personal accounts and devices because they are easier, and use what you and your family post online to make the approach credible.</p>
+      <p class="en"><strong>Business impact:</strong> a takeover of your private mail is a company incident with no company log. Two settings do most of the work, and both are free: the strongest protection your mail provider offers (Google calls it the Advanced Protection Program and requires a security key or passkey), and Lockdown Mode on an iPhone (iOS 16 or later). We suggest the company helps the board, their assistants and their households set this up, rather than asking them to.</p>
+      <p class="nl">Uw werklaptop en werkmailbox zijn gepatcht, bewaakt en beveiligd met <abbr class="tip" tabindex="0" data-tip="Multifactorauthenticatie: een tweede bewijs, zoals een app of een sleutel, naast het wachtwoord.">MFA</abbr>. Uw privémailbox, uw eigen telefoon, de gezinstablet en de accounts van uw partner niet, en daar staat veel in: reisplannen, de vergaderstukken die u doorstuurde om op vakantie te lezen, de wachtwoordresets voor al het andere. Het Britse <abbr class="tip" tabindex="0" data-tip="National Cyber Security Centre: het cybersecuritycentrum van de Britse overheid, onderdeel van GCHQ.">NCSC</abbr> noemt mensen die door hun functie toegang hebben tot gevoelige informatie "high-risk individuals" en schreef precies hiervoor een richtlijn (2023, herzien 2024): aanvallers kiezen privéaccounts en -apparaten omdat die makkelijker zijn, en gebruiken wat u en uw gezin online delen om de benadering geloofwaardig te maken.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een overname van uw privémail is een bedrijfsincident zonder bedrijfslog. Twee instellingen doen het meeste werk, en beide zijn gratis: de sterkste beveiliging die uw mailprovider biedt (Google noemt het Advanced Protection Program en vereist een beveiligingssleutel of passkey), en Lockdown Mode op een iPhone (iOS 16 of hoger). Wij stellen voor dat het bedrijf de directie, hun assistenten en hun huishouden helpt dit in te stellen, in plaats van het hun te vragen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">PRIVATE MAIL · OWN PHONE · FAMILY · NO MFA, NO LOG</span><span class="nl">PRIVÉMAIL · EIGEN TELEFOON · GEZIN · GEEN MFA, GEEN LOG</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: STRONGEST PROTECTION ON PRIVATE MAIL, SET UP BY THE COMPANY</span><span class="nl">AANBEVOLEN: STERKSTE BEVEILIGING OP PRIVÉMAIL, INGESTELD DOOR HET BEDRIJF</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">An AI tool builds a profile of you and your family from LinkedIn, the annual report, a podcast and your child's football club in minutes. The phishing mail then mentions the right names.</span><span class="nl">Een AI-tool bouwt in minuten een profiel van u en uw gezin uit LinkedIn, het jaarverslag, een podcast en de voetbalclub van uw kind. De phishingmail noemt dan de juiste namen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">The AI assistant on your private phone reads your mail and calendar. Whoever takes over that account, or that assistant, reads along.</span><span class="nl">De AI-assistent op uw privételefoon leest uw mail en agenda. Wie dat account, of die assistent, overneemt, leest mee.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Your provider already does</span><span class="nl">Uw provider doet het al</span></b><p><span class="en">The big mail providers use AI to block phishing and odd logins. That protection is strongest in their high-risk programmes, which is why switching them on matters.</span><span class="nl">De grote mailproviders gebruiken AI om phishing en vreemde inlogs te blokkeren. Die bescherming is het sterkst in hun programma's voor risicogroepen, en daarom telt het inschakelen.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">ROUTE 02</span><span class="nl">ROUTE 02</span></span>
+    <h2>
+      <span class="en">Your voice and face are public. <em>So they can be borrowed.</em></span>
+      <span class="nl">Uw stem en gezicht zijn openbaar. <em>Dus kunnen ze worden geleend.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">CEO fraud from the top / deepfakes / public appearances as material</span>
+      <span class="nl">CEO-fraude vanaf de top / deepfakes / optredens als materiaal</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">FROM THE STAGE TO THE FINANCE TEAM</span><span class="nl">VAN HET PODIUM NAAR DE FINANCIËLE AFDELING</span></div>
+      <div class="q">🎙️</div>
+      <div class="bx a"><b><span class="en">Your keynote</span><span class="nl">Uw keynote</span></b><span class="en">on YouTube, with your voice</span><span class="nl">op YouTube, met uw stem</span></div>
+      <div class="bx b"><b><span class="en">"It's me, pay it today"</span><span class="nl">"Ik ben het, betaal vandaag"</span></b><span class="en">a call to finance, in your voice</span><span class="nl">een telefoontje naar finance, met uw stem</span></div>
+      <div class="banner"><span class="en">NO SYSTEM HACKED · ONLY YOUR AUTHORITY</span><span class="nl">GEEN SYSTEEM GEHACKT · ALLEEN UW GEZAG</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en"><abbr class="tip" tabindex="0" data-tip="CEO fraud, or business email compromise: a message or call that pretends to come from a senior person and asks for a payment or data.">CEO fraud</abbr> works because staff do what the top asks. It used to need a convincing email. It now needs a few minutes of your voice, and every keynote, podcast and results call provides that. In January 2024 a finance employee at the engineering firm Arup in Hong Kong paid out HK$200 million (about US$25 million) after a video call in which, as Hong Kong police reported and Arup confirmed, every other participant was a deepfake of a colleague. No system was broken into. The FBI's Internet Crime Complaint Center recorded US$3.0 billion in reported losses from business email compromise in 2025 (IC3 Annual Report, 2026). Mandiant's M-Trends 2026 report puts voice phishing second among the ways attackers get in (11%).</p>
+      <p class="en"><strong>Business impact:</strong> recognising your voice or face is no longer proof that it is you, and the people who work for you need to hear that from you. We suggest one rule, from the board down: no payment, no change of bank details and no sharing of sensitive data on the strength of a call or a message alone, however senior or urgent. The check is a call back on a known number, or a code word with your assistant and family. The EU <abbr class="tip" tabindex="0" data-tip="EU Regulation (EU) 2024/1689 on artificial intelligence; its transparency duties apply from 2 August 2026.">AI Act</abbr> requires deepfakes to be labelled (Art. 50, from 2 August 2026), which criminals will not do.</p>
+      <p class="nl"><abbr class="tip" tabindex="0" data-tip="CEO-fraude, ook business email compromise: een bericht of telefoontje dat van een bestuurder lijkt te komen en om een betaling of gegevens vraagt.">CEO-fraude</abbr> werkt omdat medewerkers doen wat de top vraagt. Vroeger was daar een overtuigende e-mail voor nodig. Nu volstaan een paar minuten van uw stem, en elke keynote, podcast en cijferpresentatie levert die. In januari 2024 maakte een financieel medewerker van ingenieursbureau Arup in Hongkong HK$200 miljoen (ongeveer US$25 miljoen) over na een videogesprek waarin, zo meldde de politie van Hongkong en bevestigde Arup, elke andere deelnemer een deepfake van een collega was. Er is geen systeem gekraakt. Het Internet Crime Complaint Center van de FBI registreerde in 2025 US$3,0 miljard aan gemelde schade door business email compromise (IC3-jaarrapport, 2026). Het M-Trends-rapport 2026 van Mandiant zet telefonische phishing op de tweede plaats van ingangen (11%).</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> uw stem of gezicht herkennen is geen bewijs meer dat u het bent, en de mensen die voor u werken moeten dat van u horen. Wij stellen één regel voor, van de directie naar beneden: geen betaling, geen wijziging van bankgegevens en geen gevoelige gegevens op grond van alleen een telefoontje of bericht, hoe hoog of hoe dringend ook. De controle is terugbellen op een bekend nummer, of een codewoord met uw assistent en uw gezin. De Europese <abbr class="tip" tabindex="0" data-tip="EU-verordening (EU) 2024/1689 over kunstmatige intelligentie; de transparantieplichten gelden vanaf 2 augustus 2026.">AI-verordening</abbr> vereist dat deepfakes worden gelabeld (art. 50, vanaf 2 augustus 2026), en dat zullen criminelen niet doen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">A FEW MINUTES OF AUDIO = YOUR AUTHORITY, FOR SALE</span><span class="nl">EEN PAAR MINUTEN AUDIO = UW GEZAG, TE KOOP</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: NO MONEY OR DATA ON A VOICE ALONE, CALL BACK ON A KNOWN NUMBER</span><span class="nl">AANBEVOLEN: GEEN GELD OF DATA OP EEN STEM ALLEEN, TERUGBELLEN OP EEN BEKEND NUMMER</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Cloning a voice from a short public recording is a consumer service. Live video of a known face on a call is harder, but the Arup case shows it is done.</span><span class="nl">Een stem klonen uit een korte openbare opname is een consumentendienst. Live video van een bekend gezicht in een gesprek is moeilijker, maar de zaak-Arup laat zien dat het gebeurt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">An AI note-taker in your board calls stores your voice and your words. Ask where those recordings go, and who can reach them.</span><span class="nl">Een AI-notulist in uw directievergaderingen bewaart uw stem en uw woorden. Vraag waar die opnames heen gaan en wie erbij kan.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="mid"><span class="en">Partly</span><span class="nl">Deels</span></b><p><span class="en">Deepfake detectors exist and improve, but they lag the generators. The call-back rule works regardless of how good the fake is.</span><span class="nl">Deepfake-detectie bestaat en wordt beter, maar loopt achter op de generatoren. De terugbelregel werkt hoe goed de vervalsing ook is.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">ROUTE 03</span><span class="nl">ROUTE 03</span></span>
+    <h2>
+      <span class="en">The board pack is the most valuable file <em>in the company.</em></span>
+      <span class="nl">De vergaderstukken zijn het waardevolste bestand <em>in het bedrijf.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">board portal / minutes / where the pack ends up</span>
+      <span class="nl">bestuursportaal / notulen / waar de stukken belanden</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">THE SAME PACK, TWO PLACES</span><span class="nl">DEZELFDE STUKKEN, TWEE PLEKKEN</span></div>
+      <div class="q">🕵️</div>
+      <div class="bx a"><b><span class="en">Forwarded PDF</span><span class="nl">Doorgestuurde pdf</span></b><span class="en">private mail · printed · family tablet</span><span class="nl">privémail · geprint · gezinstablet</span></div>
+      <div class="bx b"><b><span class="en">Board portal</span><span class="nl">Bestuursportaal</span></b><span class="en">MFA · read in the app · deleted after</span><span class="nl">MFA · lezen in de app · daarna gewist</span></div>
+      <div class="banner"><span class="en">ONE COPY YOU CAN REVOKE · ONE COPY YOU CANNOT</span><span class="nl">ÉÉN KOPIE DIE U KUNT INTREKKEN · ÉÉN DIE U NIET KUNT INTREKKEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Strategy, acquisitions, results before they are published, the salary of the CEO, the legal dispute: it is all in one PDF, sent to ten people every month. A board portal exists so that this file is read inside an app, behind MFA, and withdrawn afterwards. The leak rarely comes from the portal. It comes from the pack forwarded to a private mailbox, printed for the train, opened on the family tablet, or kept by a board member who left two years ago. Minutes and the management letter from the auditor travel the same way.</p>
+      <p class="en"><strong>Business impact:</strong> for a listed company this is inside information; for every company it is the negotiation position of the year. A stolen board pack is also a privacy incident when it contains personal data, with a duty to notify the <abbr class="tip" tabindex="0" data-tip="Autoriteit Persoonsgegevens: the Dutch data protection authority.">AP</abbr> within 72 hours. The ask is small: read the pack in the portal, on a device the company manages, and nowhere else. Where a board member cannot, that is worth a conversation, not an exception.</p>
+      <p class="nl">Strategie, overnames, cijfers vóór publicatie, het salaris van de CEO, het juridische geschil: het staat allemaal in één pdf, die elke maand naar tien mensen gaat. Een bestuursportaal bestaat zodat dat bestand in een app wordt gelezen, achter MFA, en daarna wordt ingetrokken. Het lek komt zelden uit het portaal. Het komt uit de stukken die naar een privémailbox zijn doorgestuurd, geprint voor in de trein, geopend op de gezinstablet, of bewaard door een commissaris die twee jaar geleden vertrok. Notulen en de management letter van de accountant reizen dezelfde weg.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> voor een beursgenoteerd bedrijf is dit voorwetenschap; voor elk bedrijf is het de onderhandelingspositie van het jaar. Gestolen vergaderstukken zijn ook een privacy-incident als ze persoonsgegevens bevatten, met een meldplicht bij de <abbr class="tip" tabindex="0" data-tip="Autoriteit Persoonsgegevens: de Nederlandse toezichthouder op de bescherming van persoonsgegevens.">AP</abbr> binnen 72 uur. De vraag is klein: lees de stukken in het portaal, op een apparaat dat het bedrijf beheert, en nergens anders. Waar een bestuurder dat niet kan, is dat een gesprek waard, geen uitzondering.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ONE PDF · TEN MAILBOXES · NO WAY TO RECALL IT</span><span class="nl">ÉÉN PDF · TIEN MAILBOXEN · NIET TERUG TE HALEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: THE PACK LIVES IN THE PORTAL, ON A MANAGED DEVICE, AND NOWHERE ELSE</span><span class="nl">AANBEVOLEN: DE STUKKEN BLIJVEN IN HET PORTAAL, OP EEN BEHEERD APPARAAT, EN NERGENS ANDERS</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A stolen mailbox with five years of board packs is too much to read. An AI tool summarises it into the ten facts an extortionist or a competitor wants in an afternoon.</span><span class="nl">Een gestolen mailbox met vijf jaar vergaderstukken is te veel om te lezen. Een AI-tool vat het in een middag samen tot de tien feiten die een afperser of concurrent wil.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">A board member pastes the pack into a public chatbot to get a summary. The pack is now on a server outside your control, possibly used for training.</span><span class="nl">Een bestuurder plakt de stukken in een publieke chatbot voor een samenvatting. De stukken staan nu op een server buiten uw controle, mogelijk gebruikt voor training.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Summaries inside the portal</span><span class="nl">Samenvattingen in het portaal</span></b><p><span class="en">Board portals increasingly offer AI summaries inside the app. That keeps the convenience and removes the reason to paste the pack elsewhere.</span><span class="nl">Bestuursportalen bieden steeds vaker AI-samenvattingen in de app. Dat houdt het gemak en haalt de reden weg om de stukken elders te plakken.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">ROUTE 04</span><span class="nl">ROUTE 04</span></span>
+    <h2>
+      <span class="en">On the road, <em>the phone is the company.</em></span>
+      <span class="nl">Onderweg <em>is de telefoon het bedrijf.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">travel / borders, hotels, chargers, conferences</span>
+      <span class="nl">reizen / grenzen, hotels, opladers, congressen</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">FIVE PLACES YOUR PHONE GOES ON A TRIP</span><span class="nl">VIJF PLEKKEN WAAR UW TELEFOON OP REIS KOMT</span></div>
+      <div class="shelf">
+        <div class="loc open">🛂<b>?</b><i><span class="en">Border check</span><span class="nl">Grenscontrole</span></i></div>
+        <div class="loc open">🏨<b>?</b><i><span class="en">Hotel safe</span><span class="nl">Hotelkluis</span></i></div>
+        <div class="loc open">🔌<b>?</b><i><span class="en">Public charger</span><span class="nl">Openbare oplader</span></i></div>
+        <div class="loc open">📶<b>?</b><i><span class="en">Free wifi</span><span class="nl">Gratis wifi</span></i></div>
+        <div class="loc">📱<b>OK</b><i><span class="en">Loaner phone</span><span class="nl">Leentelefoon</span></i></div>
+      </div>
+      <div class="banner"><span class="en">THE AIVD ADVISES A TEMPORARY DEVICE FOR HIGH-RISK COUNTRIES</span><span class="nl">DE AIVD ADVISEERT EEN TIJDELIJK APPARAAT VOOR RISICOLANDEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A board member travels with the whole company in one phone: mail, the board pack, the banking app, the MFA codes. At a border the device can be inspected or taken out of sight. In the hotel, the safe is opened by staff. On a conference stage, you are the most interesting visitor in the building. The <abbr class="tip" tabindex="0" data-tip="Algemene Inlichtingen- en Veiligheidsdienst: the Dutch general intelligence and security service.">AIVD</abbr> advises for travel to countries with an espionage risk: take a temporary laptop and phone, keep them with you rather than in the hotel safe, and do not connect them to the company network on return (guidance, 2025). NCSC-NL adds: no public USB chargers, and a VPN installed before you leave.</p>
+      <p class="en"><strong>Business impact:</strong> the fix is a travel kit, not a lecture. For high-risk destinations the company hands out a clean phone and laptop with only what the trip needs, and wipes them afterwards. For every trip: a power bank instead of a public charger, the board pack read in the portal and not stored on the device, and a known number to call if the device is lost or taken. Which countries count as high-risk is a decision for the board with its security lead, and the list changes.</p>
+      <p class="nl">Een bestuurder reist met het hele bedrijf in één telefoon: mail, de vergaderstukken, de bankapp, de MFA-codes. Aan de grens kan het apparaat worden bekeken of uit het zicht worden meegenomen. In het hotel wordt de kluis geopend door het personeel. Op een congrespodium bent u de interessantste bezoeker van het gebouw. De <abbr class="tip" tabindex="0" data-tip="Algemene Inlichtingen- en Veiligheidsdienst: de Nederlandse inlichtingen- en veiligheidsdienst.">AIVD</abbr> adviseert voor reizen naar landen met een spionagerisico: neem een tijdelijke laptop en telefoon mee, houd ze bij u in plaats van in de hotelkluis, en sluit ze bij terugkomst niet aan op het bedrijfsnetwerk (richtlijn, 2025). Het NCSC voegt toe: geen openbare USB-opladers, en een VPN die u vóór vertrek installeert.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de oplossing is een reiskit, geen preek. Voor risicobestemmingen geeft het bedrijf een schone telefoon en laptop mee met alleen wat de reis nodig heeft, en wist die daarna. Voor elke reis: een powerbank in plaats van een openbare oplader, de vergaderstukken in het portaal gelezen en niet op het apparaat bewaard, en een bekend nummer om te bellen als het apparaat kwijt of ingenomen is. Welke landen als risicovol gelden, is een besluit van de directie met de beveiligingsverantwoordelijke, en die lijst verandert.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ONE PHONE · BORDER, SAFE, CHARGER, WIFI</span><span class="nl">ÉÉN TELEFOON · GRENS, KLUIS, OPLADER, WIFI</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: A TRAVEL KIT, AND A LOANER DEVICE FOR HIGH-RISK COUNTRIES</span><span class="nl">AANBEVOLEN: EEN REISKIT, EN EEN LEENAPPARAAT VOOR RISICOLANDEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Your conference talk is announced months ahead. An AI-written invitation from the "organiser", with the right programme and hotel, arrives in your private mail.</span><span class="nl">Uw congreslezing wordt maanden vooraf aangekondigd. Een door AI geschreven uitnodiging van de "organisator", met het juiste programma en hotel, komt binnen op uw privémail.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Translation and travel apps installed abroad ask for access to your contacts, photos and microphone. On a loaner device, that costs nothing.</span><span class="nl">Vertaal- en reisapps die u in het buitenland installeert, vragen toegang tot uw contacten, foto's en microfoon. Op een leenapparaat kost dat niets.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Odd login, blocked</span><span class="nl">Vreemde inlog, geblokkeerd</span></b><p><span class="en">Your identity provider scores each login by device, place and behaviour. A login from your phone in one country and your laptop in another, an hour apart, gets stopped.</span><span class="nl">Uw identiteitsprovider beoordeelt elke inlog op apparaat, plaats en gedrag. Een inlog vanaf uw telefoon in het ene land en uw laptop in het andere, een uur na elkaar, wordt tegengehouden.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>closes the four routes.</em></span>
+      <span class="nl">Wat <em>de vier routes sluit.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">most of this is a setting, a rule or a kit, offered by the company to the board</span>
+      <span class="nl">het meeste is een instelling, een regel of een kit, die het bedrijf de directie aanbiedt</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">PRIVATE MFA</span><span class="nl">PRIVÉ-MFA</span></span>
+        <span class="chip c2"><span class="en">CALL-BACK RULE</span><span class="nl">TERUGBELREGEL</span></span>
+        <span class="chip c3"><span class="en">BOARD PORTAL</span><span class="nl">BESTUURSPORTAAL</span></span>
+        <span class="chip c4"><span class="en">TRAVEL KIT</span><span class="nl">REISKIT</span></span>
+        <span class="chip c5"><span class="en">BOARD TRAINING</span><span class="nl">BESTUURSTRAINING</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Addresses</th><th>In one line</th></tr>
+        <tr><td class="ctl">Strongest protection on private accounts</td><td>Private (01)</td><td>Security key or passkey on private mail (Google's Advanced Protection Program or equivalent), Lockdown Mode on the iPhone. The company sets it up with each board member and their household.</td></tr>
+        <tr><td class="ctl">Work stays on managed devices</td><td>Private (01)</td><td>Board mail is read on a company-managed phone or laptop. No forwarding to private mail. Assistants included.</td></tr>
+        <tr><td class="ctl">Call-back rule</td><td>Voice &amp; face (02)</td><td>No payment, bank-detail change or sensitive data on a call, message or video alone. Verify on a known number. The board states the rule and accepts being checked.</td></tr>
+        <tr><td class="ctl">Code word</td><td>Voice &amp; face (02)</td><td>A word agreed with your assistant and your family for anything urgent that involves money or access.</td></tr>
+        <tr><td class="ctl">Board portal only</td><td>Board pack (03)</td><td>Packs, minutes and the auditor's letters are read in the portal with MFA, not downloaded, and withdrawn after the meeting. Access ends the day a member leaves.</td></tr>
+        <tr><td class="ctl">No public AI tools for board material</td><td>Board pack (03)</td><td>Summaries come from a tool the company has contracted, with no training on your data, or from the portal itself.</td></tr>
+        <tr><td class="ctl">Travel kit</td><td>Travel (04)</td><td>Loaner phone and laptop for high-risk countries, wiped on return. Power bank, VPN installed before departure, a number to call when a device is lost or seized.</td></tr>
+        <tr><td class="ctl">Public footprint review</td><td>All</td><td>Once a year, someone looks at what the internet shows of each board member and their family: home address, routines, children's schools, leaked passwords.</td></tr>
+        <tr><td class="ctl">Board training that includes this</td><td>All</td><td>NIS2 Art. 20 and the Cyberbeveiligingswet require board training. We suggest making the board's own exposure the first module.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Pakt aan</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Sterkste beveiliging op privéaccounts</td><td>Privé (01)</td><td>Beveiligingssleutel of passkey op privémail (Google's Advanced Protection Program of gelijkwaardig), Lockdown Mode op de iPhone. Het bedrijf stelt het in met elke bestuurder en diens huishouden.</td></tr>
+        <tr><td class="ctl">Werk blijft op beheerde apparaten</td><td>Privé (01)</td><td>Bestuursmail wordt gelezen op een door het bedrijf beheerde telefoon of laptop. Niet doorsturen naar privémail. Assistenten inbegrepen.</td></tr>
+        <tr><td class="ctl">Terugbelregel</td><td>Stem &amp; gezicht (02)</td><td>Geen betaling, wijziging van bankgegevens of gevoelige gegevens op alleen een telefoontje, bericht of video. Controleer op een bekend nummer. De directie stelt de regel en accepteert dat zij wordt gecontroleerd.</td></tr>
+        <tr><td class="ctl">Codewoord</td><td>Stem &amp; gezicht (02)</td><td>Een woord dat u afspreekt met uw assistent en uw gezin voor alles wat dringend is en om geld of toegang gaat.</td></tr>
+        <tr><td class="ctl">Alleen het bestuursportaal</td><td>Vergaderstukken (03)</td><td>Stukken, notulen en de brieven van de accountant worden gelezen in het portaal met MFA, niet gedownload, en na de vergadering ingetrokken. Toegang eindigt op de dag dat een lid vertrekt.</td></tr>
+        <tr><td class="ctl">Geen publieke AI-tools voor bestuursstukken</td><td>Vergaderstukken (03)</td><td>Samenvattingen komen uit een tool waarmee het bedrijf een contract heeft, zonder training op uw data, of uit het portaal zelf.</td></tr>
+        <tr><td class="ctl">Reiskit</td><td>Reizen (04)</td><td>Leentelefoon en -laptop voor risicolanden, gewist bij terugkomst. Powerbank, VPN vóór vertrek geïnstalleerd, een nummer om te bellen als een apparaat kwijt of ingenomen is.</td></tr>
+        <tr><td class="ctl">Controle van de online voetafdruk</td><td>Alles</td><td>Eens per jaar kijkt iemand wat het internet toont van elke bestuurder en diens gezin: huisadres, routines, scholen van de kinderen, gelekte wachtwoorden.</td></tr>
+        <tr><td class="ctl">Bestuurstraining die dit meeneemt</td><td>Alles</td><td>NIS2 art. 20 en de Cyberbeveiligingswet vereisen training van het bestuur. Wij stellen voor de eigen blootstelling van de directie de eerste module te maken.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> this is the one security topic where the control is you. We suggest three questions for your next meeting. Is my private mail protected by a security key, and who helped my partner set up theirs? If someone with my voice calls finance today, what happens? Where is last month's board pack right now, and on how many devices? The company can offer the settings, the rule and the kit; whether the board accepts being checked like everyone else is the decision only the board can take.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> dit is het ene beveiligingsonderwerp waarbij de maatregel u zelf bent. Wij stellen drie vragen voor uw volgende vergadering voor. Is mijn privémail beveiligd met een beveiligingssleutel, en wie heeft mijn partner daarbij geholpen? Als iemand met mijn stem vandaag finance belt, wat gebeurt er dan? Waar zijn de vergaderstukken van vorige maand nu, en op hoeveel apparaten? Het bedrijf kan de instellingen, de regel en de kit aanbieden; of de directie accepteert net als iedereen gecontroleerd te worden, is het besluit dat alleen de directie kan nemen.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Board members are named on the website, speak in public and sign the payments. Voice phishing is the second most common way in (Mandiant, 2026) and business email compromise cost US$3.0 billion in reported losses in 2025 (FBI IC3, 2026).</span><span class="nl">Bestuurders staan met naam op de website, spreken in het openbaar en tekenen de betalingen. Telefonische phishing is de op één na meest voorkomende ingang (Mandiant, 2026) en business email compromise kostte in 2025 US$3,0 miljard aan gemelde schade (FBI IC3, 2026).</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">A payment that cannot be recalled, a board pack in the wrong hands, inside information on the street, or a private mailbox used to reset every other account.</span><span class="nl">Een betaling die niet terug te draaien is, vergaderstukken in verkeerde handen, voorwetenschap op straat, of een privémailbox waarmee elk ander account wordt gereset.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">Your voice stays public and your family stays online. With a security key on private mail, a call-back rule, the portal and a travel kit, a hit becomes rarer and costs less.</span><span class="nl">Uw stem blijft openbaar en uw gezin blijft online. Met een beveiligingssleutel op privémail, een terugbelregel, het portaal en een reiskit wordt een treffer zeldzamer en kost hij minder.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">The chair</span><span class="nl">De voorzitter</span></span><p><span class="en">The <abbr class="tip" tabindex="0" data-tip="Chief information security officer: the executive responsible for information security.">CISO</abbr> can offer the settings and the kit. Whether the board adopts them is a question for the chair, because the exposure is personal.</span><span class="nl">De <abbr class="tip" tabindex="0" data-tip="Chief information security officer: de bestuurder die verantwoordelijk is voor informatiebeveiliging.">CISO</abbr> kan de instellingen en de kit aanbieden. Of de directie ze overneemt, is een vraag voor de voorzitter, omdat de blootstelling persoonlijk is.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Board members with a security key on private mail · payment requests "from the top" that were called back, as a share of all such requests · board packs found outside the portal · board members who completed the training this year.</span><span class="nl">Bestuurders met een beveiligingssleutel op privémail · betaalverzoeken "van de top" die zijn teruggebeld, als aandeel van alle zulke verzoeken · vergaderstukken aangetroffen buiten het portaal · bestuurders die dit jaar de training hebben afgerond.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“A board member's personal account, device, voice or likeness is abused to authorise a payment, obtain board material or reach company systems, which can lead to financial loss, disclosure of inside information and a notifiable incident.”</span><span class="nl">“Het privéaccount, apparaat, de stem of het beeld van een bestuurder wordt misbruikt om een betaling goed te keuren, bestuursstukken te verkrijgen of bedrijfssystemen te bereiken, wat kan leiden tot financiële schade, het uitlekken van voorwetenschap en een meldplichtig incident.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU directive on cybersecurity for essential and important entities; in the Netherlands the Cyberbeveiligingswet.">NIS2</abbr> names the board: management bodies approve and oversee the security measures, can be held liable, and are required to follow training (Art. 20). In the Netherlands this runs through the Cyberbeveiligingswet, in force since 15 August 2026, which includes the board training duty.</td><td>Ask whether their executives' accounts and payment approvals are covered by the same controls as yours. A supplier's finance team fooled by your "CEO" is still your loss.</td><td>A compromised board account or a fraudulent payment can count as a significant incident if it meets the thresholds. Early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month.</td></tr>
+        <tr><td class="ctl">DORA</td><td>The management body bears the ultimate responsibility for <abbr class="tip" tabindex="0" data-tip="Information and communication technology: in DORA, any digital or data service a financial entity relies on.">ICT</abbr> risk and its members keep their knowledge up to date, including through regular training (Art. 5). DORA has applied since 17 January 2025.</td><td>Ask how the supplier verifies payment and change requests that claim to come from senior staff, yours or theirs.</td><td>Classify promptly. Initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
+        <tr><td class="ctl">GDPR / AVG</td><td>A board pack or a private mailbox usually contains personal data. A breach is notified to the Autoriteit Persoonsgegevens within 72 hours (Art. 33); the people affected are informed when the risk is high (Art. 34).</td><td>Not applicable to their report; applicable to the data of your staff in your mailbox.</td><td>Notify the AP within 72 hours; inform the people affected when the risk is high.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>The access criteria (CC6) cover who can reach the systems in scope. Board members' private accounts are outside the scope unless they reach those systems.</td><td>Check whether executive access and payment approval are inside the described system, or carved out.</td><td>A fraudulent payment approved through a process in scope will likely appear as an exception in the next report.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>The focus is financial reporting. Payment authorisation and segregation of duties are core general controls, and the call-back rule sits exactly there.</td><td>Ask whether the payment process tested includes verification of requests from senior staff.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor cyberbeveiliging van essentiële en belangrijke entiteiten; in Nederland de Cyberbeveiligingswet.">NIS2</abbr> noemt het bestuur: bestuursorganen keuren de beveiligingsmaatregelen goed en zien erop toe, kunnen aansprakelijk worden gesteld en zijn verplicht training te volgen (art. 20). In Nederland loopt dit via de Cyberbeveiligingswet, van kracht sinds 15 augustus 2026, inclusief de trainingsplicht voor het bestuur.</td><td>Vraag of de accounts en betaalgoedkeuringen van hun bestuurders onder dezelfde maatregelen vallen als die van u. Een financiële afdeling van een leverancier die door uw "CEO" wordt misleid, is nog steeds uw schade.</td><td>Een gecompromitteerd bestuursaccount of een frauduleuze betaling kan als significant incident gelden als het de drempels haalt. Vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindverslag binnen een maand.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Het leidinggevend orgaan draagt de eindverantwoordelijkheid voor <abbr class="tip" tabindex="0" data-tip="Informatie- en communicatietechnologie: onder DORA elke digitale of datadienst waarop een financiële instelling leunt.">ICT</abbr>-risico en zijn leden houden hun kennis op peil, onder meer met regelmatige training (art. 5). DORA geldt sinds 17 januari 2025.</td><td>Vraag hoe de leverancier betaal- en wijzigingsverzoeken controleert die van hoger management lijken te komen, dat van u of dat van hen.</td><td>Classificeer snel. Eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">AVG</td><td>Vergaderstukken of een privémailbox bevatten meestal persoonsgegevens. Een datalek meldt u binnen 72 uur bij de Autoriteit Persoonsgegevens (art. 33); de betrokkenen informeert u als het risico hoog is (art. 34).</td><td>Niet van toepassing op hun rapport; wel op de gegevens van uw medewerkers in uw mailbox.</td><td>Meld binnen 72 uur bij de AP; informeer de betrokkenen als het risico hoog is.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>De toegangscriteria (CC6) gaan over wie de systemen binnen scope kan bereiken. Privéaccounts van bestuurders vallen buiten de scope, tenzij ze die systemen bereiken.</td><td>Controleer of toegang van bestuurders en betaalgoedkeuring binnen het beschreven systeem vallen, of erbuiten zijn gelaten.</td><td>Een frauduleuze betaling die via een proces binnen scope is goedgekeurd, komt waarschijnlijk als afwijking in het volgende rapport.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>De focus ligt op de financiële verslaggeving. Betaalautorisatie en functiescheiding zijn kernmaatregelen, en de terugbelregel zit precies daar.</td><td>Vraag of het geteste betaalproces de controle van verzoeken van hoger management omvat.</td><td>ISAE 3402 schept geen meldplicht aan de auditors van gebruikers. Verwacht een afwijking in het volgende rapport en vraag in het contract om tussentijdse melding.</td></tr>
+      </table>
+      <p class="sources en">Checked against: <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 20 and 23, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL on the Cyberbeveiligingswet</a> (Aug 2026), <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 5 and 19 and <a href="https://eur-lex.europa.eu/eli/reg_del/2025/301/oj">RTS (EU) 2025/301</a> Art. 5, <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">GDPR</a> Art. 33 and 34, <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">AI Act</a> Art. 50 and 113, <a href="https://www.ncsc.gov.uk/collection/defending-democracy/guidance-for-high-risk-individuals">NCSC UK guidance for high-risk individuals</a> (Dec 2023, reviewed May 2024), <a href="https://www.aivd.nl/onderwerpen/aandachtsgebieden/cyberdreiging/mogelijke-spionage-bij-reizen-naar-china">AIVD travel advice</a> (Oct 2025), <a href="https://www.ncsc.nl/mobiele-apparatuur/onderweg-en-op-reis">NCSC-NL on the road</a>, <a href="https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf">FBI IC3 Annual Report 2025</a> (2026), <a href="https://cloud.google.com/blog/topics/threat-intelligence/m-trends-2026/">Mandiant M-Trends 2026</a> (Mar 2026), Arup statement as reported by Dezeen (17 May 2024), <a href="https://support.google.com/accounts/answer/7519408">Google Advanced Protection Program</a>, <a href="https://support.apple.com/en-us/105120">Apple Lockdown Mode</a> · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 20 en 23, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC over de Cyberbeveiligingswet</a> (aug 2026), <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 5 en 19 en <a href="https://eur-lex.europa.eu/eli/reg_del/2025/301/oj">RTS (EU) 2025/301</a> art. 5, <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">AVG</a> art. 33 en 34, <a href="https://eur-lex.europa.eu/eli/reg/2024/1689/oj">AI-verordening</a> art. 50 en 113, <a href="https://www.ncsc.gov.uk/collection/defending-democracy/guidance-for-high-risk-individuals">NCSC UK-richtlijn voor high-risk individuals</a> (dec 2023, herzien mei 2024), <a href="https://www.aivd.nl/onderwerpen/aandachtsgebieden/cyberdreiging/mogelijke-spionage-bij-reizen-naar-china">AIVD-reisadvies</a> (okt 2025), <a href="https://www.ncsc.nl/mobiele-apparatuur/onderweg-en-op-reis">NCSC onderweg en op reis</a>, <a href="https://www.ic3.gov/AnnualReport/Reports/2025_IC3Report.pdf">FBI IC3-jaarrapport 2025</a> (2026), <a href="https://cloud.google.com/blog/topics/threat-intelligence/m-trends-2026/">Mandiant M-Trends 2026</a> (mrt 2026), verklaring van Arup zoals gemeld door Dezeen (17 mei 2024), <a href="https://support.google.com/accounts/answer/7519408">Google Advanced Protection Program</a>, <a href="https://support.apple.com/en-us/105120">Apple Lockdown Mode</a> · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../phishing/"><span class="en">Phishing</span><span class="nl">Phishing</span></a> ·
+  <a href="../ai-security/"><span class="en">AI at work</span><span class="nl">AI op de werkvloer</span></a> ·
+  <a href="../endpoints/"><span class="en">Endpoints</span><span class="nl">Endpoints</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=board-as-target&amp;title=Missing%3A%20board-as-target"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=board-as-target&amp;title=Correction%3A%20board-as-target"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">THE BOARD AS A TARGET <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">DE DIRECTIE ALS DOELWIT <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>
