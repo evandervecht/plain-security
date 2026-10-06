@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>The box at the edge // Plain Security</title>
+<meta name="description" content="VPN and firewall appliances are the most common way in. Who owns the box, is it patched, is the admin page on the internet, and what zero trust changes.">
+<link rel="canonical" href="https://plain-security.fyi/edge-devices/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The box at the edge // Plain Security">
+<meta property="og:description" content="VPN and firewall appliances are the most common way in. Who owns the box, is it patched, is the admin page on the internet, and what zero trust changes.">
+<meta property="og:url" content="https://plain-security.fyi/edge-devices/">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="nl_NL">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   EDGE DEVICES // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 7s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : every system has an owner, except the box --- */
+.s1 .shelf{position:absolute;left:40px;right:40px;top:56px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.s1 .loc{position:relative;height:118px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;font-size:26px}
+.s1 .loc i{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-style:normal;font-size:9px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.s1 .loc b{position:absolute;top:6px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.1em;color:#8ff0cd;font-weight:700;text-transform:uppercase}
+.s1 .loc.open{border-color:rgba(255,93,115,.55)}
+.s1 .loc.open b{color:var(--bad-soft)}
+.s1 .loc.open::after{content:"?";position:absolute;inset:0;display:grid;place-items:center;font-family:var(--sans);font-weight:800;font-size:46px;color:var(--bad);background:rgba(58,20,48,.85);opacity:0;animation:flag 6s ease-in-out infinite}
+@keyframes flag{0%,20%{opacity:0}30%,80%{opacity:1}90%,100%{opacity:0}}
+.s1 .banner{animation-duration:6s}
+
+/* --- scene 2 : the race between the attacker and the patch cycle --- */
+.s2 .row{position:absolute;left:24px;right:24px;height:76px;display:flex;align-items:center;gap:14px}
+.s2 .row.a{top:42px}.s2 .row.b{top:134px}
+.s2 .who{flex:none;width:128px;height:64px;display:grid;place-items:center;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;background:var(--surface);border:1px solid var(--line);line-height:1.3}
+.s2 .who b{display:block;font-size:22px}
+.s2 .row.a .who{background:#3a1430;border-color:rgba(255,93,115,.55);color:var(--bad-soft)}
+.s2 .path{flex:1;position:relative;height:1px;background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+.s2 .path::after{content:"";position:absolute;top:-4px;left:0;width:9px;height:9px;background:var(--white)}
+.s2 .row.a .path::after{animation:tfast 8s linear infinite}
+.s2 .row.b .path::after{animation:tslow 8s linear infinite}
+@keyframes tfast{0%{left:0;opacity:0}3%{opacity:1}15%{left:calc(100% - 9px);opacity:1}20%,100%{left:calc(100% - 9px);opacity:0}}
+@keyframes tslow{0%{left:0;opacity:0}3%{opacity:1}85%{left:calc(100% - 9px);opacity:1}90%,100%{left:calc(100% - 9px);opacity:0}}
+.s2 .out{flex:none;width:190px;padding:10px 12px;font-size:11px;letter-spacing:.06em;line-height:1.45;border:1px solid;opacity:0}
+.s2 .out.bad{color:var(--bad-soft);border-color:rgba(255,93,115,.55);background:rgba(255,93,115,.1);animation:rfast 8s ease-in-out infinite}
+.s2 .out.good{color:#8ff0cd;border-color:rgba(55,211,155,.5);background:rgba(55,211,155,.07);animation:rslow 8s ease-in-out infinite}
+@keyframes rfast{0%,15%{opacity:0}20%,100%{opacity:1}}
+@keyframes rslow{0%,85%{opacity:0}90%,100%{opacity:1}}
+.s2 .banner{animation-duration:8s}
+
+/* --- scene 3 : the admin page on the internet, the VPN without MFA --- */
+.s3 .bx{position:absolute;top:84px;width:38%;height:120px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 10px}
+.s3 .bx b{display:block;font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--white);text-transform:none}
+.s3 .bx.a{left:6%}
+.s3 .bx.b{right:6%}
+.s3 .bx::after{content:"";position:absolute;inset:0;background:rgba(255,93,115,.3);border:1px solid var(--bad);opacity:0;animation:expose 7s ease-in-out infinite}
+.s3 .bx.b::after{animation-delay:1.2s}
+@keyframes expose{0%,55%{opacity:0}62%,90%{opacity:1}96%,100%{opacity:0}}
+.s3 .q{position:absolute;top:34px;left:0;font-size:24px;z-index:3;animation:sweep 7s ease-in-out infinite}
+@keyframes sweep{0%{left:4%;opacity:0}8%{opacity:1}70%{left:calc(94% - 24px);opacity:1}80%,100%{left:calc(94% - 24px);opacity:0}}
+.s3 .banner{animation-duration:7s}
+
+/* --- scene 4 : VPN opens the network, zero trust opens one app --- */
+.s4 .bx{position:absolute;top:84px;width:38%;height:120px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 10px}
+.s4 .bx b{display:block;font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--white);text-transform:none}
+.s4 .bx.a{left:6%}
+.s4 .bx.a::after{content:"";position:absolute;inset:0;background:rgba(255,93,115,.3);border:1px solid var(--bad);opacity:0;animation:expose 7s ease-in-out infinite}
+.s4 .bx.b{right:6%;border-color:rgba(55,211,155,.5)}
+.s4 .q{position:absolute;top:34px;left:0;font-size:24px;z-index:3;animation:sweep4 7s ease-in-out infinite}
+@keyframes sweep4{0%{left:4%;opacity:0}8%{opacity:1}45%{left:calc(44% - 24px);opacity:1}55%,100%{left:calc(44% - 24px);opacity:0}}
+.s4 .banner{animation-duration:7s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .s1 .loc.open::after{opacity:1}
+  .s2 .out{opacity:1}.s2 .path::after{left:calc(100% - 9px)}
+  .s3 .bx::after{opacity:1}.s3 .q{display:none}
+  .s4 .bx.a::after{opacity:1}.s4 .q{display:none}
+  .banner{opacity:1}.shield .tick{stroke-dashoffset:0}
+}
+@media (max-width:820px){
+  .s1 .shelf{left:12px;right:12px;gap:6px}
+  .s1 .loc i,.s1 .loc b{font-size:7.5px;letter-spacing:.04em}
+  .s2 .row{left:12px;right:12px;gap:8px}
+  .s2 .who{width:86px;font-size:8.5px;letter-spacing:.08em}
+  .s2 .out{width:128px;font-size:9.5px;padding:8px}
+  .s3 .bx,.s4 .bx{width:42%;font-size:8.5px;letter-spacing:.06em}.s3 .bx.a,.s4 .bx.a{left:4%}.s3 .bx.b,.s4 .bx.b{right:4%}
+  .s3 .bx b,.s4 .bx b{font-size:14px}
+  .stage .banner{white-space:normal;text-align:center;width:calc(100% - 24px);line-height:1.4}
+}
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> <span class="en">EDGE DEVICES</span><span class="nl">RANDAPPARATUUR</span></a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">OWNER</span><span class="nl">EIGENAAR</span></a>
+      <a href="#r2"><span class="en">PATCHING</span><span class="nl">PATCHEN</span></a>
+      <a href="#r3"><span class="en">EXPOSURE</span><span class="nl">BLOOTSTELLING</span></a>
+      <a href="#r4">ZERO TRUST</a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">The box at the edge. <em>Who owns it, and is it patched?</em></span>
+      <span class="nl">De doos aan de rand. <em>Wie is eigenaar, en is hij gepatcht?</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">VPN gateways, firewalls and remote-access appliances sit on the internet by design. In the 2026 incident reports from Mandiant and Verizon, exploiting a vulnerability is the most common way in, and these devices are a favourite target. Four questions decide whether yours is the way in: who owns it, how fast it is patched, what it exposes, and how much a login opens.</span>
+      <span class="nl">VPN-gateways, firewalls en apparaten voor toegang op afstand staan per definitie aan het internet. In de incidentrapporten van Mandiant en Verizon over 2026 is misbruik van een kwetsbaarheid de meest voorkomende ingang, en deze apparaten zijn een favoriet doelwit. Vier vragen bepalen of die van u de ingang is: wie er eigenaar van is, hoe snel hij wordt gepatcht, wat hij blootstelt, en hoeveel één inlog opent.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FOUR</span><span class="nl">BEKIJK DE VIER</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT CLOSES THE DOOR</span><span class="nl">WAT DE DEUR SLUIT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">Every system has an owner. <em>Except the box.</em></span>
+      <span class="nl">Elk systeem heeft een eigenaar. <em>Behalve de doos.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">ownership / the appliance between IT, the network team and the supplier</span>
+      <span class="nl">eigenaarschap / het apparaat tussen IT, het netwerkteam en de leverancier</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">WHO IS RESPONSIBLE FOR WHAT</span><span class="nl">WIE IS WAARVOOR VERANTWOORDELIJK</span></div>
+      <div class="shelf">
+        <div class="loc">🖥️<b>IT</b><i>Server</i></div>
+        <div class="loc">💻<b>IT</b><i>Laptop</i></div>
+        <div class="loc">☁️<b>Cloud</b><i>SaaS</i></div>
+        <div class="loc">🗃️<b>Data</b><i>Database</i></div>
+        <div class="loc open">🧱<b>?</b><i><span class="en">VPN / firewall</span><span class="nl">VPN / firewall</span></i></div>
+      </div>
+      <div class="banner"><span class="en">ON THE INTERNET · NOBODY'S NAME ON IT</span><span class="nl">AAN HET INTERNET · NIEMANDS NAAM EROP</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Servers have an owner, a patch cycle and endpoint protection. The firewall or <abbr class="tip" tabindex="0" data-tip="Virtual private network: the gateway through which staff and suppliers reach the internal network from outside.">VPN</abbr> gateway was often installed by a supplier years ago. It runs its own operating system, sits outside the normal patch cycle, and cannot run your endpoint protection. Its logs usually stay on the box. Mandiant's M-Trends 2026 report finds that exploits were the most common way in for the sixth year running (32% of intrusions), and that attackers hide on edge devices precisely because those lack standard monitoring.</p>
+      <p class="en"><strong>Business impact:</strong> the box nobody owns is the one still on an old version when the advisory comes out. The first step costs nothing: one list of every device facing the internet, with an owner's name, the version, and the vendor's end-of-support date. The Five Eyes guidance (February 2025) names that inventory, with support dates, as a baseline measure.</p>
+      <p class="nl">Servers hebben een eigenaar, een patchcyclus en endpointbeveiliging. De firewall of <abbr class="tip" tabindex="0" data-tip="Virtual private network: de toegangspoort waarmee medewerkers en leveranciers van buiten het interne netwerk bereiken.">VPN</abbr>-gateway is vaak jaren geleden door een leverancier geplaatst. Hij draait zijn eigen besturingssysteem, valt buiten de normale patchcyclus en kan uw endpointbeveiliging niet draaien. Zijn logs blijven meestal op het apparaat. Het M-Trends-rapport 2026 van Mandiant stelt dat exploits voor het zesde jaar op rij de meest voorkomende ingang waren (32% van de inbraken), en dat aanvallers zich juist op randapparatuur verschuilen omdat daar standaardmonitoring ontbreekt.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de doos zonder eigenaar is de doos die nog op een oude versie staat als het beveiligingsadvies verschijnt. De eerste stap kost niets: één lijst met elk apparaat dat aan het internet staat, met de naam van een eigenaar, de versie en de einddatum van ondersteuning door de fabrikant. De Five Eyes-richtlijn (februari 2025) noemt die inventaris, met ondersteuningsdata, als basismaatregel.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">INTERNET-FACING · OUTSIDE THE PATCH CYCLE · NO OWNER</span><span class="nl">AAN HET INTERNET · BUITEN DE PATCHCYCLUS · GEEN EIGENAAR</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE LIST, ONE NAME PER BOX</span><span class="nl">AANBEVOLEN: ÉÉN LIJST, ÉÉN NAAM PER APPARAAT</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Attackers scan the whole internet for a vulnerable model and version within hours of an advisory. Whether your box is on your list makes no difference to them.</span><span class="nl">Aanvallers scannen binnen enkele uren na een advies het hele internet op een kwetsbaar model en versie. Of uw apparaat op uw lijst staat, maakt voor hen niets uit.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A leaked configuration backup of the box, fed to an AI tool, yields VPN accounts, internal addresses and firewall rules in minutes.</span><span class="nl">Een uitgelekte configuratieback-up van het apparaat levert, door een AI-tool gehaald, in minuten VPN-accounts, interne adressen en firewallregels op.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">See what the internet sees</span><span class="nl">Zie wat het internet ziet</span></b><p><span class="en">Attack-surface tools, increasingly AI-assisted, list what the internet sees of you and match it to vendor advisories. A cheap way to build the list.</span><span class="nl">Tools voor het aanvalsoppervlak, steeds vaker met AI, laten zien wat het internet van u ziet en koppelen dat aan adviezen van fabrikanten. Een goedkope manier om de lijst te maken.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">Exploited within days, <em>or never fixed at all.</em></span>
+      <span class="nl">Binnen dagen misbruikt, <em>of nooit meer gerepareerd.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">patching speed / end-of-life</span>
+      <span class="nl">patchsnelheid / einde levensduur</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">THE SAME ADVISORY, TWO CLOCKS</span><span class="nl">HETZELFDE ADVIES, TWEE KLOKKEN</span></div>
+      <div class="row a"><div class="who"><b>🕵️</b><span class="en">Attacker</span><span class="nl">Aanvaller</span></div><div class="path"></div><div class="out bad"><span class="en">INSIDE · DAY 3</span><span class="nl">BINNEN · DAG 3</span></div></div>
+      <div class="row b"><div class="who"><b>🛠️</b><span class="en">Your patch cycle</span><span class="nl">Uw patchcyclus</span></div><div class="path"></div><div class="out good"><span class="en">PATCHED · DAY 43</span><span class="nl">GEPATCHT · DAG 43</span></div></div>
+      <div class="banner"><span class="en">FIX PUBLISHED · ATTACKER FIRST · END-OF-LIFE: NO FIX</span><span class="nl">FIX GEPUBLICEERD · AANVALLER EERST · EINDE LEVENSDUUR: GEEN FIX</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">When a vendor publishes a fix for a VPN or firewall, attackers start within days, and sometimes before the fix exists. In August 2025 <abbr class="tip" tabindex="0" data-tip="Nationaal Cyber Security Centrum: the Dutch government's cybersecurity centre, part of the Ministry of Justice and Security.">NCSC-NL</abbr> reported that several critical Dutch organisations had been breached through a Citrix NetScaler flaw since early May, seven weeks before Citrix published the patch. Verizon's 2026 Data Breach Investigations Report puts exploitation of vulnerabilities at 31% of breaches, up from 20% a year earlier, and finds that only 26% of known-exploited vulnerabilities were fully fixed, after a median of 43 days. A box past its end-of-life date never gets a fix.</p>
+      <p class="en"><strong>Business impact:</strong> the monthly patch cycle is too slow for this class of device, and patching is not enough once a box was already exploited. NCSC-NL advises checking for compromise and resetting sessions as well, because the patch does not remove the intruder. Replacing a device before its end-of-support date is a budget line, not a surprise. From 11 December 2027 the <abbr class="tip" tabindex="0" data-tip="Cyber Resilience Act: EU regulation (EU) 2024/2847 that sets security duties for makers of products with digital elements.">CRA</abbr> requires manufacturers to provide security updates for a support period of at least five years.</p>
+      <p class="nl">Als een fabrikant een fix publiceert voor een VPN of firewall, beginnen aanvallers binnen dagen, en soms al voordat de fix bestaat. In augustus 2025 meldde het <abbr class="tip" tabindex="0" data-tip="Nationaal Cyber Security Centrum: het cybersecuritycentrum van de Rijksoverheid, onderdeel van het ministerie van Justitie en Veiligheid.">NCSC</abbr> dat meerdere kritieke Nederlandse organisaties sinds begin mei waren binnengedrongen via een lek in Citrix NetScaler, zeven weken voordat Citrix de patch publiceerde. Het Data Breach Investigations Report 2026 van Verizon zet misbruik van kwetsbaarheden op 31% van de datalekken, tegen 20% een jaar eerder, en stelt vast dat slechts 26% van de bekend misbruikte kwetsbaarheden volledig was verholpen, na een mediaan van 43 dagen. Een apparaat voorbij zijn einde levensduur krijgt nooit meer een fix.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de maandelijkse patchcyclus is te traag voor dit soort apparaten, en patchen volstaat niet als een apparaat al is misbruikt. Het NCSC adviseert ook te controleren op compromittatie en sessies te resetten, omdat de patch de indringer niet verwijdert. Een apparaat vervangen vóór de einddatum van ondersteuning is een begrotingspost, geen verrassing. Vanaf 11 december 2027 vereist de <abbr class="tip" tabindex="0" data-tip="Cyber Resilience Act: EU-verordening (EU) 2024/2847 met beveiligingsplichten voor makers van producten met digitale elementen.">CRA</abbr> dat fabrikanten beveiligingsupdates leveren gedurende een ondersteuningsperiode van minimaal vijf jaar.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ATTACKER IN DAYS · PATCH IN WEEKS · END-OF-LIFE NEVER</span><span class="nl">AANVALLER IN DAGEN · PATCH IN WEKEN · EINDE LEVENSDUUR NOOIT</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: EMERGENCY LANE FOR EDGE PATCHES + REPLACE BEFORE END-OF-LIFE</span><span class="nl">AANBEVOLEN: SPOEDPROCEDURE VOOR RANDPATCHES + VERVANG VÓÓR EINDE LEVENSDUUR</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI shortens the gap between a published advisory and a working exploit. Mandiant reports that the time to exploit keeps falling, with edge devices hit first.</span><span class="nl">AI verkort de tijd tussen een gepubliceerd advies en een werkende exploit. Mandiant meldt dat de tijd tot misbruik blijft dalen, met randapparatuur als eerste doelwit.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An AI assistant that summarises advisories for the team can rate one as "low" that is actively exploited. Keep a human and the vendor's own severity in the loop.</span><span class="nl">Een AI-assistent die adviezen voor het team samenvat, kan er een als "laag" beoordelen dat actief wordt misbruikt. Houd een mens en de ernstscore van de fabrikant zelf in de lus.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Advisory to ticket in an hour</span><span class="nl">Van advies naar ticket in een uur</span></b><p><span class="en">Tools match new vendor advisories to your inventory and open the change ticket automatically. The decision stays with people; the waiting disappears.</span><span class="nl">Tools koppelen nieuwe adviezen van fabrikanten aan uw inventaris en openen automatisch het wijzigingsticket. De beslissing blijft bij mensen; het wachten verdwijnt.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">The admin page on the internet, <em>the VPN without MFA.</em></span>
+      <span class="nl">De beheerpagina aan het internet, <em>de VPN zonder MFA.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">exposure / management interface, multi-factor authentication, logging</span>
+      <span class="nl">blootstelling / beheerinterface, multifactorauthenticatie, logging</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">TWO DOORS THE INTERNET CAN TRY</span><span class="nl">TWEE DEUREN DIE HET INTERNET KAN PROBEREN</span></div>
+      <div class="q">🕵️</div>
+      <div class="bx a"><b><span class="en">Admin page</span><span class="nl">Beheerpagina</span></b><span class="en">reachable from anywhere</span><span class="nl">overal bereikbaar</span></div>
+      <div class="bx b"><b><span class="en">VPN login</span><span class="nl">VPN-inlog</span></b><span class="en">password only · no MFA</span><span class="nl">alleen wachtwoord · geen MFA</span></div>
+      <div class="banner"><span class="en">BOTH ARE SETTINGS · NEITHER IS A PURCHASE</span><span class="nl">BEIDE ZIJN INSTELLINGEN · GEEN VAN BEIDE EEN AANKOOP</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Two settings decide how hard the box is to take. The first is the management interface, the page where the box is configured. It is often reachable from the whole internet, so one leaked password or one flaw in that page hands over the device. In June 2023 <abbr class="tip" tabindex="0" data-tip="Cybersecurity and Infrastructure Security Agency: the US government's cybersecurity agency.">CISA</abbr> ordered US federal agencies to take such interfaces off the internet within 14 days, and the Five Eyes guidance says the same for everyone. The second is the VPN login itself. A VPN account with only a password is one password guess away from the inside of your network, and that includes supplier accounts and service accounts.</p>
+      <p class="en"><strong>Business impact:</strong> both are configuration choices, not purchases. The admin page is reachable only from an internal management network. Every remote login uses <abbr class="tip" tabindex="0" data-tip="Multi-factor authentication: a second proof, such as an app or a key, on top of the password.">MFA</abbr>, phishing-resistant where possible. And the box sends its logs to your monitoring, because it cannot run your endpoint protection and an intruder on the box can delete what stays there.</p>
+      <p class="nl">Twee instellingen bepalen hoe moeilijk het apparaat te veroveren is. De eerste is de beheerinterface, de pagina waarop het apparaat wordt ingesteld. Die is vaak vanaf het hele internet bereikbaar, zodat één uitgelekt wachtwoord of één lek in die pagina het apparaat overdraagt. In juni 2023 gaf <abbr class="tip" tabindex="0" data-tip="Cybersecurity and Infrastructure Security Agency: de cybersecuritydienst van de Amerikaanse overheid.">CISA</abbr> Amerikaanse overheidsdiensten de opdracht zulke interfaces binnen 14 dagen van het internet te halen, en de Five Eyes-richtlijn zegt hetzelfde voor iedereen. De tweede is de VPN-inlog zelf. Een VPN-account met alleen een wachtwoord staat één geraden wachtwoord af van de binnenkant van uw netwerk, en dat geldt ook voor leveranciersaccounts en serviceaccounts.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> beide zijn configuratiekeuzes, geen aankopen. De beheerpagina is alleen bereikbaar vanaf een intern beheernetwerk. Elke inlog op afstand gebruikt <abbr class="tip" tabindex="0" data-tip="Multifactorauthenticatie: een tweede bewijs, zoals een app of een sleutel, naast het wachtwoord.">MFA</abbr>, waar mogelijk phishingbestendig. En het apparaat stuurt zijn logs naar uw monitoring, omdat het uw endpointbeveiliging niet kan draaien en een indringer op het apparaat kan wissen wat daar blijft.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ONE PASSWORD = THE DEVICE, OR THE NETWORK</span><span class="nl">ÉÉN WACHTWOORD = HET APPARAAT, OF HET NETWERK</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ADMIN PAGE OFF THE INTERNET + MFA ON EVERY REMOTE LOGIN</span><span class="nl">AANBEVOLEN: BEHEERPAGINA VAN HET INTERNET + MFA OP ELKE INLOG OP AFSTAND</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Password guessing against VPN portals runs at scale, with AI picking likely passwords per company and per vendor's login format.</span><span class="nl">Wachtwoorden raden op VPN-portalen gebeurt op grote schaal, waarbij AI per bedrijf en per inlogformaat van de fabrikant de meest waarschijnlijke wachtwoorden kiest.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">A cloned voice calls the helpdesk to reset an admin's MFA. Mandiant reports voice phishing as the second most common way in for 2025 (11%).</span><span class="nl">Een gekloonde stem belt de helpdesk om de MFA van een beheerder te resetten. Mandiant meldt telefonische phishing als op één na meest voorkomende ingang in 2025 (11%).</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Spot the odd login</span><span class="nl">Zie de vreemde inlog</span></b><p><span class="en">Detection models flag a VPN login from a new country followed by admin activity within minutes. That only works if the box's logs leave the box.</span><span class="nl">Detectiemodellen signaleren een VPN-inlog uit een nieuw land, gevolgd door beheeractiviteit binnen enkele minuten. Dat werkt alleen als de logs het apparaat verlaten.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">From "VPN in, everything open" <em>to one door per application.</em></span>
+      <span class="nl">Van "VPN erin, alles open" <em>naar één deur per applicatie.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">zero trust / access per application, not per network</span>
+      <span class="nl">zero trust / toegang per applicatie, niet per netwerk</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">WHAT ONE LOGIN OPENS</span><span class="nl">WAT ÉÉN INLOG OPENT</span></div>
+      <div class="q">🕵️</div>
+      <div class="bx a"><b>VPN</b><span class="en">one login · the whole network</span><span class="nl">één inlog · het hele netwerk</span></div>
+      <div class="bx b"><b>Zero trust</b><span class="en">one login · one application · device checked</span><span class="nl">één inlog · één applicatie · apparaat gecontroleerd</span></div>
+      <div class="banner"><span class="en">A STOLEN VPN LOGIN REACHES EVERYTHING · A STOLEN APP LOGIN REACHES ONE APP</span><span class="nl">EEN GESTOLEN VPN-INLOG BEREIKT ALLES · EEN GESTOLEN APP-INLOG BEREIKT ÉÉN APP</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A classic VPN gives a connected laptop a seat inside the network. Whoever holds that login, or breaks the box, is inside. Zero trust turns this around: access is granted per application, per user and per device check, and being "on the network" means nothing by itself. <abbr class="tip" tabindex="0" data-tip="National Institute of Standards and Technology: the US standards body; SP 800-207 (2020) is its zero-trust reference, guidance not law.">NIST</abbr> describes the model in SP 800-207 (guidance, 2020). The practical gain is twofold: fewer boxes facing the internet, and a stolen login that reaches one application instead of everything. It is a programme, not a product. The VPN box often stays for years for the legacy systems that cannot move.</p>
+      <p class="en"><strong>Business impact:</strong> the question for the board is not "do we buy zero trust" but "which applications still need the whole network opened, and by when do we shrink that list". A short list with dates is a reasonable ask of IT. <span class="disclaimer">Suggested timeline, not a legal deadline.</span></p>
+      <p class="nl">Een klassieke VPN geeft een verbonden laptop een plek binnen het netwerk. Wie die inlog heeft, of het apparaat kraakt, is binnen. Zero trust draait dit om: toegang wordt per applicatie, per gebruiker en per apparaatcontrole verleend, en "op het netwerk zitten" betekent op zichzelf niets. Het <abbr class="tip" tabindex="0" data-tip="National Institute of Standards and Technology: de Amerikaanse standaardeninstantie; SP 800-207 (2020) is haar zero-trustreferentie, richtlijn en geen wet.">NIST</abbr> beschrijft het model in SP 800-207 (richtlijn, 2020). De praktische winst is tweeledig: minder apparaten aan het internet, en een gestolen inlog die één applicatie bereikt in plaats van alles. Het is een programma, geen product. De VPN-doos blijft vaak nog jaren staan voor de oude systemen die niet mee kunnen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de vraag voor de directie is niet "kopen we zero trust" maar "welke applicaties hebben nog het hele netwerk nodig, en wanneer krimpt die lijst". Een korte lijst met data is een redelijke vraag aan IT. <span class="disclaimer">Voorgestelde tijdlijn, geen wettelijke deadline.</span></p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ONE LOGIN OPENS THE WHOLE NETWORK</span><span class="nl">ÉÉN INLOG OPENT HET HELE NETWERK</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: LIST THE APPS BEHIND THE VPN, SHRINK IT WITH DATES</span><span class="nl">AANBEVOLEN: LIJST DE APPS ACHTER DE VPN, KRIMP DIE MET DATA</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Once inside through the VPN, AI tooling maps a flat network and finds the valuable systems in minutes. Per-application access leaves far less to map.</span><span class="nl">Eenmaal binnen via de VPN brengt AI-gereedschap een plat netwerk in minuten in kaart en vindt het de waardevolle systemen. Toegang per applicatie laat veel minder over om in kaart te brengen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI agents and integrations get handed VPN-style network access because it is quick. They deserve the same per-application door as a person.</span><span class="nl">AI-agents en koppelingen krijgen VPN-achtige netwerktoegang omdat dat snel is. Zij verdienen dezelfde deur per applicatie als een mens.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Risk per request</span><span class="nl">Risico per verzoek</span></b><p><span class="en">Device health, location and behaviour, scored continuously, feed each access decision. That scoring is where AI earns its place in zero trust.</span><span class="nl">Apparaatstatus, locatie en gedrag, doorlopend gescoord, voeden elke toegangsbeslissing. In die scoring verdient AI zijn plek binnen zero trust.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>closes the door.</em></span>
+      <span class="nl">Wat <em>de deur sluit.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">most of this is a list, a setting or a date, not a new product</span>
+      <span class="nl">het meeste is een lijst, een instelling of een datum, geen nieuw product</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">INVENTORY</span><span class="nl">INVENTARIS</span></span>
+        <span class="chip c2"><span class="en">EMERGENCY PATCH</span><span class="nl">SPOEDPATCH</span></span>
+        <span class="chip c3"><span class="en">ADMIN OFF INTERNET</span><span class="nl">BEHEER VAN INTERNET</span></span>
+        <span class="chip c4"><span class="en">MFA</span><span class="nl">MFA</span></span>
+        <span class="chip c5"><span class="en">PER-APP ACCESS</span><span class="nl">TOEGANG PER APP</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Addresses</th><th>In one line</th></tr>
+        <tr><td class="ctl">Edge inventory</td><td>Owner (01)</td><td>Every internet-facing device, with owner, model, version and the vendor's end-of-support date. Reviewed every quarter.</td></tr>
+        <tr><td class="ctl">Named owner</td><td>Owner (01)</td><td>One person accountable per box for patching and configuration. The supplier that installed it is not the owner.</td></tr>
+        <tr><td class="ctl">Emergency patch lane</td><td>Patching (02)</td><td>Edge advisories skip the monthly cycle: assess the same day, patch within days, with a maintenance window agreed in advance.</td></tr>
+        <tr><td class="ctl">Compromise check</td><td>Patching (02)</td><td>For an actively exploited flaw, assume the box was hit: run the vendor's or NCSC's checks, reset sessions and credentials.</td></tr>
+        <tr><td class="ctl">Replace before end-of-life</td><td>Patching (02)</td><td>A date in the budget. A device past vendor support leaves the internet, whatever it still does internally.</td></tr>
+        <tr><td class="ctl">Admin page off the internet</td><td>Exposure (03)</td><td>Management reachable only from an internal management network or through a separate, MFA-protected access gateway.</td></tr>
+        <tr><td class="ctl">MFA on every remote login</td><td>Exposure (03)</td><td>Phishing-resistant where possible. Includes suppliers and service accounts. No shared VPN accounts.</td></tr>
+        <tr><td class="ctl">Logs off the box</td><td>Exposure (03)</td><td>Central logging with alerts on admin logins and configuration changes. The box cannot run your endpoint protection.</td></tr>
+        <tr><td class="ctl">Per-application access</td><td>Zero trust (04)</td><td>New remote access per application with a device check. The network-wide VPN shrinks to a dated list of legacy systems.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Pakt aan</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Inventaris van de rand</td><td>Eigenaar (01)</td><td>Elk apparaat aan het internet, met eigenaar, model, versie en de einddatum van ondersteuning door de fabrikant. Elk kwartaal nagelopen.</td></tr>
+        <tr><td class="ctl">Eigenaar met naam</td><td>Eigenaar (01)</td><td>Eén persoon per apparaat die verantwoordelijk is voor patchen en configuratie. De leverancier die het plaatste, is niet de eigenaar.</td></tr>
+        <tr><td class="ctl">Spoedprocedure voor patches</td><td>Patchen (02)</td><td>Adviezen over randapparatuur slaan de maandcyclus over: dezelfde dag beoordelen, binnen dagen patchen, met een vooraf afgesproken onderhoudsvenster.</td></tr>
+        <tr><td class="ctl">Controle op compromittatie</td><td>Patchen (02)</td><td>Bij een actief misbruikt lek: ga ervan uit dat het apparaat is geraakt, draai de controles van de fabrikant of het NCSC, reset sessies en wachtwoorden.</td></tr>
+        <tr><td class="ctl">Vervangen vóór einde levensduur</td><td>Patchen (02)</td><td>Een datum in de begroting. Een apparaat zonder ondersteuning van de fabrikant gaat van het internet af, wat het intern ook nog doet.</td></tr>
+        <tr><td class="ctl">Beheerpagina van het internet</td><td>Blootstelling (03)</td><td>Beheer alleen bereikbaar vanaf een intern beheernetwerk of via een aparte, met MFA beveiligde toegangspoort.</td></tr>
+        <tr><td class="ctl">MFA op elke inlog op afstand</td><td>Blootstelling (03)</td><td>Waar mogelijk phishingbestendig. Inclusief leveranciers en serviceaccounts. Geen gedeelde VPN-accounts.</td></tr>
+        <tr><td class="ctl">Logs van het apparaat af</td><td>Blootstelling (03)</td><td>Centrale logging met meldingen bij beheerinlogs en configuratiewijzigingen. Het apparaat kan uw endpointbeveiliging niet draaien.</td></tr>
+        <tr><td class="ctl">Toegang per applicatie</td><td>Zero trust (04)</td><td>Nieuwe toegang op afstand per applicatie, met apparaatcontrole. De netwerkbrede VPN krimpt tot een lijst oude systemen met data.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> "do we have a VPN box and is it patched" is a fair question, and we suggest three sharper ones. Do we have a list of every device facing the internet, with a name on each? How many days pass between a vendor advisory and our patch, and which boxes are past vendor support? Can anyone reach our network with only a password? Zero trust is the direction most guidance points to; the pace, and which legacy systems keep the VPN for now, is your call.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> "hebben we een VPN-doos en is hij gepatcht" is een goede vraag, en wij stellen drie scherpere voor. Hebben we een lijst van elk apparaat aan het internet, met op elk een naam? Hoeveel dagen zitten er tussen een advies van de fabrikant en onze patch, en welke apparaten zijn voorbij de ondersteuning van de fabrikant? Kan iemand ons netwerk bereiken met alleen een wachtwoord? Zero trust is de richting waar de meeste richtlijnen naar wijzen; het tempo, en welke oude systemen voorlopig de VPN houden, is uw keuze.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">The box is on the internet by design, and scanned by everyone. Exploiting a vulnerability is the most common way in, in both the Mandiant and the Verizon 2026 reports, and edge devices are a favourite target.</span><span class="nl">Het apparaat staat per definitie aan het internet en wordt door iedereen gescand. Misbruik van een kwetsbaarheid is de meest voorkomende ingang, in zowel het Mandiant- als het Verizon-rapport over 2026, en randapparatuur is een favoriet doelwit.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">A breached edge device is a foothold inside the network. It is how ransomware and data theft often start, and it can become a notifiable incident.</span><span class="nl">Een gekraakt randapparaat is een voet tussen de deur van het netwerk. Zo beginnen ransomware en datadiefstal vaak, en het kan een meldplichtig incident worden.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">Zero-days remain. With an owner, fast patching, the admin page off the internet, MFA and logs off the box, a hit is rarer, shorter and reaches less.</span><span class="nl">Zero-days blijven bestaan. Met een eigenaar, snel patchen, de beheerpagina van het internet, MFA en logs van het apparaat af is een treffer zeldzamer, korter en bereikt hij minder.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CISO</span><span class="nl">CISO</span></span><p><span class="en">The <abbr class="tip" tabindex="0" data-tip="Chief information security officer: the executive responsible for information security.">CISO</abbr> owns the policy; the head of infrastructure owns each box by name. If that second name is missing, that is the finding.</span><span class="nl">De <abbr class="tip" tabindex="0" data-tip="Chief information security officer: de bestuurder die verantwoordelijk is voor informatiebeveiliging.">CISO</abbr> is eigenaar van het beleid; het hoofd infrastructuur is bij naam eigenaar van elk apparaat. Ontbreekt die tweede naam, dan is dat de bevinding.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Internet-facing devices without a named owner · days from a critical edge advisory to patch · devices past vendor support · % of remote logins with MFA.</span><span class="nl">Apparaten aan het internet zonder eigenaar met naam · dagen tussen een kritiek advies over randapparatuur en de patch · apparaten voorbij de ondersteuning van de fabrikant · % inlogs op afstand met MFA.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“An unpatched, end-of-life or exposed internet-facing appliance (VPN, firewall, gateway) is exploited and gives an attacker a foothold in the internal network, which can lead to ransomware, data theft and a notifiable incident.”</span><span class="nl">“Een ongepatcht, verouderd of blootgesteld apparaat aan het internet (VPN, firewall, gateway) wordt misbruikt en geeft een aanvaller een voet tussen de deur van het interne netwerk, wat kan leiden tot ransomware, datadiefstal en een meldplichtig incident.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU directive on cybersecurity for essential and important entities; in the Netherlands the Cyberbeveiligingswet.">NIS2</abbr> requires security in the acquisition and maintenance of systems, including vulnerability handling (Art. 21(2)(e)), asset management (Art. 21(2)(i)) and <abbr class="tip" tabindex="0" data-tip="Multi-factor authentication: a second proof, such as an app or a key, on top of the password.">MFA</abbr> where appropriate (Art. 21(2)(j)). In the Netherlands this runs through the Cyberbeveiligingswet, in force since 15 August 2026.</td><td>Ask which of their devices face the internet for your service, how many days they take to patch an actively exploited flaw, and whether their remote access uses MFA.</td><td>A breach through an edge device can count as a significant incident if it meets the thresholds. Early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month.</td></tr>
+        <tr><td class="ctl">DORA</td><td>The <abbr class="tip" tabindex="0" data-tip="Regulatory technical standards: detailed EU rules under DORA, here Delegated Regulation (EU) 2024/1774.">RTS</abbr> on ICT risk require an asset inventory that records the end dates of vendor support (Art. 4) and vulnerability and patch management with set timeframes (Art. 10). DORA has applied since 17 January 2025.</td><td>The gateway in front of your service belongs to an <abbr class="tip" tabindex="0" data-tip="Information and communication technology: in DORA, any digital or data service a financial entity relies on.">ICT</abbr> third party in your register. Ask for its patch timelines and end-of-support dates.</td><td>Classify promptly. Initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterion CC6.6 covers protecting against threats from outside the system boundary, which is where the firewall and VPN live. CC7.1 covers detecting new vulnerabilities and configuration changes.</td><td>Check that boundary devices are in scope and tested, not only described. Check whether the hosting provider underneath is carved out of the report.</td><td>An exploited or unpatched boundary device in scope will likely appear as an exception in the next report.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>The focus is financial reporting. The firewall and VPN appear only as general IT controls where they protect the financial process.</td><td>The report rarely names device versions or end-of-support dates. Ask for them in the contract instead.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor cyberbeveiliging van essentiële en belangrijke entiteiten; in Nederland de Cyberbeveiligingswet.">NIS2</abbr> vraagt beveiliging bij de aanschaf en het onderhoud van systemen, inclusief de omgang met kwetsbaarheden (art. 21 lid 2 onder e), beheer van bedrijfsmiddelen (art. 21 lid 2 onder i) en <abbr class="tip" tabindex="0" data-tip="Multifactorauthenticatie: een tweede bewijs, zoals een app of een sleutel, naast het wachtwoord.">MFA</abbr> waar passend (art. 21 lid 2 onder j). In Nederland loopt dit via de Cyberbeveiligingswet, van kracht sinds 15 augustus 2026.</td><td>Vraag welke van hun apparaten voor uw dienst aan het internet staan, hoeveel dagen zij nodig hebben om een actief misbruikt lek te patchen, en of hun toegang op afstand MFA gebruikt.</td><td>Een inbraak via een randapparaat kan als significant incident gelden als het de drempels haalt. Vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindverslag binnen een maand.</td></tr>
+        <tr><td class="ctl">DORA</td><td>De <abbr class="tip" tabindex="0" data-tip="Technische reguleringsnormen: gedetailleerde EU-regels onder DORA, hier Gedelegeerde Verordening (EU) 2024/1774.">RTS</abbr> over ICT-risico vragen een inventaris van bedrijfsmiddelen met de einddata van ondersteuning door de leverancier (art. 4) en kwetsbaarheids- en patchbeheer met vaste termijnen (art. 10). DORA geldt sinds 17 januari 2025.</td><td>De gateway vóór uw dienst hoort bij een <abbr class="tip" tabindex="0" data-tip="Informatie- en communicatietechnologie: onder DORA elke digitale of datadienst waarop een financiële instelling leunt.">ICT</abbr>-derde in uw register. Vraag naar zijn patchtermijnen en einddata van ondersteuning.</td><td>Classificeer snel. Eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterium CC6.6 gaat over bescherming tegen dreigingen van buiten de systeemgrens, en daar staan de firewall en de VPN. CC7.1 gaat over het ontdekken van nieuwe kwetsbaarheden en configuratiewijzigingen.</td><td>Controleer of de apparaten op de grens binnen scope vallen en zijn getest, niet alleen beschreven. Controleer of de onderliggende hostingleverancier buiten het rapport is gelaten.</td><td>Een misbruikt of ongepatcht grensapparaat binnen scope komt waarschijnlijk als afwijking in het volgende rapport.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>De focus ligt op de financiële verslaggeving. De firewall en de VPN komen alleen voor als algemene IT-beheersmaatregelen waar ze het financiële proces beschermen.</td><td>Het rapport noemt zelden apparaatversies of einddata van ondersteuning. Vraag daar in het contract naar.</td><td>ISAE 3402 schept geen meldplicht aan de auditors van gebruikers. Verwacht een afwijking in het volgende rapport en vraag in het contract om tussentijdse melding.</td></tr>
+      </table>
+      <p class="sources en">Checked against: <a href="https://cloud.google.com/security/resources/m-trends">Mandiant M-Trends 2026</a> (2026), <a href="https://www.verizon.com/business/resources/reports/dbir/">Verizon DBIR 2026</a> (2026), <a href="https://www.ncsc.nl/alerts/casus-citrix-kwetsbaarheid">NCSC-NL Citrix case</a> (13 Aug 2025), <a href="https://www.cyber.gc.ca/en/guidance/security-considerations-edge-devices-itsm80101">Five Eyes edge-device guidance ITSM.80.101</a> (Feb 2025), <a href="https://www.cisa.gov/news-events/directives/binding-operational-directive-23-02">CISA BOD 23-02</a> (June 2023), <a href="https://csrc.nist.gov/pubs/sp/800/207/final">NIST SP 800-207</a> (Aug 2020), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 21 and 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 19 and <a href="https://eur-lex.europa.eu/eli/reg_del/2024/1774/oj">RTS (EU) 2024/1774</a> Art. 4 and 10, <a href="https://eur-lex.europa.eu/eli/reg/2024/2847/oj">CRA</a> Art. 13 and 71, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL</a> (Aug 2026), AICPA Trust Services Criteria CC6.6 and CC7.1 (2017, points of focus 2022) · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://cloud.google.com/security/resources/m-trends">Mandiant M-Trends 2026</a> (2026), <a href="https://www.verizon.com/business/resources/reports/dbir/">Verizon DBIR 2026</a> (2026), <a href="https://www.ncsc.nl/alerts/casus-citrix-kwetsbaarheid">NCSC casus Citrix</a> (13 aug 2025), <a href="https://www.cyber.gc.ca/en/guidance/security-considerations-edge-devices-itsm80101">Five Eyes-richtlijn randapparatuur ITSM.80.101</a> (feb 2025), <a href="https://www.cisa.gov/news-events/directives/binding-operational-directive-23-02">CISA BOD 23-02</a> (juni 2023), <a href="https://csrc.nist.gov/pubs/sp/800/207/final">NIST SP 800-207</a> (aug 2020), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 21 en 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 19 en <a href="https://eur-lex.europa.eu/eli/reg_del/2024/1774/oj">RTS (EU) 2024/1774</a> art. 4 en 10, <a href="https://eur-lex.europa.eu/eli/reg/2024/2847/oj">CRA</a> art. 13 en 71, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC</a> (aug 2026), AICPA Trust Services Criteria CC6.6 en CC7.1 (2017, aandachtspunten 2022) · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../patching/"><span class="en">The unpatched server</span><span class="nl">De ongepatchte server</span></a> ·
+  <a href="../blast-radius/"><span class="en">Decrease the blast radius</span><span class="nl">Beperk de reikwijdte van een inbreuk</span></a> ·
+  <a href="../identity/"><span class="en">Passwords and identity</span><span class="nl">Wachtwoorden en identiteit</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=edge-devices&amp;title=Missing%3A%20edge-devices"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=edge-devices&amp;title=Correction%3A%20edge-devices"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">EDGE DEVICES BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">RANDAPPARATUUR BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>
