@@ -70,6 +70,8 @@ function staticChecks(p, html) {
     for (const need of ['id="risk"', 'href="#risk"', 'href="../"']) if (!html.includes(need)) fail(p.slug, `required part missing: ${need}`);
     // advisory tone: no imperative FIX:/OPLOSSING: pills
     const imp = html.match(/>(FIX|OPLOSSING):/g); if (imp) fail(p.slug, `imperative pill wording (${imp.length}× FIX:/OPLOSSING:) — use SUGGESTED:/AANBEVOLEN:`);
+    // ...and every briefing suggests at least one control (CONTROL:/CONTROLE: and the like slipped past the FIX: check)
+    if (!/>(SUGGESTED|AANBEVOLEN):/.test(html)) fail(p.slug, "no SUGGESTED:/AANBEVOLEN: pill — every briefing suggests at least one control");
     // every tooltip has text, and stays short
     for (const m of html.matchAll(/<abbr class="tip"[^>]*data-tip="([^"]*)"/g)) {
       if (!m[1].trim()) fail(p.slug, "empty data-tip");
