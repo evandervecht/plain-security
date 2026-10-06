@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://plain-security.fyi/sitemap.xml
