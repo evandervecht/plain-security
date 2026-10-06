@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Could we restore? // Plain Security</title>
+<meta name="description" content="If ransomware hits tonight, how long until we are back? Recovery targets in plain words, the copy an attacker cannot delete, the restore nobody tested, and the cloud data nobody backs up.">
+<link rel="canonical" href="https://plain-security.fyi/backups-and-restore/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Could we restore? // Plain Security">
+<meta property="og:description" content="If ransomware hits tonight, how long until we are back? Recovery targets in plain words, the copy an attacker cannot delete, the restore nobody tested, and the cloud data nobody backs up.">
+<meta property="og:url" content="https://plain-security.fyi/backups-and-restore/">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="nl_NL">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   BACKUPS AND RESTORE // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 7s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+@keyframes expose{0%,55%{opacity:0}62%,90%{opacity:1}96%,100%{opacity:0}}
+
+/* --- scene 1 : one incident, two clocks (RPO and RTO) --- */
+.s1 .tl{position:absolute;left:40px;right:40px;top:150px;height:2px;background:var(--line)}
+.s1 .mk{position:absolute;top:84px;width:90px;margin-left:-45px;text-align:center;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:1.3;z-index:3}
+.s1 .mk b{display:block;font-size:22px;margin-bottom:4px}
+.s1 .mk.a{left:12%}.s1 .mk.b{left:44%}.s1 .mk.c{left:88%}
+.s1 .sp{position:absolute;top:149px;height:4px;transform-origin:left;transform:scaleX(0)}
+.s1 .sp.rpo{left:12%;width:32%;background:var(--warn);animation:grow 7s ease-in-out infinite}
+.s1 .sp.rto{left:44%;width:44%;background:var(--bad);animation:grow 7s ease-in-out infinite 1.2s}
+.s1 .lb{position:absolute;top:168px;font-size:10px;letter-spacing:.14em;font-weight:700;text-transform:uppercase;text-align:center;opacity:0;animation:show7 7s ease-in-out infinite}
+.s1 .lb.rpo{left:12%;width:32%;color:var(--warn)}
+.s1 .lb.rto{left:44%;width:44%;color:var(--bad-soft);animation-delay:1.2s}
+@keyframes grow{0%,10%{transform:scaleX(0)}40%,86%{transform:scaleX(1)}96%,100%{transform:scaleX(0)}}
+@keyframes show7{0%,36%{opacity:0}46%,86%{opacity:1}96%,100%{opacity:0}}
+.s1 .banner{animation-duration:7s}
+
+/* --- scene 2 : three copies, one survives --- */
+.s2 .bx{position:absolute;top:84px;width:27%;height:120px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 10px}
+.s2 .bx b{display:block;font-family:var(--sans);font-size:16px;letter-spacing:0;color:var(--white);text-transform:none;line-height:1.2}
+.s2 .bx.a{left:5%}
+.s2 .bx.b{left:36.5%}
+.s2 .bx.c{right:5%;border-color:rgba(55,211,155,.5)}
+.s2 .bx.a::after,.s2 .bx.b::after{content:"";position:absolute;inset:0;background:rgba(255,93,115,.3);border:1px solid var(--bad);opacity:0;animation:expose 7s ease-in-out infinite}
+.s2 .bx.b::after{animation-delay:1s}
+.s2 .q{position:absolute;top:34px;left:0;font-size:24px;z-index:3;animation:sweep2 7s ease-in-out infinite}
+@keyframes sweep2{0%{left:4%;opacity:0}8%{opacity:1}50%{left:calc(63% - 24px);opacity:1}62%,100%{left:calc(63% - 24px);opacity:0}}
+.s2 .banner{animation-duration:7s}
+
+/* --- scene 3 : seven green nights, one red day --- */
+.s3 .log{position:absolute;left:40px;top:60px;width:44%;display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.s3 .d{height:36px;display:grid;place-items:center;font-size:15px;color:#8ff0cd;background:rgba(55,211,155,.07);border:1px solid rgba(55,211,155,.4);opacity:0;animation:tick 8s ease-in-out infinite}
+.s3 .d:nth-child(2){animation-delay:.4s}.s3 .d:nth-child(3){animation-delay:.8s}.s3 .d:nth-child(4){animation-delay:1.2s}
+.s3 .d:nth-child(5){animation-delay:1.6s}.s3 .d:nth-child(6){animation-delay:2s}.s3 .d:nth-child(7){animation-delay:2.4s}
+.s3 .cap{position:absolute;left:40px;top:106px;width:44%;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.s3 .res{position:absolute;right:40px;top:60px;width:40%;height:120px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 10px}
+.s3 .res b{display:block;font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--white);text-transform:none}
+.s3 .f{position:absolute;inset:0;display:grid;place-items:center;background:#3a1430;border:1px solid var(--bad);color:var(--bad-soft);font-weight:700;font-size:11px;letter-spacing:.16em;padding:0 10px;line-height:1.5;opacity:0;animation:fail 8s ease-in-out infinite}
+@keyframes tick{0%,8%{opacity:0}16%,92%{opacity:1}100%{opacity:0}}
+@keyframes fail{0%,56%{opacity:0}64%,92%{opacity:1}100%{opacity:0}}
+.s3 .banner{animation-duration:8s}
+
+/* --- scene 4 : what the provider keeps after a delete --- */
+.s4 .tile{position:absolute;top:66px;width:27%;height:136px;display:grid;place-items:center;align-content:center;gap:4px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;padding:0 8px;line-height:1.35}
+.s4 .tile b{display:block;font-size:24px}
+.s4 .tile i{display:block;font-style:normal;font-family:var(--sans);font-weight:800;font-size:18px;color:var(--warn);letter-spacing:0;text-transform:none;line-height:1.2}
+.s4 .tile.a{left:5%}.s4 .tile.b{left:36.5%}.s4 .tile.c{right:5%}
+.s4 .tile::after{content:"";position:absolute;inset:0;background:rgba(255,93,115,.3);border:1px solid var(--bad);opacity:0;animation:expose 7s ease-in-out infinite}
+.s4 .tile.b::after{animation-delay:.6s}.s4 .tile.c::after{animation-delay:1.2s}
+.s4 .banner{animation-duration:7s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .s1 .sp{transform:scaleX(1)}.s1 .lb{opacity:1}
+  .s2 .bx.a::after,.s2 .bx.b::after{opacity:1}.s2 .q{display:none}
+  .s3 .d{opacity:1}.s3 .f{opacity:1}
+  .s4 .tile::after{opacity:1}
+  .banner{opacity:1}.shield .tick{stroke-dashoffset:0}
+}
+@media (max-width:820px){
+  .s1 .tl{left:12px;right:12px}
+  .s1 .mk{width:70px;margin-left:-35px;font-size:7.5px;letter-spacing:.04em}
+  .s1 .lb{font-size:8px;letter-spacing:.04em}
+  .s2 .bx,.s4 .tile{width:30%;font-size:8px;letter-spacing:.04em;padding:0 6px}
+  .s2 .bx.a,.s4 .tile.a{left:3%}.s2 .bx.b,.s4 .tile.b{left:35%}.s2 .bx.c,.s4 .tile.c{right:3%}
+  .s2 .bx b{font-size:12px}.s4 .tile i{font-size:14px}.s4 .tile b{font-size:18px}
+  .s3 .log{left:12px;width:calc(100% - 24px);top:44px}
+  .s3 .cap{left:12px;top:88px;width:auto}
+  .s3 .res{left:12px;right:12px;width:auto;top:112px;height:96px;font-size:8.5px;letter-spacing:.06em}
+  .s3 .res b{font-size:14px}.s3 .f{font-size:9.5px;letter-spacing:.08em}
+  .stage .banner{white-space:normal;text-align:center;width:calc(100% - 24px);line-height:1.4}
+}
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> <span class="en">BACKUPS</span><span class="nl">BACK-UPS</span></a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">TARGETS</span><span class="nl">DOELEN</span></a>
+      <a href="#r2"><span class="en">COPIES</span><span class="nl">KOPIEËN</span></a>
+      <a href="#r3"><span class="en">RESTORE</span><span class="nl">HERSTEL</span></a>
+      <a href="#r4">SAAS</a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Could we restore? <em>Backups, and the restore nobody tested.</em></span>
+      <span class="nl">Kunnen we herstellen? <em>Back-ups, en de hersteltest die niemand deed.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">If ransomware hits tonight, two numbers decide the next weeks: how much work is lost, and how long you are down. Both were set by decisions made long before the attack. Four questions show where you stand: do we know our recovery targets, can an attacker reach the backups, has anyone ever restored everything, and who backs up the data in our cloud applications.</span>
+      <span class="nl">Als ransomware vannacht toeslaat, bepalen twee getallen de komende weken: hoeveel werk verloren gaat, en hoe lang u stilstaat. Beide zijn vastgelegd door beslissingen van lang vóór de aanval. Vier vragen laten zien waar u staat: kennen we onze hersteldoelen, kan een aanvaller bij de back-ups, heeft iemand ooit alles teruggezet, en wie maakt back-ups van de data in onze clouddiensten.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FOUR</span><span class="nl">BEKIJK DE VIER</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT GETS YOU BACK</span><span class="nl">WAT U WEER OP GANG BRENGT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">Two numbers <em>the board should know by heart.</em></span>
+      <span class="nl">Twee getallen <em>die de directie uit het hoofd zou moeten kennen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">recovery targets / how much you lose, how long you are down</span>
+      <span class="nl">hersteldoelen / hoeveel u verliest, hoe lang u stilstaat</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">ONE INCIDENT, TWO CLOCKS</span><span class="nl">EÉN INCIDENT, TWEE KLOKKEN</span></div>
+      <div class="tl"></div>
+      <div class="mk a"><b>💾</b><span class="en">Last good backup</span><span class="nl">Laatste goede back-up</span></div>
+      <div class="mk b"><b>⚡</b><span class="en">Incident</span><span class="nl">Incident</span></div>
+      <div class="mk c"><b>✅</b><span class="en">Back at work</span><span class="nl">Weer aan het werk</span></div>
+      <div class="sp rpo"></div><div class="sp rto"></div>
+      <div class="lb rpo"><span class="en">RPO · WORK LOST</span><span class="nl">RPO · VERLOREN WERK</span></div>
+      <div class="lb rto"><span class="en">RTO · TIME DOWN</span><span class="nl">RTO · STILSTAND</span></div>
+      <div class="banner"><span class="en">NOBODY AGREED EITHER NUMBER · IT FOUND OUT ON THE DAY</span><span class="nl">NIEMAND SPRAK EEN GETAL AF · IT ONTDEKTE HET OP DE DAG ZELF</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Every recovery has two measures. The <abbr class="tip" tabindex="0" data-tip="Recovery point objective: how old the last usable copy may be, so how much work you accept losing.">RPO</abbr> is how much work you accept losing: with a nightly backup, up to a day. The <abbr class="tip" tabindex="0" data-tip="Recovery time objective: how long a system may be down before the business is harmed.">RTO</abbr> is how long you accept being down. <abbr class="tip" tabindex="0" data-tip="National Institute of Standards and Technology: the US standards body; SP 800-34 is its contingency-planning guide, guidance not law.">NIST</abbr> defines both in SP 800-34 (guidance). In most organisations IT has set them by default, per system, from whatever the backup tool happened to do. The business has rarely said which systems need to be back in hours and which can wait a week. Sophos's State of Ransomware 2026 survey of 2,158 organisations that were hit puts the average time to full recovery at three weeks; 55% were back within one week.</p>
+      <p class="en"><strong>Business impact:</strong> a recovery target is a business decision with a price tag. Hours of downtime for the order system cost one amount; hours for the archive cost almost nothing. We suggest a short list: the ten systems that matter most, the hours or days you can miss each one, and what IT can deliver today. The gap between those two columns is the real risk, and it is the board's to accept or to fund. For financial entities <abbr class="tip" tabindex="0" data-tip="Digital Operational Resilience Act: EU regulation (EU) 2022/2554 on ICT risk for the financial sector, applying since 17 January 2025.">DORA</abbr> requires backup policies that set the scope and minimum frequency per data criticality (Art. 12). For everyone else it is sound practice.</p>
+      <p class="nl">Elk herstel heeft twee maten. De <abbr class="tip" tabindex="0" data-tip="Recovery point objective: hoe oud de laatste bruikbare kopie mag zijn, dus hoeveel werk u accepteert te verliezen.">RPO</abbr> is hoeveel werk u accepteert te verliezen: met een nachtelijke back-up tot een dag. De <abbr class="tip" tabindex="0" data-tip="Recovery time objective: hoe lang een systeem mag stilstaan voordat de organisatie schade lijdt.">RTO</abbr> is hoe lang u accepteert stil te staan. Het <abbr class="tip" tabindex="0" data-tip="National Institute of Standards and Technology: de Amerikaanse standaardeninstantie; SP 800-34 is haar gids voor continuïteitsplanning, richtlijn en geen wet.">NIST</abbr> definieert beide in SP 800-34 (richtlijn). In de meeste organisaties heeft IT ze stilzwijgend vastgesteld, per systeem, op basis van wat het back-upprogramma toevallig deed. De business heeft zelden gezegd welke systemen binnen uren terug moeten zijn en welke een week kunnen wachten. Het State of Ransomware-onderzoek 2026 van Sophos onder 2.158 getroffen organisaties zet de gemiddelde tijd tot volledig herstel op drie weken; 55% was binnen een week terug.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een hersteldoel is een bedrijfsbeslissing met een prijskaartje. Uren stilstand van het ordersysteem kosten het ene bedrag; uren stilstand van het archief kosten bijna niets. Wij stellen een korte lijst voor: de tien systemen die het meest tellen, de uren of dagen die u elk kunt missen, en wat IT vandaag kan leveren. Het gat tussen die twee kolommen is het echte risico, en het is aan de directie om dat te accepteren of te financieren. Voor financiële instellingen vereist <abbr class="tip" tabindex="0" data-tip="Digital Operational Resilience Act: EU-verordening (EU) 2022/2554 over ICT-risico in de financiële sector, van toepassing sinds 17 januari 2025.">DORA</abbr> back-upbeleid dat de reikwijdte en minimale frequentie per gegevenscategorie vastlegt (art. 12). Voor alle anderen is het gezond verstand.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NO AGREED TARGETS · IT GUESSES · THE BUSINESS IS SURPRISED</span><span class="nl">GEEN AFGESPROKEN DOELEN · IT GOKT · DE BUSINESS IS VERRAST</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: TEN SYSTEMS, TWO NUMBERS EACH, SIGNED BY THE BUSINESS</span><span class="nl">AANBEVOLEN: TIEN SYSTEMEN, TWEE GETALLEN PER SYSTEEM, GETEKEND DOOR DE BUSINESS</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Attacks now run from first login to encryption in hours, often at night or at the weekend. A weekly backup then means up to a week of work lost; the attacker picked the moment, not you.</span><span class="nl">Aanvallen lopen nu in uren van eerste inlog tot versleuteling, vaak 's nachts of in het weekend. Een wekelijkse back-up betekent dan tot een week verloren werk; de aanvaller koos het moment, niet u.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An AI assistant asked "are we backed up?" answers from the backup tool's green dashboard. It does not know which systems the business needs first, or that nobody ever set a target.</span><span class="nl">Een AI-assistent die wordt gevraagd "hebben we back-ups?" antwoordt vanuit het groene dashboard van het back-upprogramma. Hij weet niet welke systemen de business als eerste nodig heeft, of dat niemand ooit een doel heeft gesteld.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Targets from real use</span><span class="nl">Doelen uit echt gebruik</span></b><p><span class="en">Monitoring and AI tooling can rank systems by actual use and by what depends on what. That makes the first draft of the ten-system list a day's work instead of a quarter's.</span><span class="nl">Monitoring en AI-gereedschap kunnen systemen rangschikken op werkelijk gebruik en op wat van wat afhangt. Dat maakt de eerste versie van de lijst van tien een dag werk in plaats van een kwartaal.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">The attacker deletes the backup <em>before the ransom note.</em></span>
+      <span class="nl">De aanvaller wist de back-up <em>vóór het losgeldbriefje.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">copies / offline, immutable, a separate login</span>
+      <span class="nl">kopieën / offline, onveranderbaar, een aparte inlog</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">THREE COPIES, ONE SURVIVES</span><span class="nl">DRIE KOPIEËN, ÉÉN OVERLEEFT</span></div>
+      <div class="q">🕵️</div>
+      <div class="bx a"><b><span class="en">Production</span><span class="nl">Productie</span></b><span class="en">live data</span><span class="nl">actuele data</span></div>
+      <div class="bx b"><b><span class="en">Online backup</span><span class="nl">Online back-up</span></b><span class="en">same admin login</span><span class="nl">zelfde beheerdersinlog</span></div>
+      <div class="bx c"><b><span class="en">Offline or immutable copy</span><span class="nl">Offline of onveranderbare kopie</span></b><span class="en">no login can delete it</span><span class="nl">geen inlog kan hem wissen</span></div>
+      <div class="banner"><span class="en">A BACKUP THE ATTACKER CAN REACH IS NOT A BACKUP</span><span class="nl">EEN BACK-UP WAAR DE AANVALLER BIJ KAN, IS GEEN BACK-UP</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Ransomware crews look for the backup server before they encrypt anything, because a company that can restore does not pay. If the backup system accepts the same administrator login as the rest of the network, the backups go first. The old rule still holds, and <abbr class="tip" tabindex="0" data-tip="National Cyber Security Centre: the UK government's cybersecurity centre; its backup advice is guidance, not law.">NCSC UK</abbr> restates it in its guidance (updated July 2026): at least three copies, on two kinds of storage, one of them off-site. Ransomware adds one word: one copy that is offline or <abbr class="tip" tabindex="0" data-tip="Locked for a fixed period: nobody, not even an administrator, can delete or change it until the period ends.">immutable</abbr>, in an account that no stolen password reaches. Cloud backup can meet that bar, but only if deletion is blocked for a set period and the backup account is separate; NCSC UK's principles for ransomware-resistant cloud backups (November 2024) spell out what to ask a provider.</p>
+      <p class="en"><strong>Business impact:</strong> this is the control that turns ransomware from an existential event into a bad fortnight. In the Sophos 2026 survey, 66% of organisations whose data was encrypted restored from backups, and 48% paid; many did both. The questions for IT are short: which copy survives if a domain administrator account is stolen tonight, how long is it locked, and when did we last check that it is there. For financial entities DORA requires that restoring from backup uses systems physically and logically separate from the source (Art. 12(3)).</p>
+      <p class="nl">Ransomwarebendes zoeken de back-upserver voordat ze iets versleutelen, omdat een bedrijf dat kan herstellen niet betaalt. Als het back-upsysteem dezelfde beheerdersinlog accepteert als de rest van het netwerk, gaan de back-ups als eerste. De oude regel geldt nog steeds, en het <abbr class="tip" tabindex="0" data-tip="National Cyber Security Centre: het cybersecuritycentrum van de Britse overheid; zijn back-upadvies is een richtlijn, geen wet.">NCSC UK</abbr> herhaalt hem in zijn richtlijn (bijgewerkt juli 2026): minstens drie kopieën, op twee soorten opslag, waarvan één op een andere locatie. Ransomware voegt één woord toe: één kopie die offline of <abbr class="tip" tabindex="0" data-tip="Een vaste periode vergrendeld: niemand, ook geen beheerder, kan hem wissen of wijzigen tot die periode voorbij is.">onveranderbaar</abbr> is, in een account waar geen gestolen wachtwoord bij komt. Cloudback-up kan aan die lat voldoen, maar alleen als verwijderen voor een vaste periode is geblokkeerd en het back-upaccount apart staat; de principes van het NCSC UK voor ransomwarebestendige cloudback-ups (november 2024) zetten op een rij wat u een leverancier vraagt.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> dit is de maatregel die ransomware van een existentiële crisis verandert in een slechte twee weken. In het Sophos-onderzoek van 2026 herstelde 66% van de organisaties met versleutelde data vanuit back-ups, en 48% betaalde; velen deden beide. De vragen aan IT zijn kort: welke kopie overleeft als vannacht een domeinbeheerdersaccount wordt gestolen, hoe lang is die vergrendeld, en wanneer hebben we voor het laatst gecontroleerd dat hij er is. Voor financiële instellingen vereist DORA dat herstel vanuit een back-up gebeurt op systemen die fysiek en logisch gescheiden zijn van de bron (art. 12 lid 3).</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">SAME LOGIN FOR BACKUPS AND NETWORK · DELETED IN MINUTES</span><span class="nl">ZELFDE INLOG VOOR BACK-UPS EN NETWERK · IN MINUTEN GEWIST</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE IMMUTABLE OR OFFLINE COPY, BEHIND A SEPARATE LOGIN</span><span class="nl">AANBEVOLEN: ÉÉN ONVERANDERBARE OF OFFLINE KOPIE, ACHTER EEN APARTE INLOG</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Once inside, AI tooling finds the backup server, its console and its retention settings in minutes. Shortening retention to zero is one click if the login allows it.</span><span class="nl">Eenmaal binnen vindt AI-gereedschap in minuten de back-upserver, zijn beheerconsole en zijn bewaarinstellingen. De bewaartermijn op nul zetten is één klik als de inlog het toelaat.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A convincing voice or email asks the backup administrator to "free up space" or to share the recovery key. Immutability protects against the honest mistake as much as against the attacker.</span><span class="nl">Een overtuigende stem of e-mail vraagt de back-upbeheerder "ruimte vrij te maken" of de herstelsleutel te delen. Onveranderbaarheid beschermt evenzeer tegen de eerlijke vergissing als tegen de aanvaller.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Alert on the unusual</span><span class="nl">Alarm bij het ongewone</span></b><p><span class="en">Backup platforms flag an unusual deletion request, a retention change or a sudden drop in the data to back up. NCSC UK lists such alerts as one of its five principles.</span><span class="nl">Back-upplatforms signaleren een ongewoon verwijderverzoek, een gewijzigde bewaartermijn of een plotselinge daling van de te back-uppen data. Het NCSC UK noemt zulke meldingen als een van zijn vijf principes.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">The backup job says green. <em>Nobody has tried the restore.</em></span>
+      <span class="nl">De back-uptaak staat op groen. <em>Niemand heeft het herstel geprobeerd.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">restore test / the only proof that a backup exists</span>
+      <span class="nl">hersteltest / het enige bewijs dat een back-up bestaat</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">SEVEN GREEN NIGHTS, ONE RED DAY</span><span class="nl">ZEVEN GROENE NACHTEN, ÉÉN RODE DAG</span></div>
+      <div class="log"><div class="d">✓</div><div class="d">✓</div><div class="d">✓</div><div class="d">✓</div><div class="d">✓</div><div class="d">✓</div><div class="d">✓</div></div>
+      <div class="cap"><span class="en">BACKUP JOB · EVERY NIGHT · OK</span><span class="nl">BACK-UPTAAK · ELKE NACHT · OK</span></div>
+      <div class="res"><b><span class="en">Full restore</span><span class="nl">Volledig herstel</span></b><span class="en">first attempt: during the incident</span><span class="nl">eerste poging: tijdens het incident</span>
+        <div class="f"><span class="en">FAILED · KEY WAS ON THE ENCRYPTED SERVER · DAY 9</span><span class="nl">MISLUKT · SLEUTEL STOND OP DE VERSLEUTELDE SERVER · DAG 9</span></div></div>
+      <div class="banner"><span class="en">A BACKUP IS A HOPE · A RESTORE IS A FACT</span><span class="nl">EEN BACK-UP IS EEN HOOP · EEN HERSTEL IS EEN FEIT</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Backup reports show whether the copy was written, not whether it can be read back into a working system. What fails shows up only on restore day: the encryption key kept on the server that was just encrypted, the database that restores but will not start, the application that needs three other systems first, and the single person who knows the order. <abbr class="tip" tabindex="0" data-tip="Nationaal Cyber Security Centrum: the Dutch government's cybersecurity centre, part of the Ministry of Justice and Security.">NCSC-NL</abbr> and NCSC UK say the same in their guidance: test restores regularly, against the agreed recovery targets, and keep a written recovery plan that names the order of systems. The <abbr class="tip" tabindex="0" data-tip="General Data Protection Regulation: EU regulation (EU) 2016/679; in the Netherlands the AVG.">GDPR</abbr> puts it in law for personal data: the ability to restore availability in a timely manner, and regular testing of that ability (Art. 32).</p>
+      <p class="en"><strong>Business impact:</strong> a restore test is cheap compared with learning the answer during an incident. We suggest two levels: every quarter a restore of a few systems into a separate environment, timed; once a year a full exercise of the most important systems, from the immutable copy, with the people who would really do it. The result is one number per system, actual hours to restore, next to the target from step 01. For financial entities DORA requires periodic testing of backup and restoration procedures, and testing of the business continuity plans at least yearly (Art. 11 and 12). <span class="disclaimer">Suggested frequency, not a legal deadline.</span></p>
+      <p class="nl">Back-uprapporten laten zien of de kopie is weggeschreven, niet of die terug te lezen is in een werkend systeem. Wat faalt, blijkt pas op de dag van het herstel: de versleutelsleutel die op de zojuist versleutelde server stond, de database die wel terugkomt maar niet start, de applicatie die eerst drie andere systemen nodig heeft, en de ene persoon die de volgorde kent. Het <abbr class="tip" tabindex="0" data-tip="Nationaal Cyber Security Centrum: het cybersecuritycentrum van de Rijksoverheid, onderdeel van het ministerie van Justitie en Veiligheid.">NCSC</abbr> en het NCSC UK zeggen in hun richtlijnen hetzelfde: test het herstel regelmatig, tegen de afgesproken hersteldoelen, en houd een geschreven herstelplan bij dat de volgorde van systemen benoemt. De <abbr class="tip" tabindex="0" data-tip="Algemene verordening gegevensbescherming: EU-verordening (EU) 2016/679, in het Engels de GDPR.">AVG</abbr> legt het voor persoonsgegevens in de wet vast: het vermogen de beschikbaarheid tijdig te herstellen, en het regelmatig testen van dat vermogen (art. 32).</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een hersteltest is goedkoop vergeleken met het antwoord leren tijdens een incident. Wij stellen twee niveaus voor: elk kwartaal een herstel van enkele systemen in een aparte omgeving, met de stopwatch erbij; eens per jaar een volledige oefening van de belangrijkste systemen, vanuit de onveranderbare kopie, met de mensen die het echt zouden doen. Het resultaat is één getal per systeem, werkelijke uren tot herstel, naast het doel uit stap 01. Voor financiële instellingen vereist DORA periodiek testen van de back-up- en herstelprocedures, en minstens jaarlijks testen van de bedrijfscontinuïteitsplannen (art. 11 en 12). <span class="disclaimer">Voorgestelde frequentie, geen wettelijke deadline.</span></p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">GREEN DASHBOARD · UNKNOWN RESTORE TIME · ONE PERSON KNOWS THE ORDER</span><span class="nl">GROEN DASHBOARD · ONBEKENDE HERSTELTIJD · ÉÉN PERSOON KENT DE VOLGORDE</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: TIMED RESTORE TESTS, A FULL EXERCISE ONCE A YEAR</span><span class="nl">AANBEVOLEN: HERSTELTESTS MET STOPWATCH, EENS PER JAAR EEN VOLLEDIGE OEFENING</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Attackers sit in networks for weeks before encrypting, and AI helps them find what to corrupt quietly. A restore from last month can bring the intruder back; the test should include checking that the copy is clean.</span><span class="nl">Aanvallers zitten weken in netwerken voordat ze versleutelen, en AI helpt hen te vinden wat ze stilletjes kunnen beschadigen. Een herstel van vorige maand kan de indringer terugbrengen; de test hoort ook te controleren of de kopie schoon is.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Asked during the incident, an AI assistant produces a confident restore runbook for a system nobody has ever restored. Confident is not the same as tested.</span><span class="nl">Gevraagd tijdens het incident produceert een AI-assistent een zelfverzekerd hersteldraaiboek voor een systeem dat niemand ooit heeft hersteld. Zelfverzekerd is niet hetzelfde als getest.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Automated restore drills</span><span class="nl">Automatische hersteloefeningen</span></b><p><span class="en">Backup platforms can restore a system into an isolated environment every night, start it and report whether it works. The green light then means something.</span><span class="nl">Back-upplatforms kunnen elke nacht een systeem in een afgezonderde omgeving terugzetten, opstarten en melden of het werkt. Het groene lampje betekent dan iets.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">The cloud keeps your data. <em>For about a month.</em></span>
+      <span class="nl">De cloud bewaart uw data. <em>Ongeveer een maand lang.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">SaaS / the provider runs the service, you own the data</span>
+      <span class="nl">SaaS / de leverancier draait de dienst, u bent eigenaar van de data</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">WHAT THE PROVIDER KEEPS AFTER A DELETE</span><span class="nl">WAT DE LEVERANCIER BEWAART NA VERWIJDERING</span></div>
+      <div class="tile a"><b>📧</b><span class="en">Mailbox · user deleted</span><span class="nl">Mailbox · gebruiker verwijderd</span><i><span class="en">30 days</span><span class="nl">30 dagen</span></i></div>
+      <div class="tile b"><b>📁</b><span class="en">Drive files · bin emptied</span><span class="nl">Drive-bestanden · prullenbak geleegd</span><i><span class="en">25 days</span><span class="nl">25 dagen</span></i></div>
+      <div class="tile c"><b>📇</b><span class="en">CRM · HR · finance app</span><span class="nl">CRM · HR · financiële app</span><i><span class="en">see contract</span><span class="nl">zie contract</span></i></div>
+      <div class="banner"><span class="en">THE SERVICE STAYS UP · YOUR DATA IS YOUR JOB</span><span class="nl">DE DIENST BLIJFT DRAAIEN · UW DATA IS UW TAAK</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Cloud applications are highly available, and that is often mistaken for being backed up. The provider keeps the service running and protects it against its own failures. It does not protect you against yours: a deleted user, an employee who empties a mailbox on the way out, a sync tool that overwrites a folder, or an attacker with a stolen login. The recovery windows are short and documented. Microsoft states that content a user or administrator deletes in Microsoft 365 is retained for at most 30 days, and that all data is deleted within 180 days after a subscription ends; its services agreement recommends that you back up your own content. Google states that an administrator can recover a user's deleted Drive files for 25 days after the bin is emptied. For the CRM, HR and finance <abbr class="tip" tabindex="0" data-tip="Software as a service: an application the provider runs and you use over the internet, such as Microsoft 365 or Salesforce.">SaaS</abbr> applications, the answer is in the contract, and often it is "export it yourself".</p>
+      <p class="en"><strong>Business impact:</strong> the data in your cloud applications is yours under the <abbr class="tip" tabindex="0" data-tip="General Data Protection Regulation: EU regulation (EU) 2016/679; in the Netherlands the AVG.">GDPR</abbr> and under every contract, and so is the duty to be able to restore it. We suggest one question per major cloud application: if this data were deleted or encrypted today, who can bring it back, from where, and how far back. Where the answer is "the provider, for a few weeks", a separate backup of that application, held in your own account, is a modest cost. Retention and legal-hold settings help against deletion; they are not a backup against a lost tenant or a compromised administrator.</p>
+      <p class="nl">Clouddiensten zijn vrijwel altijd beschikbaar, en dat wordt vaak verward met geback-upt zijn. De leverancier houdt de dienst draaiend en beschermt die tegen zijn eigen storingen. Hij beschermt u niet tegen de uwe: een verwijderde gebruiker, een medewerker die bij vertrek een mailbox leegt, een synchronisatietool die een map overschrijft, of een aanvaller met een gestolen inlog. De herstelvensters zijn kort en gedocumenteerd. Microsoft stelt dat inhoud die een gebruiker of beheerder in Microsoft 365 verwijdert hoogstens 30 dagen wordt bewaard, en dat alle data binnen 180 dagen na het einde van een abonnement wordt gewist; zijn servicevoorwaarden raden aan zelf een back-up van uw inhoud te maken. Google stelt dat een beheerder verwijderde Drive-bestanden van een gebruiker 25 dagen na het legen van de prullenbak kan terughalen. Voor de CRM-, HR- en financiële <abbr class="tip" tabindex="0" data-tip="Software as a service: een applicatie die de leverancier draait en die u via internet gebruikt, zoals Microsoft 365 of Salesforce.">SaaS</abbr>-applicaties staat het antwoord in het contract, en vaak luidt het "exporteer het zelf".</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de data in uw clouddiensten is van u onder de <abbr class="tip" tabindex="0" data-tip="Algemene verordening gegevensbescherming: EU-verordening (EU) 2016/679, in het Engels de GDPR.">AVG</abbr> en onder elk contract, en dus ook de plicht om die te kunnen herstellen. Wij stellen één vraag per belangrijke clouddienst voor: als deze data vandaag wordt gewist of versleuteld, wie kan haar dan terughalen, waarvandaan, en tot hoe ver terug. Waar het antwoord "de leverancier, een paar weken lang" is, zijn aparte back-ups van die dienst, in uw eigen account, een bescheiden kostenpost. Bewaar- en bewaarplichtinstellingen helpen tegen verwijdering; ze zijn geen back-up tegen een verloren tenant of een gecompromitteerde beheerder.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">AVAILABLE IS NOT BACKED UP · WINDOWS OF 25 TO 30 DAYS</span><span class="nl">BESCHIKBAAR IS NIET GEBACK-UPT · VENSTERS VAN 25 TOT 30 DAGEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: PER CLOUD APP, KNOW WHO RESTORES IT; BACK UP THE ONES THAT MATTER</span><span class="nl">AANBEVOLEN: WEET PER CLOUDDIENST WIE HERSTELT; BACK-UP VOOR WAT ERTOE DOET</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">A stolen cloud administrator login, increasingly obtained with AI-written phishing, can delete users, mailboxes and files across the whole tenant in one script. Ransomware now targets cloud data directly.</span><span class="nl">Een gestolen cloudbeheerdersinlog, steeds vaker verkregen met door AI geschreven phishing, kan in één script gebruikers, mailboxen en bestanden in de hele tenant wissen. Ransomware richt zich nu rechtstreeks op clouddata.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI assistants and integrations get broad permissions on mail and files to be useful. A misfiring automation can delete or overwrite at scale, well inside the 30-day window.</span><span class="nl">AI-assistenten en koppelingen krijgen brede rechten op mail en bestanden om nuttig te zijn. Een ontspoorde automatisering kan op grote schaal wissen of overschrijven, ruim binnen het venster van 30 dagen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Spot mass deletion</span><span class="nl">Zie massaal wissen</span></b><p><span class="en">Cloud platforms and backup tools flag an unusual number of deletions or encrypted files and can pause the account. That turns a tenant-wide loss into a short restore.</span><span class="nl">Cloudplatforms en back-uptools signaleren een ongewoon aantal verwijderingen of versleutelde bestanden en kunnen het account pauzeren. Dat maakt van een tenantbreed verlies een kort herstel.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>gets you back.</em></span>
+      <span class="nl">Wat <em>u weer op gang brengt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">most of this is a list, a setting and a rehearsal, not a new product</span>
+      <span class="nl">het meeste is een lijst, een instelling en een oefening, geen nieuw product</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">RTO / RPO LIST</span><span class="nl">RTO/RPO-LIJST</span></span>
+        <span class="chip c2"><span class="en">IMMUTABLE COPY</span><span class="nl">ONVERANDERBARE KOPIE</span></span>
+        <span class="chip c3"><span class="en">SEPARATE LOGIN</span><span class="nl">APARTE INLOG</span></span>
+        <span class="chip c4"><span class="en">RESTORE TEST</span><span class="nl">HERSTELTEST</span></span>
+        <span class="chip c5"><span class="en">SAAS BACKUP</span><span class="nl">SAAS-BACK-UP</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Addresses</th><th>In one line</th></tr>
+        <tr><td class="ctl">Recovery targets</td><td>Targets (01)</td><td>The ten systems that matter most, with the hours you can miss each and the work you can lose. Agreed by the business, not set by the backup tool.</td></tr>
+        <tr><td class="ctl">Recovery plan</td><td>Targets (01)</td><td>One written document: order of systems, who does what, where the keys and passwords are kept, and how the business works while IT restores.</td></tr>
+        <tr><td class="ctl">Immutable or offline copy</td><td>Copies (02)</td><td>At least one copy that nobody can delete or change for a set period: offline, or with deletion blocked, away from the main network.</td></tr>
+        <tr><td class="ctl">Separate backup login</td><td>Copies (02)</td><td>Backup systems do not accept the domain administrator account. Their own accounts, MFA, and alerts on retention changes.</td></tr>
+        <tr><td class="ctl">Timed restore tests</td><td>Restore (03)</td><td>Every quarter a few systems restored into a separate environment, timed. Once a year the most important systems from the immutable copy, with the real team.</td></tr>
+        <tr><td class="ctl">Clean restore</td><td>Restore (03)</td><td>Before restoring, check the copy for the intruder. A backup that includes the attacker brings them back.</td></tr>
+        <tr><td class="ctl">SaaS recovery answer</td><td>SaaS (04)</td><td>For each major cloud application: who restores it, from where, how far back. A separate backup in your own account for the ones that matter.</td></tr>
+        <tr><td class="ctl">Deletion alerts</td><td>SaaS (04)</td><td>Alerts on mass deletion, encryption or retention changes in cloud applications and backups, with the ability to pause the account.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Pakt aan</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Hersteldoelen</td><td>Doelen (01)</td><td>De tien systemen die het meest tellen, met de uren die u elk kunt missen en het werk dat u kunt verliezen. Afgesproken door de business, niet bepaald door het back-upprogramma.</td></tr>
+        <tr><td class="ctl">Herstelplan</td><td>Doelen (01)</td><td>Eén geschreven document: volgorde van systemen, wie wat doet, waar de sleutels en wachtwoorden liggen, en hoe de organisatie werkt terwijl IT herstelt.</td></tr>
+        <tr><td class="ctl">Onveranderbare of offline kopie</td><td>Kopieën (02)</td><td>Minstens één kopie die niemand een vaste periode kan wissen of wijzigen: offline, of met verwijderen geblokkeerd, weg van het hoofdnetwerk.</td></tr>
+        <tr><td class="ctl">Aparte back-upinlog</td><td>Kopieën (02)</td><td>Back-upsystemen accepteren het domeinbeheerdersaccount niet. Eigen accounts, MFA, en meldingen bij gewijzigde bewaartermijnen.</td></tr>
+        <tr><td class="ctl">Hersteltests met stopwatch</td><td>Herstel (03)</td><td>Elk kwartaal enkele systemen teruggezet in een aparte omgeving, met de tijd erbij. Eens per jaar de belangrijkste systemen vanuit de onveranderbare kopie, met het echte team.</td></tr>
+        <tr><td class="ctl">Schoon herstel</td><td>Herstel (03)</td><td>Controleer de kopie op de indringer voordat u herstelt. Een back-up met de aanvaller erin brengt hem terug.</td></tr>
+        <tr><td class="ctl">Herstelantwoord per SaaS</td><td>SaaS (04)</td><td>Voor elke belangrijke clouddienst: wie herstelt, waarvandaan, tot hoe ver terug. Een aparte back-up in uw eigen account voor de diensten die ertoe doen.</td></tr>
+        <tr><td class="ctl">Meldingen bij verwijdering</td><td>SaaS (04)</td><td>Meldingen bij massaal wissen, versleutelen of gewijzigde bewaartermijnen in clouddiensten en back-ups, met de mogelijkheid het account te pauzeren.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> "do we have backups" is a fair question, and we suggest two sharper ones. For our ten most important systems, how many hours would we be down and how much work would we lose? And has anyone ever restored them end to end, from a copy an attacker could not reach, with a stopwatch running? If the answer is a dashboard rather than a timed exercise, the number is unknown. How much downtime to accept, and what a shorter number is worth, is your call. <span class="disclaimer">Suggested frequency, not a legal deadline.</span></span>
+        <span class="nl"><strong>De kern voor de directie:</strong> "hebben we back-ups" is een goede vraag, en wij stellen twee scherpere voor. Hoeveel uur zouden we voor onze tien belangrijkste systemen stilstaan, en hoeveel werk zouden we verliezen? En heeft iemand ze ooit van begin tot eind hersteld, vanuit een kopie waar een aanvaller niet bij kon, met de stopwatch erbij? Als het antwoord een dashboard is in plaats van een getimede oefening, is het getal onbekend. Hoeveel stilstand u accepteert, en wat een korter getal waard is, is uw keuze. <span class="disclaimer">Voorgestelde frequentie, geen wettelijke deadline.</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Ransomware is common and goes for the backups first. Every organisation also loses data to its own mistakes. In most of them, the restore is tested for the first time during the incident.</span><span class="nl">Ransomware komt veel voor en richt zich eerst op de back-ups. Elke organisatie verliest bovendien data door eigen fouten. Bij de meeste wordt het herstel voor het eerst getest tijdens het incident.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Weeks of standstill, work lost since the last good copy, and a ransom decision under pressure. Sophos (2026) reports an average of three weeks to full recovery.</span><span class="nl">Weken stilstand, verloren werk sinds de laatste goede kopie, en een losgeldbeslissing onder druk. Sophos (2026) meldt gemiddeld drie weken tot volledig herstel.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">With agreed targets, an immutable copy behind its own login, timed restore tests and a backup of the cloud applications, an incident becomes a known number of days instead of an open question.</span><span class="nl">Met afgesproken doelen, een onveranderbare kopie achter een eigen inlog, getimede hersteltests en een back-up van de clouddiensten wordt een incident een bekend aantal dagen in plaats van een open vraag.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CIO</span><span class="nl">CIO</span></span><p><span class="en">The <abbr class="tip" tabindex="0" data-tip="Chief information officer: the executive responsible for IT.">CIO</abbr> owns the ability to restore; each business owner owns the target for their system. If no business owner has signed a target, that is the finding.</span><span class="nl">De <abbr class="tip" tabindex="0" data-tip="Chief information officer: de bestuurder die verantwoordelijk is voor IT.">CIO</abbr> is eigenaar van het herstelvermogen; elke proceseigenaar is eigenaar van het doel voor zijn systeem. Heeft geen proceseigenaar een doel getekend, dan is dat de bevinding.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Important systems with an agreed RTO and RPO · days since the last timed full restore test · copies that survive a stolen domain administrator login · cloud applications with a recovery answer.</span><span class="nl">Belangrijke systemen met een afgesproken RTO en RPO · dagen sinds de laatste getimede volledige hersteltest · kopieën die een gestolen domeinbeheerdersinlog overleven · clouddiensten met een herstelantwoord.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Backups are deleted, encrypted or unusable during a ransomware or deletion incident, or cloud application data is lost beyond the provider's retention window, leading to weeks of standstill, permanent loss of work and a notifiable incident.”</span><span class="nl">“Back-ups worden gewist, versleuteld of blijken onbruikbaar bij een ransomware- of verwijderingsincident, of data in een clouddienst gaat verloren buiten het bewaarvenster van de leverancier, wat leidt tot weken stilstand, blijvend verlies van werk en een meldplichtig incident.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU directive on cybersecurity for essential and important entities; in the Netherlands the Cyberbeveiligingswet.">NIS2</abbr> requires business continuity measures, and names backup management and disaster recovery (Art. 21(2)(c)). In the Netherlands the Cyberbeveiligingswet, in force since 15 August 2026, carries the same duty of care.</td><td>Ask for their recovery targets for your service, when they last restored it end to end, and whether their backups survive a compromise of their own administrators.</td><td>A ransomware or data-loss incident can count as a significant incident if it meets the thresholds. Early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month.</td></tr>
+        <tr><td class="ctl">DORA</td><td>DORA requires an <abbr class="tip" tabindex="0" data-tip="Information and communication technology: in DORA, any digital or data service a financial entity relies on.">ICT</abbr> business continuity policy with response and recovery plans, tested at least yearly (Art. 11), and backup policies that set scope and minimum frequency, periodic restore testing, and restoring on systems separate from the source (Art. 12). DORA has applied since 17 January 2025.</td><td>Your critical ICT third parties should show tested recovery times for your service and backups separated from production. Ask for the last test report, not the policy.</td><td>Classify promptly. Initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Availability criteria A1.2 and A1.3 cover backup processes and recovery infrastructure, and testing of recovery plan procedures. CC7.5 covers recovery from incidents.</td><td>Check whether Availability is in scope at all; many reports cover Security only. If it is, look for a tested restore, not a described one.</td><td>A failed or untested restore in scope will likely appear as an exception in the next report.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>The focus is financial reporting. Backup and recovery appear as general IT controls where they protect the financial process, usually as "backups are made and monitored".</td><td>The report rarely proves a restore. Ask for restore-test evidence and recovery targets in the contract instead.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor cyberbeveiliging van essentiële en belangrijke entiteiten; in Nederland de Cyberbeveiligingswet.">NIS2</abbr> vraagt maatregelen voor bedrijfscontinuïteit, en noemt back-upbeheer en noodherstel (art. 21 lid 2 onder c). In Nederland bevat de Cyberbeveiligingswet, van kracht sinds 15 augustus 2026, dezelfde zorgplicht.</td><td>Vraag naar hun hersteldoelen voor uw dienst, wanneer zij die voor het laatst van begin tot eind hebben hersteld, en of hun back-ups een compromittatie van hun eigen beheerders overleven.</td><td>Een ransomware- of dataverliesincident kan als significant incident gelden als het de drempels haalt. Vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindverslag binnen een maand.</td></tr>
+        <tr><td class="ctl">DORA</td><td>DORA vraagt een <abbr class="tip" tabindex="0" data-tip="Informatie- en communicatietechnologie: onder DORA elke digitale of datadienst waarop een financiële instelling leunt.">ICT</abbr>-bedrijfscontinuïteitsbeleid met respons- en herstelplannen, minstens jaarlijks getest (art. 11), en back-upbeleid dat reikwijdte en minimale frequentie vastlegt, periodiek herstel test, en herstel op systemen gescheiden van de bron (art. 12). DORA geldt sinds 17 januari 2025.</td><td>Uw kritieke ICT-derden horen geteste hersteltijden voor uw dienst te laten zien en back-ups gescheiden van productie. Vraag naar het laatste testrapport, niet naar het beleid.</td><td>Classificeer snel. Eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>De beschikbaarheidscriteria A1.2 en A1.3 gaan over back-upprocessen en herstelinfrastructuur, en over het testen van herstelprocedures. CC7.5 gaat over herstel na incidenten.</td><td>Controleer of Beschikbaarheid überhaupt binnen scope valt; veel rapporten dekken alleen Beveiliging. Zo ja, zoek dan naar een getest herstel, niet naar een beschreven herstel.</td><td>Een mislukt of ongetest herstel binnen scope komt waarschijnlijk als afwijking in het volgende rapport.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>De focus ligt op de financiële verslaggeving. Back-up en herstel komen voor als algemene IT-beheersmaatregelen waar ze het financiële proces beschermen, meestal als "back-ups worden gemaakt en bewaakt".</td><td>Het rapport bewijst zelden een herstel. Vraag in het contract om bewijs van hersteltests en om hersteldoelen.</td><td>ISAE 3402 schept geen meldplicht aan de auditors van gebruikers. Verwacht een afwijking in het volgende rapport en vraag in het contract om tussentijdse melding.</td></tr>
+      </table>
+      <p class="sources en">Checked against: <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 21(2)(c) and 23 (2022), <a href="https://www.ncsc.nl/cyberbeveiligingswet-nis2/zorgplicht">NCSC-NL on the Cbw duty of care</a> (2026), <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 11 and 12 (2022), <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">GDPR</a> Art. 32 and 33, <a href="https://www.ncsc.gov.uk/blog-post/offline-backups-in-an-online-world">NCSC UK, Offline backups in an online world</a> (updated 28 Jul 2026), <a href="https://www.ncsc.gov.uk/guidance/principles-for-ransomware-resistant-cloud-backups">NCSC UK, Principles for ransomware-resistant cloud backups</a> (22 Nov 2024), <a href="https://www.ncsc.nl/wat-kun-je-zelf-doen/weerbaarheid/herstellen/herstel-van-een-cyberincident">NCSC-NL, Herstel van een cyberincident</a> (2026), <a href="https://csrc.nist.gov/pubs/sp/800/34/r1/upd1/final">NIST SP 800-34 Rev. 1</a> (2010), <a href="https://www.sophos.com/en-us/content/state-of-ransomware">Sophos State of Ransomware 2026</a> (2026), <a href="https://learn.microsoft.com/en-us/compliance/assurance/assurance-data-retention-deletion-and-destruction-overview">Microsoft 365 data retention and deletion</a> (Jun 2024, updated May 2026), <a href="https://www.microsoft.com/en-us/servicesagreement">Microsoft Services Agreement</a> (Sep 2026), <a href="https://knowledge.workspace.google.com/admin/drive/recover-deleted-files-and-folders-for-drive-users">Google Workspace admin help</a> (2026), AICPA Trust Services Criteria A1.2, A1.3 and CC7.5 (2017, points of focus 2022) · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 21 lid 2 onder c en art. 23 (2022), <a href="https://www.ncsc.nl/cyberbeveiligingswet-nis2/zorgplicht">NCSC over de zorgplicht in de Cbw</a> (2026), <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 11 en 12 (2022), <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">AVG</a> art. 32 en 33, <a href="https://www.ncsc.gov.uk/blog-post/offline-backups-in-an-online-world">NCSC UK, Offline backups in an online world</a> (bijgewerkt 28 jul 2026), <a href="https://www.ncsc.gov.uk/guidance/principles-for-ransomware-resistant-cloud-backups">NCSC UK, Principles for ransomware-resistant cloud backups</a> (22 nov 2024), <a href="https://www.ncsc.nl/wat-kun-je-zelf-doen/weerbaarheid/herstellen/herstel-van-een-cyberincident">NCSC, Herstel van een cyberincident</a> (2026), <a href="https://csrc.nist.gov/pubs/sp/800/34/r1/upd1/final">NIST SP 800-34 Rev. 1</a> (2010), <a href="https://www.sophos.com/en-us/content/state-of-ransomware">Sophos State of Ransomware 2026</a> (2026), <a href="https://learn.microsoft.com/en-us/compliance/assurance/assurance-data-retention-deletion-and-destruction-overview">Microsoft 365 data retention and deletion</a> (jun 2024, bijgewerkt mei 2026), <a href="https://www.microsoft.com/en-us/servicesagreement">Microsoft Services Agreement</a> (sep 2026), <a href="https://knowledge.workspace.google.com/admin/drive/recover-deleted-files-and-folders-for-drive-users">Google Workspace-beheerdershulp</a> (2026), AICPA Trust Services Criteria A1.2, A1.3 en CC7.5 (2017, aandachtspunten 2022) · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../ransomware/"><span class="en">Ransomware</span><span class="nl">Ransomware</span></a> ·
+  <a href="../incident-response/"><span class="en">The first 72 hours</span><span class="nl">De eerste 72 uur</span></a> ·
+  <a href="../shared-responsibility/"><span class="en">Shared responsibility</span><span class="nl">Gedeelde verantwoordelijkheid</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=backups-and-restore&amp;title=Missing%3A%20backups-and-restore"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=backups-and-restore&amp;title=Correction%3A%20backups-and-restore"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">BACKUPS BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">BACK-UPS BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>
