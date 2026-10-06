@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Cbw &amp; Wwke // Plain Security</title>
+<meta name="description" content="Two Dutch laws started on 15 August 2026: one for cyber, one for physical resilience. Which one applies to you, what differs, and the one board decision that covers both.">
+<link rel="canonical" href="https://plain-security.fyi/cbw-wwke/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cbw &amp; Wwke // Plain Security">
+<meta property="og:description" content="Two Dutch laws started on 15 August 2026: one for cyber, one for physical resilience. Which one applies to you, what differs, and the one board decision that covers both.">
+<meta property="og:url" content="https://plain-security.fyi/cbw-wwke/">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="nl_NL">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   CBW & WWKE // BRIEFING
+   Same palette and components as the other briefings.
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript apart from the language memory.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 8s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : two laws, one overlap --- */
+.s1 .ring{position:absolute;top:50%;width:230px;height:150px;margin-top:-75px;border:1px solid var(--line);background:rgba(42,72,88,.55);display:grid;place-items:center;text-align:center;font-size:10px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase;z-index:2}
+.s1 .ring b{display:block;font-family:var(--sans);font-size:20px;letter-spacing:0;text-transform:none;color:var(--white);margin-bottom:4px}
+.s1 .ring.cbw{left:calc(50% - 250px);animation:slideL 8s ease-in-out infinite}
+.s1 .ring.wwke{left:calc(50% + 20px);animation:slideR 8s ease-in-out infinite}
+@keyframes slideL{0%,30%{left:calc(50% - 250px)}45%,100%{left:calc(50% - 200px)}}
+@keyframes slideR{0%,30%{left:calc(50% + 20px)}45%,100%{left:calc(50% - 30px)}}
+.s1 .both{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:120px;padding:8px 0;text-align:center;font-size:9.5px;letter-spacing:.18em;font-weight:700;color:var(--deep);background:var(--warn);z-index:3;opacity:0;animation:fadeInEarly 8s ease-in-out infinite}
+@keyframes fadeInEarly{0%,42%{opacity:0}52%,100%{opacity:1}}
+
+/* --- scene 2 : the building --- */
+.s2 .site{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,84%);height:170px;border:1px dashed var(--line);display:grid;place-items:center}
+.s2 .fence{position:absolute;inset:-1px;border:2px solid transparent;animation:fence 8s ease-in-out infinite}
+@keyframes fence{0%,38%{border-color:transparent}48%,100%{border-color:var(--good)}}
+.s2 .bld{display:grid;grid-auto-flow:column;gap:14px;align-items:end}
+.s2 .bld i{display:grid;place-items:center;width:62px;height:62px;font-size:26px;font-style:normal;background:var(--surface);border:1px solid var(--line);color:var(--white)}
+.s2 .bld i.tall{height:84px}
+.s2 .badge{position:absolute;right:14px;top:14px;font-size:9.5px;letter-spacing:.18em;font-weight:700;padding:4px 9px;background:var(--deep);border:1px solid rgba(55,211,155,.45);color:#8ff0cd;opacity:0;animation:fadeInEarly 8s ease-in-out infinite}
+.s2 .badge.b2{top:auto;bottom:14px;animation-delay:.6s}
+.s2 .actor{position:absolute;left:-40px;top:50%;margin-top:-31px;width:62px;height:62px;display:grid;place-items:center;font-size:26px;background:#3a1430;border:1px solid rgba(255,93,115,.55);animation:approach 8s ease-in-out infinite}
+@keyframes approach{0%,10%{left:-40px;opacity:0}20%{opacity:1}40%{left:-14px}48%,100%{left:-40px;opacity:1}}
+.s2 .banner{animation:fadeIn 8s ease-in-out infinite}
+
+/* --- scene 3 : two clocks --- */
+.s3 .track{position:absolute;left:90px;right:90px;height:6px;background:var(--line-soft)}
+.s3 .track.t1{top:calc(50% - 44px)}
+.s3 .track.t2{top:calc(50% + 44px)}
+.s3 .fill{position:absolute;left:0;top:0;height:100%;width:0;background:var(--bad);animation:fill 9s linear infinite}
+@keyframes fill{0%{width:0}90%,100%{width:100%}}
+.s3 .mark{position:absolute;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;background:var(--surface);border:2px solid var(--line);border-radius:50%;z-index:2}
+.s3 .mark .lbl{position:absolute;top:22px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.16em;font-weight:700;color:var(--muted)}
+.s3 .mark .lbl.up{top:auto;bottom:22px}
+.s3 .lbl i{font-style:normal}
+.s3 .mark.m0{left:0;border-color:var(--bad);background:var(--bad)}
+.s3 .mark.m1{left:25%;animation:hit1 9s linear infinite}
+.s3 .mark.m2{left:55%;animation:hit2 9s linear infinite}
+.s3 .mark.m3{left:100%;animation:hit3 9s linear infinite}
+.s3 .mark.m3 .lbl{left:auto;right:-8px;transform:none}
+@keyframes hit1{0%,22%{border-color:var(--line);background:var(--surface)}25%,100%{border-color:var(--bad);background:var(--bad)}}
+@keyframes hit2{0%,49%{border-color:var(--line);background:var(--surface)}52%,100%{border-color:var(--bad);background:var(--bad)}}
+@keyframes hit3{0%,88%{border-color:var(--line);background:var(--surface)}91%,100%{border-color:var(--bad);background:var(--bad)}}
+.s3 .who{position:absolute;left:90px;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--slate)}
+.s3 .who.w1{top:calc(50% - 86px)}
+.s3 .who.w2{top:calc(50% + 2px)}
+.s3 .banner{animation:fadeIn 9s ease-in-out infinite}
+
+/* --- scene 4 : one decision --- */
+.s4 .list{position:absolute;left:50%;top:calc(50% - 14px);transform:translate(-50%,-50%);width:min(560px,82%);background:var(--surface);border:1px solid var(--line);padding:14px 24px}
+.s4 .item{display:flex;align-items:center;gap:14px;padding:8px 0;border-bottom:1px solid var(--line-soft);font-size:10.5px;letter-spacing:.16em;font-weight:700;color:var(--body);text-transform:uppercase}
+.s4 .item:last-child{border-bottom:none}
+.s4 .item i{width:20px;height:20px;border:1px solid var(--line);display:grid;place-items:center;font-size:12px;color:var(--good);flex:none;font-style:normal}
+.s4 .item i::after{content:"✔";opacity:0;animation:tick 9s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes tick{0%{opacity:0}5%{opacity:1}80%{opacity:1}86%,100%{opacity:0}}
+.s4 .item .st{margin-left:auto;font-size:9.5px;color:var(--muted)}
+.s4 .banner{animation:fadeIn 9s ease-in-out infinite}
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+.callout .disclaimer{margin-top:10px;font-family:var(--mono);font-size:11.5px;color:var(--slate)}
+body:has(#lang-en:checked) .callout .en.disclaimer,body:has(#lang-nl:checked) .callout .nl.disclaimer{display:block}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .s1 .ring{width:150px;height:120px;margin-top:-60px}
+  .s1 .ring.cbw{animation:none;left:calc(50% - 160px)}
+  .s1 .ring.wwke{animation:none;left:calc(50% + 10px)}
+  .s1 .both{width:90px}
+  .s2 .bld{gap:8px}.s2 .bld i{width:46px;height:46px;font-size:20px}.s2 .bld i.tall{height:62px}
+  .s2 .badge{display:none}
+  .s2 .actor{animation:none;left:-24px;opacity:1}
+  .s3 .track{left:60px;right:60px}
+  .s3 .who{left:60px}
+  .s3 .mark .lbl{font-size:8.5px;letter-spacing:.08em}
+  .s3 .lbl i.x{display:none}
+  .s4{height:330px}
+  .s4 .list{width:92%;padding:8px 14px;top:calc(50% - 6px)}
+  .s4 .item{font-size:9.5px;letter-spacing:.1em;padding:6px 0;gap:10px}
+  .s4 .item .st{font-size:8.5px}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .s1 .ring.cbw{left:calc(50% - 200px)}
+  .s1 .ring.wwke{left:calc(50% - 30px)}
+  .s1 .both,.s2 .badge{opacity:1}
+  .s2 .fence{border-color:var(--good)}
+  .s2 .actor{left:-14px;opacity:1}
+  .s3 .fill{width:100%}
+  .s3 .mark{border-color:var(--bad);background:var(--bad)}
+  .s4 .item i::after{opacity:1}
+  .banner{opacity:1}
+}
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+/* ---------- sources + related ---------- */
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+/* diagram:law-map */
+/* ---------- law map (which law applies) ---------- */
+.arch{margin:0 0 30px;background:var(--bg-lo);border:1px solid var(--line-soft);padding:12px;overflow-x:auto}
+.arch svg{display:block;width:100%;min-width:900px;height:auto}
+.arch .cw-zone{fill:var(--bg-hi);stroke:var(--line-soft)}
+.arch .cw-zlabel{font:700 11px var(--mono);letter-spacing:.24em;fill:var(--slate)}
+.arch .cw-node{fill:var(--surface);stroke:var(--line)}
+.arch .cw-s-q .cw-bar{fill:var(--brand)}
+.arch .cw-s-ok .cw-bar{fill:var(--good)}
+.arch .cw-s-warn .cw-bar{fill:var(--warn)}
+.arch .cw-s-bad .cw-bar{fill:var(--bad)}
+.arch .cw-s-bad .cw-node{stroke:rgba(255,93,115,.45)}
+.arch .cw-kick{font:500 10px var(--mono);letter-spacing:.12em;fill:var(--muted)}
+.arch .cw-name{font:600 13px var(--sans);fill:var(--white)}
+.arch .cw-st{font:400 10px var(--mono);fill:var(--prose)}
+.arch .cw-note{font:400 10px var(--mono);fill:var(--muted)}
+.arch .cw-time{font:700 12px var(--mono);letter-spacing:.04em;fill:var(--white)}
+.arch .cw-dot{fill:var(--bad)}
+.arch .cw-step{fill:none;stroke:var(--slate);stroke-width:1.2;stroke-dasharray:3 4}
+.arch .cw-legend{font:400 11px var(--mono);fill:var(--body)}
+.arch .cw-foot{font:400 10px var(--mono);letter-spacing:.06em;fill:var(--slate)}
+.arch .cw-llabel{font:700 9.5px var(--mono);letter-spacing:.12em;fill:var(--muted)}
+.arch .cw-link{fill:none;stroke:var(--slate);stroke-width:1.5;stroke-dasharray:5 5;animation:cw-flow 1.4s linear infinite}
+.arch .cw-lex{fill:none;stroke:var(--warn);stroke-width:2}
+.arch .cw-arrowhead{fill:var(--slate)}
+.arch .cw-sw-q{fill:var(--brand)}
+.arch .cw-sw-ok{fill:var(--good)}
+.arch .cw-sw-warn{fill:var(--warn)}
+.arch .cw-sw-bad{fill:var(--bad)}
+@keyframes cw-flow{to{stroke-dashoffset:-10}}
+@media (prefers-reduced-motion:reduce){.arch .cw-link{animation:none}}
+.arch .cw-svtip{visibility:hidden;pointer-events:none}
+.arch .cw-tip-bg{fill:var(--deep);stroke:var(--line)}
+.arch .cw-tip-acc{fill:var(--brand)}
+.arch .cw-tip-t0{font:700 11px var(--mono);fill:var(--white)}
+.arch .cw-tip-t{font:400 11px var(--mono);fill:var(--prose)}
+.arch [tabindex]{cursor:help;outline:none}
+.arch [tabindex]:focus-visible > rect:first-child{stroke:var(--brand);stroke-width:1.5}
+.arch svg:has(.cw-hc0:hover,.cw-hc0:focus) .cw-tc0,.arch svg:has(.cw-hc1:hover,.cw-hc1:focus) .cw-tc1,.arch svg:has(.cw-hc2:hover,.cw-hc2:focus) .cw-tc2,.arch svg:has(.cw-hc3:hover,.cw-hc3:focus) .cw-tc3,.arch svg:has(.cw-hc4:hover,.cw-hc4:focus) .cw-tc4,.arch svg:has(.cw-hc5:hover,.cw-hc5:focus) .cw-tc5,.arch svg:has(.cw-hc6:hover,.cw-hc6:focus) .cw-tc6,.arch svg:has(.cw-hc7:hover,.cw-hc7:focus) .cw-tc7,.arch svg:has(.cw-hc8:hover,.cw-hc8:focus) .cw-tc8,.arch svg:has(.cw-hc9:hover,.cw-hc9:focus) .cw-tc9{visibility:visible}
+/* /diagram:law-map */
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> CBW · WWKE</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">TWO LAWS</span><span class="nl">TWEE WETTEN</span></a>
+      <a href="#r2"><span class="en">THE BUILDING</span><span class="nl">HET GEBOUW</span></a>
+      <a href="#r3"><span class="en">TWO CLOCKS</span><span class="nl">TWEE KLOKKEN</span></a>
+      <a href="#r4"><span class="en">ONE DECISION</span><span class="nl">ÉÉN BESLUIT</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Cbw &amp; Wwke. <em>One date, two kinds of resilience.</em></span>
+      <span class="nl">Cbw &amp; Wwke. <em>Eén datum, twee soorten weerbaarheid.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">On 15 August 2026 two Dutch laws started on the same day. The Cyberbeveiligingswet covers your systems. The Wet weerbaarheid kritieke entiteiten covers your buildings, your people and your recovery. In plain language: which one applies to you, what is different, and the one board decision that covers both.</span>
+      <span class="nl">Op 15 augustus 2026 gingen twee Nederlandse wetten op dezelfde dag in. De Cyberbeveiligingswet gaat over uw systemen. De Wet weerbaarheid kritieke entiteiten gaat over uw gebouwen, uw mensen en uw herstel. In gewone taal: welke wet voor u geldt, wat er anders is, en het ene bestuursbesluit dat beide dekt.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">WHICH LAW APPLIES</span><span class="nl">WELKE WET GELDT</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT TO PUT IN PLACE</span><span class="nl">WAT U KUNT REGELEN</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">QUESTION 01</span><span class="nl">VRAAG 01</span></span>
+    <h2>
+      <span class="en">Two laws. <em>Which one applies to us?</em></span>
+      <span class="nl">Twee wetten. <em>Welke geldt voor ons?</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">scope / essential or important entity under the Cbw, critical entity under the Wwke</span>
+      <span class="nl">reikwijdte / essentiële of belangrijke entiteit onder de Cbw, kritieke entiteit onder de Wwke</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">WHO IS IN SCOPE</span><span class="nl">WIE ERONDER VALT</span></div>
+      <div class="ring cbw"><div><b>Cbw</b><span class="en">about 8,000 · cyber · you assess yourself</span><span class="nl">ruim 8.000 · cyber · u toetst zelf</span></div></div>
+      <div class="ring wwke"><div><b>Wwke</b><span class="en">about 500 · physical · minister designates</span><span class="nl">ongeveer 500 · fysiek · minister wijst aan</span></div></div>
+      <div class="both"><span class="en">BOTH</span><span class="nl">BEIDE</span></div>
+      <div class="banner"><span class="en">CRITICAL UNDER THE WWKE = ESSENTIAL UNDER THE CBW</span><span class="nl">KRITIEK ONDER DE WWKE = ESSENTIEEL ONDER DE CBW</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The <abbr class="tip" tabindex="0" data-tip="Cyberbeveiligingswet: the Dutch law that transposes the EU NIS2 directive, in force since 15 August 2026.">Cbw</abbr> is the Dutch version of <abbr class="tip" tabindex="0" data-tip="EU directive on the cybersecurity of essential and important entities, Directive (EU) 2022/2555.">NIS2</abbr>. It applies to about 8,000 organisations in 18 sectors, mostly medium-sized or larger, and you work out yourself whether you are in scope and register with the <abbr class="tip" tabindex="0" data-tip="Nationaal Cyber Security Centrum: the Dutch national CSIRT, which keeps the Cbw register and runs the reporting portal.">NCSC</abbr>. The <abbr class="tip" tabindex="0" data-tip="Wet weerbaarheid kritieke entiteiten: the Dutch law that transposes the EU CER directive on the resilience of critical entities, in force since 15 August 2026.">Wwke</abbr> is the Dutch version of the <abbr class="tip" tabindex="0" data-tip="Critical Entities Resilience directive, Directive (EU) 2022/2557: physical and organisational resilience of entities that provide essential services.">CER</abbr> directive. It applies to about 500 organisations, and only after your sector minister formally designates you as a critical entity. The link between the two is one-way: a critical entity under the Wwke is an essential entity under the Cbw by law. An essential entity under the Cbw is not automatically critical.</p>
+      <p class="en"><strong>Business impact:</strong> most organisations in the shared sectors, such as energy, transport, water, health, digital infrastructure and government, will fall under the Cbw and not the Wwke. The 500 that are designated get both, with the heaviest supervision. Not knowing which group you are in means either over-investing in fences or under-investing in what a designation letter will ask for.</p>
+      <p class="nl">De <abbr class="tip" tabindex="0" data-tip="Cyberbeveiligingswet: de Nederlandse wet die de Europese NIS2-richtlijn omzet, van kracht sinds 15 augustus 2026.">Cbw</abbr> is de Nederlandse versie van <abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor de cyberbeveiliging van essentiële en belangrijke entiteiten, Richtlijn (EU) 2022/2555.">NIS2</abbr>. Zij geldt voor ruim 8.000 organisaties in 18 sectoren, meestal middelgroot of groter, en u bepaalt zelf of u eronder valt en registreert u bij het <abbr class="tip" tabindex="0" data-tip="Nationaal Cyber Security Centrum: het nationale CSIRT, dat het Cbw-register bijhoudt en het meldportaal beheert.">NCSC</abbr>. De <abbr class="tip" tabindex="0" data-tip="Wet weerbaarheid kritieke entiteiten: de Nederlandse wet die de Europese CER-richtlijn omzet, van kracht sinds 15 augustus 2026.">Wwke</abbr> is de Nederlandse versie van de <abbr class="tip" tabindex="0" data-tip="Critical Entities Resilience-richtlijn, Richtlijn (EU) 2022/2557: fysieke en organisatorische weerbaarheid van entiteiten die essentiële diensten verlenen.">CER</abbr>-richtlijn. Zij geldt voor ongeveer 500 organisaties, en pas nadat uw vakminister u formeel als kritieke entiteit heeft aangewezen. De koppeling is eenrichtingsverkeer: een kritieke entiteit onder de Wwke is van rechtswege essentiële entiteit onder de Cbw. Een essentiële entiteit onder de Cbw is niet automatisch kritiek.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de meeste organisaties in de gedeelde sectoren, zoals energie, vervoer, water, zorg, digitale infrastructuur en overheid, vallen onder de Cbw en niet onder de Wwke. De 500 die worden aangewezen krijgen beide, met het zwaarste toezicht. Niet weten in welke groep u zit betekent óf te veel investeren in hekken, óf te weinig in wat een aanwijzingsbesluit van u gaat vragen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">TWO SCOPES · ONE-WAY LINK · DESIGNATION ARRIVES BY LETTER</span><span class="nl">TWEE REIKWIJDTES · EENRICHTINGSKOPPELING · AANWIJZING KOMT PER BESLUIT</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE SCOPE DECISION, DATED, COVERING BOTH LAWS</span><span class="nl">AANBEVOLEN: ÉÉN GEDATEERD REIKWIJDTEBESLUIT VOOR BEIDE WETTEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Public designation lists, annual reports and permits can be combined by AI into a map of which sites deliver which essential service, pointing an attacker at the one location whose loss would disrupt the most.</span><span class="nl">Openbare aanwijzingslijsten, jaarverslagen en vergunningen kan AI combineren tot een kaart van welke locatie welke essentiële dienst levert, en zo een aanvaller wijzen op de ene plek waarvan uitval het meest verstoort.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">A scope memo written by a chatbot reads well and can quietly conclude "not in scope" from outdated thresholds, giving the board a confident answer that no lawyer checked against the current annexes.</span><span class="nl">Een reikwijdtememo van een chatbot leest prettig en kan stilletjes "valt er niet onder" concluderen op basis van verouderde drempels, waardoor het bestuur een stellig antwoord krijgt dat geen jurist aan de huidige bijlagen heeft getoetst.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Check the annexes, then sign</span><span class="nl">Bijlagen checken, dan tekenen</span></b><p><span class="en">AI can compare your activities against the sector annexes of both laws and flag where you sit near a threshold, but the decision is worth a signature from legal and the board, with the date on it.</span><span class="nl">AI kan uw activiteiten vergelijken met de sectorbijlagen van beide wetten en markeren waar u dicht bij een drempel zit, maar het besluit verdient een handtekening van juridische zaken en het bestuur, met datum.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">QUESTION 02</span><span class="nl">VRAAG 02</span></span>
+    <h2>
+      <span class="en">The Wwke adds <em>the building and the people.</em></span>
+      <span class="nl">De Wwke voegt <em>het gebouw en de mensen toe.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">risk assessment, resilience measures, background checks / Wwke Art. 14 and 15</span>
+      <span class="nl">risicobeoordeling, weerbaarheidsmaatregelen, antecedentenonderzoek / Wwke art. 14 en 15</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">THE SITE</span><span class="nl">DE LOCATIE</span></div>
+      <div class="site">
+        <div class="fence"></div>
+        <div class="actor">🕵</div>
+        <div class="bld"><i>🏭</i><i class="tall">🏢</i><i>⚡</i></div>
+        <div class="badge"><span class="en">ACCESS CONTROL</span><span class="nl">TOEGANGSCONTROLE</span></div>
+        <div class="badge b2"><span class="en">SCREENED STAFF</span><span class="nl">GESCREEND PERSONEEL</span></div>
+      </div>
+      <div class="banner"><span class="en">NOT ONLY HACKERS · FLOODS, FIRE, SABOTAGE, INSIDERS</span><span class="nl">NIET ALLEEN HACKERS · WATER, BRAND, SABOTAGE, INSIDERS</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The Cbw asks what happens to your essential service when your systems fail. The Wwke asks the same question for everything else: a flood, a fire, sabotage, a contractor with a grudge, a supplier that stops delivering. After designation, the Wwke requires a risk assessment within nine months, repeated at least every four years, and measures within ten months. The law lists them: prevent incidents, protect buildings and critical infrastructure physically, limit and recover from disruption, manage personnel security with background checks for critical roles, and make staff aware. The measures are written down, and your sector supervisor can ask to see them.</p>
+      <p class="en"><strong>Business impact:</strong> for most boards this is a different budget line and a different team. Fences, access control, continuity plans and screening sit with facilities, HR and operations, not with the <abbr class="tip" tabindex="0" data-tip="Chief Information Security Officer: the executive who runs information security day to day.">CISO</abbr>. The risk is that two teams each assess half of the same site, and nobody asks what the service needs to keep running.</p>
+      <p class="nl">De Cbw vraagt wat er met uw essentiële dienst gebeurt als uw systemen uitvallen. De Wwke stelt dezelfde vraag voor al het andere: een overstroming, brand, sabotage, een aannemer met wrok, een leverancier die stopt met leveren. Na aanwijzing eist de Wwke een risicobeoordeling binnen negen maanden, daarna ten minste elke vier jaar herhaald, en maatregelen binnen tien maanden. De wet somt ze op: incidenten voorkomen, gebouwen en kritieke infrastructuur fysiek beschermen, verstoring beperken en herstellen, personeelsbeveiliging regelen met antecedentenonderzoek voor kritieke functies, en medewerkers bewust maken. De maatregelen worden vastgelegd, en uw sectortoezichthouder kan ze opvragen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> voor de meeste besturen is dit een andere begrotingspost en een ander team. Hekken, toegangscontrole, continuïteitsplannen en screening liggen bij facilitair, HR en operatie, niet bij de <abbr class="tip" tabindex="0" data-tip="Chief Information Security Officer: de manager die de informatiebeveiliging dagelijks leidt.">CISO</abbr>. Het risico is dat twee teams elk de helft van dezelfde locatie beoordelen, en niemand vraagt wat de dienst nodig heeft om te blijven draaien.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">9 MONTHS TO ASSESS · 10 MONTHS TO ACT · TWO TEAMS, ONE SITE</span><span class="nl">9 MAANDEN BEOORDELEN · 10 MAANDEN REGELEN · TWEE TEAMS, ÉÉN LOCATIE</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE RISK ASSESSMENT PER SERVICE, CYBER AND PHYSICAL TOGETHER</span><span class="nl">AANBEVOLEN: ÉÉN RISICOBEOORDELING PER DIENST, CYBER EN FYSIEK SAMEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Satellite imagery, street views and job adverts let AI sketch a site's perimeter, shift patterns and unguarded entrances in an afternoon, work that used to take weeks of physical reconnaissance.</span><span class="nl">Met satellietbeelden, straatfoto's en vacatures schetst AI in een middag de omheining, de ploegendiensten en de onbewaakte ingangen van een locatie, werk dat vroeger weken fysieke verkenning kostte.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">A fabricated CV, references and a deepfaked video interview can get an insider into a critical role; a background check that only verifies documents is exactly what generative AI is good at defeating.</span><span class="nl">Een verzonnen cv, referenties en een gedeepfakete video-interview kunnen een insider in een kritieke functie brengen; een antecedentenonderzoek dat alleen documenten controleert, is precies wat generatieve AI goed kan omzeilen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Correlate badge, camera and login</span><span class="nl">Pas, camera en inlog koppelen</span></b><p><span class="en">AI can link badge swipes, camera feeds and system logins to flag a person in a room they never badged into, but the physical basics stay human: who holds the keys, who checked them, who revokes them.</span><span class="nl">AI kan pasregistraties, camerabeelden en inlogs koppelen en iemand markeren in een ruimte waar hij nooit heeft ingecheckt, maar de fysieke basis blijft mensenwerk: wie de sleutels heeft, wie dat controleerde, wie ze intrekt.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">QUESTION 03</span><span class="nl">VRAAG 03</span></span>
+    <h2>
+      <span class="en">Two clocks, <em>one portal, different recipients.</em></span>
+      <span class="nl">Twee klokken, <em>één portaal, andere ontvangers.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">incident reporting / confirm the exact regime with legal</span>
+      <span class="nl">incidentmelding / laat juridische zaken het exacte regime bevestigen</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">FROM THE MOMENT YOU KNOW</span><span class="nl">VANAF HET MOMENT DAT U HET WEET</span></div>
+      <span class="who w1"><span class="en">WWKE · COMPETENT AUTHORITY</span><span class="nl">WWKE · BEVOEGDE AUTORITEIT</span></span>
+      <div class="track t1">
+        <div class="fill"></div>
+        <div class="mark m0"><span class="lbl up"><span class="en">T=0 · AWARE</span><span class="nl">T=0 · BEKEND</span></span></div>
+        <div class="mark m1"><span class="lbl"><span class="en">~24H · NOTIFICATION</span><span class="nl">~24U · MELDING</span></span></div>
+        <div class="mark m3"><span class="lbl up"><span class="en">~1 MONTH · DETAILED REPORT</span><span class="nl">~1 MAAND · UITGEBREID RAPPORT</span></span></div>
+      </div>
+      <span class="who w2"><span class="en">CBW · NCSC OR SECTOR CSIRT</span><span class="nl">CBW · NCSC OF SECTOR-CSIRT</span></span>
+      <div class="track t2">
+        <div class="fill"></div>
+        <div class="mark m0"><span class="lbl up"><span class="en">T=0</span><span class="nl">T=0</span></span></div>
+        <div class="mark m1"><span class="lbl"><span class="en">~24H · EARLY WARNING</span><span class="nl">~24U · VROEGE WAARSCHUWING</span></span></div>
+        <div class="mark m2"><span class="lbl up"><span class="en">~72H · NOTIFICATION</span><span class="nl">~72U · MELDING</span></span></div>
+        <div class="mark m3"><span class="lbl"><span class="en">~1 MONTH<i class="x"> · FINAL</i></span><span class="nl">~1 MAAND<i class="x"> · EINDRAPPORT</i></span></span></div>
+      </div>
+      <div class="banner"><span class="en">ONE INCIDENT CAN START BOTH CLOCKS</span><span class="nl">ÉÉN INCIDENT KAN BEIDE KLOKKEN STARTEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Under the Wwke, an incident that significantly disrupts your essential service, or could, is reported to the competent authority for your sector without undue delay and within 24 hours of becoming aware, with a detailed report within one month. Whether it counts depends on how many people are affected, for how long, and over what area. Under the Cbw, a significant cyber incident goes to the NCSC or your sector <abbr class="tip" tabindex="0" data-tip="Computer Security Incident Response Team: the national or sector team that receives incident reports and helps respond.">CSIRT</abbr>: early warning within 24 hours, notification within 72 hours, final report within one month. Both reports run through the same portal, <abbr class="tip" tabindex="0" data-tip="The NCSC portal where organisations register and report incidents under both the Cbw and the Wwke.">MijnNCSC</abbr>. The <abbr class="tip" tabindex="0" data-tip="Nationaal Coördinator Terrorismebestrijding en Veiligheid: coordinates the Wwke and critical-infrastructure policy, but does not receive incident reports.">NCTV</abbr> coordinates the Wwke but is not the recipient. A fire that takes down a data hall can start both clocks at once.</p>
+      <p class="en"><strong>Business impact:</strong> the first 24 hours now have to answer two questions, not one: is the service disrupted, and are the systems compromised. The teams that know are different, and the pre-drafted notifications are different. Organisations that rehearse only the cyber version tend to discover the physical one when the letter from the supervisor arrives.</p>
+      <p class="nl">Onder de Wwke meldt u een incident dat uw essentiële dienst aanzienlijk verstoort, of kan verstoren, zonder onnodige vertraging en binnen 24 uur na kennisname bij de bevoegde autoriteit voor uw sector, met een uitgebreid rapport binnen een maand. Of het meetelt hangt af van hoeveel mensen zijn geraakt, hoe lang, en in welk gebied. Onder de Cbw gaat een significant cyberincident naar het NCSC of uw sectorale <abbr class="tip" tabindex="0" data-tip="Computer Security Incident Response Team: het nationale of sectorale team dat incidentmeldingen ontvangt en helpt bij de aanpak.">CSIRT</abbr>: vroege waarschuwing binnen 24 uur, melding binnen 72 uur, eindrapport binnen een maand. Beide meldingen lopen via hetzelfde portaal, <abbr class="tip" tabindex="0" data-tip="Het NCSC-portaal waar organisaties zich registreren en incidenten melden onder zowel de Cbw als de Wwke.">MijnNCSC</abbr>. De <abbr class="tip" tabindex="0" data-tip="Nationaal Coördinator Terrorismebestrijding en Veiligheid: coördineert de Wwke en het vitale-infrastructuurbeleid, maar ontvangt geen incidentmeldingen.">NCTV</abbr> coördineert de Wwke, maar is niet de ontvanger. Een brand die een datazaal uitschakelt kan beide klokken tegelijk starten.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de eerste 24 uur moeten nu twee vragen beantwoorden in plaats van één: is de dienst verstoord, en zijn de systemen gecompromitteerd. De teams die het weten verschillen, en de voorbereide meldingen verschillen. Organisaties die alleen de cybervariant oefenen, ontdekken de fysieke meestal pas als de brief van de toezichthouder komt.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">24H TWICE · DIFFERENT RECIPIENTS · NIGHTS AND WEEKENDS COUNT</span><span class="nl">TWEEMAAL 24U · ANDERE ONTVANGERS · NACHTEN EN WEEKENDEN TELLEN MEE</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE INCIDENT PROCESS THAT FEEDS BOTH REPORTS, REHEARSED</span><span class="nl">AANBEVOLEN: ÉÉN INCIDENTPROCES DAT BEIDE MELDINGEN VOEDT, GEOEFEND</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A spoofed message from "the supervisor" or "the NCSC portal" in the first hours, written by AI in the right tone, can send the real notification to the wrong place or delay it past 24 hours.</span><span class="nl">Een vervalst bericht van "de toezichthouder" of "het NCSC-portaal" in de eerste uren, door AI in de juiste toon geschreven, kan de echte melding naar de verkeerde plek sturen of tot na 24 uur vertragen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Under time pressure, staff paste site plans, shift rosters and incident details into a public chatbot to draft the report, handing a map of a critical site to a third party.</span><span class="nl">Onder tijdsdruk plakken medewerkers plattegronden, roosters en incidentdetails in een openbare chatbot om de melding op te stellen, en geven zo een kaart van een kritieke locatie aan een derde partij.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Draft both, verify once</span><span class="nl">Beide opstellen, één keer checken</span></b><p><span class="en">AI can pre-fill both templates from one incident timeline and point out where the facts differ, but one named person still verifies every fact before either report leaves the building.</span><span class="nl">AI kan beide sjablonen vooraf invullen vanuit één incidenttijdlijn en aangeven waar de feiten verschillen, maar één persoon met naam controleert elk feit voordat een van beide meldingen de deur uitgaat.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">QUESTION 04</span><span class="nl">VRAAG 04</span></span>
+    <h2>
+      <span class="en">Where they overlap, <em>and the one decision that covers both.</em></span>
+      <span class="nl">Waar ze overlappen, <em>en het ene besluit dat beide dekt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">governance / who is accountable under each law</span>
+      <span class="nl">governance / wie onder welke wet verantwoordelijk is</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">ONE DECISION, FOUR LINES</span><span class="nl">ÉÉN BESLUIT, VIER REGELS</span></div>
+      <div class="list">
+        <div class="item"><i style="--d:.6s"></i><span class="en">One executive owns resilience, cyber and physical</span><span class="nl">Eén bestuurder is eigenaar van weerbaarheid, cyber en fysiek</span><span class="st"><span class="en">NAMED</span><span class="nl">BIJ NAAM</span></span></div>
+        <div class="item"><i style="--d:2.2s"></i><span class="en">One risk assessment per essential service</span><span class="nl">Eén risicobeoordeling per essentiële dienst</span><span class="st"><span class="en">DATED</span><span class="nl">GEDATEERD</span></span></div>
+        <div class="item"><i style="--d:3.8s"></i><span class="en">One incident process, two report templates</span><span class="nl">Eén incidentproces, twee meldsjablonen</span><span class="st"><span class="en">REHEARSED</span><span class="nl">GEOEFEND</span></span></div>
+        <div class="item"><i style="--d:5.4s"></i><span class="en">One evidence file for both supervisors</span><span class="nl">Eén bewijsdossier voor beide toezichthouders</span><span class="st"><span class="en">ON THE AGENDA</span><span class="nl">OP DE AGENDA</span></span></div>
+      </div>
+      <div class="banner"><span class="en">TWO LAWS · ONE SERVICE · ONE OWNER</span><span class="nl">TWEE WETTEN · ÉÉN DIENST · ÉÉN EIGENAAR</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The two laws overlap more than they differ. Both ask for a risk assessment, proportionate measures, incident reporting and evidence, and both are enforced by your sector supervisor. The differences sit in the details: the Cbw names the management body, requires it to approve the measures and to follow training, and can hold it liable. The Wwke is enforced against the organisation, not against individuals, and its supervisor is the sector ministry or its inspectorate. If you are designated, the ministry informs the Cbw authority within a month, so the two supervisors will know about each other before you do.</p>
+      <p class="en"><strong>Business impact:</strong> the cheapest way through is to decide once. We suggest a single board decision that names one executive for resilience, orders one risk assessment per essential service covering systems, buildings, people and suppliers, sets up one incident process with two report templates, and keeps one evidence file. Two parallel programmes cost more and leave the gap between them unowned.</p>
+      <p class="nl">De twee wetten overlappen meer dan ze verschillen. Beide vragen een risicobeoordeling, evenredige maatregelen, incidentmelding en bewijs, en beide worden gehandhaafd door uw sectortoezichthouder. De verschillen zitten in de details: de Cbw noemt het bestuur, verplicht het de maatregelen goed te keuren en training te volgen, en kan het aansprakelijk stellen. De Wwke wordt gehandhaafd tegen de organisatie, niet tegen personen, en de toezichthouder is het vakministerie of zijn inspectie. Wordt u aangewezen, dan informeert het ministerie binnen een maand de Cbw-autoriteit, dus de twee toezichthouders weten eerder van elkaar dan u.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de goedkoopste route is één keer besluiten. Wij stellen één bestuursbesluit voor dat één bestuurder voor weerbaarheid benoemt, één risicobeoordeling per essentiële dienst opdraagt die systemen, gebouwen, mensen en leveranciers dekt, één incidentproces met twee meldsjablonen inricht, en één bewijsdossier bijhoudt. Twee parallelle programma's kosten meer en laten het gat ertussen zonder eigenaar.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">TWO PROGRAMMES · TWO SUPERVISORS · THE GAP BETWEEN THEM</span><span class="nl">TWEE PROGRAMMA'S · TWEE TOEZICHTHOUDERS · HET GAT ERTUSSEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE BOARD DECISION, ONE OWNER, ONE EVIDENCE FILE</span><span class="nl">AANBEVOLEN: ÉÉN BESTUURSBESLUIT, ÉÉN EIGENAAR, ÉÉN BEWIJSDOSSIER</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An attacker who finds that cyber and physical are run by different teams can time a small physical incident to pull attention away from the intrusion, or the other way round, because nobody sees both dashboards.</span><span class="nl">Een aanvaller die ontdekt dat cyber en fysiek door verschillende teams worden gedaan, kan een klein fysiek incident timen om de aandacht van de inbraak af te leiden, of andersom, omdat niemand beide dashboards ziet.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Generative AI produces two polished compliance reports for two supervisors that quietly contradict each other on the same site, and the board signs both without noticing.</span><span class="nl">Generatieve AI levert twee gepolijste compliance-rapporten voor twee toezichthouders die elkaar stilletjes tegenspreken over dezelfde locatie, en het bestuur tekent beide zonder het te merken.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">One file, cross-checked</span><span class="nl">Eén dossier, kruislings gecheckt</span></b><p><span class="en">AI can read the cyber and the physical assessment of one service side by side and list where they disagree, which is a useful board paper, but the decision to merge them is the board's, not the tool's.</span><span class="nl">AI kan de cyber- en de fysieke beoordeling van één dienst naast elkaar lezen en opsommen waar ze van elkaar afwijken, een nuttig bestuursstuk, maar het besluit om ze samen te voegen is van het bestuur, niet van het hulpmiddel.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- diagram:law-map -->
+<section class="risk-block" id="law-map">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">IN PRACTICE</span><span class="nl">IN DE PRAKTIJK</span></span>
+    <h2><span class="en">Which law applies to you.<br><em>And whom you would report to.</em></span><span class="nl">Welke wet voor u geldt.<br><em>En aan wie u zou melden.</em></span></h2>
+    <span class="term"><span class="en">law map / indicative, not legal advice</span><span class="nl">wettenkaart / indicatief, geen juridisch advies</span></span>
+
+    <figure class="arch">
+<svg viewBox="0 0 1120 640" role="img" aria-labelledby="cw-title cw-desc" xmlns="http://www.w3.org/2000/svg">
+<title id="cw-title">Which law applies to us: Cbw, Wwke or both?</title>
+<desc id="cw-desc">Decision map. Question 1: has your sector minister designated you as a critical entity? If yes, the Wwke applies and you are an essential entity under the Cbw by law: report a disruptive incident within 24 hours to the competent authority via the MijnNCSC portal, detailed report within one month, and the Cbw clock runs as well. If no, question 2: are you in a Cbw sector and medium-sized or larger, or designated? If yes, the Cbw applies: early warning within 24 hours, notification within 72 hours, final report within one month, to NCSC or the sector CSIRT. If neither, no Cbw or Wwke clock. Question 3, for everyone and in parallel: is personal data involved? If yes, notify the Autoriteit Persoonsgegevens within 72 hours under the GDPR. Indicative, not legal advice.</desc>
+<defs>
+<marker id="cw-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 Z" class="cw-arrowhead"/></marker>
+</defs>
+<rect x="20" y="30" width="550" height="504" class="cw-zone"/>
+<text x="40" y="54" class="cw-zlabel en">WHICH LAW · CONFIRM WITH LEGAL</text><text x="40" y="54" class="cw-zlabel nl">WELKE WET · BEVESTIG MET JURISTEN</text>
+<rect x="580" y="30" width="520" height="504" class="cw-zone"/>
+<text x="596" y="54" class="cw-zlabel en">REPORTING CLOCK · FROM BECOMING AWARE</text><text x="596" y="54" class="cw-zlabel nl">MELDKLOK · VANAF KENNISNAME</text>
+<path d="M292 118.0 H337" class="cw-link" marker-end="url(#cw-arr)"/>
+<text x="302" y="111.0" class="cw-llabel en" text-anchor="start">YES</text><text x="302" y="111.0" class="cw-llabel nl" text-anchor="start">JA</text>
+<path d="M100 168 V197" class="cw-link" marker-end="url(#cw-arr)"/>
+<text x="110" y="188" class="cw-llabel en" text-anchor="start">NO</text><text x="110" y="188" class="cw-llabel nl" text-anchor="start">NEE</text>
+<path d="M292 248.0 H337" class="cw-link" marker-end="url(#cw-arr)"/>
+<text x="302" y="241.0" class="cw-llabel en" text-anchor="start">YES</text><text x="302" y="241.0" class="cw-llabel nl" text-anchor="start">JA</text>
+<path d="M200 298 V354 H337" class="cw-link" marker-end="url(#cw-arr)"/>
+<text x="210" y="314" class="cw-llabel en" text-anchor="start">NO</text><text x="210" y="314" class="cw-llabel nl" text-anchor="start">NEE</text>
+<path d="M292 468.0 H337" class="cw-link" marker-end="url(#cw-arr)"/>
+<text x="302" y="461.0" class="cw-llabel en" text-anchor="start">YES</text><text x="302" y="461.0" class="cw-llabel nl" text-anchor="start">JA</text>
+<path d="M542 118.0 H587" class="cw-link" marker-end="url(#cw-arr)"/>
+<path d="M542 248.0 H587" class="cw-link" marker-end="url(#cw-arr)"/>
+<path d="M542 468.0 H587" class="cw-link" marker-end="url(#cw-arr)"/>
+<path d="M510 168 V198" class="cw-lex"/>
+<text x="502" y="187" class="cw-llabel en" text-anchor="end">CBW TOO</text><text x="502" y="187" class="cw-llabel nl" text-anchor="end">OOK CBW</text>
+<g class="cw-node-g cw-s-q cw-hc0" tabindex="0">
+<rect x="40" y="70" width="250" height="96" class="cw-node"/>
+<rect x="40" y="70" width="4" height="96" class="cw-bar"/>
+<text x="56" y="92" class="cw-kick en">QUESTION 1</text><text x="56" y="92" class="cw-kick nl">VRAAG 1</text>
+<text x="56" y="114" class="cw-name en">Designated as a critical</text><text x="56" y="114" class="cw-name nl">Door uw vakminister</text>
+<text x="56" y="131" class="cw-name en">entity by your minister?</text><text x="56" y="131" class="cw-name nl">aangewezen als kritiek?</text>
+<text x="56" y="154" class="cw-st en">about 500 organisations</text><text x="56" y="154" class="cw-st nl">ongeveer 500 organisaties</text>
+</g>
+<g class="cw-node-g cw-s-q cw-hc1" tabindex="0">
+<rect x="40" y="200" width="250" height="96" class="cw-node"/>
+<rect x="40" y="200" width="4" height="96" class="cw-bar"/>
+<text x="56" y="222" class="cw-kick en">QUESTION 2</text><text x="56" y="222" class="cw-kick nl">VRAAG 2</text>
+<text x="56" y="244" class="cw-name en">In a Cbw sector and</text><text x="56" y="244" class="cw-name nl">In een Cbw-sector en</text>
+<text x="56" y="261" class="cw-name en">medium-sized or larger?</text><text x="56" y="261" class="cw-name nl">middelgroot of groter?</text>
+<text x="56" y="284" class="cw-st en">or designated · about 8,000</text><text x="56" y="284" class="cw-st nl">of aangewezen · ruim 8.000</text>
+</g>
+<g class="cw-node-g cw-s-q cw-hc2" tabindex="0">
+<rect x="40" y="420" width="250" height="96" class="cw-node"/>
+<rect x="40" y="420" width="4" height="96" class="cw-bar"/>
+<text x="56" y="442" class="cw-kick en">QUESTION 3 · ALWAYS</text><text x="56" y="442" class="cw-kick nl">VRAAG 3 · ALTIJD</text>
+<text x="56" y="464" class="cw-name en">Is personal data involved?</text><text x="56" y="464" class="cw-name nl">Zijn persoonsgegevens</text>
+<text x="56" y="481" class="cw-name en"></text><text x="56" y="481" class="cw-name nl">betrokken?</text>
+<text x="56" y="504" class="cw-st en">for everyone, in parallel</text><text x="56" y="504" class="cw-st nl">voor iedereen, parallel</text>
+</g>
+<g class="cw-node-g cw-s-warn cw-hc3" tabindex="0">
+<rect x="340" y="70" width="200" height="96" class="cw-node"/>
+<rect x="340" y="70" width="4" height="96" class="cw-bar"/>
+<text x="356" y="92" class="cw-kick en">PHYSICAL AND DIGITAL</text><text x="356" y="92" class="cw-kick nl">FYSIEK EN DIGITAAL</text>
+<text x="356" y="114" class="cw-name en">Wwke applies,</text><text x="356" y="114" class="cw-name nl">Wwke geldt,</text>
+<text x="356" y="131" class="cw-name en">and the Cbw by law</text><text x="356" y="131" class="cw-name nl">en de Cbw van rechtswege</text>
+<text x="356" y="154" class="cw-st en">essential entity</text><text x="356" y="154" class="cw-st nl">essentiële entiteit</text>
+</g>
+<g class="cw-node-g cw-s-warn cw-hc4" tabindex="0">
+<rect x="340" y="200" width="200" height="96" class="cw-node"/>
+<rect x="340" y="200" width="4" height="96" class="cw-bar"/>
+<text x="356" y="222" class="cw-kick en">DIGITAL ONLY</text><text x="356" y="222" class="cw-kick nl">ALLEEN DIGITAAL</text>
+<text x="356" y="244" class="cw-name en">Cbw applies</text><text x="356" y="244" class="cw-name nl">Cbw geldt</text>
+<text x="356" y="284" class="cw-st en">register with NCSC</text><text x="356" y="284" class="cw-st nl">registreren bij NCSC</text>
+</g>
+<g class="cw-node-g cw-s-ok cw-hc5" tabindex="0">
+<rect x="340" y="322" width="200" height="64" class="cw-node"/>
+<rect x="340" y="322" width="4" height="64" class="cw-bar"/>
+<text x="356" y="344" class="cw-kick en">NEITHER</text><text x="356" y="344" class="cw-kick nl">GEEN VAN BEIDE</text>
+<text x="356" y="366" class="cw-name en">No Cbw or Wwke clock</text><text x="356" y="366" class="cw-name nl">Geen Cbw- of Wwke-klok</text>
+</g>
+<g class="cw-node-g cw-s-warn cw-hc6" tabindex="0">
+<rect x="340" y="420" width="200" height="96" class="cw-node"/>
+<rect x="340" y="420" width="4" height="96" class="cw-bar"/>
+<text x="356" y="442" class="cw-kick en">PERSONAL DATA BREACH</text><text x="356" y="442" class="cw-kick nl">DATALEK</text>
+<text x="356" y="464" class="cw-name en">GDPR applies</text><text x="356" y="464" class="cw-name nl">AVG geldt</text>
+<text x="356" y="504" class="cw-st en">Art. 33 and 34</text><text x="356" y="504" class="cw-st nl">art. 33 en 34</text>
+</g>
+<g class="cw-node-g cw-s-bad cw-hc7" tabindex="0">
+<rect x="590" y="70" width="490" height="96" class="cw-node"/>
+<rect x="590" y="70" width="4" height="96" class="cw-bar"/>
+<text x="606" y="92" class="cw-kick en">WWKE · TO THE COMPETENT AUTHORITY VIA MIJNNCSC</text><text x="606" y="92" class="cw-kick nl">WWKE · AAN DE BEVOEGDE AUTORITEIT VIA MIJNNCSC</text>
+<rect x="606.0" y="104" width="7" height="7" class="cw-dot"/>
+<path d="M617.0 107.5 H829.0" class="cw-step"/>
+<text x="606.0" y="128" class="cw-time en">24H</text><text x="606.0" y="128" class="cw-time nl">24U</text>
+<text x="606.0" y="142" class="cw-st en">notification</text><text x="606.0" y="142" class="cw-st nl">melding</text>
+<rect x="835.0" y="104" width="7" height="7" class="cw-dot"/>
+<text x="835.0" y="128" class="cw-time en">1 MONTH</text><text x="835.0" y="128" class="cw-time nl">1 MAAND</text>
+<text x="835.0" y="142" class="cw-st en">detailed report</text><text x="835.0" y="142" class="cw-st nl">uitgebreid rapport</text>
+<text x="606" y="158" class="cw-note en">if the disruption can count as significant · the Cbw clock below runs as well</text><text x="606" y="158" class="cw-note nl">als de verstoring als significant kan gelden · de Cbw-klok hieronder loopt ook</text>
+</g>
+<g class="cw-node-g cw-s-bad cw-hc8" tabindex="0">
+<rect x="590" y="200" width="490" height="96" class="cw-node"/>
+<rect x="590" y="200" width="4" height="96" class="cw-bar"/>
+<text x="606" y="222" class="cw-kick en">CBW · TO NCSC OR SECTOR CSIRT</text><text x="606" y="222" class="cw-kick nl">CBW · AAN NCSC OF SECTOR-CSIRT</text>
+<rect x="606.0" y="234" width="7" height="7" class="cw-dot"/>
+<path d="M617.0 237.5 H752.7" class="cw-step"/>
+<text x="606.0" y="258" class="cw-time en">24H</text><text x="606.0" y="258" class="cw-time nl">24U</text>
+<text x="606.0" y="272" class="cw-st en">early warning</text><text x="606.0" y="272" class="cw-st nl">vroege waarschuwing</text>
+<rect x="758.7" y="234" width="7" height="7" class="cw-dot"/>
+<path d="M769.7 237.5 H905.4" class="cw-step"/>
+<text x="758.7" y="258" class="cw-time en">72H</text><text x="758.7" y="258" class="cw-time nl">72U</text>
+<text x="758.7" y="272" class="cw-st en">notification</text><text x="758.7" y="272" class="cw-st nl">incidentmelding</text>
+<rect x="911.3" y="234" width="7" height="7" class="cw-dot"/>
+<text x="911.3" y="258" class="cw-time en">1 MONTH</text><text x="911.3" y="258" class="cw-time nl">1 MAAND</text>
+<text x="911.3" y="272" class="cw-st en">final report</text><text x="911.3" y="272" class="cw-st nl">eindrapport</text>
+<text x="606" y="288" class="cw-note en">if it can count as significant · via the NCSC portal</text><text x="606" y="288" class="cw-note nl">als het als significant kan gelden · via het NCSC-portaal</text>
+</g>
+<g class="cw-node-g cw-s-bad cw-hc9" tabindex="0">
+<rect x="590" y="420" width="490" height="96" class="cw-node"/>
+<rect x="590" y="420" width="4" height="96" class="cw-bar"/>
+<text x="606" y="442" class="cw-kick en">GDPR · TO THE AUTORITEIT PERSOONSGEGEVENS</text><text x="606" y="442" class="cw-kick nl">AVG · AAN DE AUTORITEIT PERSOONSGEGEVENS</text>
+<rect x="606.0" y="454" width="7" height="7" class="cw-dot"/>
+<path d="M617.0 457.5 H829.0" class="cw-step"/>
+<text x="606.0" y="478" class="cw-time en">72H</text><text x="606.0" y="478" class="cw-time nl">72U</text>
+<text x="606.0" y="492" class="cw-st en">notify the AP</text><text x="606.0" y="492" class="cw-st nl">melden bij de AP</text>
+<rect x="835.0" y="454" width="7" height="7" class="cw-dot"/>
+<text x="835.0" y="478" class="cw-time en">HIGH RISK</text><text x="835.0" y="478" class="cw-time nl">HOOG RISICO</text>
+<text x="835.0" y="492" class="cw-st en">inform the people</text><text x="835.0" y="492" class="cw-st nl">betrokkenen informeren</text>
+<text x="606" y="508" class="cw-note en">unless the breach is unlikely to cause a risk</text><text x="606" y="508" class="cw-note nl">tenzij het datalek waarschijnlijk geen risico oplevert</text>
+</g>
+<rect x="40" y="561" width="14" height="14" class="cw-sw cw-sw-q"/>
+<text x="62" y="572" class="cw-legend en">Question</text><text x="62" y="572" class="cw-legend nl">Vraag</text>
+<rect x="200" y="561" width="14" height="14" class="cw-sw cw-sw-warn"/>
+<text x="222" y="572" class="cw-legend en">Law applies</text><text x="222" y="572" class="cw-legend nl">Wet geldt</text>
+<rect x="400" y="561" width="14" height="14" class="cw-sw cw-sw-bad"/>
+<text x="422" y="572" class="cw-legend en">Reporting clock runs</text><text x="422" y="572" class="cw-legend nl">Meldklok loopt</text>
+<rect x="620" y="561" width="14" height="14" class="cw-sw cw-sw-ok"/>
+<text x="642" y="572" class="cw-legend en">No Cbw or Wwke clock</text><text x="642" y="572" class="cw-legend nl">Geen Cbw- of Wwke-klok</text>
+<path d="M870 568 H900" class="cw-lex"/>
+<text x="908" y="572" class="cw-legend en">pulls the other law in</text><text x="908" y="572" class="cw-legend nl">trekt de andere wet mee</text>
+<text x="40" y="602" class="cw-foot en">Indicative — not legal advice · clocks as set in law, scope to confirm with legal · hover or tap a box for an explanation</text><text x="40" y="602" class="cw-foot nl">Indicatief — geen juridisch advies · termijnen zoals in de wet, reikwijdte bevestigen met juristen · beweeg of tik op een blok voor uitleg</text>
+<g class="cw-svtip cw-tc0" aria-hidden="true">
+<rect x="40" y="172" width="303" height="92" class="cw-tip-bg"/>
+<rect x="40" y="172" width="3" height="92" class="cw-tip-acc"/>
+<text x="54" y="190" class="cw-tip-t0 en">Critical entity · Wwke Art. 6</text>
+<text x="54" y="205" class="cw-tip-t en">Your sector minister designates you if</text>
+<text x="54" y="220" class="cw-tip-t en">an incident would significantly disrupt</text>
+<text x="54" y="235" class="cw-tip-t en">an essential service. You receive a</text>
+<text x="54" y="250" class="cw-tip-t en">decision, with the date it starts.</text>
+<text x="54" y="190" class="cw-tip-t0 nl">Kritieke entiteit · Wwke art. 6</text>
+<text x="54" y="205" class="cw-tip-t nl">Uw vakminister wijst u aan als een</text>
+<text x="54" y="220" class="cw-tip-t nl">incident een essentiële dienst aanzienlijk</text>
+<text x="54" y="235" class="cw-tip-t nl">zou verstoren. U krijgt een besluit, met</text>
+<text x="54" y="250" class="cw-tip-t nl">de datum waarop het ingaat.</text>
+</g>
+<g class="cw-svtip cw-tc1" aria-hidden="true">
+<rect x="40" y="302" width="290" height="92" class="cw-tip-bg"/>
+<rect x="40" y="302" width="3" height="92" class="cw-tip-acc"/>
+<text x="54" y="320" class="cw-tip-t0 en">Cbw sector · size</text>
+<text x="54" y="335" class="cw-tip-t en">18 sectors in the Cbw annexes, e.g.</text>
+<text x="54" y="350" class="cw-tip-t en">energy, health, transport, digital.</text>
+<text x="54" y="365" class="cw-tip-t en">Medium-sized: 50 staff or €10M turnover.</text>
+<text x="54" y="380" class="cw-tip-t en">You assess this yourself and register.</text>
+<text x="54" y="320" class="cw-tip-t0 nl">Cbw-sector · omvang</text>
+<text x="54" y="335" class="cw-tip-t nl">18 sectoren in de Cbw-bijlagen, zoals</text>
+<text x="54" y="350" class="cw-tip-t nl">energie, zorg, vervoer, digitaal.</text>
+<text x="54" y="365" class="cw-tip-t nl">Middelgroot: 50 medewerkers of €10 mln</text>
+<text x="54" y="380" class="cw-tip-t nl">omzet. U toetst dit zelf en registreert.</text>
+</g>
+<g class="cw-svtip cw-tc2" aria-hidden="true">
+<rect x="40" y="337" width="297" height="77" class="cw-tip-bg"/>
+<rect x="40" y="337" width="3" height="77" class="cw-tip-acc"/>
+<text x="54" y="355" class="cw-tip-t0 en">Personal data · GDPR</text>
+<text x="54" y="370" class="cw-tip-t en">A personal data breach has its own clock</text>
+<text x="54" y="385" class="cw-tip-t en">under the GDPR (AVG in Dutch), alongside</text>
+<text x="54" y="400" class="cw-tip-t en">any Cbw or Wwke report.</text>
+<text x="54" y="355" class="cw-tip-t0 nl">Persoonsgegevens · AVG</text>
+<text x="54" y="370" class="cw-tip-t nl">Een datalek heeft een eigen termijn onder</text>
+<text x="54" y="385" class="cw-tip-t nl">de AVG, naast een eventuele melding</text>
+<text x="54" y="400" class="cw-tip-t nl">onder de Cbw of de Wwke.</text>
+</g>
+<g class="cw-svtip cw-tc3" aria-hidden="true">
+<rect x="340" y="172" width="323" height="92" class="cw-tip-bg"/>
+<rect x="340" y="172" width="3" height="92" class="cw-tip-acc"/>
+<text x="354" y="190" class="cw-tip-t0 en">Wwke · Wet weerbaarheid kritieke entiteiten</text>
+<text x="354" y="205" class="cw-tip-t en">Risk assessment within 9 months, measures</text>
+<text x="354" y="220" class="cw-tip-t en">within 10 months: physical protection,</text>
+<text x="354" y="235" class="cw-tip-t en">personnel checks, recovery. A critical</text>
+<text x="354" y="250" class="cw-tip-t en">entity is an essential entity under the Cbw.</text>
+<text x="354" y="190" class="cw-tip-t0 nl">Wwke · Wet weerbaarheid kritieke entiteiten</text>
+<text x="354" y="205" class="cw-tip-t nl">Risicobeoordeling binnen 9 maanden,</text>
+<text x="354" y="220" class="cw-tip-t nl">maatregelen binnen 10: fysieke beveiliging,</text>
+<text x="354" y="235" class="cw-tip-t nl">personeelsscreening, herstel. Een kritieke</text>
+<text x="354" y="250" class="cw-tip-t nl">entiteit is essentiële entiteit onder de Cbw.</text>
+</g>
+<g class="cw-svtip cw-tc4" aria-hidden="true">
+<rect x="340" y="302" width="297" height="77" class="cw-tip-bg"/>
+<rect x="340" y="302" width="3" height="77" class="cw-tip-acc"/>
+<text x="354" y="320" class="cw-tip-t0 en">Cbw · Cyberbeveiligingswet</text>
+<text x="354" y="335" class="cw-tip-t en">The Dutch NIS2 law, in force since</text>
+<text x="354" y="350" class="cw-tip-t en">15 August 2026: registration with NCSC,</text>
+<text x="354" y="365" class="cw-tip-t en">duty of care, reporting, board training.</text>
+<text x="354" y="320" class="cw-tip-t0 nl">Cbw · Cyberbeveiligingswet</text>
+<text x="354" y="335" class="cw-tip-t nl">De Nederlandse NIS2-wet, van kracht sinds</text>
+<text x="354" y="350" class="cw-tip-t nl">15 augustus 2026: registratie bij NCSC,</text>
+<text x="354" y="365" class="cw-tip-t nl">zorgplicht, meldplicht, bestuurstraining.</text>
+</g>
+<g class="cw-svtip cw-tc5" aria-hidden="true">
+<rect x="340" y="392" width="283" height="77" class="cw-tip-bg"/>
+<rect x="340" y="392" width="3" height="77" class="cw-tip-acc"/>
+<text x="354" y="410" class="cw-tip-t0 en">Outside Cbw and Wwke</text>
+<text x="354" y="425" class="cw-tip-t en">No Cbw or Wwke clock, but the GDPR,</text>
+<text x="354" y="440" class="cw-tip-t en">contracts and customer duties remain.</text>
+<text x="354" y="455" class="cw-tip-t en">Worth recording the scope decision.</text>
+<text x="354" y="410" class="cw-tip-t0 nl">Buiten Cbw en Wwke</text>
+<text x="354" y="425" class="cw-tip-t nl">Geen Cbw- of Wwke-termijn, maar de AVG,</text>
+<text x="354" y="440" class="cw-tip-t nl">contracten en klantafspraken blijven.</text>
+<text x="354" y="455" class="cw-tip-t nl">Leg het reikwijdtebesluit wel vast.</text>
+</g>
+<g class="cw-svtip cw-tc6" aria-hidden="true">
+<rect x="340" y="337" width="283" height="77" class="cw-tip-bg"/>
+<rect x="340" y="337" width="3" height="77" class="cw-tip-acc"/>
+<text x="354" y="355" class="cw-tip-t0 en">GDPR · AVG in Dutch</text>
+<text x="354" y="370" class="cw-tip-t en">General Data Protection Regulation.</text>
+<text x="354" y="385" class="cw-tip-t en">The controller notifies the Dutch data</text>
+<text x="354" y="400" class="cw-tip-t en">protection authority, the AP.</text>
+<text x="354" y="355" class="cw-tip-t0 nl">AVG · Algemene verordening</text>
+<text x="354" y="370" class="cw-tip-t nl">gegevensbescherming. De verwerkings-</text>
+<text x="354" y="385" class="cw-tip-t nl">verantwoordelijke meldt het datalek bij</text>
+<text x="354" y="400" class="cw-tip-t nl">de Autoriteit Persoonsgegevens (AP).</text>
+</g>
+<g class="cw-svtip cw-tc7" aria-hidden="true">
+<rect x="590" y="172" width="297" height="92" class="cw-tip-bg"/>
+<rect x="590" y="172" width="3" height="92" class="cw-tip-acc"/>
+<text x="604" y="190" class="cw-tip-t0 en">Disruptive incident · Wwke Art. 17</text>
+<text x="604" y="205" class="cw-tip-t en">Notify without undue delay and within</text>
+<text x="604" y="220" class="cw-tip-t en">24 hours of becoming aware; detailed</text>
+<text x="604" y="235" class="cw-tip-t en">report within one month. Same portal</text>
+<text x="604" y="250" class="cw-tip-t en">as the Cbw. The NCTV coordinates only.</text>
+<text x="604" y="190" class="cw-tip-t0 nl">Verstorend incident · Wwke art. 17</text>
+<text x="604" y="205" class="cw-tip-t nl">Meld zonder onnodige vertraging en binnen</text>
+<text x="604" y="220" class="cw-tip-t nl">24 uur na kennisname; uitgebreid rapport</text>
+<text x="604" y="235" class="cw-tip-t nl">binnen een maand. Zelfde portaal als de</text>
+<text x="604" y="250" class="cw-tip-t nl">Cbw. De NCTV coördineert alleen.</text>
+</g>
+<g class="cw-svtip cw-tc8" aria-hidden="true">
+<rect x="590" y="302" width="297" height="77" class="cw-tip-bg"/>
+<rect x="590" y="302" width="3" height="77" class="cw-tip-acc"/>
+<text x="604" y="320" class="cw-tip-t0 en">Significant incident · Cbw / NIS2 Art. 23</text>
+<text x="604" y="335" class="cw-tip-t en">Early warning 24h, notification 72h,</text>
+<text x="604" y="350" class="cw-tip-t en">final report 1 month. The NCSC portal</text>
+<text x="604" y="365" class="cw-tip-t en">forwards it to the CSIRT and supervisor.</text>
+<text x="604" y="320" class="cw-tip-t0 nl">Significant incident · Cbw / NIS2 art. 23</text>
+<text x="604" y="335" class="cw-tip-t nl">Vroege waarschuwing 24u, melding 72u,</text>
+<text x="604" y="350" class="cw-tip-t nl">eindrapport 1 maand. Het NCSC-portaal</text>
+<text x="604" y="365" class="cw-tip-t nl">stuurt door naar CSIRT en toezichthouder.</text>
+</g>
+<g class="cw-svtip cw-tc9" aria-hidden="true">
+<rect x="590" y="337" width="290" height="77" class="cw-tip-bg"/>
+<rect x="590" y="337" width="3" height="77" class="cw-tip-acc"/>
+<text x="604" y="355" class="cw-tip-t0 en">Data breach · GDPR Art. 33–34</text>
+<text x="604" y="370" class="cw-tip-t en">Notify the AP within 72h unless a risk</text>
+<text x="604" y="385" class="cw-tip-t en">is unlikely; tell the people affected</text>
+<text x="604" y="400" class="cw-tip-t en">without undue delay if the risk is high.</text>
+<text x="604" y="355" class="cw-tip-t0 nl">Datalek · AVG art. 33–34</text>
+<text x="604" y="370" class="cw-tip-t nl">Meld binnen 72u bij de AP, tenzij een</text>
+<text x="604" y="385" class="cw-tip-t nl">risico onwaarschijnlijk is; informeer</text>
+<text x="604" y="400" class="cw-tip-t nl">betrokkenen onverwijld bij hoog risico.</text>
+</g>
+</svg>
+    </figure>
+
+    <div class="panel">
+      <p class="en"><strong>We suggest settling question 1 with legal now, not after a designation letter arrives.</strong> A designation under the Wwke pulls the Cbw in by law; the reverse does not hold. Both laws use one portal, <abbr class="tip" tabindex="0" data-tip="The NCSC portal where organisations register and report incidents under both the Cbw and the Wwke.">MijnNCSC</abbr>, but the recipients and the clocks differ. Indicative, not a legal deadline list or legal advice.</p>
+      <p class="nl"><strong>Wij raden aan vraag 1 nu met juristen te beantwoorden, niet pas als het aanwijzingsbesluit op de mat ligt.</strong> Een aanwijzing onder de Wwke trekt de Cbw van rechtswege mee; andersom geldt dat niet. Beide wetten gebruiken één portaal, <abbr class="tip" tabindex="0" data-tip="Het NCSC-portaal waar organisaties zich registreren en incidenten melden onder zowel de Cbw als de Wwke.">MijnNCSC</abbr>, maar de ontvangers en de termijnen verschillen. Indicatief: geen wettelijke deadlinelijst en geen juridisch advies.</p>
+    </div>
+  </div>
+</section>
+<!-- /diagram:law-map -->
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What we suggest <em>putting in place.</em></span>
+      <span class="nl">Wat wij aanbevelen <em>te regelen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">one programme for two laws — most of it is governance, not technology</span>
+      <span class="nl">één programma voor twee wetten — het meeste is governance, geen techniek</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">RESILIENCE STACK</span><span class="nl">WEERBAARHEIDSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">SCOPE</span><span class="nl">REIKWIJDTE</span></span>
+        <span class="chip c2"><span class="en">ONE OWNER</span><span class="nl">ÉÉN EIGENAAR</span></span>
+        <span class="chip c3"><span class="en">SERVICE RISK MAP</span><span class="nl">DIENSTENRISICOKAART</span></span>
+        <span class="chip c4"><span class="en">TWO-TEMPLATE DRILL</span><span class="nl">OEFENING MET TWEE SJABLONEN</span></span>
+        <span class="chip c5"><span class="en">EVIDENCE FILE</span><span class="nl">BEWIJSDOSSIER</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Covers</th><th>In one line</th></tr>
+        <tr><td class="ctl">Scope decision</td><td>Two laws (01)</td><td>Confirm with legal whether you are in a Cbw sector and above the threshold, and whether a Wwke designation is likely or has arrived. Register with NCSC if the Cbw applies. Date and sign it.</td></tr>
+        <tr><td class="ctl">One owner</td><td>One decision (04)</td><td>One executive accountable for resilience, cyber and physical, reporting to the board on a fixed cadence. Facilities, HR, operations and IT report into that person for this.</td></tr>
+        <tr><td class="ctl">Service risk map</td><td>The building (02)</td><td>Per essential service: which systems, sites, roles and suppliers it depends on, and what happens when each fails. One assessment that satisfies both laws, redone at least every four years and after major change.</td></tr>
+        <tr><td class="ctl">Physical measures</td><td>The building (02)</td><td>Access control, perimeter, detection, and continuity for the sites that carry the service. Documented, because the supervisor can ask for the description.</td></tr>
+        <tr><td class="ctl">Personnel security</td><td>The building (02)</td><td>Name the critical roles, run background checks before and during employment within the law, and revoke access on the day someone leaves.</td></tr>
+        <tr><td class="ctl">Two-template drill</td><td>Two clocks (03)</td><td>One incident process with a Wwke template and a Cbw template, the recipients and portal access set up in advance, rehearsed against the clock at least yearly.</td></tr>
+        <tr><td class="ctl">Board training</td><td>One decision (04)</td><td>The Cbw requires it for the management body. Worth including the physical side so the board can judge the whole programme.</td></tr>
+        <tr><td class="ctl">Evidence file</td><td>All four</td><td>Scope decision, assessments, measure descriptions, screening policy, drill results, training records. One file, two supervisors.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Dekt</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Reikwijdtebesluit</td><td>Twee wetten (01)</td><td>Bevestig met juridische zaken of u in een Cbw-sector boven de drempel zit, en of een Wwke-aanwijzing waarschijnlijk is of al binnen is. Registreer u bij het NCSC als de Cbw geldt. Dateer en onderteken het.</td></tr>
+        <tr><td class="ctl">Eén eigenaar</td><td>Eén besluit (04)</td><td>Eén bestuurder die verantwoordelijk is voor weerbaarheid, cyber en fysiek, en op vaste momenten aan het bestuur rapporteert. Facilitair, HR, operatie en IT rapporteren hiervoor aan die persoon.</td></tr>
+        <tr><td class="ctl">Dienstenrisicokaart</td><td>Het gebouw (02)</td><td>Per essentiële dienst: van welke systemen, locaties, functies en leveranciers zij afhangt, en wat er gebeurt als elk uitvalt. Eén beoordeling die beide wetten dekt, ten minste elke vier jaar en na grote veranderingen herhaald.</td></tr>
+        <tr><td class="ctl">Fysieke maatregelen</td><td>Het gebouw (02)</td><td>Toegangscontrole, omheining, detectie en continuïteit voor de locaties die de dienst dragen. Vastgelegd, want de toezichthouder kan de beschrijving opvragen.</td></tr>
+        <tr><td class="ctl">Personeelsbeveiliging</td><td>Het gebouw (02)</td><td>Benoem de kritieke functies, doe binnen de wet antecedentenonderzoek vóór en tijdens het dienstverband, en trek toegang in op de dag dat iemand vertrekt.</td></tr>
+        <tr><td class="ctl">Oefening met twee sjablonen</td><td>Twee klokken (03)</td><td>Eén incidentproces met een Wwke-sjabloon en een Cbw-sjabloon, de ontvangers en de portaaltoegang vooraf geregeld, minstens jaarlijks geoefend op de klok.</td></tr>
+        <tr><td class="ctl">Bestuurstraining</td><td>Eén besluit (04)</td><td>De Cbw verplicht dit voor het bestuur. Neem de fysieke kant mee, zodat het bestuur het hele programma kan beoordelen.</td></tr>
+        <tr><td class="ctl">Bewijsdossier</td><td>Alle vier</td><td>Reikwijdtebesluit, beoordelingen, maatregelbeschrijvingen, screeningsbeleid, oefenresultaten, trainingsregistraties. Eén dossier, twee toezichthouders.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> the law does not care whether the service stopped because of a hacker or a flood, and neither do your customers. We suggest treating the Cbw and the Wwke as one question: what does each essential service need to keep running, and who in this room owns the answer by name. If the Wwke timelines apply to you, the nine and ten months start on the date in your designation decision.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> de wet maakt het niet uit of de dienst stilviel door een hacker of door een overstroming, en uw klanten ook niet. Wij raden aan de Cbw en de Wwke als één vraag te behandelen: wat heeft elke essentiële dienst nodig om te blijven draaien, en wie in deze kamer is daar bij naam eigenaar van. Gelden de Wwke-termijnen voor u, dan beginnen de negen en tien maanden op de datum in uw aanwijzingsbesluit.</span>
+        <span class="en disclaimer">The 24-hour, 72-hour, nine-month and ten-month periods are set in the Cbw and the Wwke (law). Everything else on this page is a suggestion, not a legal deadline.</span>
+        <span class="nl disclaimer">De termijnen van 24 uur, 72 uur, negen en tien maanden staan in de Cbw en de Wwke (wet). Al het andere op deze pagina is een voorstel, geen wettelijke deadline.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Being under the Cbw is a fact for most mid-sized and large organisations in the covered sectors. A Wwke designation is rarer, and arrives by decision rather than by choice.</span><span class="nl">Onder de Cbw vallen is een feit voor de meeste middelgrote en grote organisaties in de betrokken sectoren. Een Wwke-aanwijzing is zeldzamer, en komt per besluit, niet per keuze.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Supervisory orders and fines under both laws, personal liability of the board under the Cbw, and a disrupted essential service that the public notices.</span><span class="nl">Aanwijzingen en boetes van toezichthouders onder beide wetten, persoonlijke aansprakelijkheid van het bestuur onder de Cbw, en een verstoorde essentiële dienst die het publiek merkt.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low</span><span class="nl">Laag</span></span><p><span class="en">With scope settled, one owner, one assessment per service and a rehearsed two-template process, what remains is the incident itself, which the other briefings address.</span><span class="nl">Met bevestigde reikwijdte, één eigenaar, één beoordeling per dienst en een geoefend proces met twee sjablonen blijft het incident zelf over, en daar gaan de andere briefings over.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CEO / COO</span><span class="nl">CEO / COO</span></span><p><span class="en">The Cbw names the management body. The Wwke reaches facilities, HR and operations, so the owner needs authority over more than IT.</span><span class="nl">De Cbw noemt het bestuur. De Wwke raakt facilitair, HR en operatie, dus de eigenaar heeft gezag nodig over meer dan IT.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Scope decision for both laws dated and signed (yes / no) · months since the last assessment per essential service · % of critical roles with a completed background check · days since the last drill that produced both report templates.</span><span class="nl">Reikwijdtebesluit voor beide wetten gedateerd en ondertekend (ja / nee) · maanden sinds de laatste beoordeling per essentiële dienst · % kritieke functies met afgerond antecedentenonderzoek · dagen sinds de laatste oefening die beide meldsjablonen opleverde.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“A cyber or physical disruption of an essential service, without a shared risk assessment, owner and reporting process for the Cbw and the Wwke, leads to a prolonged outage, late or inconsistent notifications to two supervisors, and enforcement under both laws.”</span><span class="nl">“Een digitale of fysieke verstoring van een essentiële dienst, zonder gedeelde risicobeoordeling, eigenaar en meldproces voor de Cbw en de Wwke, leidt tot langdurige uitval, te late of tegenstrijdige meldingen aan twee toezichthouders, en handhaving onder beide wetten.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Risk management measures approved and overseen by the management body, incident reporting (early warning within 24 hours of becoming aware, notification within 72 hours, final report within one month), supply chain security, and training for management. In the Netherlands via the Cbw: registration with NCSC. A critical entity under the CER directive is an essential entity under NIS2.</td><td>A supplier's own NIS2 status does not discharge your duty. Ask for their measures and their incident notification commitment to you. For a critical site, ask who physically maintains it as well.</td><td>The incident and the notification are judged separately. A physical cause does not switch the Cbw clock off if systems are affected; a late or missing notification is its own offence.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities, DORA sets the ICT risk framework, incident classification and reporting, and testing, and takes precedence over the NIS2 rules for ICT. Banks and financial market infrastructures are also Wwke sectors, so a designation adds the physical duties on top.</td><td>Critical ICT providers fall under EU oversight. DORA requires your register of information to list them and the contract to contain the mandatory clauses.</td><td>Major ICT incidents go to DNB or AFM: initial notification within 4 hours of classifying (at most 24 hours after becoming aware), intermediate report within 72 hours, final report within one month. A physical disruption of the service can additionally be a Wwke report within 24 hours.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Nothing directly — it is an assurance report, not a law. Its physical and environmental criteria are the closest thing most suppliers offer to the Wwke's physical measures.</td><td>Read the scope and the exceptions on physical access and environmental controls. A clean report covers the tested data centre, not the supplier's whole chain.</td><td>An incident at a SOC 2 supplier can appear as an exception in their next report, long after your 24-hour deadline. Contract clauses, not the report, get you told in time.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Nothing directly — same logic as SOC 2, and common in Europe for outsourced financial processes.</td><td>Check that the controls tested include the sites and processes your essential service depends on, and that the period covers your reporting year.</td><td>ISAE 3402 creates no duty to notify user auditors: expect a deviation in the next report, and ask for interim disclosure in the contract. Your own notification duties run regardless, and much sooner.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Risicobeheersmaatregelen die door het bestuur zijn goedgekeurd en worden bewaakt, incidentmelding (vroege waarschuwing binnen 24 uur nadat u ervan weet, melding binnen 72 uur, eindrapport binnen een maand), ketenbeveiliging, en training voor het bestuur. In Nederland via de Cbw: registratie bij het NCSC. Een kritieke entiteit onder de CER-richtlijn is essentiële entiteit onder NIS2.</td><td>De eigen NIS2-status van een leverancier ontslaat u niet van uw plicht. Vraag naar hun maatregelen en hun meldtoezegging aan u. Vraag bij een kritieke locatie ook wie die fysiek onderhoudt.</td><td>Het incident en de melding worden apart beoordeeld. Een fysieke oorzaak zet de Cbw-klok niet uit als systemen zijn geraakt; een te late of ontbrekende melding is een eigen overtreding.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen bepaalt DORA het ICT-risicokader, de incidentclassificatie en -melding en het testen, en gaat zij voor op de NIS2-regels voor ICT. Banken en financiëlemarktinfrastructuren zijn ook Wwke-sectoren, dus een aanwijzing voegt de fysieke plichten daar bovenop toe.</td><td>Kritieke ICT-leveranciers vallen onder EU-toezicht. DORA verplicht u ze in uw informatieregister op te nemen en de verplichte clausules in het contract vast te leggen.</td><td>Ernstige ICT-incidenten gaan naar DNB of de AFM: eerste melding binnen 4 uur na classificatie (uiterlijk 24 uur nadat u ervan weet), tussentijds rapport binnen 72 uur, eindrapport binnen een maand. Een fysieke verstoring van de dienst kan daarnaast een Wwke-melding binnen 24 uur zijn.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Niets rechtstreeks — het is een assurancerapport, geen wet. De criteria voor fysieke en omgevingsbeveiliging komen het dichtst bij de fysieke maatregelen van de Wwke die de meeste leveranciers kunnen tonen.</td><td>Lees de reikwijdte en de afwijkingen op fysieke toegang en omgevingsmaatregelen. Een schoon rapport dekt het geteste datacenter, niet de hele keten van de leverancier.</td><td>Een incident bij een SOC 2-leverancier kan als afwijking in hun volgende rapport verschijnen, lang na uw termijn van 24 uur. Contractclausules, niet het rapport, zorgen dat u tijdig wordt geïnformeerd.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Niets rechtstreeks — dezelfde logica als SOC 2, en in Europa gebruikelijk voor uitbestede financiële processen.</td><td>Controleer of de geteste maatregelen de locaties en processen omvatten waarvan uw essentiële dienst afhangt, en of de periode uw rapportagejaar dekt.</td><td>ISAE 3402 schept geen plicht om de auditors van klanten te informeren: verwacht een afwijking in het volgende rapport, en vraag in het contract om tussentijdse melding. Uw eigen meldplichten lopen onverminderd door, en veel eerder.</td></tr>
+      </table>
+      <p class="sources en">Checked against: <a href="https://wetten.overheid.nl/BWBR0052871/2026-08-15/0">Wet weerbaarheid kritieke entiteiten</a> Art. 6, 14, 15, 17, 27 and 48 (in force 15 Aug 2026), <a href="https://www.nctv.nl/onderwerpen/v/vitale-infrastructuur/mijn-organisatie-wordt-kritieke-entiteit">NCTV, "Mijn organisatie wordt kritieke entiteit"</a> and <a href="https://www.nctv.nl/onderwerpen/v/vitale-infrastructuur/vragen-en-antwoorden">Q&amp;A</a> (2026), <a href="https://www.nctv.nl/onderwerpen/c/cyberbeveiligingswet/welke-organisaties-vallen-onder-de-cyberbeveiligingswet">NCTV on Cbw scope</a> (2026), <a href="https://www.rijksoverheid.nl/actueel/nieuws/2026/08/15/cyberbeveiligingswet-en-wet-weerbaarheid-kritieke-entiteiten-vanaf-vandaag-van-kracht">Rijksoverheid</a> and <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL</a> on both laws (15 Aug 2026), <a href="https://home-affairs.ec.europa.eu/policies/internal-security/counter-terrorism-and-radicalisation/protection/critical-infrastructure-resilience_en">European Commission on the CER directive</a> (2022/2557), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 2, 3, 20, 23 (2022), <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 19 (2022), <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">GDPR</a> Art. 33–34 · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://wetten.overheid.nl/BWBR0052871/2026-08-15/0">Wet weerbaarheid kritieke entiteiten</a> art. 6, 14, 15, 17, 27 en 48 (in werking 15 aug 2026), <a href="https://www.nctv.nl/onderwerpen/v/vitale-infrastructuur/mijn-organisatie-wordt-kritieke-entiteit">NCTV, "Mijn organisatie wordt kritieke entiteit"</a> en <a href="https://www.nctv.nl/onderwerpen/v/vitale-infrastructuur/vragen-en-antwoorden">vragen en antwoorden</a> (2026), <a href="https://www.nctv.nl/onderwerpen/c/cyberbeveiligingswet/welke-organisaties-vallen-onder-de-cyberbeveiligingswet">NCTV over de reikwijdte van de Cbw</a> (2026), <a href="https://www.rijksoverheid.nl/actueel/nieuws/2026/08/15/cyberbeveiligingswet-en-wet-weerbaarheid-kritieke-entiteiten-vanaf-vandaag-van-kracht">Rijksoverheid</a> en <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC</a> over beide wetten (15 aug 2026), <a href="https://home-affairs.ec.europa.eu/policies/internal-security/counter-terrorism-and-radicalisation/protection/critical-infrastructure-resilience_en">Europese Commissie over de CER-richtlijn</a> (2022/2557), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 2, 3, 20, 23 (2022), <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 19 (2022), <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">AVG</a> art. 33–34 · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../nis2-dora/"><span class="en">NIS2 &amp; DORA</span><span class="nl">NIS2 &amp; DORA</span></a> ·
+  <a href="../ot-iot/"><span class="en">The factory, the building and the cameras</span><span class="nl">De fabriek, het gebouw en de camera's</span></a> ·
+  <a href="../incident-response/"><span class="en">The first 72 hours</span><span class="nl">De eerste 72 uur</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=cbw-wwke&amp;title=Missing%3A%20cbw-wwke"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=cbw-wwke&amp;title=Correction%3A%20cbw-wwke"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">CBW &amp; WWKE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">CBW &amp; WWKE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>
