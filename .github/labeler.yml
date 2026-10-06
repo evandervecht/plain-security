@@ -67,6 +67,8 @@ sponsor:
   - '(insurance|verzekering|polis|policy exclusion|premium)'
 'page: nis2-dora':
   - '(nis ?2|dora|cyberbeveiligingswet|board liability|bestuurdersaansprakelijkheid)'
+'page: cbw-wwke':
+  - '(wwke|weerbaarheid kritieke entiteiten|kritieke entiteit|critical entit(y|ies)|cer.?richtlijn|cer directive|fysieke weerbaarheid|physical resilience|nctv)'
 'page: auth-protocols':
   - '(oauth2?|oauth|saml|oidc|openid connect|mtls|mTLS|authentication|authenticatie|autorisatie|sso|single sign-on|enterprise|passkeys?|fido2|webauthn|kerberos|ntlm|ldap|radius|api.?keys?|mcp)'
 'page: encryption-at-rest':
