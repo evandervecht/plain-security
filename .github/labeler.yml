@@ -73,6 +73,8 @@ sponsor:
   - '(oauth2?|oauth|saml|oidc|openid connect|mtls|mTLS|authentication|authenticatie|autorisatie|sso|single sign-on|enterprise|passkeys?|fido2|webauthn|kerberos|ntlm|ldap|radius|api.?keys?|mcp)'
 'page: encryption-at-rest':
   - '(encryption at rest|encrypted at rest|data at rest|versleuteld opgeslagen|versleutelde opslag|key management|sleutelbeheer|bitlocker|kms|hsm)'
+'page: edge-devices':
+  - '(edge device|randapparatuur|\bvpn\b|firewall|netscaler|fortigate|fortinet|ivanti|palo alto|remote.?access gateway|load balancer|zero.?trust|ztna|management interface|beheerinterface)'
 'page: cloud-sovereignty':
   - '(sovereign|soeverein|cloud act|data residency|dataresidentie|digital autonomy|digitale autonomie|seal-?[0-4])'
 'page: cada-vs-sovereignty-framework':
