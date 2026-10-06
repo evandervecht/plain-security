@@ -39,6 +39,8 @@ sponsor:
   - '(\bcloud\b|\baws\b|azure|gcp|bucket|misconfig)'
 'page: shared-responsibility':
   - '(shared responsibility|gedeelde verantwoordelijkheid|iaas|paas|saas model|responsibility matrix|verantwoordelijkheidsmatrix|cuec)'
+'page: assurance-reports':
+  - '(soc ?2|soc ?1|soc ?3|isae ?3402|isae ?3000|ssae ?18|ssae ?21|assurance report|assurancerapport|type ?(1|2|i|ii) report|bridge letter|overbruggingsbrief|carve-?out|subservice|complementary user entity|trust services criteria|iso ?27001 certif)'
 'page: insider':
   - '(insider|binnenuit|leaver|vertrekker)'
 'page: ddos':
