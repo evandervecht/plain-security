@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Buying a company, buying its breaches // Plain Security</title>
+<meta name="description" content="When you buy a company, you also buy its network, its accounts, its data and whoever is already inside. An inherited attacker, the estate nobody listed, connecting on day one, warranties and insurance, and the personal data that comes with the deal.">
+<link rel="canonical" href="https://plain-security.fyi/acquisitions/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Buying a company, buying its breaches // Plain Security">
+<meta property="og:description" content="When you buy a company, you also buy its network, its accounts, its data and whoever is already inside. An inherited attacker, the estate nobody listed, connecting on day one, warranties and insurance, and the personal data that comes with the deal.">
+<meta property="og:url" content="https://plain-security.fyi/acquisitions/">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="nl_NL">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   ACQUISITIONS // BRIEFING
+   Same palette and components as the other briefings.
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 7s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+
+/* --- scene 1 : the deal closes, the attacker stays --- */
+.s1 .tl{position:absolute;left:60px;right:60px;top:150px;height:2px;background:var(--line)}
+.s1 .bar{position:absolute;left:0;top:-40px;height:22px;width:0;background:rgba(255,93,115,.25);border-right:2px solid var(--bad);animation:stay 8s ease-in-out infinite}
+.s1 .bar span{position:absolute;left:8px;top:3px;font-size:10px;letter-spacing:.16em;font-weight:700;color:var(--bad-soft);white-space:nowrap;text-transform:uppercase}
+@keyframes stay{0%,8%{width:0}70%,92%{width:100%}100%{width:0}}
+.s1 .mk{position:absolute;top:-7px;width:2px;height:16px;background:var(--muted)}
+.s1 .mk.m1{left:0}.s1 .mk.m2{left:50%;background:var(--brand)}.s1 .mk.m3{right:0}
+.s1 .mk span{position:absolute;top:24px;font-size:10px;letter-spacing:.14em;color:var(--muted);white-space:nowrap;text-transform:uppercase;line-height:1.5}
+.s1 .m1 span{left:0}.s1 .m2 span{left:50%;transform:translateX(-50%);color:var(--white)}.s1 .m3 span{right:0;text-align:right}
+.s1 .banner{animation-duration:8s}
+
+/* --- scene 2 : the estate nobody listed --- */
+.s2 .grid{position:absolute;left:40px;right:40px;top:58px;display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.s2 .t{height:62px;display:grid;place-items:center;text-align:center;background:var(--surface);border:1px solid var(--good);font-size:10px;letter-spacing:.12em;font-weight:700;color:var(--white);text-transform:uppercase;padding:0 4px;line-height:1.3}
+.s2 .t.x{border:1px dashed var(--warn);color:var(--warn);background:rgba(255,200,87,.06);opacity:0;animation:appear 8s ease-in-out infinite}
+.s2 .t.x:nth-child(8){animation-delay:.4s}.s2 .t.x:nth-child(9){animation-delay:.8s}.s2 .t.x:nth-child(10){animation-delay:1.2s}.s2 .t.x:nth-child(11){animation-delay:1.6s}.s2 .t.x:nth-child(12){animation-delay:2s}
+@keyframes appear{0%,20%{opacity:0}30%,90%{opacity:1}100%{opacity:0}}
+.s2 .banner{animation-duration:8s}
+
+/* --- scene 3 : connecting on day one --- */
+.s3 .net{position:absolute;top:66px;width:30%;height:120px;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.18em;font-weight:700;color:var(--white);text-transform:uppercase;padding:12px 14px}
+.s3 .yours{left:6%;border-color:var(--brand)}.s3 .theirs{right:6%}
+.s3 .theirs i{position:absolute;right:18px;bottom:18px;width:12px;height:12px;background:var(--bad)}
+.s3 .link{position:absolute;top:126px;left:36%;right:36%;height:2px;background:var(--bad);transform:scaleX(0);transform-origin:right;animation:link 8s ease-in-out infinite}
+@keyframes link{0%,20%{transform:scaleX(0)}32%,92%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+.s3 .dot{position:absolute;top:121px;left:calc(64% - 12px);width:12px;height:12px;background:var(--bad);opacity:0;animation:cross 8s ease-in-out infinite}
+@keyframes cross{0%,34%{left:calc(64% - 12px);opacity:0}38%{opacity:1}60%,92%{left:calc(6% + 14px);opacity:1}100%{opacity:0}}
+.s3 .banner{animation-duration:8s}
+
+/* --- scene 4 : what the paperwork covers --- */
+.s4 .rows{position:absolute;left:10%;right:10%;top:52px;display:grid;gap:8px}
+.s4 .r{height:34px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 12px;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.s4 .r b{font-weight:700;opacity:0;animation:stamp 8s ease-in-out infinite;text-align:right}
+.s4 .r:nth-child(2) b{animation-delay:.6s}.s4 .r:nth-child(3) b{animation-delay:1.2s}.s4 .r:nth-child(4) b{animation-delay:1.8s}
+.s4 b.g{color:#8ff0cd}.s4 b.a{color:var(--warn)}
+@keyframes stamp{0%,25%{opacity:0}32%,90%{opacity:1}97%,100%{opacity:0}}
+.s4 .banner{animation-duration:8s}
+
+/* --- scene 5 : the data that comes with the deal --- */
+.s5 .duties{position:absolute;left:40px;right:40px;top:62px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.s5 .d{position:relative;height:120px;display:grid;place-content:center;gap:10px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:11px;letter-spacing:.16em;font-weight:700;color:var(--white);text-transform:uppercase;padding:0 6px}
+.s5 .d small{font-size:9px;letter-spacing:.12em;color:var(--warn);font-weight:500}
+.s5 .d::after{content:"";position:absolute;inset:0;border:1px solid var(--brand);background:rgba(90,200,250,.08);opacity:0;animation:light 8s ease-in-out infinite}
+.s5 .d:nth-child(2)::after{animation-delay:2s}.s5 .d:nth-child(3)::after{animation-delay:4s}.s5 .d:nth-child(4)::after{animation-delay:6s}
+@keyframes light{0%,2%{opacity:0}8%,22%{opacity:1}28%,100%{opacity:0}}
+.s5 .banner{animation-duration:8s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .s1 .bar{width:100%}
+  .s2 .t.x{opacity:1}
+  .s3 .link{transform:scaleX(1)}.s3 .dot{opacity:1;left:calc(6% + 14px)}
+  .s4 .r b{opacity:1}
+  .s5 .d::after{opacity:0}
+  .banner{opacity:1}.shield .tick{stroke-dashoffset:0}
+}
+@media (max-width:820px){
+  .s1 .tl{left:24px;right:24px}
+  .s1 .bar span{font-size:8px;letter-spacing:.06em}
+  .s1 .mk span{font-size:8px;letter-spacing:.04em;white-space:normal;width:84px}
+  .s1 .m3 span{text-align:right}
+  .stage.s2{height:340px}
+  .s2 .grid{left:12px;right:12px;top:44px;grid-template-columns:repeat(3,1fr);gap:6px}
+  .s2 .t{height:50px;font-size:8px;letter-spacing:.04em}
+  .s3 .net{width:36%;font-size:8px;letter-spacing:.08em;padding:8px}
+  .s3 .yours{left:3%}.s3 .theirs{right:3%}
+  .s3 .link{left:39%;right:39%}
+  .s3 .dot{left:calc(61% - 12px)}
+  @keyframes cross{0%,34%{left:calc(61% - 12px);opacity:0}38%{opacity:1}60%,92%{left:calc(3% + 10px);opacity:1}100%{opacity:0}}
+  .stage.s4{height:330px}
+  .s4 .rows{left:12px;right:12px;top:40px;gap:6px}
+  .s4 .r{height:auto;min-height:48px;flex-direction:column;align-items:flex-start;justify-content:center;gap:2px;font-size:8px;letter-spacing:.04em;padding:4px 8px}
+  .s4 .r b{text-align:left}
+  .s5 .duties{left:12px;right:12px;gap:6px;grid-template-columns:repeat(2,1fr);top:48px}
+  .s5 .d{height:80px;font-size:9px;letter-spacing:.08em;gap:4px}
+  .s5 .d small{font-size:8px;letter-spacing:.04em}
+  .stage .banner{white-space:normal;text-align:center;width:calc(100% - 24px);line-height:1.4}
+}
+/* --- controls scene --- */
+.sc{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it asks of you"}
+  #risk table.en td:nth-child(3)::before{content:"What to ask the seller"}
+  #risk table.en td:nth-child(4)::before{content:"When an incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Wat u de verkoper vraagt"}
+  #risk table.nl td:nth-child(4)::before{content:"Als een incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+#fix td abbr.tip::after{left:auto;right:0}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> <span class="en">ACQUISITIONS</span><span class="nl">OVERNAMES</span></a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">INSIDE</span><span class="nl">BINNEN</span></a>
+      <a href="#r2"><span class="en">ESTATE</span><span class="nl">OMGEVING</span></a>
+      <a href="#r3"><span class="en">DAY ONE</span><span class="nl">DAG ÉÉN</span></a>
+      <a href="#r4"><span class="en">CONTRACT</span><span class="nl">CONTRACT</span></a>
+      <a href="#r5"><span class="en">DATA</span><span class="nl">GEGEVENS</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Buying a company, <em>buying its breaches.</em></span>
+      <span class="nl">Een bedrijf kopen, <em>en zijn inbraken erbij.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">When you buy a company, you also buy its network, its accounts, its data and anyone who is already inside. Five questions decide whether the deal brings value or an incident: is an attacker already there, what are we really buying, when do we connect, who pays for what started before closing, and which personal data comes with it.</span>
+      <span class="nl">Wie een bedrijf koopt, koopt ook het netwerk, de accounts, de gegevens en iedereen die al binnen is. Vijf vragen bepalen of de overname waarde oplevert of een incident: zit er al een aanvaller, wat kopen we echt, wanneer koppelen we, wie betaalt voor wat vóór de closing begon, en welke persoonsgegevens komen mee.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FIVE</span><span class="nl">BEKIJK DE VIJF</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT GOOD LOOKS LIKE</span><span class="nl">HOE GOED ERUITZIET</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">The attacker already inside: <em>the deal closes, the attacker stays.</em></span>
+      <span class="nl">De aanvaller die al binnen is: <em>de deal sluit, de aanvaller blijft.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">inherited breach / undisclosed incident / compromise assessment</span>
+      <span class="nl">geërfde inbraak / verzwegen incident / compromise assessment</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">STARWOOD, AS DESCRIBED BY THE UK ICO (2020)</span><span class="nl">STARWOOD, ZOALS BESCHREVEN DOOR DE BRITSE ICO (2020)</span></div>
+      <div class="tl">
+        <div class="bar"><span class="en">Attacker inside</span><span class="nl">Aanvaller binnen</span></div>
+        <i class="mk m1"><span class="en">Jul 2014 · way in</span><span class="nl">Jul 2014 · binnen</span></i>
+        <i class="mk m2"><span class="en">2016 · deal closes</span><span class="nl">2016 · overname</span></i>
+        <i class="mk m3"><span class="en">Sep 2018 · found</span><span class="nl">Sep 2018 · ontdekt</span></i>
+      </div>
+      <div class="banner"><span class="en">THE DEAL CLOSED · THE ATTACKER STAYED</span><span class="nl">DE DEAL SLOOT · DE AANVALLER BLEEF</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">When you buy a company, you buy its network as it is, including anyone hiding in it. The best-documented case is Marriott. According to the penalty notice of the UK <abbr class="tip" tabindex="0" data-tip="Information Commissioner's Office: the UK data protection regulator.">ICO</abbr> (October 2020), an attacker got into Starwood's systems in July 2014. Marriott bought Starwood in 2016 and did not detect the attack until September 2018. About 339 million guest records were affected. The ICO fined Marriott £18.4 million for not securing the systems it had acquired once the <abbr class="tip" tabindex="0" data-tip="General Data Protection Regulation: the EU law on personal data, applicable since 25 May 2018. In Dutch: AVG.">GDPR</abbr> applied.</p>
+      <p class="en"><strong>Business impact:</strong> the ICO itself noted that in-depth due diligence is not always possible during a takeover. That makes the time between signing and connecting the moment to look. We suggest a <abbr class="tip" tabindex="0" data-tip="A focused search of systems and logs for signs that an attacker is already inside, rather than a review of policies.">compromise assessment</abbr> of the target before you connect anything. Before closing, the deal rules often limit what a buyer may do on the target's network, so it is worth having the seller commission one, or writing it into the agreement.</p>
+      <p class="nl">Wie een bedrijf koopt, koopt het netwerk zoals het is, inclusief iedereen die zich erin verbergt. Het best gedocumenteerde geval is Marriott. Volgens het boetebesluit van de Britse <abbr class="tip" tabindex="0" data-tip="Information Commissioner's Office: de Britse toezichthouder op de bescherming van persoonsgegevens.">ICO</abbr> (oktober 2020) drong een aanvaller in juli 2014 de systemen van Starwood binnen. Marriott kocht Starwood in 2016 en ontdekte de aanval pas in september 2018. Het ging om ongeveer 339 miljoen gastrecords. De ICO legde Marriott een boete op van £18,4 miljoen omdat het de overgenomen systemen niet goed beveiligde toen de <abbr class="tip" tabindex="0" data-tip="Algemene verordening gegevensbescherming: de EU-wet over persoonsgegevens, van toepassing sinds 25 mei 2018. In het Engels: GDPR.">AVG</abbr> eenmaal gold.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de ICO merkte zelf op dat grondig boekenonderzoek tijdens een overname niet altijd mogelijk is. Dan is de periode tussen tekenen en koppelen het moment om te kijken. Wij stellen een <abbr class="tip" tabindex="0" data-tip="Een gericht onderzoek van systemen en logs naar sporen van een aanvaller die al binnen is, in plaats van een toets van beleid.">compromise assessment</abbr> van het doelbedrijf voor, voordat u iets koppelt. Vóór de closing beperken de afspraken rond de deal vaak wat een koper op het netwerk van het doelbedrijf mag doen. Het is dan de moeite waard de verkoper er een te laten uitvoeren, of het in de overeenkomst op te nemen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">THE ATTACKER COMES WITH THE ASSETS</span><span class="nl">DE AANVALLER KOMT MEE MET DE BEDRIJFSMIDDELEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: A COMPROMISE ASSESSMENT BEFORE YOU CONNECT ANYTHING</span><span class="nl">AANBEVOLEN: EEN COMPROMISE ASSESSMENT VOORDAT U IETS KOPPELT</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Deal news is public. AI makes it cheap to write convincing emails about the deal to staff on both sides, just when everyone expects unusual requests.</span><span class="nl">Overnamenieuws is openbaar. Met AI zijn overtuigende mails over de deal aan medewerkers aan beide kanten goedkoop, precies wanneer iedereen ongewone verzoeken verwacht.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An attacker who stays for years can learn the target's habits and copy them. The longer the stay, the more normal the activity looks.</span><span class="nl">Een aanvaller die jaren blijft, leert de gewoonten van het doelbedrijf kennen en bootst ze na. Hoe langer het verblijf, hoe normaler de activiteit oogt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Years in weeks</span><span class="nl">Jaren in weken</span></b><p><span class="en">AI-assisted log analysis lets a hunt team cover years of logs in weeks. Worth asking how far back the target keeps its logs.</span><span class="nl">Met AI ondersteunde loganalyse laat een onderzoeksteam jaren aan logs in weken doorlopen. Vraag hoe ver terug het doelbedrijf zijn logs bewaart.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">The estate nobody listed: <em>you buy more than the asset list says.</em></span>
+      <span class="nl">De omgeving die niemand opschreef: <em>u koopt meer dan de lijst zegt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">unknown systems / shadow IT / asset inventory</span>
+      <span class="nl">onbekende systemen / schaduw-IT / inventaris</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">ON THE LIST · NOT ON THE LIST</span><span class="nl">OP DE LIJST · NIET OP DE LIJST</span></div>
+      <div class="grid">
+        <div class="t">ERP</div>
+        <div class="t"><span class="en">Email</span><span class="nl">E-mail</span></div>
+        <div class="t">CRM</div>
+        <div class="t"><span class="en">Payroll</span><span class="nl">Salaris</span></div>
+        <div class="t"><span class="en">Files</span><span class="nl">Bestanden</span></div>
+        <div class="t"><span class="en">Web shop</span><span class="nl">Webwinkel</span></div>
+        <div class="t x"><span class="en">Agency website</span><span class="nl">Site van bureau</span></div>
+        <div class="t x"><span class="en">Cloud account</span><span class="nl">Cloudaccount</span></div>
+        <div class="t x"><span class="en">Old VPN box</span><span class="nl">Oude VPN-box</span></div>
+        <div class="t x"><span class="en">Test server</span><span class="nl">Testserver</span></div>
+        <div class="t x"><span class="en">Office NAS</span><span class="nl">Kantoor-NAS</span></div>
+        <div class="t x"><span class="en">Old domains</span><span class="nl">Oude domeinen</span></div>
+      </div>
+      <div class="banner"><span class="en">WHAT IS ON THE LIST IS NOT ALL YOU BOUGHT</span><span class="nl">WAT OP DE LIJST STAAT, IS NIET ALLES WAT U KOCHT</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A target's IT list usually shows what its IT team runs. It rarely shows the website an agency built, the cloud account a developer opened on a company card, or the remote-access box nobody patched. That is shadow IT, and you buy it with everything else. Systems nobody owns are the ones nobody updates.</p>
+      <p class="en"><strong>Business impact:</strong> you cannot protect, insure or report on what you do not know you own. Before signing, public records such as domain names and certificates show much of what a company exposes to the internet, without touching its systems. After closing, we suggest a full inventory with an owner for each system. <abbr class="tip" tabindex="0" data-tip="EU directive on cybersecurity for essential and important entities; in the Netherlands the Cyberbeveiligingswet.">NIS2</abbr> lists asset management among the minimum security measures (Art. 21(2)(i)). <abbr class="tip" tabindex="0" data-tip="Digital Operational Resilience Act: EU regulation (EU) 2022/2554 on ICT risk for the financial sector, applicable since 17 January 2025.">DORA</abbr> requires financial entities to identify all their ICT assets (Art. 8(4)) and to assess the risk at each major change (Art. 8(3)).</p>
+      <p class="nl">De IT-lijst van een doelbedrijf laat meestal zien wat het IT-team beheert. Zelden staat erop: de website die een bureau bouwde, het cloudaccount dat een ontwikkelaar op een bedrijfscreditcard opende, of de remote-access-box die niemand patchte. Dat is schaduw-IT, en u koopt het mee. Systemen zonder eigenaar zijn de systemen die niemand bijwerkt.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> u kunt niet beschermen, verzekeren of melden wat u niet weet dat u bezit. Vóór het tekenen laten openbare gegevens zoals domeinnamen en certificaten veel zien van wat een bedrijf op internet heeft staan, zonder de systemen aan te raken. Na de closing stellen wij een volledige inventaris voor, met een eigenaar per systeem. <abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor cyberbeveiliging van essentiële en belangrijke entiteiten; in Nederland de Cyberbeveiligingswet.">NIS2</abbr> noemt beheer van bedrijfsmiddelen bij de minimale beveiligingsmaatregelen (art. 21 lid 2 onder i). <abbr class="tip" tabindex="0" data-tip="Digital Operational Resilience Act: EU-verordening (EU) 2022/2554 over ICT-risico in de financiële sector, van toepassing sinds 17 januari 2025.">DORA</abbr> verplicht financiële entiteiten al hun ICT-middelen in kaart te brengen (art. 8 lid 4) en bij elke grote wijziging het risico te beoordelen (art. 8 lid 3).</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">WHAT NOBODY LISTED, NOBODY PATCHES</span><span class="nl">WAT NIEMAND OPSCHREEF, PATCHT NIEMAND</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: MAP WHAT THEY EXPOSE BEFORE SIGNING, INVENTORY AFTER CLOSING</span><span class="nl">AANBEVOLEN: BRENG IN KAART WAT ZE TONEN VÓÓR HET TEKENEN, INVENTARISEER NA DE CLOSING</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Attackers scan the internet automatically. A forgotten system gets found whether or not you know it exists.</span><span class="nl">Aanvallers scannen het internet automatisch. Een vergeten systeem wordt gevonden, of u het nu kent of niet.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">The target's staff may use AI tools nobody approved, with company data in them. That is shadow IT too, and it is on no list.</span><span class="nl">Medewerkers van het doelbedrijf gebruiken misschien AI-tools die niemand goedkeurde, met bedrijfsgegevens erin. Ook dat is schaduw-IT, en het staat op geen enkele lijst.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Faster mapping</span><span class="nl">Sneller in kaart</span></b><p><span class="en">AI-assisted discovery tools speed up the inventory. Each finding still needs a person who owns it.</span><span class="nl">Met AI ondersteunde inventarisatietools versnellen het in kaart brengen. Elke vondst heeft nog steeds een eigenaar nodig.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">Day one: <em>connecting before you know what you connect.</em></span>
+      <span class="nl">Dag één: <em>koppelen voordat u weet wat u koppelt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">network integration / identity trust / staged integration</span>
+      <span class="nl">netwerkintegratie / vertrouwen tussen accountsystemen / gefaseerde integratie</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">ONE LINK ON DAY ONE</span><span class="nl">ÉÉN KOPPELING OP DAG ÉÉN</span></div>
+      <div class="net yours"><span class="en">Your network</span><span class="nl">Uw netwerk</span></div>
+      <div class="net theirs"><span class="en">Their network</span><span class="nl">Hun netwerk</span><i></i></div>
+      <div class="link"></div><div class="dot"></div>
+      <div class="banner"><span class="en">THEIR INCIDENT BECOMES YOURS THE DAY YOU CONNECT</span><span class="nl">HUN INCIDENT WORDT HET UWE OP DE DAG DAT U KOPPELT</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">There is pressure to show the deal working: one email system, one network, one login, fast. Every connection also links their weaknesses to yours. An attacker in their network, or an admin account with a weak password, can then reach your systems. A trust between the two account directories is the fastest route of all.</p>
+      <p class="en"><strong>Business impact:</strong> an early connection turns their incident into yours. We suggest a bridge period: share email, calendars and a few named applications through controlled gateways. Connect networks and accounts only after the compromise assessment, after admin passwords are reset, and once their devices meet your standard, such as <abbr class="tip" tabindex="0" data-tip="Multi-factor authentication: a login that needs a second proof, such as an app or a key, on top of the password.">MFA</abbr> and your monitoring. Agreeing who decides when to connect, and against which conditions, is often the most effective first step.</p>
+      <p class="nl">Er is druk om te laten zien dat de overname werkt: één mailsysteem, één netwerk, één login, snel. Elke koppeling verbindt ook hun zwakke plekken met de uwe. Een aanvaller in hun netwerk, of een beheeraccount met een zwak wachtwoord, bereikt dan uw systemen. Een vertrouwensrelatie tussen de twee accountsystemen is de snelste route van allemaal.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een vroege koppeling maakt hun incident het uwe. Wij stellen een overgangsperiode voor: deel e-mail, agenda's en een paar benoemde applicaties via gecontroleerde koppelpunten. Koppel netwerken en accounts pas na de compromise assessment, nadat beheerwachtwoorden zijn vervangen, en zodra hun apparaten aan uw standaard voldoen, zoals <abbr class="tip" tabindex="0" data-tip="Meerfactorauthenticatie: een login die naast het wachtwoord een tweede bewijs vraagt, zoals een app of een sleutel.">MFA</abbr> en uw monitoring. Afspreken wie beslist wanneer er gekoppeld wordt, en onder welke voorwaarden, is vaak de meest effectieve eerste stap.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ONE EARLY LINK SPREADS THEIR INCIDENT TO YOU</span><span class="nl">ÉÉN VROEGE KOPPELING VERSPREIDT HUN INCIDENT NAAR U</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: CONNECT IN STAGES, AFTER THE CHECKS, NOT ON DAY ONE</span><span class="nl">AANBEVOLEN: KOPPEL IN FASEN, NA DE CONTROLES, NIET OP DAG ÉÉN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI-written requests to "add me to the new group" or "reset my access for the migration" are hard to tell from real ones during an integration.</span><span class="nl">Met AI geschreven verzoeken als "voeg mij toe aan de nieuwe groep" of "reset mijn toegang voor de migratie" zijn tijdens een integratie moeilijk van echte te onderscheiden.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Integration teams may paste network plans and account lists into AI tools to save time. Worth agreeing which tools may see them.</span><span class="nl">Integratieteams plakken misschien netwerkplannen en accountlijsten in AI-tools om tijd te winnen. Spreek af welke tools die mogen zien.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Spot the odd one</span><span class="nl">Zie de uitzondering</span></b><p><span class="en">AI-assisted monitoring helps separate expected migration traffic from an attacker moving between the two networks, if both sides are monitored.</span><span class="nl">Met AI ondersteunde monitoring helpt verwacht migratieverkeer te onderscheiden van een aanvaller die tussen beide netwerken beweegt, als beide kanten bewaakt worden.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">The paperwork: <em>who pays for a breach that started before closing?</em></span>
+      <span class="nl">Het papierwerk: <em>wie betaalt voor een inbraak die vóór de closing begon?</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">warranties / indemnities / W&amp;I insurance / change of control</span>
+      <span class="nl">garanties / vrijwaringen / W&amp;I-verzekering / zeggenschapswijziging</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">WHAT EACH PROMISE COVERS</span><span class="nl">WAT ELKE TOEZEGGING DEKT</span></div>
+      <div class="rows">
+        <div class="r"><span class="en">Warranty: "no known breach"</span><span class="nl">Garantie: "geen bekende inbraak"</span><b class="a"><span class="en">Only if someone looked</span><span class="nl">Alleen als iemand keek</span></b></div>
+        <div class="r"><span class="en">Specific cyber indemnity</span><span class="nl">Specifieke cybervrijwaring</span><b class="g"><span class="en">Pays for a pre-closing breach</span><span class="nl">Betaalt voor inbraak vóór closing</span></b></div>
+        <div class="r"><span class="en">W&amp;I insurance</span><span class="nl">W&amp;I-verzekering</span><b class="a"><span class="en">Usually excludes what was known</span><span class="nl">Sluit bekende zaken meestal uit</span></b></div>
+        <div class="r"><span class="en">Their cyber policy</span><span class="nl">Hun cyberpolis</span><b class="a"><span class="en">Check the change of control</span><span class="nl">Check de zeggenschapswijziging</span></b></div>
+      </div>
+      <div class="banner"><span class="en">"NO KNOWN BREACHES" MEANS LITTLE IF NOBODY LOOKED</span><span class="nl">"GEEN BEKENDE INBRAKEN" ZEGT WEINIG ALS NIEMAND KEEK</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The purchase agreement decides who pays for a breach that began before the deal. Warranties are the seller's statements, for example that they know of no breach. An indemnity is a promise to pay for a specific risk, such as an incident that turns out to have started before closing. Many deals also use <abbr class="tip" tabindex="0" data-tip="Warranty and indemnity insurance: a policy that pays the buyer when the seller's warranties turn out to be untrue.">W&amp;I</abbr> insurance. It typically excludes what was already known at signing, so a breach found during due diligence needs its own arrangement.</p>
+      <p class="en"><strong>Business impact:</strong> a warranty that says "no known breaches" is worth little if nobody looked. We suggest asking for a list of past incidents, a specific cyber indemnity, and a claim period long enough for an attacker who is found late. At Starwood, that took four years. It is also worth checking the target's own cyber insurance: what a change of control does to it, and whether it covers incidents that started before closing but are found after. Get the insurer's answer in writing before you sign.</p>
+      <p class="nl">De koopovereenkomst bepaalt wie betaalt voor een inbraak die vóór de deal begon. Garanties zijn verklaringen van de verkoper, bijvoorbeeld dat die geen inbraak kent. Een vrijwaring is een toezegging om voor een specifiek risico te betalen, zoals een incident dat vóór de closing blijkt te zijn begonnen. Veel deals gebruiken daarnaast een <abbr class="tip" tabindex="0" data-tip="Warranty and indemnity insurance: een polis die de koper uitkeert als garanties van de verkoper onjuist blijken.">W&amp;I</abbr>-verzekering. Die sluit meestal uit wat bij het tekenen al bekend was, dus een inbraak die tijdens het boekenonderzoek is gevonden, vraagt een eigen regeling.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een garantie dat er "geen bekende inbraken" zijn, is weinig waard als niemand keek. Wij stellen voor te vragen om een lijst van eerdere incidenten, een specifieke cybervrijwaring, en een claimtermijn die lang genoeg is voor een aanvaller die laat wordt gevonden. Bij Starwood duurde dat vier jaar. Kijk ook naar de eigen cyberverzekering van het doelbedrijf: wat een zeggenschapswijziging ermee doet, en of die incidenten dekt die vóór de closing begonnen maar daarna worden ontdekt. Vraag het antwoord van de verzekeraar op schrift voordat u tekent.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">A BREACH FOUND LATE CAN FALL BETWEEN THE CONTRACT AND THE POLICY</span><span class="nl">EEN LAAT GEVONDEN INBRAAK KAN TUSSEN CONTRACT EN POLIS VALLEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: A CYBER INDEMNITY AND THE INSURER'S ANSWER IN WRITING</span><span class="nl">AANBEVOLEN: EEN CYBERVRIJWARING EN HET ANTWOORD VAN DE VERZEKERAAR OP SCHRIFT</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">The data room holds the most sensitive documents of the deal. AI makes a convincing fake "data room login" email cheap.</span><span class="nl">De dataroom bevat de gevoeligste documenten van de deal. Met AI is een overtuigende nepmail "log in op de dataroom" goedkoop.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI tools can summarise a data room in minutes. Worth agreeing with the seller which tools may read it, and where that data goes.</span><span class="nl">AI-tools vatten een dataroom in minuten samen. Spreek met de verkoper af welke tools die mogen lezen, en waar die gegevens heen gaan.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Faster review</span><span class="nl">Sneller beoordelen</span></b><p><span class="en">AI-assisted review helps lawyers find incident disclosures and security clauses across thousands of contracts. A person still decides what they mean.</span><span class="nl">Met AI ondersteunde beoordeling helpt juristen meldingen van incidenten en beveiligingsclausules in duizenden contracten te vinden. Een mens beslist nog steeds wat ze betekenen.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 05 ============================ -->
+<section class="risk-block" id="r5">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 05</span><span class="nl">STAP 05</span></span>
+    <h2>
+      <span class="en">The data that comes with the deal: <em>and its history.</em></span>
+      <span class="nl">De gegevens die meekomen: <em>en hun geschiedenis.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">personal data / purpose limitation / breach notification</span>
+      <span class="nl">persoonsgegevens / doelbinding / meldplicht datalekken</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">WHAT COMES WITH THE COMPANY</span><span class="nl">WAT MET HET BEDRIJF MEEKOMT</span></div>
+      <div class="duties">
+        <div class="d"><span class="en">Customer records</span><span class="nl">Klantgegevens</span><small><span class="en">On what basis?</span><span class="nl">Op welke grondslag?</span></small></div>
+        <div class="d"><span class="en">Staff files</span><span class="nl">Personeelsdossiers</span><small><span class="en">Kept how long?</span><span class="nl">Hoe lang bewaard?</span></small></div>
+        <div class="d"><span class="en">Old backups</span><span class="nl">Oude back-ups</span><small><span class="en">Who knows they exist?</span><span class="nl">Wie weet ervan?</span></small></div>
+        <div class="d"><span class="en">Marketing lists</span><span class="nl">Marketinglijsten</span><small><span class="en">Already leaked?</span><span class="nl">Al gelekt?</span></small></div>
+      </div>
+      <div class="banner"><span class="en">THE RECORDS COME WITH THE PROMISES MADE ABOUT THEM</span><span class="nl">DE GEGEVENS KOMEN MEE MET DE BELOFTES DIE EROVER GEDAAN ZIJN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Customer and staff records come with the company, together with how they were collected and what people were promised. If they were gathered without a valid basis, kept too long or already leaked, that history becomes your problem as the new owner. The <abbr class="tip" tabindex="0" data-tip="General Data Protection Regulation: the EU law on personal data, applicable since 25 May 2018. In Dutch: AVG.">GDPR</abbr> makes the controller responsible for complying and for being able to show it (Art. 5(2) and 24). Merging their customer list into yours is a new use. The GDPR does not allow further use that is incompatible with the purpose the data was collected for (Art. 5(1)(b)).</p>
+      <p class="en"><strong>Business impact:</strong> an old breach found after closing still has to be reported. The GDPR requires notifying the Autoriteit Persoonsgegevens within 72 hours of becoming aware (Art. 33), and informing the people affected when the risk is high (Art. 34). In the Marriott case, the ICO counted from the day Marriott became aware, not from when the attack began. We suggest a data inventory of the target before any systems merge: which personal data, on what basis, for how long, and where.</p>
+      <p class="nl">Klant- en personeelsgegevens komen mee met het bedrijf, samen met de manier waarop ze verzameld zijn en wat mensen beloofd is. Zijn ze zonder geldige grondslag verzameld, te lang bewaard of al gelekt, dan wordt die geschiedenis uw probleem als nieuwe eigenaar. De <abbr class="tip" tabindex="0" data-tip="Algemene verordening gegevensbescherming: de EU-wet over persoonsgegevens, van toepassing sinds 25 mei 2018. In het Engels: GDPR.">AVG</abbr> maakt de verwerkingsverantwoordelijke verantwoordelijk voor naleving en voor het kunnen aantonen daarvan (art. 5 lid 2 en art. 24). Hun klantenlijst samenvoegen met de uwe is een nieuw gebruik. De AVG staat geen verder gebruik toe dat onverenigbaar is met het doel waarvoor de gegevens verzameld zijn (art. 5 lid 1 onder b).</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een oud datalek dat na de closing wordt gevonden, moet nog steeds gemeld worden. De AVG verplicht een melding aan de Autoriteit Persoonsgegevens binnen 72 uur na ontdekking (art. 33), en het informeren van de betrokkenen als het risico hoog is (art. 34). In de zaak-Marriott rekende de ICO vanaf de dag dat Marriott ervan wist, niet vanaf het begin van de aanval. Wij stellen een inventaris van de gegevens van het doelbedrijf voor, voordat er systemen samengaan: welke persoonsgegevens, op welke grondslag, hoe lang, en waar.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">THEIR DATA HISTORY BECOMES YOURS</span><span class="nl">HUN GEGEVENSGESCHIEDENIS WORDT DE UWE</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: A DATA INVENTORY BEFORE ANY SYSTEMS MERGE</span><span class="nl">AANBEVOLEN: EEN GEGEVENSINVENTARIS VOORDAT SYSTEMEN SAMENGAAN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Customer data from an old leak is easy to turn into convincing AI-written phishing aimed at the customers you just bought.</span><span class="nl">Klantgegevens uit een oud lek zijn makkelijk om te zetten in overtuigende, met AI geschreven phishing, gericht op de klanten die u net kocht.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Feeding the acquired customer data into your own AI tools is also a new use. Worth checking the purpose first.</span><span class="nl">De overgenomen klantgegevens in uw eigen AI-tools stoppen, is ook een nieuw gebruik. Toets eerst het doel.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Find it faster</span><span class="nl">Sneller gevonden</span></b><p><span class="en">AI-assisted discovery finds personal data in file shares and old databases faster than a manual search.</span><span class="nl">Met AI ondersteunde zoektools vinden persoonsgegevens in bestandsmappen en oude databases sneller dan handmatig zoeken.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What a secure deal <em>looks like.</em></span>
+      <span class="nl">Hoe een veilige overname <em>eruitziet.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">most of this goes into the deal plan before signing, not after closing</span>
+      <span class="nl">het meeste hoort in het overnameplan vóór het tekenen, niet na de closing</span>
+    </span>
+
+    <div class="stage sc">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">LOOK INSIDE</span><span class="nl">KIJK BINNEN</span></span>
+        <span class="chip c2"><span class="en">FULL INVENTORY</span><span class="nl">VOLLEDIGE INVENTARIS</span></span>
+        <span class="chip c3"><span class="en">STAGED CONNECTION</span><span class="nl">GEFASEERD KOPPELEN</span></span>
+        <span class="chip c4"><span class="en">CYBER INDEMNITY</span><span class="nl">CYBERVRIJWARING</span></span>
+        <span class="chip c5"><span class="en">DATA INVENTORY</span><span class="nl">GEGEVENSINVENTARIS</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Addresses</th><th>In one line</th></tr>
+        <tr><td class="ctl">Cyber questions in due diligence</td><td>Inside (01), contract (04)</td><td>Past incidents, pentest reports, insurance claims and open findings, asked for in writing and kept with the deal file.</td></tr>
+        <tr><td class="ctl">Compromise assessment</td><td>Inside (01)</td><td>A hunt for an attacker already present, commissioned by the seller or required by the agreement, done before anything connects.</td></tr>
+        <tr><td class="ctl">Outside map, then inventory</td><td>Estate (02)</td><td>Public records before signing; a full inventory with an owner per system after closing.</td></tr>
+        <tr><td class="ctl">Staged integration</td><td>Day one (03)</td><td>Email and named applications through gateways first. Networks and accounts only once agreed conditions are met.</td></tr>
+        <tr><td class="ctl">Admin reset and enrolment</td><td>Day one (03)</td><td>New admin passwords, <abbr class="tip" tabindex="0" data-tip="Multi-factor authentication: a login that needs a second proof, such as an app or a key, on top of the password.">MFA</abbr> and your monitoring on their devices before they join your network.</td></tr>
+        <tr><td class="ctl">Cyber indemnity and insurer's answer</td><td>Contract (04)</td><td>Who pays for a breach that started before closing, for how long, and what their policy does on a change of control.</td></tr>
+        <tr><td class="ctl">Data inventory</td><td>Data (05)</td><td>Which personal data, on what basis, for how long and where, before any systems merge.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Pakt aan</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Cybervragen in het boekenonderzoek</td><td>Binnen (01), contract (04)</td><td>Eerdere incidenten, pentestrapporten, verzekeringsclaims en open bevindingen, schriftelijk opgevraagd en bewaard bij het dealdossier.</td></tr>
+        <tr><td class="ctl">Compromise assessment</td><td>Binnen (01)</td><td>Een zoektocht naar een aanvaller die al aanwezig is, in opdracht van de verkoper of vereist in de overeenkomst, uitgevoerd voordat er iets gekoppeld wordt.</td></tr>
+        <tr><td class="ctl">Kaart van buiten, dan inventaris</td><td>Omgeving (02)</td><td>Openbare gegevens vóór het tekenen; een volledige inventaris met een eigenaar per systeem na de closing.</td></tr>
+        <tr><td class="ctl">Gefaseerde integratie</td><td>Dag één (03)</td><td>Eerst e-mail en benoemde applicaties via koppelpunten. Netwerken en accounts pas als aan afgesproken voorwaarden is voldaan.</td></tr>
+        <tr><td class="ctl">Beheerreset en aansluiten</td><td>Dag één (03)</td><td>Nieuwe beheerwachtwoorden, <abbr class="tip" tabindex="0" data-tip="Meerfactorauthenticatie: een login die naast het wachtwoord een tweede bewijs vraagt, zoals een app of een sleutel.">MFA</abbr> en uw monitoring op hun apparaten voordat ze op uw netwerk komen.</td></tr>
+        <tr><td class="ctl">Cybervrijwaring en antwoord verzekeraar</td><td>Contract (04)</td><td>Wie betaalt voor een inbraak die vóór de closing begon, hoe lang, en wat hun polis doet bij een zeggenschapswijziging.</td></tr>
+        <tr><td class="ctl">Gegevensinventaris</td><td>Gegevens (05)</td><td>Welke persoonsgegevens, op welke grondslag, hoe lang en waar, voordat systemen samengaan.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> in a deal, security is part of the price. We suggest five questions before the board approves an acquisition. Has anyone looked for an attacker already inside, or will they before we connect? Do we know what we are buying, beyond the asset list? Who decides when the networks connect, and on what conditions? Who pays for a breach that started before closing, and does their insurance still apply? And which personal data comes with the deal, on what basis?</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> bij een overname is beveiliging onderdeel van de prijs. Wij stellen vijf vragen voor voordat het bestuur een overname goedkeurt. Heeft iemand gezocht naar een aanvaller die al binnen is, of gebeurt dat voordat we koppelen? Weten we wat we kopen, meer dan de lijst van bedrijfsmiddelen? Wie beslist wanneer de netwerken gekoppeld worden, en onder welke voorwaarden? Wie betaalt voor een inbraak die vóór de closing begon, en geldt hun verzekering dan nog? En welke persoonsgegevens komen mee, op welke grondslag?</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">Nobody can say a target is clean until someone has looked. An older, larger estate and a rushed integration raise the odds.</span><span class="nl">Niemand kan zeggen dat een doelbedrijf schoon is totdat iemand heeft gekeken. Een oudere, grotere omgeving en een gehaaste integratie vergroten de kans.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Response costs, fines, claims and lost trust, and possibly the value the deal was meant to create. The ICO fined Marriott £18.4 million (2020).</span><span class="nl">Kosten van de afhandeling, boetes, claims en verloren vertrouwen, en mogelijk de waarde die de overname moest opleveren. De ICO beboette Marriott met £18,4 miljoen (2020).</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">A compromise assessment and staged integration catch much of it. An attacker can still stay hidden; the contract and the insurance then decide who pays.</span><span class="nl">Een compromise assessment en gefaseerde integratie vangen veel af. Een aanvaller kan toch verborgen blijven; contract en verzekering bepalen dan wie betaalt.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">The deal sponsor</span><span class="nl">De sponsor van de deal</span></span><p><span class="en">The <abbr class="tip" tabindex="0" data-tip="Chief information security officer: the executive responsible for information security.">CISO</abbr> runs the checks and secures the integration. The board member who sponsors the deal owns the risk and the conditions to connect.</span><span class="nl">De <abbr class="tip" tabindex="0" data-tip="Chief information security officer: de bestuurder die verantwoordelijk is voor informatiebeveiliging.">CISO</abbr> voert de controles uit en beveiligt de integratie. Het bestuurslid dat de deal sponsort, is eigenaar van het risico en van de voorwaarden om te koppelen.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers during integration</span><span class="nl">Vier getallen tijdens de integratie</span></span><p><span class="en">Target systems connected before the compromise assessment · admin accounts not yet reset · systems in the inventory without an owner · due diligence findings still open at closing.</span><span class="nl">Systemen van het doelbedrijf gekoppeld vóór de compromise assessment · beheeraccounts nog niet gereset · systemen in de inventaris zonder eigenaar · bevindingen uit het boekenonderzoek nog open bij de closing.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“An acquired company may bring an undetected attacker, unknown systems and personal data with an unclear history, so that connecting it to our network can spread an existing incident to us, which can lead to fines, claims and a loss of the value the deal was meant to create.”</span><span class="nl">“Een overgenomen bedrijf kan een onontdekte aanvaller, onbekende systemen en persoonsgegevens met een onduidelijke geschiedenis meebrengen, zodat koppeling met ons netwerk een bestaand incident naar ons kan verspreiden, wat kan leiden tot boetes, claims en verlies van de waarde die de overname moest opleveren.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it asks of you</th><th>What to ask the seller</th><th>When an incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU directive on cybersecurity for essential and important entities; in the Netherlands the Cyberbeveiligingswet.">NIS2</abbr> lists asset management and access control among the minimum security measures (Art. 21(2)(i)), and the management body approves and oversees them (Art. 20). The Cyberbeveiligingswet has been in force since 15 August 2026; check whether the deal changes either company's registration with NCSC.</td><td>Ask whether the target is in scope of NIS2 in any Member State, how it registered, and which incidents it reported.</td><td>An inherited incident found after closing can count as a significant incident if it meets the thresholds. Early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Financial entities assess ICT risk at each major change (Art. 8(3)), identify all ICT assets (Art. 8(4)), and keep the register of information on ICT contracts up to date, also at consolidated level (Art. 28(3)). DORA has applied since 17 January 2025.</td><td>If the target is a financial entity, ask for its register of information and the contracts behind critical or important functions.</td><td>Classify promptly. Initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterion CC3.4 asks an organisation to identify and assess changes that could significantly affect its internal control. An acquisition is such a change.</td><td>If the target has a SOC 2 report, check its period and whether the system it describes is the one you are buying. Ask for a bridge letter for the time since.</td><td>An incident caused by a control failure will likely appear as an exception in the next report.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>The focus is financial reporting. An acquisition can change the controls in scope; expect the next report's description to change with it.</td><td>If the target is a service provider with an ISAE 3402 report, check the period and the scope, and whether its clients' contracts allow a change of control.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Wat u de verkoper vraagt</th><th>Als een incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor cyberbeveiliging van essentiële en belangrijke entiteiten; in Nederland de Cyberbeveiligingswet.">NIS2</abbr> noemt beheer van bedrijfsmiddelen en toegangsbeleid bij de minimale beveiligingsmaatregelen (art. 21 lid 2 onder i), en het bestuursorgaan keurt die goed en houdt er toezicht op (art. 20). De Cyberbeveiligingswet is van kracht sinds 15 augustus 2026; ga na of de deal de registratie van een van beide bedrijven bij het NCSC verandert.</td><td>Vraag of het doelbedrijf in een lidstaat onder NIS2 valt, hoe het geregistreerd is, en welke incidenten het meldde.</td><td>Een geërfd incident dat na de closing wordt gevonden, kan als significant incident gelden als het de drempels haalt. Vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindverslag binnen een maand.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Financiële entiteiten beoordelen ICT-risico bij elke grote wijziging (art. 8 lid 3), brengen al hun ICT-middelen in kaart (art. 8 lid 4), en houden het informatieregister over ICT-contracten bij, ook op geconsolideerd niveau (art. 28 lid 3). DORA geldt sinds 17 januari 2025.</td><td>Is het doelbedrijf een financiële entiteit, vraag dan om het informatieregister en de contracten achter kritieke of belangrijke functies.</td><td>Classificeer snel. Eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterium CC3.4 vraagt een organisatie veranderingen te herkennen en te beoordelen die de interne beheersing wezenlijk kunnen raken. Een overname is zo'n verandering.</td><td>Heeft het doelbedrijf een SOC 2-rapport, controleer dan de periode en of het beschreven systeem het systeem is dat u koopt. Vraag een bridge letter voor de tijd daarna.</td><td>Een incident door een falende beheersmaatregel komt waarschijnlijk als afwijking in het volgende rapport.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>De focus ligt op de financiële verslaggeving. Een overname kan de beheersmaatregelen in scope veranderen; verwacht dat de beschrijving in het volgende rapport meeverandert.</td><td>Is het doelbedrijf een dienstverlener met een ISAE 3402-rapport, controleer dan periode en scope, en of de contracten met zijn klanten een zeggenschapswijziging toestaan.</td><td>ISAE 3402 schept geen meldplicht aan de auditors van gebruikers. Verwacht een afwijking in het volgende rapport en vraag in het contract om tussentijdse melding.</td></tr>
+      </table>
+      <p class="sources en">Checked against: <a href="https://ico.org.uk/media2/migrated/2618524/marriott-international-inc-mpn-20201030.pdf">UK ICO penalty notice to Marriott</a> (Oct 2020), <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">GDPR</a> Art. 5, 24, 33 and 34, <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 20, 21 and 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 8, 19 and 28, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL on the Cyberbeveiligingswet</a> (Aug 2026), AICPA Trust Services Criteria CC3.4 (2017, points of focus 2022) · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://ico.org.uk/media2/migrated/2618524/marriott-international-inc-mpn-20201030.pdf">boetebesluit van de Britse ICO aan Marriott</a> (okt 2020), <a href="https://eur-lex.europa.eu/eli/reg/2016/679/oj">AVG</a> art. 5, 24, 33 en 34, <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 20, 21 en 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 8, 19 en 28, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC over de Cyberbeveiligingswet</a> (aug 2026), AICPA Trust Services Criteria CC3.4 (2017, aandachtspunten 2022) · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../blast-radius/"><span class="en">Decrease the blast radius</span><span class="nl">Beperk de reikwijdte van een inbreuk</span></a> ·
+  <a href="../cyber-insurance/"><span class="en">Cyber insurance</span><span class="nl">Cyberverzekering</span></a> ·
+  <a href="../data/"><span class="en">Knowing what to protect</span><span class="nl">Weten wat u beschermt</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=acquisitions&amp;title=Missing%3A%20acquisitions"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=acquisitions&amp;title=Correction%3A%20acquisitions"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">ACQUISITIONS BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">OVERNAMES BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>
