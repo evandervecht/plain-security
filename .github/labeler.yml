@@ -77,6 +77,8 @@ sponsor:
   - '(encryption at rest|encrypted at rest|data at rest|versleuteld opgeslagen|versleutelde opslag|key management|sleutelbeheer|bitlocker|kms|hsm)'
 'page: edge-devices':
   - '(edge device|randapparatuur|\bvpn\b|firewall|netscaler|fortigate|fortinet|ivanti|palo alto|remote.?access gateway|load balancer|zero.?trust|ztna|management interface|beheerinterface)'
+'page: pentest':
+  - '(pentest|penetration test|penetratietest|red.?team|vulnerability scan|kwetsbaarhedenscan|\btlpt\b|tiber|bug bounty|security\.txt|vulnerability disclosure|\bcvd\b|responsible disclosure|retest|hertest)'
 'page: board-as-target':
   - '(board as a target|whaling|ceo.?fraud|ceo-fraude|deepfake|voice clon|stemkloon|board portal|bestuursportaal|board pack|vergaderstukken|high-risk individual|lockdown mode|advanced protection|executive protection|bestuurder als doelwit)'
 'page: backups-and-restore':
