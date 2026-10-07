@@ -103,6 +103,13 @@ Use it for any timeline or deadline list. It goes under a roadmap diagram, and o
 - **Build:** write the SVG by hand, or with a small script in `tools/`. `tools/gen_cmap.py` and `tools/gen_roadmap.py` are worked examples; the output is static HTML either way.
 - **Embed** with `python3 tools/embed.py <slug> tools/out/<file>.svg-section.html`. It inserts the section before CONTROLS between `<!-- diagram:<id> -->` markers, and re-running it replaces the section. `quantum-and-ai/` is the reference page.
 
+### Animated scenes (pure CSS, no JavaScript)
+
+Some briefings include animated scenes (e.g., `backups-and-restore/` has four). Currently built by hand, with scene-specific CSS and animations. As a demo of the pattern, animation durations are parameterized as CSS variables (e.g., `--scene-duration: 7s`) to allow global pacing adjustments. **When to invest in tooling:**
+- After 5–6 briefings with similar scene patterns emerge, write a `tools/scene-builder.js` that takes a JSON scene description and generates the hand-coded CSS output. Until then, hand-code and reuse where you can.
+- Animation durations are inherited from `:root` CSS variables; keep them consistent across all scenes of the same visual pattern (e.g., all step-by-step reveals at 7s).
+- Test at 1260px and 390px to check for overlaps and responsive layout issues; use headless Chromium to catch mobile rendering bugs.
+
 ## Canonical regulatory text
 
 Last verified 28 Sep 2026. Re-verify before reuse, and use the same wording on every page.
