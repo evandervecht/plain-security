@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>The Cyber Resilience Act for makers // Plain Security</title>
+<meta name="description" content="We sell products with software in them. What the CRA asks of makers, importers and resellers: reporting since September 2026, CE mark and support period from December 2027.">
+<link rel="canonical" href="https://plain-security.fyi/cra/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The Cyber Resilience Act for makers // Plain Security">
+<meta property="og:description" content="We sell products with software in them. What the CRA asks of makers, importers and resellers: reporting since September 2026, CE mark and support period from December 2027.">
+<meta property="og:url" content="https://plain-security.fyi/cra/">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="nl_NL">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   CYBER RESILIENCE ACT FOR MAKERS // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 7s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : every product on the shelf has a class, except yours --- */
+.s1 .shelf{position:absolute;left:40px;right:40px;top:56px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.s1 .loc{position:relative;height:118px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;font-size:26px}
+.s1 .loc i{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-style:normal;font-size:9px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.s1 .loc b{position:absolute;top:6px;left:0;right:0;text-align:center;font-size:9px;letter-spacing:.1em;color:#8ff0cd;font-weight:700;text-transform:uppercase}
+.s1 .loc.open{border-color:rgba(255,93,115,.55)}
+.s1 .loc.open b{color:var(--bad-soft)}
+.s1 .loc.open::after{content:"?";position:absolute;inset:0;display:grid;place-items:center;font-family:var(--sans);font-weight:800;font-size:46px;color:var(--bad);background:rgba(58,20,48,.85);opacity:0;animation:flag 6s ease-in-out infinite}
+@keyframes flag{0%,20%{opacity:0}30%,80%{opacity:1}90%,100%{opacity:0}}
+.s1 .banner{animation-duration:6s}
+
+/* --- scene 2 : the exploit is seen, the 24-hour clock starts --- */
+.s2 .row{position:absolute;left:24px;right:24px;height:76px;display:flex;align-items:center;gap:14px}
+.s2 .row.a{top:42px}.s2 .row.b{top:134px}
+.s2 .who{flex:none;width:128px;height:64px;display:grid;place-items:center;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;background:var(--surface);border:1px solid var(--line);line-height:1.3}
+.s2 .who b{display:block;font-size:22px}
+.s2 .row.a .who{background:#3a1430;border-color:rgba(255,93,115,.55);color:var(--bad-soft)}
+.s2 .path{flex:1;position:relative;height:1px;background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+.s2 .path::after{content:"";position:absolute;top:-4px;left:0;width:9px;height:9px;background:var(--white)}
+.s2 .row.a .path::after{animation:tfast 8s linear infinite}
+.s2 .row.b .path::after{animation:tslow 8s linear infinite}
+@keyframes tfast{0%{left:0;opacity:0}3%{opacity:1}15%{left:calc(100% - 9px);opacity:1}20%,100%{left:calc(100% - 9px);opacity:0}}
+@keyframes tslow{0%{left:0;opacity:0}3%{opacity:1}85%{left:calc(100% - 9px);opacity:1}90%,100%{left:calc(100% - 9px);opacity:0}}
+.s2 .out{flex:none;width:190px;padding:10px 12px;font-size:11px;letter-spacing:.06em;line-height:1.45;border:1px solid;opacity:0}
+.s2 .out.bad{color:var(--bad-soft);border-color:rgba(255,93,115,.55);background:rgba(255,93,115,.1);animation:rfast 8s ease-in-out infinite}
+.s2 .out.good{color:#8ff0cd;border-color:rgba(55,211,155,.5);background:rgba(55,211,155,.07);animation:rslow 8s ease-in-out infinite}
+@keyframes rfast{0%,15%{opacity:0}20%,100%{opacity:1}}
+@keyframes rslow{0%,85%{opacity:0}90%,100%{opacity:1}}
+.s2 .banner{animation-duration:8s}
+
+/* --- scenes 3 and 4 : two boxes, an inspector sweeps, the left one fails --- */
+.s3 .bx,.s4 .bx{position:absolute;top:84px;width:38%;height:120px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 10px}
+.s3 .bx b,.s4 .bx b{display:block;font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--white);text-transform:none}
+.s3 .bx.a,.s4 .bx.a{left:6%}
+.s3 .bx.a::after,.s4 .bx.a::after{content:"";position:absolute;inset:0;background:rgba(255,93,115,.3);border:1px solid var(--bad);opacity:0;animation:expose 7s ease-in-out infinite}
+@keyframes expose{0%,55%{opacity:0}62%,90%{opacity:1}96%,100%{opacity:0}}
+.s3 .bx.b,.s4 .bx.b{right:6%;border-color:rgba(55,211,155,.5)}
+.s3 .q,.s4 .q{position:absolute;top:34px;left:0;font-size:24px;z-index:3;animation:sweep4 7s ease-in-out infinite}
+@keyframes sweep4{0%{left:4%;opacity:0}8%{opacity:1}45%{left:calc(44% - 24px);opacity:1}55%,100%{left:calc(44% - 24px);opacity:0}}
+.s3 .banner,.s4 .banner{animation-duration:7s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .s1 .loc.open::after{opacity:1}
+  .s2 .out{opacity:1}.s2 .path::after{left:calc(100% - 9px)}
+  .s3 .bx.a::after,.s4 .bx.a::after{opacity:1}.s3 .q,.s4 .q{display:none}
+  .banner{opacity:1}.shield .tick{stroke-dashoffset:0}
+}
+@media (max-width:820px){
+  .s1 .shelf{left:12px;right:12px;gap:6px}
+  .s1 .loc i,.s1 .loc b{font-size:7.5px;letter-spacing:.04em}
+  .s2 .row{left:12px;right:12px;gap:8px}
+  .s2 .who{width:86px;font-size:8.5px;letter-spacing:.08em}
+  .s2 .out{width:128px;font-size:9.5px;padding:8px}
+  .s3 .bx,.s4 .bx{width:42%;font-size:8.5px;letter-spacing:.06em}.s3 .bx.a,.s4 .bx.a{left:4%}.s3 .bx.b,.s4 .bx.b{right:4%}
+  .s3 .bx b,.s4 .bx b{font-size:14px}
+  .stage .banner{white-space:normal;text-align:center;width:calc(100% - 24px);line-height:1.4}
+}
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+.disclaimer{display:block;margin-top:10px;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a customer or supplier asks"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een klant of leverancier vraagt"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> <span class="en">CRA FOR MAKERS</span><span class="nl">CRA VOOR MAKERS</span></a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">SCOPE</span><span class="nl">REIKWIJDTE</span></a>
+      <a href="#r2"><span class="en">REPORTING</span><span class="nl">MELDPLICHT</span></a>
+      <a href="#r3"><span class="en">DESIGN</span><span class="nl">ONTWERP</span></a>
+      <a href="#r4"><span class="en">CHAIN</span><span class="nl">KETEN</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">We sell products with software in them. <em>What does the CRA ask of us, and from when?</em></span>
+      <span class="nl">Wij verkopen producten met software erin. <em>Wat vraagt de CRA van ons, en vanaf wanneer?</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">The Cyber Resilience Act (CRA) is EU law for anyone who sells hardware or software that connects to anything, from a smart lock to an accounting package. Since 11 September 2026 makers report actively exploited vulnerabilities within 24 hours. From 11 December 2027 every new product needs security by design, a support period with updates, and a CE mark. Four questions decide what it means for you: are we a maker and of which class, can we report in time, is our product ready by December 2027, and what do our importers and resellers have to check.</span>
+      <span class="nl">De Cyber Resilience Act (CRA, officieel de Verordening cyberweerbaarheid) is EU-wetgeving voor iedereen die hardware of software verkoopt die met iets verbinding maakt, van een slim slot tot een boekhoudpakket. Sinds 11 september 2026 melden makers actief misbruikte kwetsbaarheden binnen 24 uur. Vanaf 11 december 2027 heeft elk nieuw product security by design, een ondersteuningsperiode met updates en een CE-markering nodig. Vier vragen bepalen wat dit voor u betekent: zijn wij maker en in welke klasse, kunnen wij op tijd melden, is ons product klaar vóór december 2027, en wat moeten onze importeurs en wederverkopers controleren.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FOUR</span><span class="nl">BEKIJK DE VIER</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT TO PUT IN PLACE</span><span class="nl">WAT U KUNT REGELEN</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">Are we a maker? <em>And of which class?</em></span>
+      <span class="nl">Zijn wij maker? <em>En in welke klasse?</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">scope / manufacturer, importer, distributor, product class</span>
+      <span class="nl">reikwijdte / fabrikant, importeur, distributeur, productklasse</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">EVERY PRODUCT HAS A CLASS</span><span class="nl">ELK PRODUCT HEEFT EEN KLASSE</span></div>
+      <div class="shelf">
+        <div class="loc">💻<b><span class="en">Default</span><span class="nl">Standaard</span></b><i><span class="en">Accounting app</span><span class="nl">Boekhoudapp</span></i></div>
+        <div class="loc">🔑<b><span class="en">Class I</span><span class="nl">Klasse I</span></b><i><span class="en">Password manager</span><span class="nl">Wachtwoordmanager</span></i></div>
+        <div class="loc">🧱<b><span class="en">Class II</span><span class="nl">Klasse II</span></b><i>Firewall</i></div>
+        <div class="loc">💳<b><span class="en">Critical</span><span class="nl">Kritiek</span></b><i>Smartcard</i></div>
+        <div class="loc open">📦<b>?</b><i><span class="en">Your product</span><span class="nl">Uw product</span></i></div>
+      </div>
+      <div class="banner"><span class="en">CONNECTS TO SOMETHING · SOLD IN THE EU · WHICH CLASS?</span><span class="nl">MAAKT VERBINDING · VERKOCHT IN DE EU · WELKE KLASSE?</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The <abbr class="tip" tabindex="0" data-tip="Cyber Resilience Act: Regulation (EU) 2024/2847, EU law with security duties for makers, importers and distributors of connected products.">CRA</abbr> covers every product with digital elements: hardware or software that can connect to a device or a network, sold in the EU, including free software with a commercial purpose. You are the manufacturer when you sell it under your own name, even if someone else built it. An importer or reseller that puts its own brand on a product, or changes it substantially, becomes the manufacturer too. Medical devices, cars and aircraft follow their own rules and are out of scope. Most products fall in the default class and assess themselves. Annex III names important products: class I (such as password managers, VPNs, operating systems, routers, smart locks and connected toys) and class II (such as firewalls and hypervisors). Annex IV names critical products (such as smart meter gateways and smartcards).</p>
+      <p class="en"><strong>Business impact:</strong> the first step is a list: every product you sell, whether the CRA applies, and which class it falls in. The class decides whether you may assess yourself or need an outside assessor, and that decides lead time and cost. The Commission's technical descriptions (November 2025) and its guidance of July 2026 (non-binding) help with the edge cases, such as remote data processing and open source.</p>
+      <p class="nl">De <abbr class="tip" tabindex="0" data-tip="Cyber Resilience Act: Verordening (EU) 2024/2847, EU-wet met beveiligingsplichten voor makers, importeurs en distributeurs van verbonden producten.">CRA</abbr> geldt voor elk product met digitale elementen: hardware of software die verbinding kan maken met een apparaat of netwerk, verkocht in de EU, inclusief gratis software met een commercieel doel. U bent de fabrikant als u het onder uw eigen naam verkoopt, ook als iemand anders het heeft gebouwd. Een importeur of wederverkoper die zijn eigen merk op een product zet, of het wezenlijk wijzigt, wordt ook fabrikant. Medische hulpmiddelen, auto's en vliegtuigen volgen hun eigen regels en vallen erbuiten. De meeste producten vallen in de standaardklasse en beoordelen zichzelf. Bijlage III noemt belangrijke producten: klasse I (zoals wachtwoordmanagers, VPN's, besturingssystemen, routers, slimme sloten en verbonden speelgoed) en klasse II (zoals firewalls en hypervisors). Bijlage IV noemt kritieke producten (zoals slimme-metergateways en smartcards).</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de eerste stap is een lijst: elk product dat u verkoopt, of de CRA erop van toepassing is, en in welke klasse het valt. De klasse bepaalt of u zelf mag beoordelen of een externe beoordelaar nodig hebt, en dat bepaalt doorlooptijd en kosten. De technische omschrijvingen van de Commissie (november 2025) en haar richtsnoeren van juli 2026 (niet bindend) helpen bij de grensgevallen, zoals gegevensverwerking op afstand en open source.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ANY CONNECTED PRODUCT · OWN BRAND = MANUFACTURER</span><span class="nl">ELK VERBONDEN PRODUCT · EIGEN MERK = FABRIKANT</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE PRODUCT LIST WITH A CRA CLASS PER PRODUCT</span><span class="nl">AANBEVOLEN: ÉÉN PRODUCTLIJST MET EEN CRA-KLASSE PER PRODUCT</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Attackers use AI to find the same flaw across a whole product family and every customer. One weak firmware build becomes a reportable event at scale.</span><span class="nl">Aanvallers gebruiken AI om dezelfde fout in een hele productfamilie en bij elke klant te vinden. Eén zwakke firmwareversie wordt een meldplichtige gebeurtenis op schaal.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Code an AI model wrote for your product is still your product. The duty of care for third-party components covers what the model wrote too.</span><span class="nl">Code die een AI-model voor uw product schreef, is nog steeds uw product. De zorgplicht voor onderdelen van derden geldt ook voor wat het model schreef.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Sort the catalogue</span><span class="nl">Sorteer de catalogus</span></b><p><span class="en">AI tools can pre-sort a product catalogue against the Annex III and IV lists and the Commission's descriptions. The final class is a decision by people.</span><span class="nl">AI-tools kunnen een productcatalogus voorsorteren op de lijsten van bijlage III en IV en de omschrijvingen van de Commissie. De definitieve klasse is een besluit van mensen.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">Since 11 September 2026: <em>24 hours to raise the alarm.</em></span>
+      <span class="nl">Sinds 11 september 2026: <em>24 uur om alarm te slaan.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">reporting / actively exploited vulnerabilities and severe incidents</span>
+      <span class="nl">meldplicht / actief misbruikte kwetsbaarheden en ernstige incidenten</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">ONE EXPLOIT, ONE CLOCK</span><span class="nl">ÉÉN EXPLOIT, ÉÉN KLOK</span></div>
+      <div class="row a"><div class="who"><b>🕵️</b><span class="en">Exploit in the wild</span><span class="nl">Exploit in omloop</span></div><div class="path"></div><div class="out bad"><span class="en">YOU BECOME AWARE · HOUR 0</span><span class="nl">U KRIJGT ER KENNIS VAN · UUR 0</span></div></div>
+      <div class="row b"><div class="who"><b>📨</b><span class="en">Your report</span><span class="nl">Uw melding</span></div><div class="path"></div><div class="out good"><span class="en">EARLY WARNING · HOUR 24 · NOTIFICATION · HOUR 72</span><span class="nl">VROEGTIJDIGE WAARSCHUWING · UUR 24 · MELDING · UUR 72</span></div></div>
+      <div class="banner"><span class="en">ONE PLATFORM · ALSO FOR PRODUCTS YOU ALREADY SOLD</span><span class="nl">ÉÉN PLATFORM · OOK VOOR PRODUCTEN DIE U AL VERKOCHT</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The reporting duty (Art. 14) is already in force, and it also covers products you sold before December 2027. When you become aware that a vulnerability in your product is being actively exploited, or of a severe incident affecting its security, the <abbr class="tip" tabindex="0" data-tip="Cyber Resilience Act: Regulation (EU) 2024/2847, EU law with security duties for makers, importers and distributors of connected products.">CRA</abbr> requires an early warning within 24 hours, a notification within 72 hours, and a final report within 14 days after a fix is available (one month for an incident). Everything goes once, through the Single Reporting Platform run by <abbr class="tip" tabindex="0" data-tip="European Union Agency for Cybersecurity: the EU agency that runs the CRA Single Reporting Platform.">ENISA</abbr>, to the <abbr class="tip" tabindex="0" data-tip="Computer security incident response team: the national team that receives the report; in the Netherlands the NCSC.">CSIRT</abbr> of the country where you are based. In the Netherlands that is the NCSC. Informing your customers about the fix and what they can do is part of the duty.</p>
+      <p class="en"><strong>Business impact:</strong> twenty-four hours is shorter than most internal escalation paths. Reporting late can be fined up to €15 million or 2.5% of worldwide turnover, whichever is higher (Art. 64). The exercise worth doing: one named person who can file, an account on the platform, and a one-page template, rehearsed once.</p>
+      <p class="nl">De meldplicht (art. 14) is al van kracht en geldt ook voor producten die u vóór december 2027 verkocht. Zodra u er kennis van krijgt dat een kwetsbaarheid in uw product actief wordt misbruikt, of van een ernstig incident dat de beveiliging ervan raakt, vereist de <abbr class="tip" tabindex="0" data-tip="Cyber Resilience Act: Verordening (EU) 2024/2847, EU-wet met beveiligingsplichten voor makers, importeurs en distributeurs van verbonden producten.">CRA</abbr> een vroegtijdige waarschuwing binnen 24 uur, een melding binnen 72 uur en een eindverslag binnen 14 dagen nadat een fix beschikbaar is (een maand bij een incident). Alles gaat in één keer, via het centrale meldingsplatform van <abbr class="tip" tabindex="0" data-tip="Agentschap van de Europese Unie voor cyberbeveiliging: beheert het centrale meldingsplatform van de CRA.">ENISA</abbr>, naar het <abbr class="tip" tabindex="0" data-tip="Computer security incident response team: het nationale team dat de melding ontvangt; in Nederland het NCSC.">CSIRT</abbr> van het land waar u gevestigd bent. In Nederland is dat het NCSC. Uw klanten informeren over de fix en wat zij zelf kunnen doen, hoort bij de plicht.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> vierentwintig uur is korter dan de meeste interne escalatieroutes. Te laat melden kan een boete opleveren tot € 15 miljoen of 2,5% van de wereldwijde omzet, als dat hoger is (art. 64). De oefening die de moeite waard is: één persoon met naam die kan melden, een account op het platform en een sjabloon van één pagina, één keer geoefend.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">24-HOUR CLOCK · ALREADY RUNNING · ALSO FOR OLD PRODUCTS</span><span class="nl">KLOK VAN 24 UUR · LOOPT AL · OOK VOOR OUDE PRODUCTEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE NAMED REPORTER, A PLATFORM ACCOUNT, ONE REHEARSAL</span><span class="nl">AANBEVOLEN: ÉÉN MELDER MET NAAM, EEN PLATFORMACCOUNT, ÉÉN OEFENING</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Exploits follow a disclosure within days, increasingly AI-assisted. The chance that your first signal is already "actively exploited", and so reportable, grows.</span><span class="nl">Exploits volgen binnen dagen op een publicatie, steeds vaker met AI. De kans dat uw eerste signaal al "actief misbruikt" is, en dus meldplichtig, groeit.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An AI assistant that sorts support tickets can file "customer sees strange logins" as a bug. That ticket may be your first sign of an exploited vulnerability.</span><span class="nl">Een AI-assistent die supporttickets sorteert, kan "klant ziet vreemde inlogs" als bug wegzetten. Dat ticket kan uw eerste teken van een misbruikte kwetsbaarheid zijn.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Draft the warning</span><span class="nl">Schrijf de waarschuwing voor</span></b><p><span class="en">Tools can draft the 24-hour early warning from the ticket and the product record. Someone still signs it, and the clock starts at awareness, not at the draft.</span><span class="nl">Tools kunnen de vroegtijdige waarschuwing opstellen uit het ticket en het productdossier. Iemand tekent nog steeds, en de klok start bij kennisname, niet bij het concept.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">From 11 December 2027: <em>secure by design, with a CE mark.</em></span>
+      <span class="nl">Vanaf 11 december 2027: <em>secure by design, met CE-markering.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">main obligations / security by design, vulnerability handling, SBOM, support period, conformity</span>
+      <span class="nl">hoofdverplichtingen / security by design, kwetsbaarheidsbeheer, SBOM, ondersteuningsperiode, conformiteit</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">WHAT THE MARKET INSPECTOR LOOKS FOR</span><span class="nl">WAAR DE MARKTTOEZICHTHOUDER NAAR KIJKT</span></div>
+      <div class="q">🔎</div>
+      <div class="bx a"><b><span class="en">No CE mark</span><span class="nl">Geen CE-markering</span></b><span class="en">after 11 Dec 2027: not on the EU market</span><span class="nl">na 11 dec 2027: niet op de EU-markt</span></div>
+      <div class="bx b"><b><span class="en">CE mark</span><span class="nl">CE-markering</span></b><span class="en">risk assessment · SBOM · updates for 5+ years</span><span class="nl">risicobeoordeling · SBOM · updates voor 5+ jaar</span></div>
+      <div class="banner"><span class="en">SECURE BY DESIGN · SUPPORT PERIOD · CONFORMITY FILE · CE MARK</span><span class="nl">SECURE BY DESIGN · ONDERSTEUNINGSPERIODE · CONFORMITEITSDOSSIER · CE-MARKERING</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">From 11 December 2027 every product placed on the market, and every existing product that is substantially modified, meets the essential requirements of Annex I. In plain terms: shipped without known exploitable vulnerabilities and with secure defaults, a cybersecurity risk assessment, an <abbr class="tip" tabindex="0" data-tip="Software bill of materials: the ingredient list of a release, every component and its version.">SBOM</abbr> of at least the top-level components, a way for researchers to report vulnerabilities, security updates for a support period of at least five years (or the expected lifetime if shorter), and the end date of support shown at purchase. The manufacturer runs a conformity assessment, draws up technical documentation and the EU declaration of conformity, and affixes the <abbr class="tip" tabindex="0" data-tip="CE marking: the manufacturer's statement that the product meets the EU rules that apply to it, now including the CRA.">CE</abbr> mark. Default products assess themselves. Class I may do so only when harmonised standards are fully applied. Class II and critical products need a <abbr class="tip" tabindex="0" data-tip="Notified body: an independent assessor designated by an EU Member State to check conformity.">notified body</abbr> or an EU certification.</p>
+      <p class="en"><strong>Business impact:</strong> this is a product roadmap item with a fixed date. Fourteen months is short for a hardware product with a notified body in the chain, and the Commission expects the first harmonised standards only in late 2026, with more in October 2027. Consider starting with the SBOM and the vulnerability process: they are the quickest wins, and they also answer what your NIS2 and DORA customers ask today. The support period is a cost that belongs in the price.</p>
+      <p class="nl">Vanaf 11 december 2027 voldoet elk product dat in de handel wordt gebracht, en elk bestaand product dat wezenlijk wordt gewijzigd, aan de essentiële eisen van bijlage I. In gewone taal: geleverd zonder bekende misbruikbare kwetsbaarheden en met veilige standaardinstellingen, een cyberbeveiligingsrisicobeoordeling, een <abbr class="tip" tabindex="0" data-tip="Software bill of materials: de ingrediëntenlijst van een release, elk onderdeel met zijn versie.">SBOM</abbr> van ten minste de onderdelen op het hoogste niveau, een manier voor onderzoekers om kwetsbaarheden te melden, beveiligingsupdates gedurende een ondersteuningsperiode van minimaal vijf jaar (of de verwachte levensduur als die korter is), en de einddatum van de ondersteuning zichtbaar bij aankoop. De fabrikant voert een conformiteitsbeoordeling uit, stelt technische documentatie en de EU-conformiteitsverklaring op en brengt de <abbr class="tip" tabindex="0" data-tip="CE-markering: de verklaring van de fabrikant dat het product voldoet aan de EU-regels die erop van toepassing zijn, nu ook de CRA.">CE</abbr>-markering aan. Standaardproducten beoordelen zichzelf. Klasse I mag dat alleen als geharmoniseerde normen volledig zijn toegepast. Klasse II en kritieke producten hebben een <abbr class="tip" tabindex="0" data-tip="Aangemelde instantie: een onafhankelijke beoordelaar die door een EU-lidstaat is aangewezen om conformiteit te controleren.">aangemelde instantie</abbr> of een EU-certificering nodig.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> dit is een punt op de productroadmap met een vaste datum. Veertien maanden is kort voor een hardwareproduct met een aangemelde instantie in de keten, en de Commissie verwacht de eerste geharmoniseerde normen pas eind 2026, met meer in oktober 2027. Overweeg te beginnen met de SBOM en het kwetsbaarheidsproces: dat zijn de snelste winstpunten, en ze beantwoorden ook wat uw NIS2- en DORA-klanten vandaag al vragen. De ondersteuningsperiode is een kostenpost die in de prijs hoort.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NO CE MARK = NO EU MARKET FROM 11 DEC 2027</span><span class="nl">GEEN CE-MARKERING = GEEN EU-MARKT VANAF 11 DEC 2027</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: SBOM AND VULNERABILITY PROCESS FIRST, THEN THE ASSESSMENT ROUTE</span><span class="nl">AANBEVOLEN: EERST SBOM EN KWETSBAARHEIDSPROCES, DAN DE BEOORDELINGSROUTE</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI reads your SBOM too. A public component list makes known weak spots easy to find, which is exactly why updating those components fast matters.</span><span class="nl">AI leest uw SBOM ook. Een openbare onderdelenlijst maakt bekende zwakke plekken makkelijk te vinden, en juist daarom telt het snel bijwerken van die onderdelen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An AI feature added later can be a substantial modification, which reopens the conformity assessment. Worth asking before it ships.</span><span class="nl">Een later toegevoegde AI-functie kan een wezenlijke wijziging zijn, en die heropent de conformiteitsbeoordeling. De moeite waard om te vragen vóór de release.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">SBOM from the pipeline</span><span class="nl">SBOM uit de pipeline</span></b><p><span class="en">Build tools generate the SBOM and flag vulnerable components on every release. That is most of the vulnerability-handling requirement, automated.</span><span class="nl">Buildtools genereren de SBOM en markeren kwetsbare onderdelen bij elke release. Dat is het grootste deel van de eis voor kwetsbaarheidsbeheer, geautomatiseerd.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">Importers and resellers: <em>check the mark, pass on the warning.</em></span>
+      <span class="nl">Importeurs en wederverkopers: <em>controleer de markering, geef de waarschuwing door.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">supply chain / importer, distributor, own brand</span>
+      <span class="nl">keten / importeur, distributeur, eigen merk</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">WHO CARRIES THE MANUFACTURER'S DUTIES</span><span class="nl">WIE DE PLICHTEN VAN DE FABRIKANT DRAAGT</span></div>
+      <div class="q">🔎</div>
+      <div class="bx a"><b><span class="en">Own brand</span><span class="nl">Eigen merk</span></b><span class="en">importer sells under its name = manufacturer</span><span class="nl">importeur verkoopt onder eigen naam = fabrikant</span></div>
+      <div class="bx b"><b><span class="en">Reseller</span><span class="nl">Wederverkoper</span></b><span class="en">checks the CE mark · passes on vulnerabilities</span><span class="nl">controleert de CE-markering · geeft kwetsbaarheden door</span></div>
+      <div class="banner"><span class="en">IMPORTER CHECKS THE FILE · DISTRIBUTOR CHECKS THE MARK · BOTH PASS ON WARNINGS</span><span class="nl">IMPORTEUR CONTROLEERT HET DOSSIER · DISTRIBUTEUR DE MARKERING · BEIDEN GEVEN WAARSCHUWINGEN DOOR</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">If you bring a product into the EU, you are the importer. Before you sell, you check that the manufacturer has done the conformity assessment and the technical documentation, that the product carries the <abbr class="tip" tabindex="0" data-tip="CE marking: the manufacturer's statement that the product meets the EU rules that apply to it, now including the CRA.">CE</abbr> mark, the declaration of conformity and the user information, and you put your own contact details on it. If you only resell, you are the distributor: you act with due care, verify the CE mark, and check that manufacturer and importer did their part. Both pass on any vulnerability they learn of to the manufacturer without delay, warn the authorities when the risk is significant, and inform users when the manufacturer stops operating. Importers keep the declaration for at least ten years. And if you sell it under your own brand, or change it substantially, you carry the manufacturer's duties yourself.</p>
+      <p class="en"><strong>Business impact:</strong> for a reseller this is mostly paperwork and one decision: which products do we still carry when the mark is missing? For a white-label business it is the full set of obligations in step 03. Fines for importer and distributor duties go up to €10 million or 2% of worldwide turnover.</p>
+      <p class="nl">Brengt u een product de EU binnen, dan bent u de importeur. Vóór de verkoop controleert u of de fabrikant de conformiteitsbeoordeling en de technische documentatie heeft gedaan, of het product de <abbr class="tip" tabindex="0" data-tip="CE-markering: de verklaring van de fabrikant dat het product voldoet aan de EU-regels die erop van toepassing zijn, nu ook de CRA.">CE</abbr>-markering, de conformiteitsverklaring en de gebruikersinformatie draagt, en u zet uw eigen contactgegevens erop. Verkoopt u alleen door, dan bent u de distributeur: u handelt met de nodige zorgvuldigheid, controleert de CE-markering en gaat na of fabrikant en importeur hun deel hebben gedaan. Beiden geven elke kwetsbaarheid waarvan zij kennis krijgen zonder vertraging door aan de fabrikant, waarschuwen de autoriteiten als het risico aanzienlijk is, en informeren gebruikers als de fabrikant ermee stopt. Importeurs bewaren de verklaring minstens tien jaar. En verkoopt u het onder uw eigen merk, of wijzigt u het wezenlijk, dan draagt u zelf de plichten van de fabrikant.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> voor een wederverkoper is dit vooral papierwerk en één besluit: welke producten voeren we nog als de markering ontbreekt? Voor een white-labelbedrijf is het de volledige set verplichtingen uit stap 03. Boetes voor importeurs- en distributeursplichten lopen op tot € 10 miljoen of 2% van de wereldwijde omzet.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">OWN BRAND OR MODIFICATION = YOU ARE THE MANUFACTURER</span><span class="nl">EIGEN MERK OF WIJZIGING = U BENT DE FABRIKANT</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: CE MARK AND DECLARATION IN THE BUYING CHECKLIST</span><span class="nl">AANBEVOLEN: CE-MARKERING EN VERKLARING IN DE INKOOPCHECKLIST</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Fake CE marks and forged declarations are cheap to generate. Verify with the manufacturer, not from the label.</span><span class="nl">Valse CE-markeringen en vervalste verklaringen zijn goedkoop te maken. Controleer bij de fabrikant, niet op het etiket.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A white-label AI feature bolted onto someone else's product makes you the manufacturer of that part, with its reporting clock.</span><span class="nl">Een white-label AI-functie op het product van een ander maakt u fabrikant van dat deel, met de bijbehorende meldklok.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Paperwork at goods-in</span><span class="nl">Papierwerk bij ontvangst</span></b><p><span class="en">Tools can read declarations of conformity and match them to the product list at goods-in. The buyer reviews the exceptions.</span><span class="nl">Tools kunnen conformiteitsverklaringen lezen en bij ontvangst koppelen aan de productlijst. De inkoper beoordeelt de uitzonderingen.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>to put in place.</em></span>
+      <span class="nl">Wat <em>u kunt regelen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">most of this is a list, a process and a date, not a new product</span>
+      <span class="nl">het meeste is een lijst, een proces en een datum, geen nieuw product</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">PRODUCT LIST</span><span class="nl">PRODUCTLIJST</span></span>
+        <span class="chip c2"><span class="en">24-HOUR ROUTE</span><span class="nl">24-UURSROUTE</span></span>
+        <span class="chip c3">SBOM</span>
+        <span class="chip c4"><span class="en">SUPPORT PERIOD</span><span class="nl">ONDERSTEUNINGSPERIODE</span></span>
+        <span class="chip c5"><span class="en">CE FILE</span><span class="nl">CE-DOSSIER</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Addresses</th><th>In one line</th></tr>
+        <tr><td class="ctl">Product list with class</td><td>Scope (01)</td><td>Every product sold in the EU, whether the CRA applies, its class and its assessment route. One owner. Reviewed when a product changes.</td></tr>
+        <tr><td class="ctl">Substantial-modification check</td><td>Scope (01)</td><td>Every major release answers one question before it ships: does this change the security of the product, or what it is for?</td></tr>
+        <tr><td class="ctl">Reporting route</td><td>Reporting (02)</td><td>One named reporter and a deputy, an account on the ENISA platform, a template for the 24-hour early warning, rehearsed once a year.</td></tr>
+        <tr><td class="ctl">Vulnerability intake</td><td>Reporting (02)</td><td>A public contact for vulnerability reports and a coordinated disclosure policy. Support tickets with security words route to it.</td></tr>
+        <tr><td class="ctl">Secure development</td><td>Design (03)</td><td>Risk assessment per product, secure defaults, testing before release. NIST SSDF or IEC 62443-4-1 as the reference.</td></tr>
+        <tr><td class="ctl">SBOM and component updates</td><td>Design (03)</td><td>Generated by the build on every release. Vulnerable components flagged and patched within an agreed time.</td></tr>
+        <tr><td class="ctl">Support period and updates</td><td>Design (03)</td><td>At least five years, stated at purchase, with a secure update route. Priced into the product.</td></tr>
+        <tr><td class="ctl">Conformity file</td><td>Design (03)</td><td>Technical documentation, EU declaration of conformity and CE mark per product. Notified body booked early for class II and critical products.</td></tr>
+        <tr><td class="ctl">Intake checklist</td><td>Chain (04)</td><td>For imported or resold products: CE mark, declaration, user information, manufacturer contact. Missing paperwork stops the sale.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Pakt aan</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Productlijst met klasse</td><td>Reikwijdte (01)</td><td>Elk product dat in de EU wordt verkocht, of de CRA erop van toepassing is, de klasse en de beoordelingsroute. Eén eigenaar. Nagelopen bij elke productwijziging.</td></tr>
+        <tr><td class="ctl">Toets op wezenlijke wijziging</td><td>Reikwijdte (01)</td><td>Elke grote release beantwoordt vóór de uitrol één vraag: verandert dit de beveiliging van het product, of waarvoor het dient?</td></tr>
+        <tr><td class="ctl">Meldroute</td><td>Meldplicht (02)</td><td>Eén melder met naam en een plaatsvervanger, een account op het ENISA-platform, een sjabloon voor de vroegtijdige waarschuwing binnen 24 uur, jaarlijks geoefend.</td></tr>
+        <tr><td class="ctl">Ingang voor kwetsbaarheden</td><td>Meldplicht (02)</td><td>Een openbaar contactpunt voor kwetsbaarheidsmeldingen en een beleid voor gecoördineerde openbaarmaking. Supporttickets met beveiligingswoorden gaan erheen.</td></tr>
+        <tr><td class="ctl">Veilige ontwikkeling</td><td>Ontwerp (03)</td><td>Risicobeoordeling per product, veilige standaardinstellingen, testen vóór de release. NIST SSDF of IEC 62443-4-1 als referentie.</td></tr>
+        <tr><td class="ctl">SBOM en onderdelenupdates</td><td>Ontwerp (03)</td><td>Door de build gegenereerd bij elke release. Kwetsbare onderdelen gemarkeerd en binnen een afgesproken termijn gepatcht.</td></tr>
+        <tr><td class="ctl">Ondersteuningsperiode en updates</td><td>Ontwerp (03)</td><td>Minimaal vijf jaar, vermeld bij aankoop, met een veilige updateroute. Verwerkt in de prijs.</td></tr>
+        <tr><td class="ctl">Conformiteitsdossier</td><td>Ontwerp (03)</td><td>Technische documentatie, EU-conformiteitsverklaring en CE-markering per product. Aangemelde instantie vroeg geboekt voor klasse II en kritieke producten.</td></tr>
+        <tr><td class="ctl">Inkoopchecklist</td><td>Keten (04)</td><td>Voor geïmporteerde of doorverkochte producten: CE-markering, verklaring, gebruikersinformatie, contact van de fabrikant. Ontbrekend papierwerk stopt de verkoop.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> the CRA turns product security from a sales argument into a condition for selling in the EU at all. We suggest three questions. Which of our products fall under the CRA, in which class, and who owns that list? If an exploited vulnerability were found tonight, could we file an early warning within 24 hours? Which products reach the market after 11 December 2027 without a CE mark unless we start now, and what does the support period cost us per product? <span class="disclaimer">11 September 2026 and 11 December 2027 are legal deadlines (Regulation (EU) 2024/2847, Art. 71). The order of work above is a suggested timeline, not a legal deadline.</span></span>
+        <span class="nl"><strong>De kern voor de directie:</strong> de CRA maakt van productbeveiliging een voorwaarde om überhaupt in de EU te mogen verkopen, in plaats van een verkoopargument. Wij stellen drie vragen voor. Welke van onze producten vallen onder de CRA, in welke klasse, en wie is eigenaar van die lijst? Als vannacht een misbruikte kwetsbaarheid wordt gevonden, kunnen wij dan binnen 24 uur een vroegtijdige waarschuwing indienen? Welke producten komen na 11 december 2027 zonder CE-markering op de markt als we nu niet beginnen, en wat kost de ondersteuningsperiode ons per product? <span class="disclaimer">11 september 2026 en 11 december 2027 zijn wettelijke deadlines (Verordening (EU) 2024/2847, art. 71). De volgorde van het werk hierboven is een voorgestelde tijdlijn, geen wettelijke deadline.</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Any connected product or commercial software sold in the EU is in scope. The reporting duty is already running, and the 2027 date does not move.</span><span class="nl">Elk verbonden product of elke commerciële software die in de EU wordt verkocht, valt eronder. De meldplicht loopt al, en de datum in 2027 schuift niet.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">A product without a CE mark cannot be sold in the EU from 11 December 2027. Late reporting and non-conformity carry fines up to €15 million or 2.5% of turnover, and a recall is possible.</span><span class="nl">Een product zonder CE-markering mag vanaf 11 december 2027 niet in de EU worden verkocht. Te laat melden en non-conformiteit kennen boetes tot € 15 miljoen of 2,5% van de omzet, en een terugroepactie is mogelijk.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">With a classified product list, a rehearsed reporting route, an SBOM from the build and a booked assessment, what remains is timing: standards and notified bodies are still arriving.</span><span class="nl">Met een geklasseerde productlijst, een geoefende meldroute, een SBOM uit de build en een geboekte beoordeling blijft timing over: normen en aangemelde instanties zijn er nog niet allemaal.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CTO</span><span class="nl">CTO</span></span><p><span class="en">The <abbr class="tip" tabindex="0" data-tip="Chief technology officer: the executive responsible for the product and its engineering.">CTO</abbr> or product owner carries it. The CISO advises on the processes; legal confirms the class and the assessment route.</span><span class="nl">De <abbr class="tip" tabindex="0" data-tip="Chief technology officer: de bestuurder die verantwoordelijk is voor het product en de techniek erachter.">CTO</abbr> of de producteigenaar draagt het. De CISO adviseert over de processen; legal bevestigt de klasse en de beoordelingsroute.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Products without a CRA class · hours from awareness to early warning in the last drill · % of products with an SBOM from the build · products without an assessment route booked by mid-2027.</span><span class="nl">Producten zonder CRA-klasse · uren van kennisname tot vroegtijdige waarschuwing in de laatste oefening · % producten met een SBOM uit de build · producten zonder geboekte beoordelingsroute medio 2027.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“A product with digital elements that we sell in the EU does not meet the Cyber Resilience Act: an actively exploited vulnerability is reported late, or a product reaches the market after 11 December 2027 without conformity and a CE mark, leading to fines, a sales ban or a recall.”</span><span class="nl">“Een product met digitale elementen dat wij in de EU verkopen, voldoet niet aan de Cyber Resilience Act: een actief misbruikte kwetsbaarheid wordt te laat gemeld, of een product komt na 11 december 2027 zonder conformiteit en CE-markering op de markt, met boetes, een verkoopverbod of een terugroepactie als gevolg.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a customer or supplier asks</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU directive on cybersecurity for essential and important entities; in the Netherlands the Cyberbeveiligingswet.">NIS2</abbr> is for the organisation, the <abbr class="tip" tabindex="0" data-tip="Cyber Resilience Act: Regulation (EU) 2024/2847, EU law with security duties for makers, importers and distributors of connected products.">CRA</abbr> for the product. If you are also an essential or important entity, NIS2 requires supply-chain security and vulnerability handling (Art. 21); your CRA processes serve both. In the Netherlands via the Cyberbeveiligingswet, in force since 15 August 2026.</td><td>Your NIS2 customers assess their suppliers. Expect them to ask for your EU declaration, SBOM and support period. A CRA-conformant product is the shortest answer.</td><td>An exploited vulnerability in your product can count as a significant incident for your own organisation if it meets the thresholds: early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month. Two clocks, one incident.</td></tr>
+        <tr><td class="ctl">DORA</td><td>DORA binds financial entities, not product makers. If you supply <abbr class="tip" tabindex="0" data-tip="Information and communication technology: in DORA, any digital or data service a financial entity relies on.">ICT</abbr> to a bank or insurer, you are an ICT third-party provider in their register, with contract clauses on vulnerabilities and updates. DORA has applied since 17 January 2025.</td><td>Financial customers write the right to information on vulnerabilities and updates into the contract. Your CRA reporting and support period give you the content.</td><td>Your customer classifies: initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month. Your CRA notification feeds theirs.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Not a legal duty. Criteria CC7.1 (identifying vulnerabilities), CC7.4 (responding to incidents) and CC8.1 (change management) map onto the CRA's vulnerability handling and reporting.</td><td>A supplier's SOC 2 report shows whether the processes exist and were tested. It does not show CRA conformity; ask for the EU declaration separately.</td><td>A missed or late CRA report that is also a security incident will likely appear as an exception in the next report.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>The focus is financial reporting. The CRA appears only where product security affects controls your customers rely on.</td><td>The report rarely covers product security. Ask for the EU declaration and the support period in the contract instead.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een klant of leverancier vraagt</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor cyberbeveiliging van essentiële en belangrijke entiteiten; in Nederland de Cyberbeveiligingswet.">NIS2</abbr> gaat over de organisatie, de <abbr class="tip" tabindex="0" data-tip="Cyber Resilience Act: Verordening (EU) 2024/2847, EU-wet met beveiligingsplichten voor makers, importeurs en distributeurs van verbonden producten.">CRA</abbr> over het product. Bent u ook een essentiële of belangrijke entiteit, dan vereist NIS2 beveiliging van de toeleveringsketen en omgang met kwetsbaarheden (art. 21); uw CRA-processen dienen beide. In Nederland via de Cyberbeveiligingswet, van kracht sinds 15 augustus 2026.</td><td>Uw NIS2-klanten beoordelen hun leveranciers. Verwacht vragen naar uw EU-verklaring, SBOM en ondersteuningsperiode. Een CRA-conform product is het kortste antwoord.</td><td>Een misbruikte kwetsbaarheid in uw product kan voor uw eigen organisatie als significant incident gelden als het de drempels haalt: vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindverslag binnen een maand. Twee klokken, één incident.</td></tr>
+        <tr><td class="ctl">DORA</td><td>DORA bindt financiële instellingen, geen productmakers. Levert u <abbr class="tip" tabindex="0" data-tip="Informatie- en communicatietechnologie: onder DORA elke digitale of datadienst waarop een financiële instelling leunt.">ICT</abbr> aan een bank of verzekeraar, dan bent u een ICT-derde in hun register, met contractbepalingen over kwetsbaarheden en updates. DORA geldt sinds 17 januari 2025.</td><td>Financiële klanten leggen het recht op informatie over kwetsbaarheden en updates vast in het contract. Uw CRA-meldingen en ondersteuningsperiode leveren de inhoud.</td><td>Uw klant classificeert: eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand. Uw CRA-melding voedt die van hen.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Geen wettelijke plicht. De criteria CC7.1 (kwetsbaarheden herkennen), CC7.4 (reageren op incidenten) en CC8.1 (wijzigingsbeheer) sluiten aan op kwetsbaarheidsbeheer en melding onder de CRA.</td><td>Het SOC 2-rapport van een leverancier laat zien of de processen bestaan en zijn getest. Het toont geen CRA-conformiteit; vraag apart naar de EU-verklaring.</td><td>Een gemiste of te late CRA-melding die ook een beveiligingsincident is, komt waarschijnlijk als afwijking in het volgende rapport.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>De focus ligt op de financiële verslaggeving. De CRA komt alleen voor waar productbeveiliging de beheersmaatregelen raakt waarop uw klanten steunen.</td><td>Het rapport dekt zelden productbeveiliging. Vraag in het contract naar de EU-verklaring en de ondersteuningsperiode.</td><td>ISAE 3402 schept geen meldplicht aan de auditors van gebruikers. Verwacht een afwijking in het volgende rapport en vraag in het contract om tussentijdse melding.</td></tr>
+      </table>
+      <p class="sources en">Checked against: <a href="https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng">CRA, Regulation (EU) 2024/2847</a> Art. 2, 3, 7, 8, 13, 14, 16, 19–22, 28, 30, 32, 64, 69, 71 and Annexes I, III, IV (OJ 20 Nov 2024), <a href="https://eur-lex.europa.eu/eli/reg_impl/2025/2392/oj/eng">Implementing Regulation (EU) 2025/2392</a> (28 Nov 2025), <a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">Commission CRA reporting page</a> and <a href="https://digital-strategy.ec.europa.eu/en/factpages/cyber-resilience-act-implementation">implementation timeline</a> (2026), <a href="https://digital-strategy.ec.europa.eu/en/library/commission-publishes-new-guidance-support-timely-cyber-resilience-act-implementation">Commission guidance C(2026) 5252</a> (27 Jul 2026), <a href="https://www.enisa.europa.eu/news/the-cra-single-reporting-platform-is-launched">ENISA Single Reporting Platform launch</a> (11 Sep 2026), <a href="https://www.rdi.nl/onderwerpen/draadloze-apparatuur/handel-en-apparatuur/cra">RDI CRA page</a> (2026), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 21 and 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 19 and 28, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL</a> (Aug 2026), AICPA Trust Services Criteria CC7.1, CC7.4 and CC8.1 (2017, points of focus 2022) · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://eur-lex.europa.eu/eli/reg/2024/2847/oj/nld">CRA, Verordening (EU) 2024/2847</a> art. 2, 3, 7, 8, 13, 14, 16, 19–22, 28, 30, 32, 64, 69, 71 en bijlagen I, III, IV (PB 20 nov 2024), <a href="https://eur-lex.europa.eu/eli/reg_impl/2025/2392/oj/nld">Uitvoeringsverordening (EU) 2025/2392</a> (28 nov 2025), <a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">CRA-meldpagina van de Commissie</a> en <a href="https://digital-strategy.ec.europa.eu/en/factpages/cyber-resilience-act-implementation">implementatietijdlijn</a> (2026), <a href="https://digital-strategy.ec.europa.eu/en/library/commission-publishes-new-guidance-support-timely-cyber-resilience-act-implementation">richtsnoeren van de Commissie C(2026) 5252</a> (27 jul 2026), <a href="https://www.enisa.europa.eu/news/the-cra-single-reporting-platform-is-launched">lancering ENISA Single Reporting Platform</a> (11 sep 2026), <a href="https://www.rdi.nl/onderwerpen/draadloze-apparatuur/handel-en-apparatuur/cra">RDI-pagina over de CRA</a> (2026), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 21 en 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 19 en 28, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC</a> (aug 2026), AICPA Trust Services Criteria CC7.1, CC7.4 en CC8.1 (2017, aandachtspunten 2022) · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../secure-development/"><span class="en">Building software that holds</span><span class="nl">Software bouwen die standhoudt</span></a> ·
+  <a href="../supply-chain/"><span class="en">Supply chain attacks</span><span class="nl">Aanvallen via de toeleveringsketen</span></a> ·
+  <a href="../ot-iot/"><span class="en">The factory, the building and the cameras</span><span class="nl">De fabriek, het gebouw en de camera's</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=cra&amp;title=Missing%3A%20cra"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=cra&amp;title=Correction%3A%20cra"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">CRA FOR MAKERS BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">CRA VOOR MAKERS BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>

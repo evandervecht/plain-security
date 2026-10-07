@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Reading a SOC 2 or ISAE 3402 report // Plain Security</title>
+<meta name="description" content="Your supplier sent a 90-page assurance report. Which type it is, what period and scope it covers, the controls it assumes you run, how to read the exceptions, and what a clean opinion never tells you.">
+<link rel="canonical" href="https://plain-security.fyi/assurance-reports/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Reading a SOC 2 or ISAE 3402 report // Plain Security">
+<meta property="og:description" content="Your supplier sent a 90-page assurance report. Which type it is, what period and scope it covers, the controls it assumes you run, how to read the exceptions, and what a clean opinion never tells you.">
+<meta property="og:url" content="https://plain-security.fyi/assurance-reports/">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="nl_NL">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   ASSURANCE REPORTS // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 8s ease-in-out infinite}
+@keyframes fadeIn{0%,55%{opacity:0}65%,100%{opacity:1}}
+
+/* shared two-box layout (scenes 2, 3, 4) */
+.stage .bx{position:absolute;top:84px;width:38%;height:120px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 10px;line-height:1.5}
+.stage .bx b{display:block;font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--white);text-transform:none}
+.stage .bx.a{left:6%}
+.stage .bx.b{right:6%}
+.stage .bx.ok{border-color:rgba(55,211,155,.5)}
+.stage .bx.ok b{color:#8ff0cd}
+.stage .bx.flag::after{content:"?";position:absolute;inset:0;display:grid;place-items:center;font-family:var(--sans);font-weight:800;font-size:46px;color:var(--bad);background:rgba(58,20,48,.85);opacity:0;animation:flag 8s ease-in-out infinite}
+@keyframes flag{0%,45%{opacity:0}55%,90%{opacity:1}96%,100%{opacity:0}}
+.stage .arrow{position:absolute;top:134px;left:44%;width:12%;height:1px;background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+/* --- scene 1 : type 1 is a day, type 2 is a period, and the gap after it --- */
+.s1 .row{position:absolute;left:24px;right:24px;height:76px;display:flex;align-items:center;gap:14px}
+.s1 .row.a{top:42px}.s1 .row.b{top:134px}
+.s1 .who{flex:none;width:128px;height:64px;display:grid;place-items:center;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;background:var(--surface);border:1px solid var(--line);line-height:1.3}
+.s1 .who b{display:block;font-family:var(--sans);font-size:15px;letter-spacing:0;color:var(--white);text-transform:none}
+.s1 .path{flex:1;position:relative;height:12px;background:var(--bg-hi);border:1px solid var(--line)}
+.s1 .row.a .path::after{content:"";position:absolute;left:calc(50% - 5px);top:0;width:10px;height:10px;background:var(--white)}
+.s1 .row.b .path::before{content:"";position:absolute;left:0;top:0;height:100%;width:0;background:var(--good);animation:s1fill 8s linear infinite}
+@keyframes s1fill{0%{width:0}55%,100%{width:70%}}
+.s1 .row.b .path::after{content:"";position:absolute;left:70%;right:0;top:0;height:100%;background:repeating-linear-gradient(45deg,rgba(255,93,115,.55) 0 6px,transparent 6px 12px);opacity:0;animation:s1gap 8s ease-in-out infinite}
+@keyframes s1gap{0%,58%{opacity:0}68%,100%{opacity:1}}
+.s1 .out{flex:none;width:190px;padding:10px 12px;font-size:11px;letter-spacing:.06em;line-height:1.45;border:1px solid;color:var(--body);border-color:var(--line);background:var(--surface)}
+.s1 .row.b .out{opacity:0;color:var(--bad-soft);border-color:rgba(255,93,115,.55);background:rgba(255,93,115,.1);animation:s1out 8s ease-in-out infinite}
+@keyframes s1out{0%,62%{opacity:0}70%,100%{opacity:1}}
+
+/* --- scene 2 : in scope, carved out --- */
+.s2 .bx.b{border-style:dashed}
+
+/* --- scene 3 : their controls tested, yours assumed --- */
+.s3 .bx.b{border-color:rgba(255,200,87,.55)}
+.s3 .bx.b b{color:var(--warn)}
+.s3 .bx.b::after{content:"";position:absolute;inset:0;background:rgba(255,200,87,.18);opacity:0;animation:s3blink 8s ease-in-out infinite}
+@keyframes s3blink{0%,45%{opacity:0}55%,65%{opacity:1}75%,85%{opacity:0}90%,100%{opacity:1}}
+
+/* --- scene 4 : the opinion on page 3, the exceptions on page 60 --- */
+.s4 .bx.b{opacity:0;border-color:rgba(255,93,115,.55);animation:s4show 8s ease-in-out infinite}
+.s4 .bx.b b{color:var(--bad-soft)}
+@keyframes s4show{0%,40%{opacity:0}50%,100%{opacity:1}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .s1 .row.b .path::before{width:70%}.s1 .row.b .path::after{opacity:1}.s1 .row.b .out{opacity:1}
+  .stage .bx.flag::after{opacity:1}
+  .s3 .bx.b::after{opacity:1}
+  .s4 .bx.b{opacity:1}
+  .banner{opacity:1}.shield .tick{stroke-dashoffset:0}
+}
+@media (max-width:820px){
+  .s1 .row{left:12px;right:12px;gap:8px}
+  .s1 .who{width:86px;font-size:8.5px;letter-spacing:.08em}
+  .s1 .who b{font-size:12px}
+  .s1 .out{width:118px;font-size:9px;padding:8px;letter-spacing:.02em}
+  .stage .bx{width:42%;font-size:8.5px;letter-spacing:.06em}.stage .bx.a{left:4%}.stage .bx.b{right:4%}
+  .stage .bx b{font-size:13px}
+  .stage .arrow{left:46%;width:8%}
+  .stage .banner{white-space:normal;text-align:center;width:calc(100% - 24px);line-height:1.4}
+}
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> <span class="en">ASSURANCE REPORTS</span><span class="nl">ASSURANCERAPPORTEN</span></a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">WHICH REPORT</span><span class="nl">WELK RAPPORT</span></a>
+      <a href="#r2"><span class="en">SCOPE</span><span class="nl">REIKWIJDTE</span></a>
+      <a href="#r3"><span class="en">YOUR PART</span><span class="nl">UW DEEL</span></a>
+      <a href="#r4"><span class="en">EXCEPTIONS</span><span class="nl">AFWIJKINGEN</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">The 90-page report. <em>What a clean opinion does and does not tell you.</em></span>
+      <span class="nl">Het rapport van 90 pagina's. <em>Wat een goedkeurend oordeel wel en niet zegt.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">A supplier sends you a SOC 2 or ISAE 3402 report, and someone files it as "audited". The opinion on page 3 says the supplier's described controls worked, for the described scope, over a past period. Four pages decide whether that means anything for you: which type and period, what is in scope and what is carved out, the controls the auditor assumes you run, and the exceptions at the back.</span>
+      <span class="nl">Een leverancier stuurt u een SOC 2- of ISAE 3402-rapport, en iemand archiveert het als "geauditeerd". Het oordeel op pagina 3 zegt dat de beschreven maatregelen van de leverancier werkten, binnen de beschreven reikwijdte, over een periode in het verleden. Vier pagina's bepalen of dat iets voor u betekent: welk type en welke periode, wat binnen de reikwijdte valt en wat is uitgesloten, de maatregelen die de auditor bij u veronderstelt, en de afwijkingen achterin.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">THE FOUR PAGES</span><span class="nl">DE VIER PAGINA'S</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT TO DO WITH IT</span><span class="nl">WAT U ERMEE DOET</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">Type 1 is a day. <em>Type 2 is a period, and it ended months ago.</em></span>
+      <span class="nl">Type 1 is één dag. <em>Type 2 is een periode, en die eindigde maanden geleden.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">which report / type, period covered, report date, bridge letter</span>
+      <span class="nl">welk rapport / type, verslagperiode, rapportdatum, overbruggingsbrief</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">WHAT EACH TYPE COVERS</span><span class="nl">WAT ELK TYPE DEKT</span></div>
+      <div class="row a"><div class="who"><b>Type 1</b><span class="en">design, one date</span><span class="nl">opzet, één datum</span></div><div class="path"></div><div class="out"><span class="en">"AS AT 31 DEC"</span><span class="nl">"PER 31 DEC"</span></div></div>
+      <div class="row b"><div class="who"><b>Type 2</b><span class="en">operated, a period</span><span class="nl">werking, een periode</span></div><div class="path"></div><div class="out"><span class="en">TODAY · NOT COVERED</span><span class="nl">VANDAAG · NIET GEDEKT</span></div></div>
+      <div class="banner"><span class="en">THE PERIOD ENDED MONTHS BEFORE YOU READ IT</span><span class="nl">DE PERIODE EINDIGDE MAANDEN VOORDAT U HET LAS</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Assurance reports come in two types, and the standards use the same split. A <strong>Type 1</strong> report says the supplier's description is fair and its controls were suitably designed <em>as at</em> one date. A <strong>Type 2</strong> report also says the controls <em>operated effectively throughout</em> a period, and shows the tests the auditor ran. <abbr class="tip" tabindex="0" data-tip="International Standard on Assurance Engagements 3402: the IAASB standard for reports on controls at a service organisation; often written Type I/II.">ISAE 3402</abbr> says a Type 2 ordinarily covers at least six months. Only a Type 2 tells you something about what happened; a Type 1 tells you what was in place on one day. Then look at the dates. Nothing after the period end is covered, and you usually read the report months later. Suppliers fill that gap with a bridge letter: a statement by their own management that nothing material changed. Neither ISAE 3402 nor the <abbr class="tip" tabindex="0" data-tip="American Institute of Certified Public Accountants: the body that sets the SOC 2 criteria and reporting standards.">AICPA</abbr> standards define it, so it carries no auditor's opinion.</p>
+      <p class="en"><strong>Business impact:</strong> a report is a photograph of the past, not a guarantee for next year. Worth asking three things before anyone reads page 2: is it a Type 2, what period does it cover, and how long after that period are we reading it? A supplier that offers only a Type 1, or a report older than a year, is telling you something too.</p>
+      <p class="nl">Assurancerapporten bestaan in twee typen, en de normen gebruiken dezelfde indeling. Een <strong>Type 1</strong>-rapport zegt dat de beschrijving van de leverancier klopt en dat de maatregelen <em>per</em> één datum goed waren opgezet. Een <strong>Type 2</strong>-rapport zegt ook dat de maatregelen <em>gedurende</em> een periode effectief werkten, en toont de tests die de auditor deed. <abbr class="tip" tabindex="0" data-tip="International Standard on Assurance Engagements 3402: de IAASB-norm voor rapporten over maatregelen bij een serviceorganisatie; vaak geschreven als Type I/II.">ISAE 3402</abbr> stelt dat een Type 2 gewoonlijk minstens zes maanden beslaat. Alleen een Type 2 zegt iets over wat er is gebeurd; een Type 1 zegt wat er op één dag stond. Kijk daarna naar de data. Niets na het einde van de periode is gedekt, en u leest het rapport meestal maanden later. Leveranciers vullen dat gat met een overbruggingsbrief (bridge letter): een verklaring van hun eigen directie dat er niets wezenlijks is veranderd. Noch ISAE 3402, noch de normen van de <abbr class="tip" tabindex="0" data-tip="American Institute of Certified Public Accountants: de instantie die de SOC 2-criteria en rapportagenormen vaststelt.">AICPA</abbr> kennen die brief, dus er zit geen oordeel van een auditor onder.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een rapport is een foto van het verleden, geen garantie voor volgend jaar. Het is de moeite waard drie dingen te vragen voordat iemand pagina 2 leest: is het een Type 2, welke periode dekt het, en hoe lang na die periode lezen wij het? Een leverancier die alleen een Type 1 heeft, of een rapport ouder dan een jaar, zegt daarmee ook iets.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">TYPE 1 = ONE DAY · PERIOD ENDED · BRIDGE LETTER IS NOT AN AUDIT</span><span class="nl">TYPE 1 = ÉÉN DAG · PERIODE VOORBIJ · OVERBRUGGINGSBRIEF IS GEEN AUDIT</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: TYPE, PERIOD AND AGE CHECKED BEFORE READING ON</span><span class="nl">AANBEVOLEN: TYPE, PERIODE EN OUDERDOM EERST CONTROLEREN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">A convincing 90-page report is easy to generate. Check the auditor's name and licence, and that the opinion is signed by a firm, not pasted from a template.</span><span class="nl">Een overtuigend rapport van 90 pagina's is makkelijk te genereren. Controleer de naam en vergunning van de auditor, en of het oordeel door een kantoor is ondertekend en niet uit een sjabloon komt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An AI summary of the report tends to repeat the opinion and skip the dates. Ask it for the type, the period and the report date first, and verify them on page 1.</span><span class="nl">Een AI-samenvatting van het rapport herhaalt meestal het oordeel en slaat de data over. Vraag eerst naar het type, de periode en de rapportdatum, en controleer die op pagina 1.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Four fields in a minute</span><span class="nl">Vier velden in een minuut</span></b><p><span class="en">An AI tool can pull type, period, report date and auditor from every report in your supplier register and flag the ones older than twelve months.</span><span class="nl">Een AI-tool haalt type, periode, rapportdatum en auditor uit elk rapport in uw leveranciersregister en markeert de rapporten ouder dan twaalf maanden.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">The opinion covers the scope. <em>Is your service in it?</em></span>
+      <span class="nl">Het oordeel dekt de reikwijdte. <em>Valt uw dienst daarbinnen?</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">scope / services, criteria, carve-outs, subservice organisations, certificates</span>
+      <span class="nl">reikwijdte / diensten, criteria, uitsluitingen, onderaannemers, certificaten</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">INSIDE THE LINE, OUTSIDE THE LINE</span><span class="nl">BINNEN DE LIJN, BUITEN DE LIJN</span></div>
+      <div class="bx a ok"><b><span class="en">Supplier's platform</span><span class="nl">Platform van de leverancier</span></b><span class="en">in scope · tested</span><span class="nl">binnen reikwijdte · getest</span></div>
+      <div class="arrow"></div>
+      <div class="bx b flag"><b><span class="en">Their cloud provider</span><span class="nl">Hun cloudaanbieder</span></b><span class="en">named · carved out · not tested</span><span class="nl">genoemd · uitgesloten · niet getest</span></div>
+      <div class="banner"><span class="en">A CLEAN OPINION ON THE WRONG SCOPE IS NO ASSURANCE</span><span class="nl">EEN GOEDKEUREND OORDEEL OP DE VERKEERDE REIKWIJDTE IS GEEN ZEKERHEID</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The opinion covers exactly what the system description says, and nothing more. Three lines matter. Which services and locations are in scope: a supplier's "platform" report may not cover the module or the region you use. Which criteria were tested: a <abbr class="tip" tabindex="0" data-tip="Service Organization Control 2: an AICPA report on a supplier's controls against the Trust Services Criteria.">SOC 2</abbr> covers one or more of five categories (security, availability, processing integrity, confidentiality, privacy), so if availability is not named, uptime was not tested. And which subcontractors are carved out. Under the carve-out method the supplier's data centre or cloud provider is named in the description but its controls are excluded from the audit; you rely on that subcontractor's own report, if you ever see it. An <abbr class="tip" tabindex="0" data-tip="ISO/IEC 27001: the international standard for an information security management system; a certificate confirms conformity within a stated scope.">ISO 27001</abbr> certificate is a different thing again: it says a management system meets the standard within a stated scope, and it does not list tests or exceptions. Certificates to the 2013 edition expired or were withdrawn on 31 October 2025 under IAF MD 26.</p>
+      <p class="en"><strong>Business impact:</strong> a clean opinion on a scope that excludes your service is no assurance at all. One page, the scope and carve-out section, answers whether you are in it. Where a subcontractor is carved out, worth asking the supplier for that subcontractor's report, or for the contract clause that lets them see it.</p>
+      <p class="nl">Het oordeel dekt precies wat de systeembeschrijving zegt, en niets meer. Drie regels doen ertoe. Welke diensten en locaties binnen de reikwijdte vallen: het "platform"-rapport van een leverancier dekt niet altijd de module of de regio die u gebruikt. Welke criteria zijn getest: een <abbr class="tip" tabindex="0" data-tip="Service Organization Control 2: een AICPA-rapport over de maatregelen van een leverancier, getoetst aan de Trust Services Criteria.">SOC 2</abbr> dekt een of meer van vijf categorieën (beveiliging, beschikbaarheid, verwerkingsintegriteit, vertrouwelijkheid, privacy), dus als beschikbaarheid niet wordt genoemd, is de uptime niet getest. En welke onderaannemers zijn uitgesloten. Bij de carve-outmethode wordt het datacenter of de cloudaanbieder van de leverancier wel in de beschrijving genoemd, maar blijven zijn maatregelen buiten de audit; u leunt dan op het eigen rapport van die onderaannemer, als u dat ooit te zien krijgt. Een <abbr class="tip" tabindex="0" data-tip="ISO/IEC 27001: de internationale norm voor een managementsysteem voor informatiebeveiliging; een certificaat geldt binnen een vastgelegde reikwijdte.">ISO 27001</abbr>-certificaat is weer iets anders: het zegt dat een managementsysteem binnen een vastgelegde reikwijdte aan de norm voldoet, en het bevat geen tests of afwijkingen. Certificaten op de editie van 2013 zijn op 31 oktober 2025 verlopen of ingetrokken op grond van IAF MD 26.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een goedkeurend oordeel over een reikwijdte waar uw dienst buiten valt, geeft geen enkele zekerheid. Eén pagina, de paragraaf over reikwijdte en uitsluitingen, vertelt of u erbinnen valt. Is een onderaannemer uitgesloten, dan is het de moeite waard de leverancier om het rapport van die onderaannemer te vragen, of om de contractbepaling die hem inzage geeft.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">WRONG MODULE · WRONG REGION · DATA CENTRE CARVED OUT</span><span class="nl">VERKEERDE MODULE · VERKEERDE REGIO · DATACENTER UITGESLOTEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE LINE PER SERVICE: IN, CARVED OUT, OR NOT COVERED</span><span class="nl">AANBEVOLEN: ÉÉN REGEL PER DIENST: BINNEN, UITGESLOTEN OF NIET GEDEKT</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Suppliers bolt AI features onto existing products faster than audit scopes follow. The AI module you switched on this year is often outside last year's report.</span><span class="nl">Leveranciers bouwen AI-functies sneller op bestaande producten dan auditreikwijdtes volgen. De AI-module die u dit jaar aanzette, valt vaak buiten het rapport van vorig jaar.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">The AI model provider behind a supplier's feature is a subcontractor too, and usually carved out. Your data goes there; the report does not.</span><span class="nl">De aanbieder van het AI-model achter een functie van uw leverancier is ook een onderaannemer, en meestal uitgesloten. Uw data gaat daarheen; het rapport niet.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Scope matched to your contract</span><span class="nl">Reikwijdte naast uw contract</span></b><p><span class="en">An AI tool can compare the report's scope section with the services on your contract and list what is not covered. A person decides what to do about it.</span><span class="nl">Een AI-tool kan de reikwijdteparagraaf naast de diensten in uw contract leggen en opsommen wat niet gedekt is. Een mens beslist wat daarmee gebeurt.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">The page that assigns you work, <em>and nobody reads.</em></span>
+      <span class="nl">De pagina die u werk geeft, <em>en die niemand leest.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">your part / complementary user entity controls</span>
+      <span class="nl">uw deel / aanvullende maatregelen bij de gebruiker</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">WHOSE CONTROLS WERE TESTED</span><span class="nl">WIENS MAATREGELEN ZIJN GETEST</span></div>
+      <div class="bx a ok"><b><span class="en">Supplier's controls</span><span class="nl">Maatregelen leverancier</span></b><span class="en">tested by the auditor</span><span class="nl">getest door de auditor</span></div>
+      <div class="arrow"></div>
+      <div class="bx b"><b><span class="en">Your controls</span><span class="nl">Uw maatregelen</span></b><span class="en">assumed · not tested · who owns them?</span><span class="nl">verondersteld · niet getest · wie is eigenaar?</span></div>
+      <div class="banner"><span class="en">THE OPINION ONLY HOLDS IF YOU DO YOUR PART</span><span class="nl">HET OORDEEL GELDT ALLEEN ALS U UW DEEL DOET</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Every report lists <abbr class="tip" tabindex="0" data-tip="Complementary user entity controls: the controls the auditor assumes the customer runs itself; the opinion only holds if you do.">complementary user entity controls</abbr>: the things the supplier assumed you do when it designed the service, and which the auditor did not test. Typical lines: you decide who in your organisation gets access and remove leavers, you switch on multi-factor authentication, you review the supplier's logs and notifications, you approve changes to your configuration. ISAE 3402 defines them exactly that way. They are written in the auditor's words, and they rarely reach the people who run your side of the service. The same section lists complementary subservice organisation controls: what the supplier in turn assumes its subcontractors do.</p>
+      <p class="en"><strong>Business impact:</strong> the report hands you a list of duties, and the opinion is conditional on them. Copy the list out, give each line an owner, and check it once a year with the report renewal. The shared-responsibility briefing draws the same line from the cloud side.</p>
+      <p class="nl">Elk rapport bevat een lijst <abbr class="tip" tabindex="0" data-tip="Complementary user entity controls: de maatregelen die de auditor aanneemt dat de klant zelf uitvoert; het oordeel geldt alleen als u dat doet.">complementary user entity controls</abbr>: de dingen die de leverancier bij het ontwerp van de dienst bij u heeft verondersteld, en die de auditor niet heeft getest. Typische regels: u bepaalt wie in uw organisatie toegang krijgt en verwijdert vertrekkers, u zet multifactorauthenticatie aan, u bekijkt de logs en meldingen van de leverancier, u keurt wijzigingen in uw configuratie goed. ISAE 3402 definieert ze precies zo. Ze staan in de woorden van de auditor, en ze bereiken zelden de mensen die uw kant van de dienst beheren. Dezelfde paragraaf noemt de aanvullende maatregelen bij onderaannemers: wat de leverancier op zijn beurt bij zijn onderaannemers veronderstelt.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> het rapport geeft u een lijst met plichten, en het oordeel is daarvan afhankelijk. Schrijf de lijst over, geef elke regel een eigenaar, en loop hem eens per jaar na bij de vernieuwing van het rapport. De briefing over gedeelde verantwoordelijkheid trekt dezelfde lijn vanaf de cloudkant.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ASSUMED, NOT TESTED · NO OWNER ON YOUR SIDE</span><span class="nl">VERONDERSTELD, NIET GETEST · GEEN EIGENAAR AAN UW KANT</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: COPY THE LIST, ONE OWNER PER LINE, CHECK YEARLY</span><span class="nl">AANBEVOLEN: LIJST OVERNEMEN, ÉÉN EIGENAAR PER REGEL, JAARLIJKS NALOPEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Attackers go for the untested side. A leaver who still has access, or an admin without MFA, is your line in the list, and the supplier's report says nothing about it.</span><span class="nl">Aanvallers kiezen de niet-geteste kant. Een vertrekker die nog toegang heeft, of een beheerder zonder MFA, is uw regel in de lijst, en het rapport van de leverancier zegt er niets over.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI agents and integrations get accounts on the supplier's service too. They are "users" in the auditor's sense, and your list applies to them as much as to people.</span><span class="nl">AI-agents en koppelingen krijgen ook accounts op de dienst van de leverancier. Zij zijn "gebruikers" in de zin van de auditor, en uw lijst geldt net zo goed voor hen als voor mensen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">List to owners in an hour</span><span class="nl">Van lijst naar eigenaren in een uur</span></b><p><span class="en">An AI tool extracts the list from each report and drafts the owner table. Assigning the names and checking the work stays with people.</span><span class="nl">Een AI-tool haalt de lijst uit elk rapport en zet een eigenarentabel op. De namen toewijzen en het werk controleren blijft mensenwerk.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">The opinion is on page 3. <em>The exceptions are on page 60.</em></span>
+      <span class="nl">Het oordeel staat op pagina 3. <em>De afwijkingen op pagina 60.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">exceptions / test results, management's response, modified opinions, what is never in scope</span>
+      <span class="nl">afwijkingen / testresultaten, reactie van het management, aangepaste oordelen, wat nooit binnen de reikwijdte valt</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">TWO PAGES OF THE SAME REPORT</span><span class="nl">TWEE PAGINA'S VAN HETZELFDE RAPPORT</span></div>
+      <div class="bx a ok"><b><span class="en">Page 3: opinion</span><span class="nl">Pagina 3: oordeel</span></b><span class="en">unqualified · "clean"</span><span class="nl">goedkeurend · "schoon"</span></div>
+      <div class="arrow"></div>
+      <div class="bx b"><b><span class="en">Page 60: results</span><span class="nl">Pagina 60: resultaten</span></b><span class="en">3 exceptions · management's response</span><span class="nl">3 afwijkingen · reactie van het management</span></div>
+      <div class="banner"><span class="en">A CLEAN OPINION WITH EXCEPTIONS IS NORMAL · READ THEM</span><span class="nl">EEN GOEDKEUREND OORDEEL MET AFWIJKINGEN IS NORMAAL · LEES ZE</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The results section lists each control, the test and the outcome. The auditor reports every deviation, even when the related objective was still met, so a clean opinion with exceptions is normal. Read each one for what it means to you: a missed access review in a quarter when your staff changed is your problem; a late patch on a module you don't use is not. Management's response next to an exception is their claim, not the auditor's finding. A qualified or adverse opinion means a control objective was not met; ask which one and what changed since. Then the things no report tests: how you configured the service, who you gave access to, and what the supplier may do with your data, including whether it uses your data to train AI models. Those live in your settings and your contract, not in the audit. The same goes for the "other information" section at the back: the auditor reads it for contradictions but gives no opinion on it.</p>
+      <p class="en"><strong>Business impact:</strong> the exceptions are where the report earns its reading time. Worth asking for a one-page summary: each exception, whether it touches your service, management's response, and what you decided. A supplier breach in the period shows up here too, if the control that failed was tested.</p>
+      <p class="nl">De resultatenparagraaf noemt per maatregel de test en de uitkomst. De auditor rapporteert elke afwijking, ook als de bijbehorende doelstelling toch is gehaald, dus een goedkeurend oordeel met afwijkingen is normaal. Lees elke afwijking op wat zij voor u betekent: een gemiste toegangscontrole in een kwartaal waarin uw personeel wisselde is uw probleem; een late patch op een module die u niet gebruikt niet. De reactie van het management naast een afwijking is hun bewering, niet de bevinding van de auditor. Een oordeel met beperking of een afkeurend oordeel betekent dat een beheersdoelstelling niet is gehaald; vraag welke, en wat er sindsdien is veranderd. Dan de dingen die geen enkel rapport test: hoe u de dienst hebt ingericht, aan wie u toegang hebt gegeven, en wat de leverancier met uw data mag doen, inclusief of hij uw data gebruikt om AI-modellen te trainen. Die staan in uw instellingen en uw contract, niet in de audit. Hetzelfde geldt voor de "overige informatie" achterin: de auditor leest die op tegenstrijdigheden, maar geeft er geen oordeel over.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> bij de afwijkingen verdient het rapport zijn leestijd terug. Het is de moeite waard om een samenvatting van één pagina te vragen: elke afwijking, of zij uw dienst raakt, de reactie van het management, en wat u hebt besloten. Een inbraak bij de leverancier in de periode komt hier ook naar voren, als de maatregel die faalde is getest.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">EXCEPTIONS UNREAD · CONFIGURATION, ACCESS AND DATA USE NEVER TESTED</span><span class="nl">AFWIJKINGEN ONGELEZEN · INRICHTING, TOEGANG EN DATAGEBRUIK NOOIT GETEST</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE PAGE PER REPORT: EXCEPTIONS, IMPACT, DECISION</span><span class="nl">AANBEVOLEN: ÉÉN PAGINA PER RAPPORT: AFWIJKINGEN, IMPACT, BESLUIT</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Whether a supplier trains models on your data is a contract and privacy question. No SOC 2 or ISAE 3402 tests it unless the supplier wrote it into its own commitments.</span><span class="nl">Of een leverancier modellen traint op uw data is een contract- en privacyvraag. Geen SOC 2 of ISAE 3402 test dat, tenzij de leverancier het zelf in zijn toezeggingen heeft opgenomen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An AI summary that says "no material exceptions" has made a judgement the auditor did not make. Ask for the list, not the verdict.</span><span class="nl">Een AI-samenvatting die zegt "geen wezenlijke afwijkingen" velt een oordeel dat de auditor niet heeft geveld. Vraag om de lijst, niet om het verdict.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Exceptions mapped to your services</span><span class="nl">Afwijkingen naast uw diensten</span></b><p><span class="en">An AI tool can pull the exceptions from the results section and pair each with the service you use. Deciding what to do with them stays with your risk owner.</span><span class="nl">Een AI-tool kan de afwijkingen uit de resultatenparagraaf halen en elk koppelen aan de dienst die u gebruikt. Beslissen wat ermee gebeurt blijft bij uw risico-eigenaar.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What to do <em>with the report.</em></span>
+      <span class="nl">Wat u <em>met het rapport doet.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">an afternoon per report, not a new product</span>
+      <span class="nl">een middag per rapport, geen nieuw product</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">TYPE + PERIOD</span><span class="nl">TYPE + PERIODE</span></span>
+        <span class="chip c2"><span class="en">SCOPE MAP</span><span class="nl">REIKWIJDTEKAART</span></span>
+        <span class="chip c3"><span class="en">CUEC OWNERS</span><span class="nl">CUEC-EIGENAREN</span></span>
+        <span class="chip c4"><span class="en">EXCEPTION REVIEW</span><span class="nl">AFWIJKINGEN BEOORDEELD</span></span>
+        <span class="chip c5"><span class="en">CONTRACT GAP</span><span class="nl">CONTRACTGAT</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Addresses</th><th>In one line</th></tr>
+        <tr><td class="ctl">Four-field check</td><td>Which report (01)</td><td>Type, period, report date and auditor recorded before anyone reads page 2. A bridge letter is noted as a management statement, not as cover.</td></tr>
+        <tr><td class="ctl">Age limit</td><td>Which report (01)</td><td>A Type 1 only, or a period that ended more than twelve months ago, triggers a question to the supplier, not a tick in the box.</td></tr>
+        <tr><td class="ctl">Scope map</td><td>Scope (02)</td><td>One line per service you use: in the report, carved out, or not covered. Which criteria were tested is written next to it.</td></tr>
+        <tr><td class="ctl">Subcontractor's report</td><td>Scope (02)</td><td>Where the data centre or cloud provider is carved out, ask for its report or for the contract clause that gives your supplier the right to see it.</td></tr>
+        <tr><td class="ctl">CUEC owner list</td><td>Your part (03)</td><td>Every complementary user entity control copied out of the report, with a named owner on your side, checked once a year.</td></tr>
+        <tr><td class="ctl">Exception review</td><td>Exceptions (04)</td><td>Each exception rated for your service, management's response noted as a claim, qualified or adverse opinions escalated to the risk owner.</td></tr>
+        <tr><td class="ctl">Contract gap</td><td>Exceptions (04)</td><td>What no report tests (your configuration, your access, data use, AI training) is settled in your settings and your contract instead.</td></tr>
+        <tr><td class="ctl">Register entry</td><td>All</td><td>Supplier, report type, period, scope result, exceptions and your decision in the third-party register, with a renewal date.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Pakt aan</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Vier velden eerst</td><td>Welk rapport (01)</td><td>Type, periode, rapportdatum en auditor vastgelegd voordat iemand pagina 2 leest. Een overbruggingsbrief wordt genoteerd als verklaring van het management, niet als dekking.</td></tr>
+        <tr><td class="ctl">Ouderdomsgrens</td><td>Welk rapport (01)</td><td>Alleen een Type 1, of een periode die meer dan twaalf maanden geleden eindigde, leidt tot een vraag aan de leverancier, niet tot een vinkje.</td></tr>
+        <tr><td class="ctl">Reikwijdtekaart</td><td>Reikwijdte (02)</td><td>Eén regel per dienst die u gebruikt: in het rapport, uitgesloten of niet gedekt. Welke criteria zijn getest staat ernaast.</td></tr>
+        <tr><td class="ctl">Rapport van de onderaannemer</td><td>Reikwijdte (02)</td><td>Is het datacenter of de cloudaanbieder uitgesloten, vraag dan om diens rapport of om de contractbepaling die uw leverancier inzage geeft.</td></tr>
+        <tr><td class="ctl">CUEC-eigenarenlijst</td><td>Uw deel (03)</td><td>Elke complementary user entity control uit het rapport overgenomen, met een eigenaar met naam aan uw kant, eens per jaar nagelopen.</td></tr>
+        <tr><td class="ctl">Beoordeling afwijkingen</td><td>Afwijkingen (04)</td><td>Elke afwijking beoordeeld voor uw dienst, de reactie van het management genoteerd als bewering, oordelen met beperking of afkeurende oordelen geëscaleerd naar de risico-eigenaar.</td></tr>
+        <tr><td class="ctl">Contractgat</td><td>Afwijkingen (04)</td><td>Wat geen rapport test (uw inrichting, uw toegang, datagebruik, AI-training) regelt u in uw instellingen en uw contract.</td></tr>
+        <tr><td class="ctl">Registervermelding</td><td>Alle</td><td>Leverancier, rapporttype, periode, reikwijdteresultaat, afwijkingen en uw besluit in het register van derde partijen, met een vernieuwingsdatum.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> a clean opinion says the supplier's described controls worked, for the described scope, over a past period, with the exceptions listed at the back. It does not say your service was in scope, that your side of the work was done, or what the supplier may do with your data. We suggest three questions: Is our service in scope, in a Type 2, less than a year old? Who owns our list of complementary controls? Which exceptions touched us, and what did we decide? Accepting a Type 1, a carve-out or an older report can be reasonable; it is your call, as long as it is a decision and not a default.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> een goedkeurend oordeel zegt dat de beschreven maatregelen van de leverancier werkten, binnen de beschreven reikwijdte, over een periode in het verleden, met de afwijkingen achterin. Het zegt niet dat uw dienst binnen de reikwijdte viel, dat uw deel van het werk is gedaan, of wat de leverancier met uw data mag doen. Wij stellen drie vragen voor: Valt onze dienst binnen de reikwijdte, in een Type 2, jonger dan een jaar? Wie is eigenaar van onze lijst met aanvullende maatregelen? Welke afwijkingen raakten ons, en wat hebben we besloten? Een Type 1, een uitsluiting of een ouder rapport accepteren kan redelijk zijn; het is uw keuze, zolang het een besluit is en geen automatisme.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Most organisations file the report and tick the box. The scope section, the list of controls assumed on your side and the exceptions are rarely read by the people who run the service.</span><span class="nl">De meeste organisaties archiveren het rapport en zetten een vinkje. De reikwijdteparagraaf, de lijst met aan uw kant veronderstelde maatregelen en de afwijkingen worden zelden gelezen door de mensen die de dienst beheren.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">False assurance. The supplier is breached or the service fails, and the report turns out to cover another scope or period. The regulator then asks what you did with it.</span><span class="nl">Schijnzekerheid. De leverancier wordt gehackt of de dienst valt uit, en het rapport blijkt een andere reikwijdte of periode te dekken. De toezichthouder vraagt dan wat u ermee hebt gedaan.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low</span><span class="nl">Laag</span></span><p><span class="en">With a scope map, an owned list of your controls and an exception review, the report does what it is for: it shows where the supplier's assurance ends and yours begins.</span><span class="nl">Met een reikwijdtekaart, een lijst van uw maatregelen met eigenaren en een beoordeling van de afwijkingen doet het rapport waarvoor het is: het laat zien waar de zekerheid van de leverancier ophoudt en die van u begint.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CISO / risk</span><span class="nl">CISO / risk</span></span><p><span class="en">The <abbr class="tip" tabindex="0" data-tip="Chief information security officer: the executive responsible for information security.">CISO</abbr> or risk function owns the reading; the business owner of each supplier owns the controls assumed on your side.</span><span class="nl">De <abbr class="tip" tabindex="0" data-tip="Chief information security officer: de bestuurder die verantwoordelijk is voor informatiebeveiliging.">CISO</abbr> of de risk-functie is eigenaar van het lezen; de business-eigenaar van elke leverancier is eigenaar van de aan uw kant veronderstelde maatregelen.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Suppliers whose latest report is a Type 1 or older than twelve months · services you rely on that are carved out or not covered · complementary controls without an owner · exceptions touching your service without a recorded decision.</span><span class="nl">Leveranciers waarvan het laatste rapport een Type 1 is of ouder dan twaalf maanden · diensten waarop u leunt die zijn uitgesloten of niet gedekt · aanvullende maatregelen zonder eigenaar · afwijkingen die uw dienst raken zonder vastgelegd besluit.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“A supplier's assurance report is accepted without checking type, period, scope, the controls assumed on our side and the exceptions, so that a control gap at the supplier or in our own use of the service stays unnoticed until an incident.”</span><span class="nl">“Een assurancerapport van een leverancier wordt geaccepteerd zonder controle van type, periode, reikwijdte, de aan onze kant veronderstelde maatregelen en de afwijkingen, waardoor een gat in de beheersing bij de leverancier of in ons eigen gebruik van de dienst onopgemerkt blijft tot een incident.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU directive on cybersecurity for essential and important entities; in the Netherlands the Cyberbeveiligingswet.">NIS2</abbr> requires supply chain security measures (Art. 21(2)(d)) and that you take into account the cybersecurity practices of each direct supplier (Art. 21(3)). A supplier's report is one way to show you did. In the Netherlands this runs through the Cyberbeveiligingswet, in force since 15 August 2026.</td><td>Check that the report covers the service your NIS2 duties depend on, and record what you concluded from it, exceptions included.</td><td>An incident at the supplier that affects your service can count as a significant incident if it meets the thresholds. Early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month.</td></tr>
+        <tr><td class="ctl">DORA</td><td>You remain fully responsible for your obligations when you outsource (Art. 28(1)(a)) and keep a register of information on all <abbr class="tip" tabindex="0" data-tip="Information and communication technology: in DORA, any digital or data service a financial entity relies on.">ICT</abbr> contracts (Art. 28(3)). For critical or important functions the contract gives unrestricted access, inspection and audit rights, and the right to agree alternative assurance levels where other clients' rights are affected (Art. 30(3)(e)). DORA has applied since 17 January 2025.</td><td>A SOC 2 or ISAE 3402 can be part of those alternative assurance levels, but it does not replace the audit right in the contract. Record type, period, scope and exceptions in the register.</td><td>Classify promptly. Initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Nothing of you; it is the supplier's report, against the AICPA's 2017 Trust Services Criteria (points of focus revised 2022). Criterion CC9.2 covers how the supplier manages its own vendors, which is where its carve-outs come from.</td><td>This briefing: Type 2, period and age, scope and carve-outs, the complementary user entity controls, the exceptions in the results section, and the "other information" at the back, which the opinion does not cover.</td><td>A supplier incident in the period appears as a deviation in the next report, if the control that failed was tested. Ask for interim disclosure in the contract.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Nothing of you. It covers controls relevant to your financial reporting, so an ISAE 3402 says little about security beyond general IT controls. For security assurance, ask for a SOC 2 or an ISAE 3000 report.</td><td>A Type 2 ordinarily covers at least six months. Deviations are reported even where the objective was met. Check the scope, the carve-outs and the complementary user entity controls.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor cyberbeveiliging van essentiële en belangrijke entiteiten; in Nederland de Cyberbeveiligingswet.">NIS2</abbr> vraagt maatregelen voor de beveiliging van de toeleveringsketen (art. 21 lid 2 onder d) en dat u rekening houdt met de cyberbeveiligingspraktijken van elke directe leverancier (art. 21 lid 3). Het rapport van een leverancier is een manier om dat aan te tonen. In Nederland loopt dit via de Cyberbeveiligingswet, van kracht sinds 15 augustus 2026.</td><td>Controleer of het rapport de dienst dekt waarvan uw NIS2-plichten afhangen, en leg vast wat u eruit hebt geconcludeerd, inclusief de afwijkingen.</td><td>Een incident bij de leverancier dat uw dienst raakt, kan als significant incident gelden als het de drempels haalt. Vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindverslag binnen een maand.</td></tr>
+        <tr><td class="ctl">DORA</td><td>U blijft volledig verantwoordelijk voor uw verplichtingen als u uitbesteedt (art. 28 lid 1 onder a) en houdt een informatieregister bij van alle <abbr class="tip" tabindex="0" data-tip="Informatie- en communicatietechnologie: onder DORA elke digitale of datadienst waarop een financiële instelling leunt.">ICT</abbr>-contracten (art. 28 lid 3). Voor kritieke of belangrijke functies geeft het contract onbeperkte toegangs-, inspectie- en auditrechten, en het recht om alternatieve zekerheidsniveaus af te spreken als de rechten van andere klanten in het geding zijn (art. 30 lid 3 onder e). DORA geldt sinds 17 januari 2025.</td><td>Een SOC 2 of ISAE 3402 kan deel uitmaken van die alternatieve zekerheidsniveaus, maar vervangt het auditrecht in het contract niet. Leg type, periode, reikwijdte en afwijkingen vast in het register.</td><td>Classificeer snel. Eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Niets van u; het is het rapport van de leverancier, getoetst aan de Trust Services Criteria 2017 van de AICPA (aandachtspunten herzien in 2022). Criterium CC9.2 gaat over hoe de leverancier zijn eigen leveranciers beheerst, en daar komen zijn uitsluitingen vandaan.</td><td>Deze briefing: Type 2, periode en ouderdom, reikwijdte en uitsluitingen, de complementary user entity controls, de afwijkingen in de resultatenparagraaf, en de "overige informatie" achterin, waar het oordeel niet over gaat.</td><td>Een incident bij de leverancier in de periode komt als afwijking in het volgende rapport, als de maatregel die faalde is getest. Vraag in het contract om tussentijdse melding.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Niets van u. De norm gaat over maatregelen die relevant zijn voor uw financiële verslaggeving, dus een ISAE 3402 zegt weinig over beveiliging buiten de algemene IT-beheersmaatregelen. Vraag voor beveiligingszekerheid om een SOC 2 of een ISAE 3000-rapport.</td><td>Een Type 2 beslaat gewoonlijk minstens zes maanden. Afwijkingen worden gerapporteerd, ook als de doelstelling is gehaald. Controleer de reikwijdte, de uitsluitingen en de complementary user entity controls.</td><td>ISAE 3402 schept geen meldplicht aan de auditors van gebruikers. Verwacht een afwijking in het volgende rapport en vraag in het contract om tussentijdse melding.</td></tr>
+      </table>
+      <p class="sources en">Checked against: <a href="https://www.iaasb.org/publications/international-standard-assurance-engagements-isae-3402-assurance-reports-controls-service-organization">ISAE 3402</a> (IAASB, 2010; 2022 edition) paras 1, 9, 54, 55, A30, <a href="https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022">AICPA 2017 Trust Services Criteria</a> (points of focus 2022) CC9.2, <a href="https://www.aicpa-cima.com/resources/download/illustrative-service-auditors-soc-2-r-type-2-report">AICPA illustrative SOC 2 Type 2 report</a> (SSAE 21, June 2022), <a href="https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-1">AICPA SOC 1</a> (2026), <a href="https://iaf.nu/iaf_system/uploads/documents/IAF_MD26_Issue_2_15012023.pdf">IAF MD 26:2023</a> Issue 2 (15 Feb 2023), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 21 and 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 19, 28, 30 and 64, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL</a> (15 Aug 2026) · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://www.iaasb.org/publications/international-standard-assurance-engagements-isae-3402-assurance-reports-controls-service-organization">ISAE 3402</a> (IAASB, 2010; editie 2022) par. 1, 9, 54, 55, A30, <a href="https://www.aicpa-cima.com/resources/download/2017-trust-services-criteria-with-revised-points-of-focus-2022">AICPA Trust Services Criteria 2017</a> (aandachtspunten 2022) CC9.2, <a href="https://www.aicpa-cima.com/resources/download/illustrative-service-auditors-soc-2-r-type-2-report">AICPA voorbeeldrapport SOC 2 Type 2</a> (SSAE 21, juni 2022), <a href="https://www.aicpa-cima.com/topic/audit-assurance/audit-and-assurance-greater-than-soc-1">AICPA SOC 1</a> (2026), <a href="https://iaf.nu/iaf_system/uploads/documents/IAF_MD26_Issue_2_15012023.pdf">IAF MD 26:2023</a> Issue 2 (15 feb 2023), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 21 en 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 19, 28, 30 en 64, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC</a> (15 aug 2026) · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../shared-responsibility/"><span class="en">Shared responsibility</span><span class="nl">Gedeelde verantwoordelijkheid</span></a> ·
+  <a href="../supply-chain/"><span class="en">Supply chain</span><span class="nl">Toeleveringsketen</span></a> ·
+  <a href="../cloud/"><span class="en">Cloud misconfiguration</span><span class="nl">Cloudmisconfiguratie</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=assurance-reports&amp;title=Missing%3A%20assurance-reports"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=assurance-reports&amp;title=Correction%3A%20assurance-reports"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">ASSURANCE REPORTS BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">ASSURANCERAPPORTEN BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>

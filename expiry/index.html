@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Things that expire // Plain Security</title>
+<meta name="description" content="Could we go offline because somebody forgot to renew something? Domains, DNS and certificates all carry a date, and public certificates shrink to 47 days by 2029.">
+<link rel="canonical" href="https://plain-security.fyi/expiry/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Things that expire // Plain Security">
+<meta property="og:description" content="Could we go offline because somebody forgot to renew something? Domains, DNS and certificates all carry a date, and public certificates shrink to 47 days by 2029.">
+<meta property="og:url" content="https://plain-security.fyi/expiry/">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="nl_NL">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   THINGS THAT EXPIRE // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+.disclaimer{display:block;margin-top:10px;font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--muted)}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 7s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : the domain lapses, a stranger registers it --- */
+.s1 .dom{position:absolute;left:50%;top:58px;transform:translateX(-50%);padding:14px 28px;background:var(--surface);border:1px solid var(--line);font-family:var(--sans);font-weight:700;font-size:20px;color:var(--white);z-index:3;animation:domred 9s ease-in-out infinite}
+@keyframes domred{0%,62%{border-color:var(--line);background:var(--surface)}70%,95%{border-color:var(--bad);background:#3a1430}100%{border-color:var(--line);background:var(--surface)}}
+.s1 .st{position:absolute;left:50%;top:138px;transform:translateX(-50%);font-size:11px;letter-spacing:.18em;font-weight:700;padding:8px 16px;border:1px solid;white-space:nowrap;opacity:0;z-index:3}
+.s1 .st.a{color:#8ff0cd;border-color:rgba(55,211,155,.5);background:rgba(55,211,155,.08);animation:st1 9s ease-in-out infinite}
+.s1 .st.b{color:var(--warn);border-color:rgba(255,200,87,.5);background:rgba(255,200,87,.08);animation:st2 9s ease-in-out infinite}
+.s1 .st.c{color:var(--bad-soft);border-color:rgba(255,93,115,.55);background:rgba(255,93,115,.12);animation:st3 9s ease-in-out infinite}
+@keyframes st1{0%,4%{opacity:0}9%,28%{opacity:1}33%,100%{opacity:0}}
+@keyframes st2{0%,33%{opacity:0}38%,58%{opacity:1}63%,100%{opacity:0}}
+@keyframes st3{0%,63%{opacity:0}70%,95%{opacity:1}100%{opacity:0}}
+.s1 .who{position:absolute;right:9%;top:62px;font-size:28px;z-index:3;opacity:0;animation:st3 9s ease-in-out infinite}
+.s1 .who i{position:absolute;left:-26px;top:-6px;font-size:18px;font-style:normal}
+.s1 .banner{animation:st3 9s ease-in-out infinite}
+
+/* --- scene 2 : one DNS provider answers for everything --- */
+.s2 .hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:112px;height:64px;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);font-weight:700;letter-spacing:.16em;color:var(--white);font-size:12px;z-index:3;animation:hubfail 8s ease-in-out infinite}
+@keyframes hubfail{0%,45%{background:var(--surface);border-color:var(--line)}55%,90%{background:#3a1430;border-color:var(--bad)}100%{background:var(--surface);border-color:var(--line)}}
+.s2 .leaf{position:absolute;width:124px;height:52px;display:grid;place-items:center;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);z-index:3;animation:leaffail 8s ease-in-out infinite}
+@keyframes leaffail{0%,50%{opacity:1}60%,90%{opacity:.22}100%{opacity:1}}
+.s2 .leaf.l1{left:7%;top:40px}.s2 .leaf.l2{right:7%;top:40px}.s2 .leaf.l3{left:7%;bottom:40px}.s2 .leaf.l4{right:7%;bottom:40px}
+.s2 .ln{position:absolute;left:50%;top:50%;width:36%;height:1px;transform-origin:0 0;background:repeating-linear-gradient(90deg,var(--line) 0 8px,transparent 8px 16px)}
+.s2 .ln.k1{transform:rotate(-156deg)}.s2 .ln.k2{transform:rotate(-24deg)}.s2 .ln.k3{transform:rotate(156deg)}.s2 .ln.k4{transform:rotate(24deg)}
+.s2 .banner{animation-duration:8s}
+
+/* --- scene 3 : the certificate expires, the site and the API stop --- */
+.s3 .clk{position:absolute;left:50%;top:34px;transform:translateX(-50%);font-size:11px;letter-spacing:.18em;font-weight:700;padding:8px 16px;border:1px solid;white-space:nowrap;z-index:3}
+.s3 .clk.ok{color:#8ff0cd;border-color:rgba(55,211,155,.5);background:rgba(55,211,155,.08);animation:ck1 7s ease-in-out infinite}
+.s3 .clk.no{color:var(--bad-soft);border-color:rgba(255,93,115,.55);background:rgba(255,93,115,.12);opacity:0;animation:ck2 7s ease-in-out infinite}
+@keyframes ck1{0%,50%{opacity:1}56%,100%{opacity:0}}
+@keyframes ck2{0%,50%{opacity:0}56%,100%{opacity:1}}
+.s3 .bx{position:absolute;top:96px;width:38%;height:112px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 10px}
+.s3 .bx b{display:block;font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--white);text-transform:none}
+.s3 .bx.a{left:6%}
+.s3 .bx.b{right:6%}
+.s3 .bx::after{content:"";position:absolute;inset:0;background:rgba(255,93,115,.3);border:1px solid var(--bad);opacity:0;animation:expose 7s ease-in-out infinite}
+.s3 .bx.b::after{animation-delay:.6s}
+@keyframes expose{0%,55%{opacity:0}62%,90%{opacity:1}96%,100%{opacity:0}}
+.s3 .banner{animation-duration:7s}
+
+/* --- scene 4 : 398 → 200 → 100 → 47 days --- */
+.s4 .rowb{position:absolute;left:170px;right:30px;height:28px;display:flex;align-items:center;gap:12px}
+.s4 .rowb.y1{top:46px}.s4 .rowb.y2{top:98px}.s4 .rowb.y3{top:150px}.s4 .rowb.y4{top:202px}
+.s4 .lbl{position:absolute;left:24px;width:136px;font-size:10px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;line-height:1.3}
+.s4 .lbl.y1{top:40px}.s4 .lbl.y2{top:92px}.s4 .lbl.y3{top:144px}.s4 .lbl.y4{top:196px}
+.s4 .lbl b{display:block;color:var(--white);font-size:12px;letter-spacing:.06em}
+.s4 .bar4{height:18px;background:var(--slate);transform-origin:0 50%;animation:grow 7s ease-out infinite}
+.s4 .y2 .bar4{animation-delay:.3s}.s4 .y3 .bar4{animation-delay:.6s}.s4 .y4 .bar4{animation-delay:.9s;background:var(--bad)}
+.s4 .w1{width:100%}.s4 .w2{width:50%}.s4 .w3{width:25%}.s4 .w4{width:12%}
+@keyframes grow{0%{transform:scaleX(0)}18%,88%{transform:scaleX(1)}100%{transform:scaleX(0)}}
+.s4 .n{font-size:11px;font-weight:700;color:var(--white);white-space:nowrap;flex:none}
+.s4 .y4 .n{color:var(--bad-soft)}
+.s4 .banner{animation-duration:7s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .s1 .st.c,.s1 .who{opacity:1}.s1 .dom{border-color:var(--bad);background:#3a1430}
+  .s2 .hub{background:#3a1430;border-color:var(--bad)}.s2 .leaf{opacity:.22}
+  .s3 .clk.ok{opacity:0}.s3 .clk.no{opacity:1}.s3 .bx::after{opacity:1}
+  .s4 .bar4{transform:scaleX(1)}
+  .banner{opacity:1}.shield .tick{stroke-dashoffset:0}
+}
+@media (max-width:820px){
+  .s1 .dom{font-size:15px;padding:10px 16px}
+  .s1 .st{font-size:9px;letter-spacing:.1em;padding:6px 10px}
+  .s1 .who{right:4%}
+  .s2 .leaf{width:84px;height:46px;font-size:8px;letter-spacing:.06em}
+  .s2 .leaf.l1,.s2 .leaf.l3{left:4%}.s2 .leaf.l2,.s2 .leaf.l4{right:4%}
+  .s2 .hub{width:80px;height:52px;font-size:10px}
+  .s2 .leaf.l1,.s2 .leaf.l2{top:44px}.s2 .leaf.l3,.s2 .leaf.l4{bottom:74px}
+  .s4{height:340px}
+  .s4 .stage-label{white-space:nowrap;font-size:8.5px;letter-spacing:.14em}
+  .s4 .lbl.y1,.s4 .rowb.y1{top:54px}.s4 .lbl.y2,.s4 .rowb.y2{top:108px}.s4 .lbl.y3,.s4 .rowb.y3{top:162px}.s4 .lbl.y4,.s4 .rowb.y4{top:216px}  .s3 .clk{font-size:9px;letter-spacing:.1em;padding:6px 10px}
+  .s3 .bx{width:42%;font-size:8.5px;letter-spacing:.06em}.s3 .bx.a{left:4%}.s3 .bx.b{right:4%}
+  .s3 .bx b{font-size:14px}
+  .s4 .lbl{left:10px;width:108px;font-size:8.5px;letter-spacing:.04em;line-height:1.25}.s4 .lbl b{font-size:10px;letter-spacing:.02em}
+  .s4 .rowb{left:124px;right:12px}
+  .stage .banner{white-space:normal;text-align:center;width:calc(100% - 24px);line-height:1.4}
+}
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> <span class="en">THINGS THAT EXPIRE</span><span class="nl">WAT VERLOOPT</span></a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">DOMAIN</span><span class="nl">DOMEIN</span></a>
+      <a href="#r2">DNS</a>
+      <a href="#r3"><span class="en">CERTIFICATES</span><span class="nl">CERTIFICATEN</span></a>
+      <a href="#r4"><span class="en">47 DAYS</span><span class="nl">47 DAGEN</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Things that expire. <em>Domains, DNS and certificates.</em></span>
+      <span class="nl">Wat verloopt. <em>Domeinen, DNS en certificaten.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Nobody breaks in. A date passes. A domain lapses, the DNS provider has a bad night, a certificate runs out, and the website, the email and the links between systems stop at once. Four things with an expiry date, what each one takes down, and the one habit that keeps them renewed.</span>
+      <span class="nl">Niemand breekt in. Er verstrijkt een datum. Een domein verloopt, de DNS-provider heeft een slechte nacht, een certificaat raakt op, en de website, de e-mail en de koppelingen tussen systemen vallen tegelijk stil. Vier dingen met een vervaldatum, wat elk ervan platlegt, en de ene gewoonte die ze verlengd houdt.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FOUR</span><span class="nl">BEKIJK DE VIER</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT KEEPS US ONLINE</span><span class="nl">WAT ONS ONLINE HOUDT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">The domain renews itself. <em>Until the card expires.</em></span>
+      <span class="nl">Het domein verlengt zichzelf. <em>Tot de creditcard verloopt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">domain / renewal, contact details and the registrar account</span>
+      <span class="nl">domein / verlenging, contactgegevens en het registraraccount</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">ONE DATE, THREE STATES</span><span class="nl">ÉÉN DATUM, DRIE TOESTANDEN</span></div>
+      <div class="dom">yourcompany.nl</div>
+      <div class="st a"><span class="en">ACTIVE · RENEWS IN 12 DAYS</span><span class="nl">ACTIEF · VERLENGT OVER 12 DAGEN</span></div>
+      <div class="st b"><span class="en">PAYMENT FAILED · REMINDER SENT TO A LEAVER</span><span class="nl">BETALING MISLUKT · HERINNERING NAAR EEN VERTREKKER</span></div>
+      <div class="st c"><span class="en">EXPIRED · REGISTERED BY SOMEONE ELSE</span><span class="nl">VERLOPEN · DOOR EEN ANDER GEREGISTREERD</span></div>
+      <div class="who">🕵️<i>✉️</i></div>
+      <div class="banner"><span class="en">YOUR EMAIL NOW ARRIVES AT A STRANGER</span><span class="nl">UW E-MAIL KOMT NU BIJ EEN VREEMDE AAN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Your domain is rented, usually a year at a time. Renewal fails for dull reasons: the payment card expired, the contact mailbox belongs to someone who left, the registrar's reminders went to spam. After a grace period anyone can register the name, and with it your web address, your email and every login link that points at it. The same registrar account, protected by one password, is also how a domain is stolen: an attacker changes the name servers and your traffic is theirs. <abbr class="tip" tabindex="0" data-tip="National Cyber Security Centre: the UK government's cybersecurity centre, part of GCHQ.">NCSC UK</abbr> (guidance, reviewed March 2025) suggests auto-renewal on a company payment method, a shared mailbox for the contact details, two-step verification on the registrar account, and a lock on high-value domains.</p>
+      <p class="en"><strong>Business impact:</strong> an expired domain stops email as well as the website, and getting it back takes weeks, not hours. One list of every domain the company owns, with renewal date, registrar and an owner's name, is often the most effective first step. For the main domain, a registry lock, where changes need a verified phone call, is worth the fee.</p>
+      <p class="nl">Uw domein is gehuurd, meestal per jaar. Verlenging mislukt om saaie redenen: de creditcard is verlopen, de contactmailbox is van iemand die is vertrokken, de herinneringen van de registrar belandden in de spam. Na een respijtperiode kan iedereen de naam registreren, en daarmee uw webadres, uw e-mail en elke inloglink die ernaar verwijst. Datzelfde registraraccount, beschermd met één wachtwoord, is ook de manier waarop een domein wordt gestolen: een aanvaller wijzigt de naamservers en uw verkeer is van hem. Het <abbr class="tip" tabindex="0" data-tip="National Cyber Security Centre: het cybersecuritycentrum van de Britse overheid, onderdeel van GCHQ.">NCSC UK</abbr> (richtlijn, herzien maart 2025) adviseert automatische verlenging op een bedrijfsbetaalmiddel, een gedeelde mailbox voor de contactgegevens, tweestapsverificatie op het registraraccount en een slot op waardevolle domeinen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een verlopen domein legt naast de website ook de e-mail stil, en het terugkrijgen duurt weken, geen uren. Eén lijst met elk domein dat het bedrijf bezit, met verlengdatum, registrar en de naam van een eigenaar, is vaak de meest effectieve eerste stap. Voor het hoofddomein is een registry lock, waarbij wijzigingen een geverifieerd telefoontje vereisen, de kosten waard.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">RENEWAL FAILS · EMAIL AND WEB STOP · A STRANGER CAN REGISTER IT</span><span class="nl">VERLENGING MISLUKT · E-MAIL EN WEB STIL · EEN VREEMDE KAN HET REGISTREREN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: AUTO-RENEW, A SHARED CONTACT, A LOCK ON THE MAIN DOMAIN</span><span class="nl">AANBEVOLEN: AUTOMATISCH VERLENGEN, GEDEELD CONTACT, SLOT OP HET HOOFDDOMEIN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Bots watch the lists of expiring domains and register a lapsed company name within seconds, to catch its email or sell it back.</span><span class="nl">Bots volgen de lijsten met verlopende domeinen en registreren een verlopen bedrijfsnaam binnen seconden, om de e-mail op te vangen of hem terug te verkopen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An AI-written email from a lapsed subsidiary's domain passes every check, because it is the real domain. Old brands and project names count too.</span><span class="nl">Een door AI geschreven e-mail vanaf het verlopen domein van een dochterbedrijf doorstaat elke controle, omdat het het echte domein is. Oude merken en projectnamen tellen ook mee.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Watch the list</span><span class="nl">Bewaak de lijst</span></b><p><span class="en">Monitoring services, some AI-assisted, watch every domain and name server you own and alert on a change nobody planned.</span><span class="nl">Monitoringdiensten, sommige met AI, bewaken elk domein en elke naamserver die u bezit en waarschuwen bij een wijziging die niemand had gepland.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">One provider answers for everything. <em>And signatures expire too.</em></span>
+      <span class="nl">Eén provider antwoordt voor alles. <em>En ook handtekeningen verlopen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">DNS / the single shared dependency, and the keys inside it</span>
+      <span class="nl">DNS / de ene gedeelde afhankelijkheid, en de sleutels erin</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">WHEN THE NAME SERVICE STOPS</span><span class="nl">ALS DE NAAMDIENST STOPT</span></div>
+      <div class="ln k1"></div><div class="ln k2"></div><div class="ln k3"></div><div class="ln k4"></div>
+      <div class="hub">DNS</div>
+      <div class="leaf l1"><span class="en">Website</span><span class="nl">Website</span></div>
+      <div class="leaf l2"><span class="en">Email</span><span class="nl">E-mail</span></div>
+      <div class="leaf l3"><span class="en">Customer login</span><span class="nl">Klantportaal</span></div>
+      <div class="leaf l4"><span class="en">APIs to partners</span><span class="nl">API's naar partners</span></div>
+      <div class="banner"><span class="en">SERVERS FINE · NOBODY CAN FIND THEM</span><span class="nl">SERVERS IN ORDE · NIEMAND KAN ZE VINDEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en"><abbr class="tip" tabindex="0" data-tip="Domain Name System: the service that turns a name like yourcompany.nl into the address of a server.">DNS</abbr> turns your name into an address. If the provider that answers for your domain goes down, every service stops at once, website, email, logins and the APIs your partners call, even though the servers are fine. Most companies have one provider, because it came with the domain. DNS expires in its own way too. With <abbr class="tip" tabindex="0" data-tip="DNS Security Extensions: digital signatures on DNS answers, so a resolver can tell a genuine answer from a forged one.">DNSSEC</abbr>, the signatures that prove your answers are genuine carry an end date and a key schedule. On 5 May 2026 a faulty key rollover at DENIC, the registry for .de, made most .de domains unreachable for about three hours for anyone behind a validating resolver, by DENIC's own final report. A routine, scheduled task, not an attack.</p>
+      <p class="en"><strong>Business impact:</strong> two independent DNS providers turn a blackout into a partial outage, and the DDoS briefing covers that choice. The point here is narrower: if you sign your zone, someone owns the key calendar and something outside your network checks that your signatures still validate. An expiry inside DNS has the same effect as an attack, and no attacker to blame.</p>
+      <p class="nl"><abbr class="tip" tabindex="0" data-tip="Domain Name System: de dienst die een naam als uwbedrijf.nl vertaalt naar het adres van een server.">DNS</abbr> vertaalt uw naam naar een adres. Valt de provider uit die voor uw domein antwoordt, dan stopt elke dienst tegelijk, website, e-mail, inlogs en de API's die uw partners aanroepen, terwijl de servers gewoon werken. De meeste bedrijven hebben één provider, omdat die bij het domein zat. Ook DNS verloopt op zijn eigen manier. Bij <abbr class="tip" tabindex="0" data-tip="DNS Security Extensions: digitale handtekeningen onder DNS-antwoorden, zodat een resolver een echt antwoord van een vervalst kan onderscheiden.">DNSSEC</abbr> hebben de handtekeningen die bewijzen dat uw antwoorden echt zijn een einddatum en een sleutelschema. Op 5 mei 2026 maakte een mislukte sleutelwissel bij DENIC, het register voor .de, de meeste .de-domeinen zo'n drie uur onbereikbaar voor iedereen achter een validerende resolver, aldus het eindrapport van DENIC zelf. Een routinematige, geplande taak, geen aanval.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> twee onafhankelijke DNS-providers maken van een black-out een gedeeltelijke storing, en de DDoS-briefing behandelt die keuze. Het punt hier is smaller: als u uw zone ondertekent, is iemand eigenaar van de sleutelkalender en controleert iets buiten uw netwerk of uw handtekeningen nog valideren. Een vervaldatum binnen DNS heeft hetzelfde effect als een aanval, zonder aanvaller om de schuld te geven.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ONE DNS PROVIDER · ONE EXPIRED SIGNATURE · EVERYTHING OFFLINE</span><span class="nl">ÉÉN DNS-PROVIDER · ÉÉN VERLOPEN HANDTEKENING · ALLES OFFLINE</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: A SECOND DNS PROVIDER + AN OWNER FOR THE DNSSEC KEYS</span><span class="nl">AANBEVOLEN: EEN TWEEDE DNS-PROVIDER + EEN EIGENAAR VOOR DE DNSSEC-SLEUTELS</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Attackers go for the DNS provider's account, not your servers. One hijacked login rewrites where your name points, and AI makes the phishing for that login personal.</span><span class="nl">Aanvallers richten zich op het account bij de DNS-provider, niet op uw servers. Eén gekaapte inlog herschrijft waar uw naam naartoe wijst, en AI maakt de phishing voor die inlog persoonlijk.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI agents given DNS access "to be helpful" change records at scale. A wrong change spreads in minutes and is cached for hours.</span><span class="nl">AI-agents die DNS-toegang krijgen "om te helpen" wijzigen records op grote schaal. Een verkeerde wijziging verspreidt zich in minuten en blijft uren in de cache.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Watch the answers</span><span class="nl">Bewaak de antwoorden</span></b><p><span class="en">Monitoring that asks for your names from several places on the internet, and alerts on a changed answer or a failed signature before customers notice.</span><span class="nl">Monitoring die uw namen vanaf meerdere plekken op het internet opvraagt, en waarschuwt bij een gewijzigd antwoord of een mislukte handtekening voordat klanten het merken.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">A certificate expired. <em>The site, the app and the link between systems stop.</em></span>
+      <span class="nl">Een certificaat is verlopen. <em>De site, de app en de koppeling tussen systemen stoppen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">certificates / the ones you watch, and the ones nobody registered</span>
+      <span class="nl">certificaten / die u in de gaten houdt, en die niemand heeft geregistreerd</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">MIDNIGHT ON THE EXPIRY DATE</span><span class="nl">MIDDERNACHT OP DE VERVALDATUM</span></div>
+      <div class="clk ok"><span class="en">CERTIFICATE VALID · 1 DAY LEFT</span><span class="nl">CERTIFICAAT GELDIG · NOG 1 DAG</span></div>
+      <div class="clk no"><span class="en">CERTIFICATE EXPIRED · 00:00</span><span class="nl">CERTIFICAAT VERLOPEN · 00:00</span></div>
+      <div class="bx a"><b><span class="en">Website</span><span class="nl">Website</span></b><span class="en">browsers show a warning</span><span class="nl">browsers tonen een waarschuwing</span></div>
+      <div class="bx b"><b><span class="en">System to system</span><span class="nl">Systeem naar systeem</span></b><span class="en">connection refused · no human to click</span><span class="nl">verbinding geweigerd · geen mens om te klikken</span></div>
+      <div class="banner"><span class="en">NOBODY HACKED ANYTHING · A DATE PASSED</span><span class="nl">NIEMAND HEEFT IETS GEHACKT · ER VERSTREEK EEN DATUM</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A <abbr class="tip" tabindex="0" data-tip="Transport Layer Security: the protocol behind the padlock; its certificate proves a site or system is who it says it is.">TLS</abbr> certificate proves that a website or system is who it says it is, and it has an end date. When that passes, browsers show a warning most people won't click through, and systems that talk to each other simply refuse. On 6 December 2018 an expired certificate in Ericsson's software took mobile networks offline in several countries, including O2 in the UK and SoftBank in Japan, for most of a day, by Ericsson's own account. The public website is usually watched. The certificates between internal systems, on the VPN, on the payment link and inside a supplier's product are not, and those are the ones that expire on a Sunday.</p>
+      <p class="en"><strong>Business impact:</strong> nobody hacked anything; a date passed. An inventory of every certificate, public and internal, with its expiry date and an owner, and an alert 30 days ahead to a team rather than a person, is the control. The test is simple: ask what would stop if the certificate on your busiest system-to-system link expired tonight, and who would be called.</p>
+      <p class="nl">Een <abbr class="tip" tabindex="0" data-tip="Transport Layer Security: het protocol achter het slotje; het certificaat bewijst dat een site of systeem is wie het zegt te zijn.">TLS</abbr>-certificaat bewijst dat een website of systeem is wie het zegt te zijn, en het heeft een einddatum. Verstrijkt die, dan tonen browsers een waarschuwing waar de meeste mensen niet doorheen klikken, en weigeren systemen die met elkaar praten simpelweg. Op 6 december 2018 legde een verlopen certificaat in software van Ericsson in meerdere landen mobiele netwerken plat, waaronder O2 in het Verenigd Koninkrijk en SoftBank in Japan, het grootste deel van een dag, volgens Ericsson zelf. De publieke website wordt meestal bewaakt. De certificaten tussen interne systemen, op de VPN, op de betaalkoppeling en in het product van een leverancier niet, en dat zijn de certificaten die op een zondag verlopen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> niemand heeft iets gehackt; er verstreek een datum. Een inventaris van elk certificaat, publiek en intern, met vervaldatum en eigenaar, en een waarschuwing 30 dagen vooraf aan een team in plaats van een persoon, is de maatregel. De test is eenvoudig: vraag wat er stopt als het certificaat op uw drukste koppeling tussen systemen vannacht verloopt, en wie er wordt gebeld.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">DATE PASSES · BROWSERS WARN · SYSTEMS REFUSE EACH OTHER</span><span class="nl">DATUM VERSTRIJKT · BROWSERS WAARSCHUWEN · SYSTEMEN WEIGEREN ELKAAR</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE CERTIFICATE INVENTORY + ALERTS 30 DAYS OUT</span><span class="nl">AANBEVOLEN: ÉÉN CERTIFICAATINVENTARIS + WAARSCHUWING 30 DAGEN VOORAF</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Expired and misconfigured certificates are visible from the internet. Scanners flag them as the soft target and the opening for an impersonated site.</span><span class="nl">Verlopen en verkeerd ingestelde certificaten zijn vanaf het internet zichtbaar. Scanners markeren ze als het zwakke doelwit en de opening voor een nagemaakte site.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Staff who learned to click through certificate warnings, because "it's always that one internal site", click through the fake one too.</span><span class="nl">Medewerkers die hebben geleerd door certificaatwaarschuwingen heen te klikken, omdat "het altijd die ene interne site is", klikken ook door de valse heen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Find them all</span><span class="nl">Vind ze allemaal</span></b><p><span class="en">Discovery tools scan your networks and cloud accounts for every certificate, including the ones nobody registered, and build the inventory for you.</span><span class="nl">Ontdekkingstools doorzoeken uw netwerken en cloudaccounts op elk certificaat, ook de certificaten die niemand heeft geregistreerd, en bouwen de inventaris voor u.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">From once a year <em>to eight times a year.</em></span>
+      <span class="nl">Van één keer per jaar <em>naar acht keer per jaar.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">47 days / CA/Browser Forum ballot SC-081, and why manual renewal stops working</span>
+      <span class="nl">47 dagen / CA/Browser Forum-stemming SC-081, en waarom handmatig verlengen ophoudt te werken</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">MAXIMUM LIFETIME OF A PUBLIC CERTIFICATE</span><span class="nl">MAXIMALE LEVENSDUUR VAN EEN PUBLIEK CERTIFICAAT</span></div>
+      <div class="lbl y1"><b><span class="en">until 14 Mar 2026</span><span class="nl">tot 14 mrt 2026</span></b><span class="en">once a year</span><span class="nl">één keer per jaar</span></div>
+      <div class="rowb y1"><div class="bar4 w1"></div><span class="n"><span class="en">398 days</span><span class="nl">398 dagen</span></span></div>
+      <div class="lbl y2"><b><span class="en">from 15 Mar 2026</span><span class="nl">vanaf 15 mrt 2026</span></b><span class="en">now in force</span><span class="nl">nu van kracht</span></div>
+      <div class="rowb y2"><div class="bar4 w2"></div><span class="n"><span class="en">200 days</span><span class="nl">200 dagen</span></span></div>
+      <div class="lbl y3"><b><span class="en">from 15 Mar 2027</span><span class="nl">vanaf 15 mrt 2027</span></b><span class="en">four times a year</span><span class="nl">vier keer per jaar</span></div>
+      <div class="rowb y3"><div class="bar4 w3"></div><span class="n"><span class="en">100 days</span><span class="nl">100 dagen</span></span></div>
+      <div class="lbl y4"><b><span class="en">from 15 Mar 2029</span><span class="nl">vanaf 15 mrt 2029</span></b><span class="en">eight times a year</span><span class="nl">acht keer per jaar</span></div>
+      <div class="rowb y4"><div class="bar4 w4"></div><span class="n"><span class="en">47 days</span><span class="nl">47 dagen</span></span></div>
+      <div class="banner"><span class="en">INDUSTRY RULE · NOT A LAW · MANUAL RENEWAL WON'T KEEP UP</span><span class="nl">BRANCHEREGEL · GEEN WET · HANDMATIG VERLENGEN HOUDT HET NIET BIJ</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The CA/Browser Forum, the industry body of browser makers and certificate authorities, adopted ballot SC-081 on 11 April 2025. It is an industry rule, not a law. Public certificates used to last at most 398 days. Since 15 March 2026 the maximum is 200 days, from 15 March 2027 it is 100 days, and from 15 March 2029 it is 47 days. The proof that you control a domain, which a certificate authority may reuse, drops to 10 days. A certificate someone renews by hand once a year will need renewing every six weeks, on every system. At that pace manual renewal is an outage waiting to happen. The answer is automation: <abbr class="tip" tabindex="0" data-tip="Automatic Certificate Management Environment: the open standard (RFC 8555, 2019) that lets a system request and renew its own certificates.">ACME</abbr> lets systems renew their own certificates, and certificate authorities already issue certificates that last six days.</p>
+      <p class="en"><strong>Business impact:</strong> this is a planning and budget question, not a technical one. Every system that receives a certificate by hand today needs an automated path before 2029, and the awkward ones, appliances, old software and suppliers' products, need it first, because they take longest. <span class="disclaimer">Industry timeline, not a legal deadline. The dates bind the certificate authorities; for your own planning they are a suggestion.</span></p>
+      <p class="nl">Het CA/Browser Forum, het brancheorgaan van browsermakers en certificaatautoriteiten, nam op 11 april 2025 stemming SC-081 aan. Het is een brancheregel, geen wet. Publieke certificaten waren hooguit 398 dagen geldig. Sinds 15 maart 2026 is het maximum 200 dagen, vanaf 15 maart 2027 wordt het 100 dagen en vanaf 15 maart 2029 47 dagen. Het bewijs dat u een domein beheert, dat een certificaatautoriteit mag hergebruiken, daalt naar 10 dagen. Een certificaat dat iemand één keer per jaar met de hand verlengt, moet dan elke zes weken worden verlengd, op elk systeem. In dat tempo is handmatig verlengen een storing die op zich laat wachten. Het antwoord is automatisering: met <abbr class="tip" tabindex="0" data-tip="Automatic Certificate Management Environment: de open standaard (RFC 8555, 2019) waarmee een systeem zelf zijn certificaten aanvraagt en verlengt.">ACME</abbr> verlengen systemen hun eigen certificaten, en certificaatautoriteiten geven al certificaten van zes dagen uit.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> dit is een plannings- en begrotingsvraag, geen technische. Elk systeem dat vandaag met de hand een certificaat krijgt, heeft vóór 2029 een geautomatiseerde route nodig, en de lastige systemen, apparaten, oude software en producten van leveranciers, als eerste, omdat die het langst duren. <span class="disclaimer">Tijdlijn van de branche, geen wettelijke deadline. De data binden de certificaatautoriteiten; voor uw eigen planning zijn ze een suggestie.</span></p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">47-DAY CERTIFICATES BY 2029 · MANUAL RENEWAL WON'T KEEP UP</span><span class="nl">CERTIFICATEN VAN 47 DAGEN IN 2029 · HANDMATIG VERLENGEN HOUDT HET NIET BIJ</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: AUTOMATE RENEWAL, THE AWKWARD SYSTEMS FIRST</span><span class="nl">AANBEVOLEN: AUTOMATISEER VERLENGING, DE LASTIGE SYSTEMEN EERST</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">Harder</span><span class="nl">Moeilijker</span></b><p><span class="en">Shorter certificates help the defence: a stolen certificate is useful for weeks, not a year. The risk shifts from theft to outage.</span><span class="nl">Kortere certificaten helpen de verdediging: een gestolen certificaat is weken bruikbaar, geen jaar. Het risico verschuift van diefstal naar uitval.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI-generated renewal scripts that work on day one and fail silently at the first odd case are the new way to miss a date. Test the failure, not the success.</span><span class="nl">Door AI gegenereerde verlengscripts die op dag één werken en bij het eerste vreemde geval stilletjes falen, zijn de nieuwe manier om een datum te missen. Test het falen, niet het slagen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Renew without people</span><span class="nl">Verlengen zonder mensen</span></b><p><span class="en">Certificate platforms, increasingly AI-assisted, renew, install and verify every certificate and report the ones they could not reach.</span><span class="nl">Certificaatplatforms, steeds vaker met AI, verlengen, installeren en controleren elk certificaat en rapporteren de certificaten die ze niet konden bereiken.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>keeps us online.</em></span>
+      <span class="nl">Wat <em>ons online houdt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">none of this is a new product; it is a list, a setting and an owner</span>
+      <span class="nl">niets hiervan is een nieuw product; het is een lijst, een instelling en een eigenaar</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">EXPIRY INVENTORY</span><span class="nl">VERVALINVENTARIS</span></span>
+        <span class="chip c2"><span class="en">AUTO-RENEW + LOCK</span><span class="nl">AUTO-VERLENGEN + SLOT</span></span>
+        <span class="chip c3"><span class="en">SECOND DNS</span><span class="nl">TWEEDE DNS</span></span>
+        <span class="chip c4"><span class="en">ALERTS TO A TEAM</span><span class="nl">ALARM NAAR EEN TEAM</span></span>
+        <span class="chip c5"><span class="en">AUTOMATED RENEWAL</span><span class="nl">GEAUTOMATISEERD VERLENGEN</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Addresses</th><th>In one line</th></tr>
+        <tr><td class="ctl">Expiry inventory</td><td>All (01–04)</td><td>One list of everything with a date: domains, DNS and DNSSEC keys, certificates public and internal. Each with its expiry date and an owner by name.</td></tr>
+        <tr><td class="ctl">Auto-renew on a company account</td><td>Domain (01)</td><td>Renewal charged to a company payment method, reminders to a shared mailbox. Never a person's card or inbox.</td></tr>
+        <tr><td class="ctl">Registrar lock and two-step verification</td><td>Domain (01)</td><td>Transfer lock on every domain, two-step verification on the registrar account, registry lock on the main domain.</td></tr>
+        <tr><td class="ctl">Second DNS provider</td><td>DNS (02)</td><td>Two independent providers answer for your domain, tested once a year by taking one away.</td></tr>
+        <tr><td class="ctl">DNSSEC key calendar</td><td>DNS (02)</td><td>If you sign your zone, someone owns the rollover dates and an outside check confirms the signatures still validate.</td></tr>
+        <tr><td class="ctl">Expiry alerts to a team</td><td>Certificates (03)</td><td>Alerts at 30, 14 and 7 days before any certificate or domain expires, to a team mailbox or on-call rota, not to one person.</td></tr>
+        <tr><td class="ctl">Automated renewal</td><td>47 days (04)</td><td>ACME or your certificate platform renews, installs and verifies. Manual renewal becomes the documented exception with a date to end it.</td></tr>
+        <tr><td class="ctl">Awkward systems first</td><td>47 days (04)</td><td>Appliances, old software and suppliers' products that cannot renew automatically get a plan or a replacement date before 2029.</td></tr>
+        <tr><td class="ctl">Expiry rehearsal</td><td>All (01–04)</td><td>Once a year, let a test certificate expire and a test domain lapse in a staging environment, and see who notices and how fast.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Pakt aan</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Vervalinventaris</td><td>Alles (01–04)</td><td>Eén lijst van alles met een datum: domeinen, DNS- en DNSSEC-sleutels, certificaten publiek en intern. Elk met vervaldatum en een eigenaar met naam.</td></tr>
+        <tr><td class="ctl">Automatisch verlengen op bedrijfsaccount</td><td>Domein (01)</td><td>Verlenging afgeschreven van een bedrijfsbetaalmiddel, herinneringen naar een gedeelde mailbox. Nooit de kaart of inbox van een persoon.</td></tr>
+        <tr><td class="ctl">Registrarslot en tweestapsverificatie</td><td>Domein (01)</td><td>Overdrachtsslot op elk domein, tweestapsverificatie op het registraraccount, registry lock op het hoofddomein.</td></tr>
+        <tr><td class="ctl">Tweede DNS-provider</td><td>DNS (02)</td><td>Twee onafhankelijke providers antwoorden voor uw domein, jaarlijks getest door er één weg te halen.</td></tr>
+        <tr><td class="ctl">DNSSEC-sleutelkalender</td><td>DNS (02)</td><td>Ondertekent u uw zone, dan is iemand eigenaar van de wisseldata en bevestigt een controle van buiten dat de handtekeningen nog valideren.</td></tr>
+        <tr><td class="ctl">Vervalwaarschuwing naar een team</td><td>Certificaten (03)</td><td>Waarschuwingen 30, 14 en 7 dagen voordat een certificaat of domein verloopt, naar een teammailbox of piketrooster, niet naar één persoon.</td></tr>
+        <tr><td class="ctl">Geautomatiseerd verlengen</td><td>47 dagen (04)</td><td>ACME of uw certificaatplatform verlengt, installeert en controleert. Handmatig verlengen wordt de gedocumenteerde uitzondering met een einddatum.</td></tr>
+        <tr><td class="ctl">Lastige systemen eerst</td><td>47 dagen (04)</td><td>Apparaten, oude software en producten van leveranciers die niet automatisch kunnen verlengen, krijgen vóór 2029 een plan of een vervangdatum.</td></tr>
+        <tr><td class="ctl">Vervaloefening</td><td>Alles (01–04)</td><td>Laat één keer per jaar in een testomgeving een testcertificaat verlopen en een testdomein vervallen, en kijk wie het merkt en hoe snel.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> "could we go offline because somebody forgot to renew something" is the right question, and in most companies the honest answer is yes. We suggest three follow-ups. Who owns the list of everything that expires, and when was it last complete? How many certificates do we still renew by hand, and what is the plan to reach zero before 47-day certificates arrive in 2029? If our main domain or our DNS provider failed tonight, how long until email and the website are back? None of this needs a new product. It needs a name on a list. <span class="disclaimer">Suggested timeline, not a legal deadline.</span></span>
+        <span class="nl"><strong>De kern voor de directie:</strong> "kunnen we offline gaan omdat iemand vergat iets te verlengen" is de juiste vraag, en in de meeste bedrijven is het eerlijke antwoord ja. Wij stellen drie vervolgvragen voor. Wie is eigenaar van de lijst van alles wat verloopt, en wanneer was die voor het laatst compleet? Hoeveel certificaten verlengen we nog met de hand, en wat is het plan om op nul uit te komen voordat certificaten van 47 dagen in 2029 arriveren? Als ons hoofddomein of onze DNS-provider vannacht uitvalt, hoe lang duurt het dan tot e-mail en website terug zijn? Niets hiervan vraagt een nieuw product. Het vraagt een naam op een lijst. <span class="disclaimer">Voorgestelde tijdlijn, geen wettelijke deadline.</span></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">Every domain and certificate expires on a known date. Whether it is renewed depends on a reminder reaching someone who still works here and still has the card.</span><span class="nl">Elk domein en elk certificaat verloopt op een bekende datum. Of het wordt verlengd, hangt af van een herinnering die iemand bereikt die hier nog werkt en de kaart nog heeft.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">An expired domain or certificate stops the website, email and the links between systems at once, with no attacker to blame, often outside office hours.</span><span class="nl">Een verlopen domein of certificaat legt website, e-mail en de koppelingen tussen systemen tegelijk stil, zonder aanvaller om de schuld te geven, vaak buiten kantooruren.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low</span><span class="nl">Laag</span></span><p><span class="en">With an inventory, automated renewal and alerts to a team, an expiry becomes a ticket instead of an outage. A second DNS provider covers the rest.</span><span class="nl">Met een inventaris, geautomatiseerd verlengen en waarschuwingen aan een team wordt een vervaldatum een ticket in plaats van een storing. Een tweede DNS-provider dekt de rest.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CIO</span><span class="nl">CIO</span></span><p><span class="en">The <abbr class="tip" tabindex="0" data-tip="Chief information officer: the executive responsible for IT.">CIO</abbr> owns the policy and the automation budget; the head of infrastructure owns the list. The item without an owner is the one that expires.</span><span class="nl">De <abbr class="tip" tabindex="0" data-tip="Chief information officer: de bestuurder die verantwoordelijk is voor IT.">CIO</abbr> is eigenaar van het beleid en het automatiseringsbudget; het hoofd infrastructuur is eigenaar van de lijst. Het item zonder eigenaar is het item dat verloopt.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Items on the expiry inventory without an owner · certificates still renewed by hand · days until the next expiry nobody has a plan for · number of independent DNS providers.</span><span class="nl">Items op de vervalinventaris zonder eigenaar · certificaten die nog met de hand worden verlengd · dagen tot de eerstvolgende vervaldatum waar niemand een plan voor heeft · aantal onafhankelijke DNS-providers.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“A domain, DNS configuration or TLS certificate expires or is changed without authorisation because renewal depended on one person, one payment card or one provider, taking the website, email and system-to-system links offline for hours to days.”</span><span class="nl">“Een domein, DNS-configuratie of TLS-certificaat verloopt of wordt zonder toestemming gewijzigd omdat de verlenging afhing van één persoon, één betaalkaart of één provider, waardoor website, e-mail en koppelingen tussen systemen uren tot dagen offline zijn.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU directive on cybersecurity for essential and important entities; in the Netherlands the Cyberbeveiligingswet.">NIS2</abbr> requires business continuity measures (Art. 21(2)(c)) and policies on the use of cryptography (Art. 21(2)(h)). Domain and certificate renewal fall under both. In the Netherlands this runs through the Cyberbeveiligingswet, in force since 15 August 2026.</td><td>Ask who holds their domains and certificates, whether renewal is automated, and how many DNS providers answer for the service you buy.</td><td>An outage caused by an expired certificate or domain can count as a significant incident if it meets the thresholds. Early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month.</td></tr>
+        <tr><td class="ctl">DORA</td><td>The <abbr class="tip" tabindex="0" data-tip="Regulatory technical standards: detailed EU rules under DORA, here Delegated Regulation (EU) 2024/1774.">RTS</abbr> on ICT risk require a register of all certificates for ICT assets supporting critical or important functions, and renewal in advance of expiry (Art. 7(4) and 7(5)). DORA has applied since 17 January 2025.</td><td>Your <abbr class="tip" tabindex="0" data-tip="Information and communication technology: in DORA, any digital or data service a financial entity relies on.">ICT</abbr> third party's certificate register and renewal automation are fair questions. Ask how they would notice an expiry before you do.</td><td>Classify promptly. Initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>The availability criteria (A1.2) cover the infrastructure a service needs to keep running; an expired certificate is an availability failure, not a breach. CC7.1 covers detecting configuration changes.</td><td>Check whether Availability is in scope at all. Many SOC 2 reports cover Security only, and then an expired certificate is nobody's exception.</td><td>An outage in scope will likely appear as an exception in the next report. With Availability out of scope, it appears nowhere.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>The focus is financial reporting. Domains and certificates appear only as general IT controls where they protect the financial process.</td><td>The report rarely mentions domain or certificate management. Ask for renewal automation and monitoring in the contract instead.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor cyberbeveiliging van essentiële en belangrijke entiteiten; in Nederland de Cyberbeveiligingswet.">NIS2</abbr> vraagt maatregelen voor bedrijfscontinuïteit (art. 21 lid 2 onder c) en beleid voor het gebruik van cryptografie (art. 21 lid 2 onder h). Het verlengen van domeinen en certificaten valt onder beide. In Nederland loopt dit via de Cyberbeveiligingswet, van kracht sinds 15 augustus 2026.</td><td>Vraag wie hun domeinen en certificaten beheert, of verlenging is geautomatiseerd, en hoeveel DNS-providers antwoorden voor de dienst die u afneemt.</td><td>Een storing door een verlopen certificaat of domein kan als significant incident gelden als het de drempels haalt. Vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindverslag binnen een maand.</td></tr>
+        <tr><td class="ctl">DORA</td><td>De <abbr class="tip" tabindex="0" data-tip="Technische reguleringsnormen: gedetailleerde EU-regels onder DORA, hier Gedelegeerde Verordening (EU) 2024/1774.">RTS</abbr> over ICT-risico vragen een register van alle certificaten voor ICT-middelen die kritieke of belangrijke functies ondersteunen, en verlenging vóór het verlopen (art. 7 lid 4 en 5). DORA geldt sinds 17 januari 2025.</td><td>Het certificaatregister en de verlengautomatisering van uw <abbr class="tip" tabindex="0" data-tip="Informatie- en communicatietechnologie: onder DORA elke digitale of datadienst waarop een financiële instelling leunt.">ICT</abbr>-derde zijn redelijke vragen. Vraag hoe zij een vervaldatum eerder zouden opmerken dan u.</td><td>Classificeer snel. Eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>De beschikbaarheidscriteria (A1.2) gaan over de infrastructuur die een dienst nodig heeft om te blijven draaien; een verlopen certificaat is een beschikbaarheidsstoring, geen inbreuk. CC7.1 gaat over het ontdekken van configuratiewijzigingen.</td><td>Controleer of Beschikbaarheid überhaupt binnen scope valt. Veel SOC 2-rapporten dekken alleen Beveiliging, en dan is een verlopen certificaat niemands afwijking.</td><td>Een storing binnen scope komt waarschijnlijk als afwijking in het volgende rapport. Valt Beschikbaarheid buiten scope, dan komt hij nergens voor.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>De focus ligt op de financiële verslaggeving. Domeinen en certificaten komen alleen voor als algemene IT-beheersmaatregelen waar ze het financiële proces beschermen.</td><td>Het rapport noemt zelden domein- of certificaatbeheer. Vraag in het contract om verlengautomatisering en monitoring.</td><td>ISAE 3402 schept geen meldplicht aan de auditors van gebruikers. Verwacht een afwijking in het volgende rapport en vraag in het contract om tussentijdse melding.</td></tr>
+      </table>
+      <p class="sources en">Checked against: <a href="https://cabforum.org/2025/04/11/ballot-sc081v3-introduce-schedule-of-reducing-validity-and-data-reuse-periods/">CA/Browser Forum ballot SC-081v3</a> (11 Apr 2025) and <a href="https://cabforum.org/working-groups/server/baseline-requirements/documents/">TLS Baseline Requirements</a> §4.2.1 and §6.3.2, <a href="https://letsencrypt.org/docs/profiles/">Let's Encrypt certificate profiles</a> (2026), <a href="https://www.rfc-editor.org/rfc/rfc8555">IETF RFC 8555</a> (Mar 2019), <a href="https://www.ncsc.gov.uk/guidance/managing-public-domain-names">NCSC UK, Managing public domain names</a> (reviewed 12 Mar 2025), <a href="https://blog.denic.de/en/final-report-dns-outage-of-5-may-2026/">DENIC final report on the 5 May 2026 outage</a> (11 Jun 2026), <a href="https://www.ericsson.com/en/press-releases/2018/12/update-on-software-issue-impacting-certain-customers">Ericsson press release</a> (6 Dec 2018), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 21 and 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 19 and <a href="https://eur-lex.europa.eu/eli/reg_del/2024/1774/oj">RTS (EU) 2024/1774</a> Art. 7, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL</a> (Aug 2026), AICPA Trust Services Criteria A1.2 and CC7.1 (2017, points of focus 2022) · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://cabforum.org/2025/04/11/ballot-sc081v3-introduce-schedule-of-reducing-validity-and-data-reuse-periods/">CA/Browser Forum-stemming SC-081v3</a> (11 apr 2025) en <a href="https://cabforum.org/working-groups/server/baseline-requirements/documents/">TLS Baseline Requirements</a> §4.2.1 en §6.3.2, <a href="https://letsencrypt.org/docs/profiles/">Let's Encrypt certificaatprofielen</a> (2026), <a href="https://www.rfc-editor.org/rfc/rfc8555">IETF RFC 8555</a> (mrt 2019), <a href="https://www.ncsc.gov.uk/guidance/managing-public-domain-names">NCSC UK, Managing public domain names</a> (herzien 12 mrt 2025), <a href="https://blog.denic.de/en/final-report-dns-outage-of-5-may-2026/">DENIC-eindrapport over de storing van 5 mei 2026</a> (11 jun 2026), <a href="https://www.ericsson.com/en/press-releases/2018/12/update-on-software-issue-impacting-certain-customers">Persbericht Ericsson</a> (6 dec 2018), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 21 en 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 19 en <a href="https://eur-lex.europa.eu/eli/reg_del/2024/1774/oj">RTS (EU) 2024/1774</a> art. 7, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC</a> (aug 2026), AICPA Trust Services Criteria A1.2 en CC7.1 (2017, aandachtspunten 2022) · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../ddos/"><span class="en">DDoS &amp; availability</span><span class="nl">DDoS &amp; beschikbaarheid</span></a> ·
+  <a href="../tls-cipher-suites/"><span class="en">SSL/TLS cipher suites</span><span class="nl">SSL/TLS-ciphersuites</span></a> ·
+  <a href="../web-security/"><span class="en">Your website is a front door</span><span class="nl">Uw website is een voordeur</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=expiry&amp;title=Missing%3A%20expiry"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=expiry&amp;title=Correction%3A%20expiry"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">THINGS THAT EXPIRE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">WAT VERLOOPT BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>
