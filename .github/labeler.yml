@@ -81,6 +81,8 @@ sponsor:
   - '(edge device|randapparatuur|\bvpn\b|firewall|netscaler|fortigate|fortinet|ivanti|palo alto|remote.?access gateway|load balancer|zero.?trust|ztna|management interface|beheerinterface)'
 'page: pentest':
   - '(pentest|penetration test|penetratietest|red.?team|vulnerability scan|kwetsbaarhedenscan|\btlpt\b|tiber|bug bounty|security\.txt|vulnerability disclosure|\bcvd\b|responsible disclosure|retest|hertest)'
+'page: acquisitions':
+  - '(acquisitions|buying a company|acquiring a company|merger|\bm&a\b|due diligence|inherited breach|warrant(y|ies)|indemnit|w&i|change of control|overname|fusie|boekenonderzoek|vrijwaring|zeggenschapswijziging)'
 'page: security-governance':
   - '(security governance|how much security|security budget|beveiligingsbudget|security spend|\bciso\b|reporting line|rapportagelijn|board dashboard|bestuursdashboard|risk appetite|risicobereidheid|external review|externe toetsing|management body|leidinggevend orgaan)'
 'page: board-as-target':
