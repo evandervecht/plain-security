@@ -1,0 +1,37 @@
+#!/bin/bash
+# Pre-commit hook: validate UTF-8 encoding on HTML, SVG, and Python generator files
+# Prevents character-encoding corruption (e.g., mojibake) in briefing pages and generators
+
+set -e
+
+# Get the list of staged files
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=d)
+
+# Filter for files that should be UTF-8 (HTML, SVG, Python in tools/)
+CHECKED_FILES=$(echo "$STAGED_FILES" | grep -E '\.(html|svg|py)$' || true)
+
+if [ -z "$CHECKED_FILES" ]; then
+  exit 0
+fi
+
+# Check each file for UTF-8 encoding
+ENCODING_ISSUES=0
+while IFS= read -r file; do
+  if [ -f "$file" ]; then
+    mime_type=$(file --mime-encoding "$file" | cut -d: -f2 | xargs)
+    if [ "$mime_type" != "utf-8" ]; then
+      echo "ERROR: $file is encoded as $mime_type, not utf-8"
+      ENCODING_ISSUES=$((ENCODING_ISSUES + 1))
+    fi
+  fi
+done <<< "$CHECKED_FILES"
+
+if [ $ENCODING_ISSUES -gt 0 ]; then
+  echo ""
+  echo "ENCODING CHECK FAILED: $ENCODING_ISSUES file(s) with incorrect encoding."
+  echo "Fix with: iconv -f <current-encoding> -t utf-8 <file> > <file>.tmp && mv <file>.tmp <file>"
+  echo "Or re-save the file as UTF-8 in your editor."
+  exit 1
+fi
+
+exit 0
