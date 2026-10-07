@@ -174,4 +174,4 @@ Ask a maintainer in the issue, and don't guess, when:
 
 Add a diagram only when it replaces text.
 
-ot-iot (Purdue / IEC 62443 zones) · ransomware (tiered admin + isolated backups) · ai-security (AI gateway, tools behind least privilege) · tls-cipher-suites (TLS per hop) · nis2-dora (which regime applies → reporting chain) · secure-development (pipeline with signing) · later: entra, email-security, cloud, incident-response.
+ot-iot (Purdue / IEC 62443 zones) · ransomware (tiered admin + isolated backups) · ai-security (AI gateway, tools behind least privilege) · tls-cipher-suites (TLS per hop) · nis2-dora (which regime applies → reporting chain) · secure-development (pipeline with signing) · later: pentest (testing ladder over time), entra, email-security, cloud, incident-response.
