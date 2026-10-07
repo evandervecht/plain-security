@@ -51,6 +51,8 @@ sponsor:
   - '(shadow.?it|saas sprawl|wildgroei|oauth)'
 'page: ai-security':
   - '(\bai\b|llm|chatgpt|copilot|deepfake|prompt injection)'
+'page: ai-sandboxing':
+  - '(sandbox|zandbak|microvm|gvisor)'
 'page: web-security':
   - '(website|web.?security|webshop|injection|\bwaf\b|skimm)'
 'page: endpoints':
