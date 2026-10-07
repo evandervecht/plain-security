@@ -81,6 +81,8 @@ sponsor:
   - '(edge device|randapparatuur|\bvpn\b|firewall|netscaler|fortigate|fortinet|ivanti|palo alto|remote.?access gateway|load balancer|zero.?trust|ztna|management interface|beheerinterface)'
 'page: pentest':
   - '(pentest|penetration test|penetratietest|red.?team|vulnerability scan|kwetsbaarhedenscan|\btlpt\b|tiber|bug bounty|security\.txt|vulnerability disclosure|\bcvd\b|responsible disclosure|retest|hertest)'
+'page: security-governance':
+  - '(security governance|how much security|security budget|beveiligingsbudget|security spend|\bciso\b|reporting line|rapportagelijn|board dashboard|bestuursdashboard|risk appetite|risicobereidheid|external review|externe toetsing|management body|leidinggevend orgaan)'
 'page: board-as-target':
   - '(board as a target|whaling|ceo.?fraud|ceo-fraude|deepfake|voice clon|stemkloon|board portal|bestuursportaal|board pack|vergaderstukken|high-risk individual|lockdown mode|advanced protection|executive protection|bestuurder als doelwit)'
 'page: backups-and-restore':

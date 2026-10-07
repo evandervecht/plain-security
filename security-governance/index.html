@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>How much security is enough // Plain Security</title>
+<meta name="description" content="What should we spend, who should the CISO report to, and which numbers should the board see every quarter? Budget benchmarks, the CISO's independence, five numbers for the dashboard, external review, and what NIS2 and DORA ask of the board.">
+<link rel="canonical" href="https://plain-security.fyi/security-governance/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How much security is enough // Plain Security">
+<meta property="og:description" content="What should we spend, who should the CISO report to, and which numbers should the board see every quarter? Budget benchmarks, the CISO's independence, five numbers for the dashboard, external review, and what NIS2 and DORA ask of the board.">
+<meta property="og:url" content="https://plain-security.fyi/security-governance/">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="nl_NL">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   SECURITY GOVERNANCE // BRIEFING
+   Same palette and components as the other briefings.
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 7s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : the median is a benchmark, not a target --- */
+.s1 .rows{position:absolute;left:40px;right:40px;top:62px;display:grid;gap:14px}
+.s1 .row{display:flex;align-items:center;gap:14px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.s1 .row .lb{flex:none;width:190px}
+.s1 .row .it{position:relative;flex:1;height:30px;background:var(--surface);border:1px solid var(--line)}
+.s1 .row .sec{position:absolute;left:0;top:0;bottom:0;width:0;background:rgba(90,200,250,.35);border-right:2px solid var(--brand);animation:grow 8s ease-in-out infinite}
+.s1 .row.a .sec{--w:5%}.s1 .row.b .sec{--w:9%;animation-delay:.5s}.s1 .row.c .sec{--w:17%;animation-delay:1s}
+@keyframes grow{0%,10%{width:0}35%,90%{width:var(--w)}100%{width:0}}
+.s1 .med{position:absolute;top:40px;height:160px;left:calc(244px + (100% - 284px) * .09);border-left:1px dashed var(--warn)}
+.s1 .med span{position:absolute;top:0;left:6px;font-size:9px;letter-spacing:.14em;color:var(--warn);white-space:nowrap;text-transform:uppercase}
+.s1 .banner{animation-duration:8s}
+
+/* --- scene 2 : who the CISO reports to --- */
+.s2 .bx{position:absolute;width:150px;height:44px;margin-left:-75px;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.16em;color:var(--white);font-weight:700;text-transform:uppercase;z-index:2}
+.s2 .bd{left:50%;top:40px}.s2 .ceo{left:30%;top:104px}.s2 .cio{left:30%;top:168px}.s2 .ciso{left:72%;top:168px;border-color:var(--brand)}
+.s2 .ln{position:absolute;background:var(--line)}
+.s2 .l0{left:30%;top:84px;width:20%;height:1px}
+.s2 .l1{left:30%;top:84px;width:1px;height:20px}
+.s2 .l2{left:30%;top:148px;width:1px;height:20px}
+.s2 .old{position:absolute;top:190px;left:calc(30% + 75px);width:calc(42% - 150px);height:2px;background:var(--bad);animation:old 8s ease-in-out infinite}
+.s2 .new{position:absolute;top:62px;left:calc(50% + 75px);width:calc(22% - 75px);height:106px;border-top:2px dashed var(--good);border-right:2px dashed var(--good);opacity:0;animation:new 8s ease-in-out infinite}
+@keyframes old{0%,40%{opacity:1}50%,100%{opacity:.3}}
+@keyframes new{0%,45%{opacity:0}55%,100%{opacity:1}}
+.s2 .banner{animation-duration:8s}
+
+/* --- scene 3 : five numbers, each with a tolerance --- */
+.s3 .tiles{position:absolute;left:40px;right:40px;top:56px;display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.s3 .k{position:relative;height:130px;background:var(--surface);border:1px solid var(--line);padding:12px 10px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);line-height:1.45}
+.s3 .k i{position:absolute;left:10px;bottom:12px;width:14px;height:14px;background:var(--good);animation:rag 9s steps(1) infinite}
+.s3 .k:nth-child(2) i{animation-delay:-3s}.s3 .k:nth-child(4) i{animation-delay:-6s}
+@keyframes rag{0%{background:var(--good)}33%{background:var(--warn)}66%{background:var(--bad)}100%{background:var(--good)}}
+.s3 .banner{animation-duration:9s}
+
+/* --- scene 4 : marking your own homework --- */
+.s4 .col{position:absolute;top:44px;width:40%;display:grid;gap:8px}
+.s4 .col.us{left:6%}.s4 .col.ext{right:6%}
+.s4 .col .h{font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+.s4 .col .r{height:34px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.s4 .col .r b{font-weight:700}
+.s4 .us b{color:#8ff0cd}
+.s4 .ext b{opacity:0;animation:stamp 8s ease-in-out infinite}
+.s4 .ext .r:nth-child(3) b{animation-delay:.6s}.s4 .ext .r:nth-child(4) b{animation-delay:1.2s}
+.s4 b.g{color:#8ff0cd}.s4 b.a{color:var(--warn)}.s4 b.x{color:var(--bad-soft)}
+@keyframes stamp{0%,25%{opacity:0}32%,90%{opacity:1}97%,100%{opacity:0}}
+.s4 .banner{animation-duration:8s}
+
+/* --- scene 5 : what the law asks of the board --- */
+.s5 .duties{position:absolute;left:40px;right:40px;top:70px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.s5 .d{position:relative;height:110px;display:grid;place-items:center;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:11px;letter-spacing:.16em;font-weight:700;color:var(--white);text-transform:uppercase;padding:0 6px}
+.s5 .d::after{content:"";position:absolute;inset:0;border:1px solid var(--brand);background:rgba(90,200,250,.08);opacity:0;animation:light 8s ease-in-out infinite}
+.s5 .d:nth-child(2)::after{animation-delay:2s}.s5 .d:nth-child(3)::after{animation-delay:4s}.s5 .d:nth-child(4)::after{animation-delay:6s}
+@keyframes light{0%,2%{opacity:0}8%,22%{opacity:1}28%,100%{opacity:0}}
+.s5 .banner{animation-duration:8s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .s1 .row .sec{width:var(--w)}
+  .s2 .old{opacity:.3}.s2 .new{opacity:1}
+  .s4 .ext b{opacity:1}
+  .s5 .d::after{opacity:0}
+  .banner{opacity:1}.shield .tick{stroke-dashoffset:0}
+}
+@media (max-width:820px){
+  .stage.s1{height:320px}
+  .s1 .rows{left:12px;right:12px;top:84px}
+  .s1 .row{font-size:8px;letter-spacing:.04em;gap:8px}
+  .s1 .row .lb{width:96px}
+  .s1 .med{left:calc(116px + (100% - 128px) * .09)}
+  .s1 .med{top:62px;height:150px}
+  .s1 .med span{font-size:7.5px;letter-spacing:.04em}
+  .s2 .bx{width:96px;margin-left:-48px;font-size:8px;letter-spacing:.06em}
+  .s2 .ceo,.s2 .cio,.s2 .l1,.s2 .l2,.s2 .l0{left:24%}
+  .s2 .l0{width:26%}
+  .s2 .ciso{left:76%}
+  .s2 .old{left:calc(24% + 48px);width:calc(52% - 96px)}
+  .s2 .new{left:calc(50% + 48px);width:calc(26% - 48px);top:74px;height:98px}
+  .stage.s2{height:320px}
+  .s2 .bd{top:52px}.s2 .ceo{top:112px}.s2 .cio,.s2 .ciso{top:172px}
+  .s2 .l0,.s2 .l1{top:96px}.s2 .l1{height:16px}.s2 .l2{top:156px;height:16px}.s2 .old{top:194px}
+  .s3 .tiles{left:12px;right:12px;gap:4px;top:44px}
+  .s3 .k{font-size:7px;letter-spacing:.02em;padding:8px 5px;height:150px;line-height:1.35}
+  .s3 .k i{left:5px}
+  .s4 .col{width:44%}.s4 .col.us{left:3%}.s4 .col.ext{right:3%}
+  .s4 .col .h{font-size:8px;letter-spacing:.06em}
+  .s4 .col .r{font-size:7.5px;letter-spacing:.04em;padding:0 6px}
+  .s5 .duties{left:12px;right:12px;gap:6px;grid-template-columns:repeat(2,1fr);top:60px}
+  .s5 .d{height:72px;font-size:9px;letter-spacing:.08em}
+  .stage .banner{white-space:normal;text-align:center;width:calc(100% - 24px);line-height:1.4}
+}
+/* --- controls scene --- */
+.sc{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it asks of the board"}
+  #risk table.en td:nth-child(3)::before{content:"What to ask a supplier"}
+  #risk table.en td:nth-child(4)::before{content:"When an incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van het bestuur vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Wat u een leverancier vraagt"}
+  #risk table.nl td:nth-child(4)::before{content:"Als een incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+#fix td abbr.tip::after{left:auto;right:0}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> <span class="en">GOVERNANCE</span><span class="nl">GOVERNANCE</span></a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">BUDGET</span><span class="nl">BUDGET</span></a>
+      <a href="#r2"><span class="en">CISO</span><span class="nl">CISO</span></a>
+      <a href="#r3"><span class="en">NUMBERS</span><span class="nl">GETALLEN</span></a>
+      <a href="#r4"><span class="en">REVIEW</span><span class="nl">TOETSING</span></a>
+      <a href="#r5"><span class="en">LAW</span><span class="nl">WET</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">How much security <em>is enough?</em></span>
+      <span class="nl">Hoeveel beveiliging <em>is genoeg?</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Every board asks it sooner or later: what should we spend, who should the security lead report to, and how do we know it is working? There is no single right number. There are five questions that turn "are we secure?" into something a board can govern: the budget, the reporting line, the numbers you see each quarter, who checks them, and what the law asks of the board itself.</span>
+      <span class="nl">Elk bestuur stelt de vraag vroeg of laat: wat moeten we uitgeven, aan wie rapporteert de beveiligingsverantwoordelijke, en hoe weten we dat het werkt? Er is geen enkel juist getal. Er zijn vijf vragen die van "zijn we veilig?" iets maken dat een bestuur kan besturen: het budget, de rapportagelijn, de getallen die u elk kwartaal ziet, wie die controleert, en wat de wet van het bestuur zelf vraagt.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FIVE</span><span class="nl">BEKIJK DE VIJF</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT GOOD LOOKS LIKE</span><span class="nl">HOE GOED ERUITZIET</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">The budget: <em>the median is a benchmark, not a target.</em></span>
+      <span class="nl">Het budget: <em>de mediaan is een ijkpunt, geen doel.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">security spend / share of IT budget / risk appetite</span>
+      <span class="nl">beveiligingsuitgaven / aandeel van het IT-budget / risicobereidheid</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">SECURITY AS A SHARE OF THE IT BUDGET</span><span class="nl">BEVEILIGING ALS AANDEEL VAN HET IT-BUDGET</span></div>
+      <div class="med"><span class="en">EU median ≈ 9%</span><span class="nl">EU-mediaan ≈ 9%</span></div>
+      <div class="rows">
+        <div class="row a"><span class="lb"><span class="en">Little to lose</span><span class="nl">Weinig te verliezen</span></span><span class="it"><span class="sec"></span></span></div>
+        <div class="row b"><span class="lb"><span class="en">Typical</span><span class="nl">Gemiddeld</span></span><span class="it"><span class="sec"></span></span></div>
+        <div class="row c"><span class="lb"><span class="en">Payments, patients, plants</span><span class="nl">Betalingen, patiënten, installaties</span></span><span class="it"><span class="sec"></span></span></div>
+      </div>
+      <div class="banner"><span class="en">YOUR RISK DECIDES THE NUMBER · THE MEDIAN ONLY SAYS WHAT OTHERS SPEND</span><span class="nl">UW RISICO BEPAALT HET GETAL · DE MEDIAAN ZEGT ALLEEN WAT ANDEREN UITGEVEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The best public benchmark in the EU comes from <abbr class="tip" tabindex="0" data-tip="European Union Agency for Cybersecurity: the EU body that supports Member States and publishes research on cybersecurity.">ENISA</abbr>. In its NIS Investments 2025 report, the median organisation spent about 9% of its IT budget on security in 2024, roughly the same as the year before. The survey covered 1,080 organisations in sectors under <abbr class="tip" tabindex="0" data-tip="EU directive on cybersecurity for essential and important entities; in the Netherlands the Cyberbeveiligingswet.">NIS2</abbr>, mostly large ones. That tells you what comparable organisations spend. It does not tell you what you need. We know of no primary source for security spend as a share of revenue, so we give no figure for it.</p>
+      <p class="en"><strong>Business impact:</strong> a budget set by benchmark buys the average, whatever your risk is. A budget set by risk starts from the other end: which services must not stop, how much loss the board will accept, and what it costs to stay within that. The UK government's Cyber Governance Code of Practice (April 2025) asks boards for exactly this: resources that follow the agreed risk appetite. <abbr class="tip" tabindex="0" data-tip="Digital Operational Resilience Act: EU regulation (EU) 2022/2554 on ICT risk for the financial sector, applicable since 17 January 2025.">DORA</abbr> goes further for the financial sector and makes the budget the management body's job: it allocates the budget and reviews it periodically (Art. 5(2)(g)).</p>
+      <p class="nl">Het beste openbare ijkpunt in de EU komt van <abbr class="tip" tabindex="0" data-tip="Agentschap van de Europese Unie voor cyberbeveiliging: het EU-orgaan dat lidstaten ondersteunt en onderzoek naar cyberbeveiliging publiceert.">ENISA</abbr>. In het rapport NIS Investments 2025 besteedde de mediane organisatie in 2024 ongeveer 9% van haar IT-budget aan beveiliging, ongeveer evenveel als het jaar ervoor. Het onderzoek omvatte 1.080 organisaties in sectoren onder <abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor cyberbeveiliging van essentiële en belangrijke entiteiten; in Nederland de Cyberbeveiligingswet.">NIS2</abbr>, vooral grote. Dat vertelt u wat vergelijkbare organisaties uitgeven. Het vertelt u niet wat u nodig hebt. Wij kennen geen primaire bron voor beveiligingsuitgaven als aandeel van de omzet, dus daarvoor geven wij geen getal.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een budget op basis van een ijkpunt koopt het gemiddelde, wat uw risico ook is. Een budget op basis van risico begint aan de andere kant: welke diensten mogen niet stilvallen, hoeveel verlies aanvaardt het bestuur, en wat kost het om daarbinnen te blijven. De Cyber Governance Code of Practice van de Britse overheid (april 2025) vraagt besturen precies dit: middelen die de afgesproken risicobereidheid volgen. <abbr class="tip" tabindex="0" data-tip="Digital Operational Resilience Act: EU-verordening (EU) 2022/2554 over ICT-risico in de financiële sector, van toepassing sinds 17 januari 2025.">DORA</abbr> gaat voor de financiële sector verder en maakt het budget de taak van het leidinggevend orgaan: dat wijst het budget toe en evalueert het periodiek (art. 5 lid 2 onder g).</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">SPENDING THE AVERAGE BUYS THE AVERAGE, NOT ENOUGH</span><span class="nl">HET GEMIDDELDE UITGEVEN KOOPT HET GEMIDDELDE, NIET GENOEG</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: SET THE RISK APPETITE FIRST, THEN THE BUDGET</span><span class="nl">AANBEVOLEN: EERST DE RISICOBEREIDHEID, DAN HET BUDGET</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Attackers' costs fall with AI while defenders' budgets are set once a year. Last year's number assumes last year's attacker.</span><span class="nl">De kosten van aanvallers dalen met AI, terwijl het budget van verdedigers eens per jaar wordt vastgesteld. Het getal van vorig jaar gaat uit van de aanvaller van vorig jaar.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">New AI tools arrive with their own risks and rarely with their own security budget. The bill lands later, after an incident.</span><span class="nl">Nieuwe AI-tools komen met eigen risico's en zelden met een eigen beveiligingsbudget. De rekening komt later, na een incident.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">More per euro</span><span class="nl">Meer per euro</span></b><p><span class="en">AI-assisted monitoring and triage let a small team cover more. Worth asking which tasks it took over, rather than assuming the budget can shrink.</span><span class="nl">Met AI ondersteunde monitoring en triage laten een klein team meer afdekken. Vraag welke taken het overnam, in plaats van aan te nemen dat het budget kan krimpen.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">The reporting line: <em>can the CISO say no to their boss?</em></span>
+      <span class="nl">De rapportagelijn: <em>kan de CISO nee zeggen tegen de eigen baas?</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">reporting line / independence / direct access to the board</span>
+      <span class="nl">rapportagelijn / onafhankelijkheid / directe toegang tot het bestuur</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">WHO HEARS THE BAD NEWS FIRST</span><span class="nl">WIE HOORT HET SLECHTE NIEUWS ALS EERSTE</span></div>
+      <div class="ln l0"></div><div class="ln l1"></div><div class="ln l2"></div>
+      <div class="old"></div><div class="new"></div>
+      <div class="bx bd"><span class="en">Board</span><span class="nl">Bestuur</span></div>
+      <div class="bx ceo">CEO</div>
+      <div class="bx cio">CIO</div>
+      <div class="bx ciso">CISO</div>
+      <div class="banner"><span class="en">A DIRECT LINE TO THE BOARD · NOT ONLY THROUGH THE PERSON WHO OWNS THE DEADLINES</span><span class="nl">EEN DIRECTE LIJN NAAR HET BESTUUR · NIET ALLEEN VIA WIE DE DEADLINES BEZIT</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">No law tells you where the <abbr class="tip" tabindex="0" data-tip="Chief information security officer: the executive responsible for information security.">CISO</abbr> should sit. The question is who can overrule them, and who hears about it when they do. In many organisations the CISO reports to the <abbr class="tip" tabindex="0" data-tip="Chief information officer: the executive responsible for IT, its projects and its delivery deadlines.">CIO</abbr>, who also owns the project deadlines that security can delay. That works while the two agree. When they disagree, the board may never hear about it. DORA names the principle for the financial sector: the function that manages and oversees ICT risk needs an appropriate level of independence to avoid conflicts of interest (Art. 6(4)).</p>
+      <p class="en"><strong>Business impact:</strong> the reporting line decides which risks reach the board. We suggest a CISO who can bring an issue to the board, or its audit or risk committee, directly and without asking permission first. Whether the day-to-day line runs to the CEO, the COO or the risk function is your call. The UK Cyber Governance Code suggests a regular two-way dialogue between the board and the CISO, whatever the chart says.</p>
+      <p class="nl">Geen wet zegt waar de <abbr class="tip" tabindex="0" data-tip="Chief information security officer: de bestuurder die verantwoordelijk is voor informatiebeveiliging.">CISO</abbr> hoort. De vraag is wie de CISO kan overrulen, en wie dat hoort als het gebeurt. In veel organisaties rapporteert de CISO aan de <abbr class="tip" tabindex="0" data-tip="Chief information officer: de bestuurder die verantwoordelijk is voor IT, de projecten en de opleverdata.">CIO</abbr>, die ook de projectdeadlines bezit die beveiliging kan vertragen. Dat werkt zolang beiden het eens zijn. Zijn ze het oneens, dan hoort het bestuur er misschien nooit van. DORA benoemt het principe voor de financiële sector: de functie die ICT-risico beheert en bewaakt, heeft een passend niveau van onafhankelijkheid nodig om belangenconflicten te voorkomen (art. 6 lid 4).</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de rapportagelijn bepaalt welke risico's het bestuur bereiken. Wij stellen een CISO voor die een kwestie rechtstreeks bij het bestuur, of de audit- of risicocommissie, kan neerleggen zonder eerst toestemming te vragen. Of de dagelijkse lijn naar de CEO, de COO of de risicofunctie loopt, is uw keuze. De Britse Cyber Governance Code stelt een regelmatige dialoog in twee richtingen voor tussen het bestuur en de CISO, wat het organogram ook zegt.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">THE PERSON WHO OWNS THE DEADLINE DECIDES WHAT THE BOARD HEARS</span><span class="nl">WIE DE DEADLINE BEZIT, BEPAALT WAT HET BESTUUR HOORT</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: A DIRECT LINE FROM THE CISO TO THE BOARD OR ITS COMMITTEE</span><span class="nl">AANBEVOLEN: EEN DIRECTE LIJN VAN DE CISO NAAR HET BESTUUR OF DE COMMISSIE</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI projects are often run from the business, outside IT. A CISO who only sees IT's pipeline misses them until they are live.</span><span class="nl">AI-projecten lopen vaak vanuit de business, buiten IT om. Een CISO die alleen de pijplijn van IT ziet, mist ze tot ze live staan.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">The pressure to ship AI features fast is exactly the pressure that keeps a CISO who reports to delivery quiet.</span><span class="nl">De druk om AI-functies snel uit te brengen, is precies de druk waardoor een CISO die aan de oplevering rapporteert, zwijgt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">One view for all</span><span class="nl">Eén beeld voor iedereen</span></b><p><span class="en">Tools that summarise risk data give the board and the CISO the same picture. The independence still comes from the reporting line, not the tool.</span><span class="nl">Tools die risicogegevens samenvatten, geven bestuur en CISO hetzelfde beeld. De onafhankelijkheid komt nog steeds uit de rapportagelijn, niet uit de tool.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">Five numbers a quarter, <em>each with a line you agreed in advance.</em></span>
+      <span class="nl">Vijf getallen per kwartaal, <em>elk met een grens die u vooraf afsprak.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">board dashboard / metrics / tolerances</span>
+      <span class="nl">bestuursdashboard / indicatoren / toleranties</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">THE QUARTERLY PAGE</span><span class="nl">DE KWARTAALPAGINA</span></div>
+      <div class="tiles">
+        <div class="k"><span class="en">Critical flaws fixed on time</span><span class="nl">Kritieke lekken op tijd gedicht</span><i></i></div>
+        <div class="k"><span class="en">Admin accounts with strong MFA</span><span class="nl">Beheeraccounts met sterke MFA</span><i></i></div>
+        <div class="k"><span class="en">Last tested restore</span><span class="nl">Laatste geteste herstel</span><i></i></div>
+        <div class="k"><span class="en">Alert to action, out of hours</span><span class="nl">Alarm tot actie, buiten kantoortijd</span><i></i></div>
+        <div class="k"><span class="en">Overdue risks and findings</span><span class="nl">Verlopen risico's en bevindingen</span><i></i></div>
+      </div>
+      <div class="banner"><span class="en">FIVE NUMBERS · A TOLERANCE EACH · THE SAME ONES EVERY QUARTER</span><span class="nl">VIJF GETALLEN · ELK EEN TOLERANTIE · ELK KWARTAAL DEZELFDE</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A dashboard full of blocked attacks and training completions tells a board that the team is busy, not that the organisation is safe. We suggest five numbers that move when real risk moves. The share of critical vulnerabilities fixed within the agreed deadline. The share of admin and remote-access accounts with phishing-resistant <abbr class="tip" tabindex="0" data-tip="Multi-factor authentication: a login that needs a second proof, such as a security key, on top of the password.">MFA</abbr>. The date of the last successful restore test of a critical system. The time from an alert to someone acting on it, outside office hours. And the number of findings and accepted risks past their deadline.</p>
+      <p class="en"><strong>Business impact:</strong> a number without a tolerance is trivia. Agree in advance what green, amber and red mean for each, and ask for the same five every quarter so the trend is visible. The UK Cyber Governance Code suggests formal reporting at least quarterly, with metrics and agreed tolerances. DORA asks financial entities to set security objectives with key performance indicators and key risk metrics (Art. 6(8)(c)). Which five you choose is your call; these are ours.</p>
+      <p class="nl">Een dashboard vol tegengehouden aanvallen en afgeronde trainingen vertelt een bestuur dat het team druk is, niet dat de organisatie veilig is. Wij stellen vijf getallen voor die bewegen als het echte risico beweegt. Het aandeel kritieke kwetsbaarheden dat binnen de afgesproken termijn is gedicht. Het aandeel beheer- en externe-toegangsaccounts met phishingbestendige <abbr class="tip" tabindex="0" data-tip="Multifactorauthenticatie: een login die naast het wachtwoord een tweede bewijs vraagt, zoals een beveiligingssleutel.">MFA</abbr>. De datum van de laatste geslaagde hersteltest van een kritiek systeem. De tijd van een alarm tot iemand erop handelt, buiten kantoortijd. En het aantal bevindingen en aanvaarde risico's dat over de termijn is.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een getal zonder tolerantie is een weetje. Spreek vooraf af wat groen, oranje en rood voor elk betekent, en vraag elk kwartaal dezelfde vijf, zodat de trend zichtbaar wordt. De Britse Cyber Governance Code stelt formele rapportage voor van minstens eens per kwartaal, met indicatoren en afgesproken toleranties. DORA vraagt financiële entiteiten beveiligingsdoelen vast te leggen met kritieke prestatie-indicatoren en kernrisico-indicatoren (art. 6 lid 8 onder c). Welke vijf u kiest, is uw keuze; dit zijn de onze.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ACTIVITY NUMBERS SHOW EFFORT, NOT EXPOSURE</span><span class="nl">ACTIVITEITSCIJFERS TONEN INSPANNING, GEEN BLOOTSTELLING</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: FIVE OUTCOME NUMBERS WITH AGREED TOLERANCES, EVERY QUARTER</span><span class="nl">AANBEVOLEN: VIJF UITKOMSTGETALLEN MET AFGESPROKEN TOLERANTIES, ELK KWARTAAL</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI help shortens the time from a published flaw to a working attack. A patch deadline that was fine last year may be too slow now.</span><span class="nl">AI-hulp verkort de tijd van een gepubliceerd lek tot een werkende aanval. Een patchtermijn die vorig jaar goed was, kan nu te traag zijn.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI makes a polished dashboard cheap. Ask where each number comes from and who can change it, before trusting the colour.</span><span class="nl">AI maakt een gepolijst dashboard goedkoop. Vraag waar elk getal vandaan komt en wie het kan wijzigen, voordat u op de kleur vertrouwt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Measured, not typed</span><span class="nl">Gemeten, niet getypt</span></b><p><span class="en">Numbers pulled straight from the systems, not typed into slides, are harder to dress up. AI can help collect them; a person still owns each one.</span><span class="nl">Getallen die rechtstreeks uit de systemen komen, niet in dia's getypt, zijn lastiger op te poetsen. AI kan helpen ze te verzamelen; elk getal heeft nog steeds een eigenaar.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">An outside view, <em>before the supervisor gives you one.</em></span>
+      <span class="nl">Een blik van buiten, <em>voordat de toezichthouder u er een geeft.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">internal audit / external review / independent assurance</span>
+      <span class="nl">interne audit / externe toetsing / onafhankelijke zekerheid</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">THE SAME QUESTIONS, TWO MARKERS</span><span class="nl">DEZELFDE VRAGEN, TWEE BEOORDELAARS</span></div>
+      <div class="col us">
+        <span class="h"><span class="en">Marked by us</span><span class="nl">Door onszelf beoordeeld</span></span>
+        <div class="r"><span class="en">Patching</span><span class="nl">Patchen</span><b><span class="en">GREEN</span><span class="nl">GROEN</span></b></div>
+        <div class="r"><span class="en">Restore</span><span class="nl">Herstel</span><b><span class="en">GREEN</span><span class="nl">GROEN</span></b></div>
+        <div class="r"><span class="en">Suppliers</span><span class="nl">Leveranciers</span><b><span class="en">GREEN</span><span class="nl">GROEN</span></b></div>
+      </div>
+      <div class="col ext">
+        <span class="h"><span class="en">External review</span><span class="nl">Externe toetsing</span></span>
+        <div class="r"><span class="en">Patching</span><span class="nl">Patchen</span><b class="g"><span class="en">GREEN</span><span class="nl">GROEN</span></b></div>
+        <div class="r"><span class="en">Restore</span><span class="nl">Herstel</span><b class="a"><span class="en">AMBER</span><span class="nl">ORANJE</span></b></div>
+        <div class="r"><span class="en">Suppliers</span><span class="nl">Leveranciers</span><b class="x"><span class="en">RED</span><span class="nl">ROOD</span></b></div>
+      </div>
+      <div class="banner"><span class="en">A DASHBOARD THAT IS ALWAYS GREEN IS A QUESTION, NOT AN ANSWER</span><span class="nl">EEN DASHBOARD DAT ALTIJD GROEN IS, IS EEN VRAAG, GEEN ANTWOORD</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">The five numbers come from the people they measure. Now and then the board needs someone else to check them. Internal audit is the first option: DORA requires it for financial entities, by auditors with enough ICT knowledge and appropriate independence (Art. 6(6)). An external review is worth considering when the inside view is weakest: a new CISO, after a serious incident, before a merger or a large cloud move, before a supervisor's visit, and when the dashboard has been green for a year. Under NIS2, the supervisor can order an independent security audit of an essential entity, at that entity's cost (Art. 32(2)).</p>
+      <p class="en"><strong>Business impact:</strong> an outside view costs far less when you ask for it than when it arrives after an incident. Worth agreeing who commissions it: the board or its audit committee, not the team being reviewed, so the findings reach you unfiltered.</p>
+      <p class="nl">De vijf getallen komen van de mensen die ze meten. Af en toe heeft het bestuur iemand anders nodig om ze te controleren. Interne audit is de eerste optie: DORA vereist die voor financiële entiteiten, door auditors met voldoende ICT-kennis en de nodige onafhankelijkheid (art. 6 lid 6). Een externe toetsing is het overwegen waard als het zicht van binnen het zwakst is: een nieuwe CISO, na een ernstig incident, vóór een fusie of een grote overstap naar de cloud, vóór een bezoek van de toezichthouder, en als het dashboard al een jaar groen is. Onder NIS2 kan de toezichthouder een onafhankelijke beveiligingsaudit van een essentiële entiteit opleggen, op kosten van die entiteit (art. 32 lid 2).</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een blik van buiten kost veel minder als u erom vraagt dan als die na een incident komt. Het loont om af te spreken wie de opdracht geeft: het bestuur of de auditcommissie, niet het team dat wordt getoetst, zodat de bevindingen ongefilterd bij u komen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">THE TEAM MARKS ITS OWN HOMEWORK</span><span class="nl">HET TEAM BEOORDEELT ZIJN EIGEN HUISWERK</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: THE BOARD COMMISSIONS AN OUTSIDE VIEW AT THE MOMENTS THAT MATTER</span><span class="nl">AANBEVOLEN: HET BESTUUR LAAT OP DE BELANGRIJKE MOMENTEN VAN BUITEN TOETSEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Attackers test you continuously with AI help. Next to that, a review every few years is a long gap.</span><span class="nl">Aanvallers testen u doorlopend met AI-hulp. Daarnaast is een toetsing om de paar jaar een lang gat.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI writes convincing policies and evidence files fast. A review that only reads documents can pass an organisation that only writes them.</span><span class="nl">AI schrijft snel overtuigend beleid en bewijsdossiers. Een toetsing die alleen documenten leest, kan een organisatie goedkeuren die alleen documenten schrijft.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Test, don't read</span><span class="nl">Testen, niet lezen</span></b><p><span class="en">Ask reviewers to check settings and run tests, not only read policies. AI tooling makes that cheaper for them too.</span><span class="nl">Vraag toetsers instellingen te controleren en tests te draaien, niet alleen beleid te lezen. AI-gereedschap maakt dat ook voor hen goedkoper.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 05 ============================ -->
+<section class="risk-block" id="r5">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 05</span><span class="nl">STAP 05</span></span>
+    <h2>
+      <span class="en">What the law asks of the board <em>itself.</em></span>
+      <span class="nl">Wat de wet van het bestuur <em>zelf</em> vraagt.</span>
+    </h2>
+    <span class="term">
+      <span class="en">NIS2 Art. 20 / DORA Art. 5 / Cyberbeveiligingswet</span>
+      <span class="nl">NIS2 art. 20 / DORA art. 5 / Cyberbeveiligingswet</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">FOUR DUTIES THAT STAY WITH THE BOARD</span><span class="nl">VIER PLICHTEN DIE BIJ HET BESTUUR BLIJVEN</span></div>
+      <div class="duties">
+        <div class="d"><span class="en">Approve</span><span class="nl">Goedkeuren</span></div>
+        <div class="d"><span class="en">Oversee</span><span class="nl">Toezien</span></div>
+        <div class="d"><span class="en">Be trained</span><span class="nl">Opgeleid zijn</span></div>
+        <div class="d"><span class="en">Be liable</span><span class="nl">Aansprakelijk zijn</span></div>
+      </div>
+      <div class="banner"><span class="en">THE WORK CAN BE DELEGATED · THE ACCOUNTABILITY CANNOT</span><span class="nl">HET WERK KUNT U DELEGEREN · DE VERANTWOORDING NIET</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en"><abbr class="tip" tabindex="0" data-tip="EU directive on cybersecurity for essential and important entities; in the Netherlands the Cyberbeveiligingswet.">NIS2</abbr> names the board: management bodies approve the security measures, oversee their implementation, can be held liable, and are required to follow training (Art. 20). In the Netherlands this runs through the Cyberbeveiligingswet, in force since 15 August 2026. <abbr class="tip" tabindex="0" data-tip="National Cyber Security Centre of the Netherlands: the government body that registers Cbw entities and handles their reports.">NCSC-NL</abbr> puts it simply: security is a responsibility of the board, and directors need enough knowledge to judge risks and measures. <abbr class="tip" tabindex="0" data-tip="Digital Operational Resilience Act: EU regulation (EU) 2022/2554 on ICT risk for the financial sector, applicable since 17 January 2025.">DORA</abbr> asks the same of financial entities and adds the budget and the audit plans: the management body bears the ultimate responsibility for ICT risk, and its members keep their knowledge up to date, including through regular training (Art. 5).</p>
+      <p class="en"><strong>Business impact:</strong> neither law says how often the board trains, only that it does, and regularly under DORA. We suggest keeping a record of what each member followed and when, and approving the measures as a minuted decision, not a slide that was shown.</p>
+      <p class="nl"><abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor cyberbeveiliging van essentiële en belangrijke entiteiten; in Nederland de Cyberbeveiligingswet.">NIS2</abbr> noemt het bestuur: bestuursorganen keuren de beveiligingsmaatregelen goed en zien toe op de uitvoering, kunnen aansprakelijk worden gesteld en zijn verplicht een opleiding te volgen (art. 20). In Nederland loopt dit via de Cyberbeveiligingswet, van kracht sinds 15 augustus 2026. Het <abbr class="tip" tabindex="0" data-tip="Nationaal Cyber Security Centrum: de overheidsdienst die Cbw-entiteiten registreert en hun meldingen ontvangt.">NCSC</abbr> zegt het eenvoudig: cyberbeveiliging is een verantwoordelijkheid van het bestuur, en bestuurders hebben voldoende kennis nodig om risico's en maatregelen te beoordelen. <abbr class="tip" tabindex="0" data-tip="Digital Operational Resilience Act: EU-verordening (EU) 2022/2554 over ICT-risico in de financiële sector, van toepassing sinds 17 januari 2025.">DORA</abbr> vraagt hetzelfde van financiële entiteiten en voegt het budget en de auditplannen toe: het leidinggevend orgaan draagt de eindverantwoordelijkheid voor ICT-risico, en zijn leden houden hun kennis op peil, onder meer met regelmatige opleidingen (art. 5).</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> geen van beide wetten zegt hoe vaak het bestuur een opleiding volgt, alleen dat het gebeurt, en onder DORA regelmatig. Wij stellen voor vast te leggen wat elk lid volgde en wanneer, en de maatregelen goed te keuren als genotuleerd besluit, niet als een dia die werd getoond.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">"WE WERE BRIEFED" IS NOT "WE APPROVED"</span><span class="nl">"WE ZIJN BIJGEPRAAT" IS NIET "WE HEBBEN GOEDGEKEURD"</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: MINUTE THE APPROVAL, RECORD THE TRAINING</span><span class="nl">AANBEVOLEN: NOTULEER DE GOEDKEURING, LEG DE OPLEIDING VAST</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Training written two years ago says little about deepfakes or AI agents. A board that trained once may judge today's risks with yesterday's picture.</span><span class="nl">Een opleiding van twee jaar geleden zegt weinig over deepfakes of AI-agents. Een bestuur dat één keer trainde, beoordeelt de risico's van vandaag misschien met het beeld van gisteren.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An AI summary of the board pack is not the same as reading it. The approval still carries each member's name.</span><span class="nl">Een AI-samenvatting van de vergaderstukken is niet hetzelfde als ze lezen. De goedkeuring draagt nog steeds de naam van elk lid.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Short and current</span><span class="nl">Kort en actueel</span></b><p><span class="en">Short, regular sessions on current threats, AI included, keep the knowledge in step. A yearly slide deck rarely does.</span><span class="nl">Korte, regelmatige sessies over actuele dreigingen, AI inbegrepen, houden de kennis bij. Een jaarlijkse presentatie doet dat zelden.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What good governance <em>looks like on paper.</em></span>
+      <span class="nl">Hoe goede governance <em>er op papier uitziet.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">most of this is a board decision, a line in the minutes or a page in the pack</span>
+      <span class="nl">het meeste is een bestuursbesluit, een regel in de notulen of een pagina in de stukken</span>
+    </span>
+
+    <div class="stage sc">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">RISK APPETITE</span><span class="nl">RISICOBEREIDHEID</span></span>
+        <span class="chip c2"><span class="en">DIRECT LINE</span><span class="nl">DIRECTE LIJN</span></span>
+        <span class="chip c3"><span class="en">FIVE NUMBERS</span><span class="nl">VIJF GETALLEN</span></span>
+        <span class="chip c4"><span class="en">OUTSIDE VIEW</span><span class="nl">BLIK VAN BUITEN</span></span>
+        <span class="chip c5"><span class="en">MINUTED APPROVAL</span><span class="nl">GENOTULEERD BESLUIT</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Addresses</th><th>In one line</th></tr>
+        <tr><td class="ctl">A written risk appetite</td><td>Budget (01)</td><td>Which services must not stop, and how much loss the board accepts. The budget is then the cost of staying within it.</td></tr>
+        <tr><td class="ctl">Budget reviewed against risk</td><td>Budget (01)</td><td>Once a year, and after a serious incident or a big change. The <abbr class="tip" tabindex="0" data-tip="European Union Agency for Cybersecurity: the EU body that supports Member States and publishes research on cybersecurity.">ENISA</abbr> median is a sanity check, not the answer.</td></tr>
+        <tr><td class="ctl">CISO with a direct line</td><td>Reporting line (02)</td><td>The <abbr class="tip" tabindex="0" data-tip="Chief information security officer: the executive responsible for information security.">CISO</abbr> can bring an issue to the board or its audit or risk committee without asking permission, and meets it without management present at least once a year.</td></tr>
+        <tr><td class="ctl">Five numbers with tolerances</td><td>Five numbers (03)</td><td>The same five outcome numbers every quarter, with green, amber and red agreed in advance. Each number has a named owner.</td></tr>
+        <tr><td class="ctl">Outside view at set moments</td><td>Review (04)</td><td>New CISO, serious incident, merger or big migration, supervisor's visit, a year of green. Commissioned by the board, not the team.</td></tr>
+        <tr><td class="ctl">Minuted approval</td><td>The law (05)</td><td>The board approves the security measures as a recorded decision and sees the follow-up.</td></tr>
+        <tr><td class="ctl">Training record</td><td>The law (05)</td><td>What each member followed and when. Short, regular sessions on current threats rather than one course.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Pakt aan</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Een vastgelegde risicobereidheid</td><td>Budget (01)</td><td>Welke diensten mogen niet stilvallen, en hoeveel verlies aanvaardt het bestuur. Het budget is dan de prijs om daarbinnen te blijven.</td></tr>
+        <tr><td class="ctl">Budget getoetst aan risico</td><td>Budget (01)</td><td>Eens per jaar, en na een ernstig incident of een grote verandering. De <abbr class="tip" tabindex="0" data-tip="Agentschap van de Europese Unie voor cyberbeveiliging: het EU-orgaan dat lidstaten ondersteunt en onderzoek naar cyberbeveiliging publiceert.">ENISA</abbr>-mediaan is een controle op redelijkheid, niet het antwoord.</td></tr>
+        <tr><td class="ctl">CISO met een directe lijn</td><td>Rapportagelijn (02)</td><td>De <abbr class="tip" tabindex="0" data-tip="Chief information security officer: de bestuurder die verantwoordelijk is voor informatiebeveiliging.">CISO</abbr> kan een kwestie bij het bestuur of de audit- of risicocommissie neerleggen zonder toestemming te vragen, en spreekt die minstens eens per jaar zonder het management erbij.</td></tr>
+        <tr><td class="ctl">Vijf getallen met toleranties</td><td>Vijf getallen (03)</td><td>Elk kwartaal dezelfde vijf uitkomstgetallen, met groen, oranje en rood vooraf afgesproken. Elk getal heeft een eigenaar met naam.</td></tr>
+        <tr><td class="ctl">Blik van buiten op vaste momenten</td><td>Toetsing (04)</td><td>Nieuwe CISO, ernstig incident, fusie of grote migratie, bezoek van de toezichthouder, een jaar groen. In opdracht van het bestuur, niet van het team.</td></tr>
+        <tr><td class="ctl">Genotuleerde goedkeuring</td><td>De wet (05)</td><td>Het bestuur keurt de beveiligingsmaatregelen goed als vastgelegd besluit en ziet de opvolging.</td></tr>
+        <tr><td class="ctl">Opleidingsregister</td><td>De wet (05)</td><td>Wat elk lid volgde en wanneer. Korte, regelmatige sessies over actuele dreigingen in plaats van één cursus.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> "how much security is enough" has no number, but it has an answer: enough to stay within the risk the board has agreed to accept. We suggest five questions to get there. Have we written down our risk appetite, and does the budget follow it? Can our CISO reach us without permission? Do we see the same five numbers every quarter, against tolerances we set? When did someone from outside last check them? And can we show, in the minutes, that we approved the measures and followed the training the law asks of us?</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> "hoeveel beveiliging is genoeg" heeft geen getal, maar wel een antwoord: genoeg om binnen het risico te blijven dat het bestuur heeft afgesproken te aanvaarden. Wij stellen vijf vragen voor om daar te komen. Hebben we onze risicobereidheid vastgelegd, en volgt het budget die? Kan onze CISO ons bereiken zonder toestemming? Zien we elk kwartaal dezelfde vijf getallen, tegen toleranties die wij vaststelden? Wanneer heeft iemand van buiten die voor het laatst gecontroleerd? En kunnen we in de notulen laten zien dat we de maatregelen hebben goedgekeurd en de opleiding hebben gevolgd die de wet van ons vraagt?</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">Without a written risk appetite and agreed tolerances, a board cannot tell enough from too little. That is the starting position until someone sets them.</span><span class="nl">Zonder vastgelegde risicobereidheid en afgesproken toleranties kan een bestuur genoeg niet van te weinig onderscheiden. Dat is de uitgangssituatie tot iemand ze vaststelt.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Money goes to the wrong things, bad news stops below the board, and after an incident the board cannot show it approved or oversaw anything. Under the Cyberbeveiligingswet that can become personal.</span><span class="nl">Geld gaat naar de verkeerde dingen, slecht nieuws stopt onder het bestuur, en na een incident kan het bestuur niet laten zien dat het iets goedkeurde of bewaakte. Onder de Cyberbeveiligingswet kan dat persoonlijk worden.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low</span><span class="nl">Laag</span></span><p><span class="en">Governance does not stop attacks. With an appetite, a direct line, five numbers and an outside view, the board knows where it stands and can show it.</span><span class="nl">Governance houdt geen aanvallen tegen. Met een risicobereidheid, een directe lijn, vijf getallen en een blik van buiten weet het bestuur waar het staat en kan het dat laten zien.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">The board</span><span class="nl">Het bestuur</span></span><p><span class="en">The <abbr class="tip" tabindex="0" data-tip="Chief information security officer: the executive responsible for information security.">CISO</abbr> runs the programme and reports on it. Approving it, funding it and overseeing it stay with the board.</span><span class="nl">De <abbr class="tip" tabindex="0" data-tip="Chief information security officer: de bestuurder die verantwoordelijk is voor informatiebeveiliging.">CISO</abbr> voert het programma uit en rapporteert erover. Goedkeuren, financieren en toezien blijven bij het bestuur.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers about the governance itself</span><span class="nl">Vier getallen over de governance zelf</span></span><p><span class="en">Quarters in a row the dashboard arrived on time · tolerances breached and not discussed · months since the last outside view · board members with a current training record.</span><span class="nl">Kwartalen op rij dat het dashboard op tijd kwam · overschreden toleranties die niet zijn besproken · maanden sinds de laatste blik van buiten · bestuursleden met een actueel opleidingsregister.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Security spending, reporting and oversight are not tied to an agreed risk appetite, so that the board cannot judge whether security is sufficient, which can lead to an avoidable incident and to a board that cannot show it met its legal duties.”</span><span class="nl">“Beveiligingsuitgaven, rapportage en toezicht zijn niet gekoppeld aan een afgesproken risicobereidheid, zodat het bestuur niet kan beoordelen of de beveiliging volstaat, wat kan leiden tot een vermijdbaar incident en tot een bestuur dat niet kan aantonen dat het zijn wettelijke plichten nakwam.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it asks of the board</th><th>What to ask a supplier</th><th>When an incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU directive on cybersecurity for essential and important entities; in the Netherlands the Cyberbeveiligingswet.">NIS2</abbr> requires management bodies to approve the security measures, oversee them and follow training, and makes them liable (Art. 20). The measures include policies to assess their effectiveness (Art. 21(2)(f)). Supervisors can order an independent audit of essential entities (Art. 32(2)). The Cyberbeveiligingswet has been in force since 15 August 2026.</td><td>Ask who in their organisation approves security, and how often their board sees it. A supplier that cannot answer has no owner for your risk.</td><td>An incident can count as a significant incident if it meets the thresholds. Early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month.</td></tr>
+        <tr><td class="ctl">DORA</td><td>The management body defines, approves and oversees the ICT risk framework and bears the ultimate responsibility (Art. 5(2)). It allocates the budget and approves the ICT audit plans (Art. 5(2)(f)–(g)), and its members train regularly (Art. 5(4)). ICT risk sits with an independent control function, and internal audit checks the framework (Art. 6(4) and 6(6)). DORA has applied since 17 January 2025.</td><td>The management body sets up reporting channels so it hears about ICT supplier arrangements and planned material changes (Art. 5(2)(i)). Ask suppliers behind critical functions for what you need to feed them.</td><td>Classify promptly. Initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterion CC1.2 asks the board to be independent of management and to oversee internal control. CC1.3 covers structures, reporting lines and responsibilities.</td><td>Read the description of the control environment: who leads security, who they report to, and how the board oversees it.</td><td>An incident caused by a control failure will likely appear as an exception in the next report.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>The focus is financial reporting. Security governance appears only where it supports the controls in scope.</td><td>The report rarely shows how the supplier's board oversees security. Ask for it in the contract, together with their security reporting.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van het bestuur vraagt</th><th>Wat u een leverancier vraagt</th><th>Als een incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor cyberbeveiliging van essentiële en belangrijke entiteiten; in Nederland de Cyberbeveiligingswet.">NIS2</abbr> verplicht bestuursorganen de beveiligingsmaatregelen goed te keuren, erop toe te zien en een opleiding te volgen, en maakt hen aansprakelijk (art. 20). Bij de maatregelen hoort beleid om de doeltreffendheid ervan te beoordelen (art. 21 lid 2 onder f). De toezichthouder kan een onafhankelijke audit van essentiële entiteiten opleggen (art. 32 lid 2). De Cyberbeveiligingswet is van kracht sinds 15 augustus 2026.</td><td>Vraag wie in hun organisatie de beveiliging goedkeurt, en hoe vaak hun bestuur die ziet. Een leverancier die dat niet weet, heeft geen eigenaar voor uw risico.</td><td>Een incident kan als significant incident gelden als het de drempels haalt. Vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindverslag binnen een maand.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Het leidinggevend orgaan bepaalt het kader voor ICT-risicobeheer, keurt het goed, houdt toezicht op de uitvoering en is ervoor verantwoordelijk; het draagt de eindverantwoordelijkheid voor ICT-risico (art. 5 lid 2). Het wijst het budget toe en keurt de ICT-auditplannen goed (art. 5 lid 2 onder f en g), en zijn leden volgen regelmatig opleidingen (art. 5 lid 4). ICT-risico ligt bij een onafhankelijke controlefunctie, en interne audit controleert het kader (art. 6 lid 4 en lid 6). DORA geldt sinds 17 januari 2025.</td><td>Het leidinggevend orgaan richt rapportagekanalen in, zodat het hoort over afspraken met ICT-leveranciers en geplande wezenlijke wijzigingen (art. 5 lid 2 onder i). Vraag leveranciers achter kritieke functies om wat u nodig hebt om die te voeden.</td><td>Classificeer snel. Eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterium CC1.2 vraagt een bestuur dat onafhankelijk is van het management en toeziet op de interne beheersing. CC1.3 gaat over structuren, rapportagelijnen en verantwoordelijkheden.</td><td>Lees de beschrijving van de beheersomgeving: wie de beveiliging leidt, aan wie die rapporteert, en hoe het bestuur toezicht houdt.</td><td>Een incident door een falende beheersmaatregel komt waarschijnlijk als afwijking in het volgende rapport.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>De focus ligt op de financiële verslaggeving. Beveiligingsgovernance komt alleen voor waar die de beheersmaatregelen in scope ondersteunt.</td><td>Het rapport laat zelden zien hoe het bestuur van de leverancier toezicht houdt op beveiliging. Vraag daar in het contract om, samen met hun beveiligingsrapportage.</td><td>ISAE 3402 schept geen meldplicht aan de auditors van gebruikers. Verwacht een afwijking in het volgende rapport en vraag in het contract om tussentijdse melding.</td></tr>
+      </table>
+      <p class="sources en">Checked against: <a href="https://www.enisa.europa.eu/publications/nis-investments-2025">ENISA NIS Investments 2025</a> (Dec 2025), <a href="https://www.gov.uk/government/publications/cyber-governance-code-of-practice">UK Cyber Governance Code of Practice</a> (DSIT and NCSC UK, Apr 2025), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 20, 21, 23 and 32, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 5, 6 and 19, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL on the Cyberbeveiligingswet</a> (Aug 2026), AICPA Trust Services Criteria CC1.2 and CC1.3 (2017, points of focus 2022) · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://www.enisa.europa.eu/publications/nis-investments-2025">ENISA NIS Investments 2025</a> (dec 2025), <a href="https://www.gov.uk/government/publications/cyber-governance-code-of-practice">Britse Cyber Governance Code of Practice</a> (DSIT en NCSC UK, apr 2025), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 20, 21, 23 en 32, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 5, 6 en 19, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC over de Cyberbeveiligingswet</a> (aug 2026), AICPA Trust Services Criteria CC1.2 en CC1.3 (2017, aandachtspunten 2022) · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../nis2-dora/"><span class="en">NIS2 and DORA</span><span class="nl">NIS2 en DORA</span></a> ·
+  <a href="../detection/"><span class="en">Detection</span><span class="nl">Detectie</span></a> ·
+  <a href="../cyber-insurance/"><span class="en">Cyber insurance</span><span class="nl">Cyberverzekering</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=security-governance&amp;title=Missing%3A%20security-governance"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=security-governance&amp;title=Correction%3A%20security-governance"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">GOVERNANCE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">GOVERNANCE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>
