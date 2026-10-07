@@ -77,7 +77,7 @@ SB_TAGS = [  # (EN label, NL label, status, tip)
     ("WORKSPACE COPY", "WERKKOPIE", "ok",
      (["Workspace · a copy, not the original", "A fresh clone of the code or a sample of", "the data. Changes leave only as a", "reviewed proposal."],
       ["Werkkopie · een kopie, niet het origineel", "Een verse kopie van de code of een", "steekproef van de data. Wijzigingen gaan", "alleen als beoordeeld voorstel naar buiten."])),
-    ("FAKE OR MASKED DATA", "NEP- OF MASKERDATA", "ok",
+    ("FAKE OR MASKED DATA", "NEP OF GEMASKEERD", "ok",
      (["Test data · fake or masked", "Synthetic or masked records instead of", "real customers. Personal data in a test", "is still covered by the GDPR."],
       ["Testdata · nep of gemaskeerd", "Synthetische of gemaskeerde records in", "plaats van echte klanten. Persoonsgegevens", "in een test vallen ook onder de AVG."])),
     ("NO STANDING KEYS", "GEEN VASTE SLEUTELS", "ok",
