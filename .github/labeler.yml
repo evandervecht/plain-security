@@ -79,6 +79,8 @@ sponsor:
   - '(edge device|randapparatuur|\bvpn\b|firewall|netscaler|fortigate|fortinet|ivanti|palo alto|remote.?access gateway|load balancer|zero.?trust|ztna|management interface|beheerinterface)'
 'page: backups-and-restore':
   - '(back-?ups?|restore|herstel|\brto\b|\brpo\b|immutable|onveranderbaar|3-2-1|disaster recovery|noodherstel|business continuity|bedrijfscontinuïteit|recovery test|hersteltest)'
+'page: expiry':
+  - '(expir|verloopt|verlopen|vervaldatum|renewal|verlenging|registrar|registry lock|dnssec|certificate lifetime|47.?days|47.?dagen|sc-?081|\bacme\b)'
 'page: cloud-sovereignty':
   - '(sovereign|soeverein|cloud act|data residency|dataresidentie|digital autonomy|digitale autonomie|seal-?[0-4])'
 'page: cada-vs-sovereignty-framework':
