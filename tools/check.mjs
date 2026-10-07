@@ -114,7 +114,7 @@ async function browserChecks(list) {
     `--user-data-dir=${mkdtempSync(join(tmpdir(), "ps-check-"))}`, "about:blank"], { stdio: ["ignore", "ignore", "pipe"] });
   const wsUrl = await new Promise((res, rej) => {
     let buf = ""; proc.stderr.on("data", d => { buf += d; const m = buf.match(/DevTools listening on (ws:\/\/\S+)/); if (m) res(m[1]); });
-    setTimeout(() => rej(new Error("browser did not start")), 15000);
+    setTimeout(() => rej(new Error("browser did not start")), 30000);
   });
   const port = new URL(wsUrl).port;
   const target = await (await fetch(`http://127.0.0.1:${port}/json/new?about:blank`, { method: "PUT" })).json();
