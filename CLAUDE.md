@@ -21,6 +21,24 @@ The pre-commit hook automatically validates version pins and prevents regression
 3. Note any functional tests skipped (e.g., workflow not run in CI) and how they'll be confirmed (e.g., "first briefing PR will confirm").
 4. Document findings in the PR body under a "Risk" section.
 
+### UTF-8 encoding validation
+
+All HTML, SVG, and Python files (especially briefing pages and diagram generators) must be UTF-8 encoded. A pre-commit hook in `.githooks/pre-commit` validates this before each commit. After the first clone or branch switch, enable the hook:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+The hook checks staged `.html`, `.svg`, and `.py` files for correct UTF-8 encoding and prevents commit if any file has mojibake or mixed encoding. If you hit the error:
+
+```bash
+iconv -f iso-8859-1 -t utf-8 <file> > <file>.tmp && mv <file>.tmp <file>
+```
+
+or re-save the file as UTF-8 in your editor, then stage and commit again.
+
+**Why:** Character-encoding corruption (mojibake) in briefing pages breaks Dutch accents and special characters for readers. PR #63 shipped with undetected UTF-8 corruption; this hook prevents recurrence.
+
 ### Worktree cleanup after merge
 
 When a PR merges, its worktree (e.g., `C:/Work/ps-issue42` for issue-42) becomes stale and should be deleted. After a successful merge:
