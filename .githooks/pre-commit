@@ -1,37 +1,80 @@
-#!/bin/bash
-# Pre-commit hook: validate UTF-8 encoding on HTML, SVG, and Python generator files
-# Prevents character-encoding corruption (e.g., mojibake) in briefing pages and generators
+#!/usr/bin/env bash
+# Pre-commit hook: validate UTF-8 encoding and GitHub Actions versions
+# - UTF-8 check: Prevents character-encoding corruption (mojibake) in briefing pages and generators
+# - Actions check: Prevents accidental downgrade or loose pinning of GitHub Actions versions
 
 set -e
 
-# Get the list of staged files
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=d)
+ENCODING_ISSUES=0
+ACTIONS_ISSUES=0
 
-# Filter for files that should be UTF-8 (HTML, SVG, Python in tools/)
+# UTF-8 Encoding Check
+# ====================
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=d)
 CHECKED_FILES=$(echo "$STAGED_FILES" | grep -E '\.(html|svg|py)$' || true)
 
-if [ -z "$CHECKED_FILES" ]; then
-  exit 0
+if [ -n "$CHECKED_FILES" ]; then
+  while IFS= read -r file; do
+    if [ -f "$file" ]; then
+      mime_type=$(file --mime-encoding "$file" | cut -d: -f2 | xargs)
+      if [ "$mime_type" != "utf-8" ]; then
+        echo "ERROR: $file is encoded as $mime_type, not utf-8"
+        ENCODING_ISSUES=$((ENCODING_ISSUES + 1))
+      fi
+    fi
+  done <<< "$CHECKED_FILES"
+
+  if [ $ENCODING_ISSUES -gt 0 ]; then
+    echo ""
+    echo "ENCODING CHECK FAILED: $ENCODING_ISSUES file(s) with incorrect encoding."
+    echo "Fix with: iconv -f <current-encoding> -t utf-8 <file> > <file>.tmp && mv <file>.tmp <file>"
+    echo "Or re-save the file as UTF-8 in your editor."
+    echo ""
+  fi
 fi
 
-# Check each file for UTF-8 encoding
-ENCODING_ISSUES=0
-while IFS= read -r file; do
-  if [ -f "$file" ]; then
-    mime_type=$(file --mime-encoding "$file" | cut -d: -f2 | xargs)
-    if [ "$mime_type" != "utf-8" ]; then
-      echo "ERROR: $file is encoded as $mime_type, not utf-8"
-      ENCODING_ISSUES=$((ENCODING_ISSUES + 1))
-    fi
+# GitHub Actions Version Check
+# ============================
+for workflow in .github/workflows/*.yml; do
+  if [ ! -f "$workflow" ]; then
+    continue
   fi
-done <<< "$CHECKED_FILES"
 
-if [ $ENCODING_ISSUES -gt 0 ]; then
+  # Extract action lines
+  grep -E "^\s*-\s+uses:\s+(actions/checkout|actions/setup-node)@" "$workflow" | while read -r line; do
+    # Extract the version/SHA part (after @)
+    version=$(echo "$line" | sed -E 's/.*@([^ #]+).*/\1/')
+
+    # Check for loose version pins (v7, v7.0, etc. without SHA)
+    if echo "$version" | grep -qE '^v[0-9]'; then
+      echo "✗ $workflow: Loose version pin found: $version"
+      echo "  Use SHA-pinned versions (e.g., 3d3c42e5... # v7.0.1)"
+      ACTIONS_ISSUES=$((ACTIONS_ISSUES + 1))
+    fi
+
+    # Check for regressions (v4.x or v6.x)
+    action_name=$(echo "$line" | sed -E 's/.*uses:\s*([^ @]+).*/\1/')
+    if git show HEAD:"$workflow" 2>/dev/null | grep -E "^\s*-\s+uses:\s+$action_name@" | grep -qE '@(v4|v6)'; then
+      # Version changed; check if it's a downgrade
+      if echo "$version" | grep -qE '^(v4|v6)'; then
+        echo "✗ $workflow: Regression detected in $action_name"
+        echo "  CLAUDE.md requires v7.0.x (SHA-pinned). Found: $version"
+        ACTIONS_ISSUES=$((ACTIONS_ISSUES + 1))
+      fi
+    fi
+  done
+done
+
+if [ $ACTIONS_ISSUES -gt 0 ]; then
   echo ""
-  echo "ENCODING CHECK FAILED: $ENCODING_ISSUES file(s) with incorrect encoding."
-  echo "Fix with: iconv -f <current-encoding> -t utf-8 <file> > <file>.tmp && mv <file>.tmp <file>"
-  echo "Or re-save the file as UTF-8 in your editor."
+  echo "ACTIONS CHECK FAILED: $ACTIONS_ISSUES issue(s) found."
+  echo ""
+fi
+
+# Exit with failure if any checks failed
+if [ $ENCODING_ISSUES -gt 0 ] || [ $ACTIONS_ISSUES -gt 0 ]; then
   exit 1
 fi
 
+# All checks passed
 exit 0
