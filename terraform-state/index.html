@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Terraform state: the map of everything you run // Plain Security</title>
+<meta name="description" content="What Terraform state is, why it holds the map of your infrastructure and often its passwords, locking and versions, the chicken-and-egg of where it lives, and HCP Terraform, GitLab, S3 and Azure compared.">
+<link rel="canonical" href="https://plain-security.fyi/terraform-state/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Terraform state: the map of everything you run // Plain Security">
+<meta property="og:description" content="What Terraform state is, why it holds the map of your infrastructure and often its passwords, locking and versions, the chicken-and-egg of where it lives, and HCP Terraform, GitLab, S3 and Azure compared.">
+<meta property="og:url" content="https://plain-security.fyi/terraform-state/">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="nl_NL">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   TERRAFORM STATE // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 7s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+
+/* --- scene 1 : code, state, cloud --- */
+.s1 .col{position:absolute;top:58px;width:24%;height:132px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 8px}
+.s1 .col b{display:block;font-family:var(--sans);font-size:15px;letter-spacing:0;color:var(--white);text-transform:none}
+.s1 .col.c{left:5%}.s1 .col.m{left:38%;border-color:var(--brand)}.s1 .col.r{right:5%}
+.s1 .col.m{animation:lose 8s ease-in-out infinite}
+@keyframes lose{0%,55%{opacity:1;border-style:solid}65%,90%{opacity:.25;border-style:dashed}100%{opacity:1}}
+.s1 .ln{position:absolute;top:122px;height:2px;width:9%;background:var(--brand);animation:link 8s ease-in-out infinite}
+.s1 .ln.a{left:29%}.s1 .ln.b{left:62%}
+@keyframes link{0%,55%{opacity:1}65%,90%{opacity:0}100%{opacity:1}}
+
+/* --- scene 2 : secrets in a readable file --- */
+.s2 .file{position:absolute;left:40px;width:56%;top:50px;display:grid;gap:8px}
+.s2 .f{height:38px;display:flex;align-items:center;gap:12px;padding:0 14px;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.1em;color:var(--muted)}
+.s2 .f b{flex:none;width:110px;color:var(--white);font-weight:700}
+.s2 .f .sec{color:var(--bad-soft);font-weight:700;animation:reveal 8s ease-in-out infinite}
+@keyframes reveal{0%,30%{filter:blur(5px)}40%,90%{filter:none}100%{filter:blur(5px)}}
+.s2 .bkt{position:absolute;right:40px;top:50px;width:30%;height:132px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;border:1px solid rgba(55,211,155,.55);background:rgba(55,211,155,.06);font-size:10px;letter-spacing:.14em;color:#8ff0cd;text-transform:uppercase;padding:0 8px}
+.s2 .bkt b{display:block;font-family:var(--sans);font-size:15px;letter-spacing:0;color:var(--white);text-transform:none}
+
+/* --- scene 3 : two writers, one lock --- */
+.s3 .who{position:absolute;left:6%;width:26%;height:54px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.s3 .who.w1{top:56px}.s3 .who.w2{top:150px}
+.s3 .ar{position:absolute;left:33%;width:28%;height:2px;background:var(--brand)}
+.s3 .ar.a1{top:82px;animation:go1 8s ease-in-out infinite}.s3 .ar.a2{top:176px;background:var(--bad);animation:go2 8s ease-in-out infinite}
+@keyframes go1{0%,10%{opacity:0}18%,45%{opacity:1}55%,100%{opacity:0}}
+@keyframes go2{0%,30%{opacity:0}38%,45%{opacity:1}52%,100%{opacity:0}}
+.s3 .st{position:absolute;right:8%;top:70px;width:28%;height:120px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--brand);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.s3 .st b{display:block;font-family:var(--sans);font-size:15px;letter-spacing:0;color:var(--white);text-transform:none}
+.s3 .lk{position:absolute;right:8%;top:42px;font-size:10px;letter-spacing:.16em;font-weight:700;color:var(--warn);border:1px solid rgba(255,200,87,.5);padding:2px 8px;opacity:0;animation:lock 8s ease-in-out infinite}
+@keyframes lock{0%,15%{opacity:0}20%,55%{opacity:1}62%,100%{opacity:0}}
+
+/* --- scene 4 : the chicken and the egg --- */
+.s4 .rung{position:absolute;left:40px;right:40px;height:54px;display:flex;align-items:center;gap:16px;padding:0 16px;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.s4 .rung b{flex:none;width:110px;font-family:var(--sans);font-size:14px;letter-spacing:0;color:var(--white);text-transform:none}
+.s4 .rung span.en,.s4 .rung span.nl{flex:1}
+.s4 .rung.r1{top:48px}.s4 .rung.r2{top:112px}.s4 .rung.r3{top:176px}
+.s4 .rung::after{content:"";position:absolute;inset:0;border:1px solid var(--brand);background:rgba(90,200,250,.08);opacity:0;animation:climb 9s ease-in-out infinite}
+.s4 .rung.r2::after{animation-delay:3s}.s4 .rung.r3::after{animation-delay:6s}
+@keyframes climb{0%,2%{opacity:0}8%,28%{opacity:1}34%,100%{opacity:0}}
+.s4 .banner{animation-duration:9s}
+
+/* --- scene 5 : where state lives --- */
+.s5b .bx{position:absolute;top:66px;width:21%;height:124px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;padding:0 8px}
+.s5b .bx b{display:block;font-family:var(--sans);font-size:14px;letter-spacing:0;color:var(--white);text-transform:none}
+.s5b .bx.b1{left:3%}.s5b .bx.b2{left:27.3%}.s5b .bx.b3{left:51.6%}.s5b .bx.b4{left:76%}
+.s5b .bx::after{content:"";position:absolute;inset:0;border:1px solid var(--brand);opacity:0;animation:look 12s ease-in-out infinite}
+.s5b .bx.b2::after{animation-delay:3s}.s5b .bx.b3::after{animation-delay:6s}.s5b .bx.b4::after{animation-delay:9s}
+@keyframes look{0%,2%{opacity:0}6%,22%{opacity:1}26%,100%{opacity:0}}
+.s5b .banner{animation-duration:12s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .s2 .f .sec{filter:none}
+  .s3 .ar,.s3 .lk{opacity:1}
+  .s4 .rung::after,.s5b .bx::after{opacity:0}
+  .banner{opacity:1}.shield .tick{stroke-dashoffset:0}
+}
+@media (max-width:820px){
+  .s1 .col{width:28%;font-size:8px;letter-spacing:.04em}.s1 .col.c{left:2%}.s1 .col.m{left:36%}.s1 .col.r{right:2%}
+  .s1 .col b{font-size:12px}.s1 .ln{width:6%}.s1 .ln.a{left:30%}.s1 .ln.b{left:64%}
+  .s2 .file{left:12px;width:58%}.s2 .f{font-size:8px;letter-spacing:.02em;gap:6px;padding:0 6px}.s2 .f b{width:62px}
+  .s2 .bkt{right:12px;width:34%;font-size:8px;letter-spacing:.04em}.s2 .bkt b{font-size:12px}
+  .s3 .who{font-size:8px;letter-spacing:.04em;width:30%;left:3%}.s3 .ar{left:34%;width:24%}
+  .s3 .st{font-size:8px;letter-spacing:.04em;width:34%;right:3%}.s3 .st b{font-size:12px}.s3 .lk{right:3%;font-size:8px}
+  .stage.s2,.stage.s4{height:330px}.s3 .st{padding:0 6px}
+  .s4 .rung{left:12px;right:12px;font-size:8px;letter-spacing:.04em;gap:8px;padding:0 10px}
+  .s4 .rung b{width:76px;font-size:11px}
+  .s5b .bx{width:23%;font-size:7px;letter-spacing:.02em;padding:0 4px}.s5b .bx b{font-size:10.5px}
+  .s5b .bx.b1{left:1.5%}.s5b .bx.b2{left:26.2%}.s5b .bx.b3{left:50.8%}.s5b .bx.b4{left:75.5%}
+  .stage .banner{white-space:normal;text-align:center;width:calc(100% - 24px);line-height:1.4}
+}
+
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> <span class="en">TERRAFORM STATE</span><span class="nl">TERRAFORM STATE</span></a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">THE MAP</span><span class="nl">DE KAART</span></a>
+      <a href="#r2"><span class="en">SECRETS</span><span class="nl">GEHEIMEN</span></a>
+      <a href="#r3"><span class="en">LOCKING</span><span class="nl">VERGRENDELEN</span></a>
+      <a href="#r4"><span class="en">CHICKEN &amp; EGG</span><span class="nl">KIP &amp; EI</span></a>
+      <a href="#r5"><span class="en">WHERE IT LIVES</span><span class="nl">WAAR HET STAAT</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Terraform state: <em>the map of everything you run.</em></span>
+      <span class="nl">Terraform state: <em>de kaart van alles wat u draait.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Many teams no longer build servers, networks and cloud accounts by hand. They describe them in text files, and a tool such as Terraform builds them. To know what it built, the tool keeps one file: the state. That file is a complete map of your infrastructure, it often holds passwords, and without it the tool no longer knows what it owns. Five things decide whether it is an asset or a liability.</span>
+      <span class="nl">Veel teams bouwen servers, netwerken en cloudaccounts niet meer met de hand. Ze beschrijven ze in tekstbestanden, en een tool als Terraform bouwt ze. Om te weten wat hij bouwde, houdt de tool één bestand bij: de state. Dat bestand is een volledige kaart van uw infrastructuur, bevat vaak wachtwoorden, en zonder dat bestand weet de tool niet meer wat van hem is. Vijf dingen bepalen of het een bezit is of een risico.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FIVE</span><span class="nl">BEKIJK DE VIJF</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT KEEPS IT SAFE</span><span class="nl">WAT HET VEILIG HOUDT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">What state is: <em>the link between the code and the real thing.</em></span>
+      <span class="nl">Wat state is: <em>de koppeling tussen de code en het echte ding.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">infrastructure as code / state file / plan and apply</span>
+      <span class="nl">infrastructure as code / statebestand / plan en apply</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">THREE THINGS THAT MUST AGREE</span><span class="nl">DRIE DINGEN DIE MOETEN KLOPPEN</span></div>
+      <div class="col c"><b><span class="en">The code</span><span class="nl">De code</span></b><span class="en">what you want</span><span class="nl">wat u wilt</span></div>
+      <div class="ln a"></div>
+      <div class="col m"><b><span class="en">The state</span><span class="nl">De state</span></b><span class="en">what was built, and its ID</span><span class="nl">wat gebouwd is, en het ID</span></div>
+      <div class="ln b"></div>
+      <div class="col r"><b><span class="en">The cloud</span><span class="nl">De cloud</span></b><span class="en">what actually runs</span><span class="nl">wat echt draait</span></div>
+      <div class="banner"><span class="en">LOSE THE STATE · THE TOOL FORGETS WHAT IT OWNS</span><span class="nl">STATE KWIJT · DE TOOL VERGEET WAT VAN HEM IS</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">With <abbr class="tip" tabindex="0" data-tip="Infrastructure as code: servers, networks and accounts described in text files that a tool builds, instead of set up by hand.">IaC</abbr>, the code says what you want: three servers, one database, a network. When <abbr class="tip" tabindex="0" data-tip="A widely used infrastructure-as-code tool from HashiCorp.">Terraform</abbr> builds them, the cloud gives each one an ID. Terraform writes those IDs down in the state, by default a text file called <code>terraform.tfstate</code>. Next time, it compares code, state and reality, shows the difference as a plan, and changes only that.</p>
+      <p class="en"><strong>Business impact:</strong> the state is how the tool knows what it is responsible for. Lose it, and Terraform sees an empty world: it may try to build everything a second time, or no longer tidy up what exists. A wrong or outdated state can make it change or delete the wrong thing. It is also a complete, current inventory of your estate, which is useful to you and to an attacker.</p>
+      <p class="nl">Bij <abbr class="tip" tabindex="0" data-tip="Infrastructure as code: servers, netwerken en accounts beschreven in tekstbestanden die een tool bouwt, in plaats van met de hand ingericht.">IaC</abbr> zegt de code wat u wilt: drie servers, één database, een netwerk. Als <abbr class="tip" tabindex="0" data-tip="Een veelgebruikte infrastructure-as-code-tool van HashiCorp.">Terraform</abbr> ze bouwt, geeft de cloud elk een ID. Terraform schrijft die ID's op in de state, standaard een tekstbestand met de naam <code>terraform.tfstate</code>. De volgende keer vergelijkt het code, state en werkelijkheid, toont het verschil als een plan, en verandert alleen dat.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> via de state weet de tool waarvoor hij verantwoordelijk is. Raakt u die kwijt, dan ziet Terraform een lege wereld: het kan alles een tweede keer proberen te bouwen, of niet meer opruimen wat er staat. Een verkeerde of verouderde state kan het verkeerde ding laten wijzigen of verwijderen. Het is ook een volledige, actuele inventaris van uw omgeving, nuttig voor u en voor een aanvaller.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NO STATE · NO MEMORY OF WHAT WAS BUILT</span><span class="nl">GEEN STATE · GEEN GEHEUGEN VAN WAT GEBOUWD IS</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: TREAT STATE AS A CROWN JEWEL, WITH AN OWNER</span><span class="nl">AANBEVOLEN: BEHANDEL STATE ALS KROONJUWEEL, MET EEN EIGENAAR</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">A stolen state file is a map of your estate. AI tools turn it into a list of targets and weak spots in minutes.</span><span class="nl">Een gestolen statebestand is een kaart van uw omgeving. AI-tools maken er in minuten een lijst van doelwitten en zwakke plekken van.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">High</span><span class="nl">Hoog</span></b><p><span class="en">An AI agent allowed to run Terraform can delete whatever the state says it owns, as fast as a person and without hesitating.</span><span class="nl">Een AI-agent die Terraform mag draaien, kan verwijderen wat volgens de state van hem is, net zo snel als een mens en zonder aarzelen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="mid"><span class="en">Review the plan</span><span class="nl">Controleer het plan</span></b><p><span class="en">AI can read a long plan and flag unexpected deletions before anyone approves it. A person still approves.</span><span class="nl">AI kan een lang plan lezen en onverwachte verwijderingen aanwijzen voordat iemand het goedkeurt. Een mens keurt nog steeds goed.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">Secrets in the state, <em>readable by whoever can read the file.</em></span>
+      <span class="nl">Geheimen in de state, <em>leesbaar voor wie het bestand kan lezen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">plain text / encryption at rest / read access</span>
+      <span class="nl">platte tekst / versleuteling in opslag / leesrechten</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">INSIDE THE STATE FILE</span><span class="nl">IN HET STATEBESTAND</span></div>
+      <div class="file">
+        <div class="f"><b>database</b><span>prod-orders · eu-west</span></div>
+        <div class="f"><b>admin_user</b><span>dbadmin</span></div>
+        <div class="f"><b>password</b><span class="sec">Winter2026!prod</span></div>
+        <div class="f"><b>api_key</b><span class="sec">sk-live-7f3a…</span></div>
+      </div>
+      <div class="bkt"><b><span class="en">Bucket encrypted ✔</span><span class="nl">Bucket versleuteld ✔</span></b><span class="en">and decrypted for everyone with read access</span><span class="nl">en ontsleuteld voor iedereen met leesrechten</span></div>
+      <div class="banner"><span class="en">ENCRYPTED AT REST · PLAIN TEXT TO EVERY READER</span><span class="nl">VERSLEUTELD OPGESLAGEN · LEESBAAR VOOR ELKE LEZER</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">HashiCorp's documentation is clear: if a secret is in the configuration, Terraform stores it in the state and the plan. The state itself is a JSON text file. Cloud storage encrypts it at rest by default, but AWS and Microsoft both decrypt it automatically for anyone allowed to read it. Encryption at rest protects against a stolen disk, not against a colleague, a pipeline or an attacker who holds read rights.</p>
+      <p class="en"><strong>Business impact:</strong> everyone who can read the state can read the database passwords and keys inside it. That list is usually longer than anyone thinks: platform engineers, the pipeline, its runners, and in GitLab by default every Developer on the project. Newer Terraform and provider features can keep a secret out of the state altogether, where the provider supports them. A key held in a separate key service, such as <abbr class="tip" tabindex="0" data-tip="Key Management Service: the AWS service that holds encryption keys and decides who may use them.">KMS</abbr>, adds a second gate: no key permission, no readable file.</p>
+      <p class="nl">De documentatie van HashiCorp is duidelijk: staat een geheim in de configuratie, dan slaat Terraform het op in de state en in het plan. De state zelf is een JSON-tekstbestand. Cloudopslag versleutelt het standaard, maar AWS en Microsoft ontsleutelen het allebei automatisch voor iedereen die het mag lezen. Versleuteling in opslag beschermt tegen een gestolen schijf, niet tegen een collega, een pipeline of een aanvaller met leesrechten.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> iedereen die de state kan lezen, kan de databasewachtwoorden en sleutels erin lezen. Die lijst is meestal langer dan iemand denkt: platformengineers, de pipeline, de runners ervan, en in GitLab standaard elke Developer op het project. Nieuwere functies van Terraform en providers kunnen een geheim helemaal buiten de state houden, waar de provider dat ondersteunt. Een sleutel in een aparte sleuteldienst, zoals <abbr class="tip" tabindex="0" data-tip="Key Management Service: de AWS-dienst die versleutelingssleutels bewaart en bepaalt wie ze mag gebruiken.">KMS</abbr>, voegt een tweede slot toe: geen sleutelrecht, geen leesbaar bestand.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">READ ACCESS TO STATE = ACCESS TO ITS SECRETS</span><span class="nl">LEESRECHT OP STATE = TOEGANG TOT DE GEHEIMEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: KEEP SECRETS OUT, AND KEEP THE READER LIST SHORT</span><span class="nl">AANBEVOLEN: HOUD GEHEIMEN ERBUITEN, EN DE LIJST LEZERS KORT</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">An attacker who finds one state file can have AI pick out every password, key and connection string in seconds.</span><span class="nl">Een aanvaller die één statebestand vindt, laat AI er in seconden elk wachtwoord, elke sleutel en elke verbindingsgegeven uithalen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An engineer pastes a state file or plan into a public AI chat to debug an error, and the secrets inside leave with it.</span><span class="nl">Een engineer plakt een statebestand of plan in een publieke AI-chat om een fout op te lossen, en de geheimen erin gaan mee.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Find them first</span><span class="nl">Vind ze eerst</span></b><p><span class="en">Secret scanners, increasingly AI-assisted, can check state files and repositories for live credentials before an attacker does.</span><span class="nl">Geheimenscanners, steeds vaker met AI, kunnen statebestanden en repositories op werkende inloggegevens controleren voordat een aanvaller dat doet.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">Two writers, one file: <em>locking, versions and a way back.</em></span>
+      <span class="nl">Twee schrijvers, één bestand: <em>vergrendelen, versies en een weg terug.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">state locking / versioning / restore</span>
+      <span class="nl">vergrendeling / versiebeheer / herstel</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">ONE STATE, TWO CHANGES AT ONCE</span><span class="nl">ÉÉN STATE, TWEE WIJZIGINGEN TEGELIJK</span></div>
+      <div class="who w1"><span class="en">PIPELINE</span><span class="nl">PIPELINE</span></div>
+      <div class="who w2"><span class="en">ENGINEER'S LAPTOP</span><span class="nl">LAPTOP ENGINEER</span></div>
+      <div class="ar a1"></div>
+      <div class="ar a2"></div>
+      <div class="lk"><span class="en">🔒 LOCKED</span><span class="nl">🔒 VERGRENDELD</span></div>
+      <div class="st"><b>state</b><span class="en">one writer at a time</span><span class="nl">één schrijver tegelijk</span></div>
+      <div class="banner"><span class="en">NO LOCK · TWO WRITERS · A CORRUPTED MAP</span><span class="nl">GEEN SLOT · TWEE SCHRIJVERS · EEN BESCHADIGDE KAART</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">If two people or pipelines change the same infrastructure at once, both write the state, and one overwrites the other. Locking stops that: the first one in holds the lock, the second waits. Some storage gives you locking automatically. With Amazon S3 it is switched off unless you turn it on. Versioning keeps every earlier copy of the state, so a bad write can be undone. HashiCorp highly recommends it for S3.</p>
+      <p class="en"><strong>Business impact:</strong> a corrupted or overwritten state can lead Terraform to rebuild or remove production systems, and the repair is slow, manual work by your most senior engineers. Terraform has a command to break a stuck lock, with a warning in its own documentation to be very careful with it. Worth asking: is locking on, is versioning on, and has anyone ever restored an old state version?</p>
+      <p class="nl">Als twee mensen of pipelines tegelijk dezelfde infrastructuur wijzigen, schrijven ze allebei de state, en overschrijft de een de ander. Vergrendelen voorkomt dat: wie het eerst komt, houdt het slot, de tweede wacht. Sommige opslag geeft u dat slot automatisch. Bij Amazon S3 staat het uit tot u het aanzet. Versiebeheer bewaart elke eerdere kopie van de state, zodat een foute schrijfactie terug te draaien is. HashiCorp raadt dat voor S3 sterk aan.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een beschadigde of overschreven state kan Terraform productiesystemen laten herbouwen of verwijderen, en het herstel is traag handwerk door uw meest ervaren engineers. Terraform heeft een commando om een vastgelopen slot te breken, met in de eigen documentatie de waarschuwing daar heel voorzichtig mee te zijn. Het loont om te vragen: staat vergrendeling aan, staat versiebeheer aan, en heeft iemand ooit een oude stateversie teruggezet?</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NO LOCK, NO VERSIONS · NO WAY BACK</span><span class="nl">GEEN SLOT, GEEN VERSIES · GEEN WEG TERUG</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: LOCKING AND VERSIONING ON, AND ONE RESTORE TEST A YEAR</span><span class="nl">AANBEVOLEN: VERGRENDELING EN VERSIEBEHEER AAN, EN ÉÉN HERSTELTEST PER JAAR</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="lo"><span class="en">Low</span><span class="nl">Laag</span></b><p><span class="en">Locking is a safety catch against accidents more than attackers. AI changes little for an outsider here.</span><span class="nl">Vergrendeling is een veiligheidspal tegen ongelukken, meer dan tegen aanvallers. Voor een buitenstaander verandert AI hier weinig.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">An AI agent that hits a stuck lock may "fix" it by forcing the lock open, the one step the documentation warns against.</span><span class="nl">Een AI-agent die op een vastgelopen slot stuit, kan het "oplossen" door het slot te forceren, precies de stap waar de documentatie voor waarschuwt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Spot the drift</span><span class="nl">Zie de afwijking</span></b><p><span class="en">AI can summarise where code, state and the real estate disagree, so a team fixes drift before it causes a bad apply.</span><span class="nl">AI kan samenvatten waar code, state en de echte omgeving verschillen, zodat een team afwijkingen herstelt voordat ze een foute apply veroorzaken.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">The chicken and the egg: <em>who builds the place where state lives?</em></span>
+      <span class="nl">De kip en het ei: <em>wie bouwt de plek waar de state staat?</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">bootstrap / backend / state migration</span>
+      <span class="nl">bootstrap / backend / statemigratie</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">THE USUAL WAY OUT</span><span class="nl">DE GEBRUIKELIJKE UITWEG</span></div>
+      <div class="rung r1"><b><span class="en">1 · Start local</span><span class="nl">1 · Lokaal starten</span></b><span class="en">a small separate setup keeps its state on one machine for now</span><span class="nl">een kleine aparte opzet houdt zijn state voorlopig op één machine</span></div>
+      <div class="rung r2"><b><span class="en">2 · Build storage</span><span class="nl">2 · Opslag bouwen</span></b><span class="en">that setup creates the bucket: locked, versioned, encrypted</span><span class="nl">die opzet maakt de bucket: vergrendeld, met versies, versleuteld</span></div>
+      <div class="rung r3"><b><span class="en">3 · Move in</span><span class="nl">3 · Verhuizen</span></b><span class="en">the state is copied into the new bucket, and the local copy goes</span><span class="nl">de state wordt naar de nieuwe bucket gekopieerd, en de lokale kopie verdwijnt</span></div>
+      <div class="banner"><span class="en">THE BUCKET THAT HOLDS THE MAP NEEDS ITS OWN GUARD</span><span class="nl">DE BUCKET MET DE KAART HEEFT ZIJN EIGEN BEWAKING NODIG</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Terraform stores state in a <strong>backend</strong>: a storage location such as an S3 bucket or an Azure storage account. That storage has to exist before Terraform can use it. But teams want everything built by Terraform, including that storage. So what builds the bucket that holds the state of the thing that builds the bucket? The backend settings cannot even use variables, so they are fixed before anything runs.</p>
+      <p class="en"><strong>Business impact:</strong> the bottom layer is often built once, by one person, and then forgotten. It holds the state for everything above it, so whoever can delete or change it can make the whole estate unmanageable. There are three common answers. Build it with a small separate Terraform setup and then move its state in, which Terraform supports with <code>terraform init -migrate-state</code>. Build it by hand or with the cloud's own tooling, and document it. Or use a hosted service that provides the storage, so only an account and access tokens remain to protect. Your call; we suggest choosing one on purpose and writing down who owns it.</p>
+      <p class="nl">Terraform bewaart state in een <strong>backend</strong>: een opslagplek zoals een S3-bucket of een Azure-opslagaccount. Die opslag moet bestaan voordat Terraform hem kan gebruiken. Maar teams willen alles door Terraform laten bouwen, ook die opslag. Wat bouwt dan de bucket die de state bewaart van het ding dat de bucket bouwt? De backendinstellingen kunnen zelfs geen variabelen gebruiken, dus ze liggen vast voordat er iets draait.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de onderste laag wordt vaak één keer gebouwd, door één persoon, en dan vergeten. Hij bewaart de state van alles erboven, dus wie hem kan verwijderen of wijzigen, kan de hele omgeving onbeheersbaar maken. Er zijn drie gangbare antwoorden. Bouw hem met een kleine aparte Terraform-opzet en verhuis daarna de state erin, wat Terraform ondersteunt met <code>terraform init -migrate-state</code>. Bouw hem met de hand of met de eigen tooling van de cloud, en leg het vast. Of gebruik een gehoste dienst die de opslag levert, zodat alleen een account en toegangstokens overblijven om te beschermen. Aan u de keuze; wij raden aan er bewust één te kiezen en op te schrijven wie de eigenaar is.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">THE BOTTOM LAYER IS OFTEN BUILT ONCE AND FORGOTTEN</span><span class="nl">DE ONDERSTE LAAG WORDT VAAK ÉÉN KEER GEBOUWD EN VERGETEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE DOCUMENTED BOOTSTRAP, AN OWNER, AND DELETE PROTECTION</span><span class="nl">AANBEVOLEN: ÉÉN GEDOCUMENTEERDE BOOTSTRAP, EEN EIGENAAR, EN VERWIJDERBESCHERMING</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">The account that built the bottom layer often keeps broad rights. AI-assisted attackers search for exactly such forgotten, powerful accounts.</span><span class="nl">Het account dat de onderste laag bouwde, houdt vaak ruime rechten. Aanvallers met AI zoeken juist naar zulke vergeten, machtige accounts.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI assistants write a working backend in seconds, but working is not safe: locking and versioning are easy to leave out.</span><span class="nl">AI-assistenten schrijven in seconden een werkende backend, maar werkend is niet veilig: vergrendeling en versiebeheer zijn makkelijk vergeten.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Check the settings</span><span class="nl">Controleer de instellingen</span></b><p><span class="en">Automated policy checks, with AI help, can confirm on every change that the state storage stays locked, versioned and private.</span><span class="nl">Geautomatiseerde beleidscontroles, met hulp van AI, kunnen bij elke wijziging bevestigen dat de stateopslag vergrendeld, met versies en privé blijft.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 05 ============================ -->
+<section class="risk-block" id="r5">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 05</span><span class="nl">STAP 05</span></span>
+    <h2>
+      <span class="en">Where state lives: <em>four common choices, one question.</em></span>
+      <span class="nl">Waar state staat: <em>vier gangbare keuzes, één vraag.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">HCP Terraform / GitLab / S3 / Azure Storage / OpenTofu</span>
+      <span class="nl">HCP Terraform / GitLab / S3 / Azure Storage / OpenTofu</span>
+    </span>
+
+    <div class="stage s5b">
+      <div class="stage-label"><span class="en">WHO CAN READ IT, IN EACH</span><span class="nl">WIE HET KAN LEZEN, PER KEUZE</span></div>
+      <div class="bx b1"><b>HCP Terraform</b><span class="en">hosted · account and tokens</span><span class="nl">gehost · account en tokens</span></div>
+      <div class="bx b2"><b>GitLab</b><span class="en">per project · Developer and up</span><span class="nl">per project · Developer en hoger</span></div>
+      <div class="bx b3"><b>Amazon S3</b><span class="en">your bucket · IAM and KMS</span><span class="nl">uw bucket · IAM en KMS</span></div>
+      <div class="bx b4"><b>Azure Storage</b><span class="en">your account · Entra ID</span><span class="nl">uw account · Entra ID</span></div>
+      <div class="banner"><span class="en">ALL ENCRYPT AT REST · THE DIFFERENCE IS WHO CAN READ</span><span class="nl">ALLE VERSLEUTELEN IN OPSLAG · HET VERSCHIL IS WIE KAN LEZEN</span></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Where</th><th>What to know</th></tr>
+        <tr><td class="ctl">HCP Terraform</td><td>HashiCorp's hosted service, called Terraform Cloud until April 2024. It stores and encrypts state for you. You trade a bucket to guard for an account and tokens to guard.</td></tr>
+        <tr><td class="ctl">GitLab-managed state</td><td>State stored with the project, encrypted at rest, with versions and locking. By default anyone with the Developer role can download it; writing needs Maintainer.</td></tr>
+        <tr><td class="ctl">Amazon S3 bucket</td><td>Encrypted by default since January 2023, but transparently. Locking is off until turned on, and HashiCorp highly recommends versioning. A customer-managed key in KMS lets you limit who can decrypt.</td></tr>
+        <tr><td class="ctl">Azure storage account</td><td>Always encrypted, and that cannot be switched off, but again transparent to readers. Locking is built in. HashiCorp recommends signing in with Entra ID; storage access keys are not recommended for new setups.</td></tr>
+        <tr><td class="ctl">OpenTofu state encryption</td><td><abbr class="tip" tabindex="0" data-tip="An infrastructure-as-code tool run as a Linux Foundation project, often used in place of Terraform.">OpenTofu</abbr> can encrypt the state file itself, with a key from a key service, so a copied file is unreadable. It still cannot hide secrets from whoever runs it.</td></tr>
+      </table>
+      <table class="nl">
+        <tr><th>Waar</th><th>Wat u moet weten</th></tr>
+        <tr><td class="ctl">HCP Terraform</td><td>De gehoste dienst van HashiCorp, tot april 2024 Terraform Cloud genoemd. Hij bewaart en versleutelt de state voor u. U ruilt een bucket om te bewaken in voor een account en tokens om te bewaken.</td></tr>
+        <tr><td class="ctl">State in GitLab</td><td>State bewaard bij het project, versleuteld in opslag, met versies en vergrendeling. Standaard kan iedereen met de rol Developer hem downloaden; schrijven vraagt Maintainer.</td></tr>
+        <tr><td class="ctl">Amazon S3-bucket</td><td>Sinds januari 2023 standaard versleuteld, maar transparant. Vergrendeling staat uit tot u die aanzet, en HashiCorp raadt versiebeheer sterk aan. Een eigen sleutel in KMS laat u beperken wie kan ontsleutelen.</td></tr>
+        <tr><td class="ctl">Azure-opslagaccount</td><td>Altijd versleuteld, en dat kan niet uit, maar ook hier transparant voor lezers. Vergrendeling is ingebouwd. HashiCorp raadt aanmelden met Entra ID aan; toegangssleutels van de opslag worden voor nieuwe opzetten afgeraden.</td></tr>
+        <tr><td class="ctl">Versleuteling in OpenTofu</td><td><abbr class="tip" tabindex="0" data-tip="Een infrastructure-as-code-tool, een project onder de Linux Foundation, vaak gebruikt in plaats van Terraform.">OpenTofu</abbr> kan het statebestand zelf versleutelen, met een sleutel uit een sleuteldienst, zodat een gekopieerd bestand onleesbaar is. Geheimen verbergen voor wie het draait, kan het nog steeds niet.</td></tr>
+      </table>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">"ENCRYPTED" DOES NOT ANSWER "WHO CAN READ IT"</span><span class="nl">"VERSLEUTELD" BEANTWOORDT "WIE KAN HET LEZEN" NIET</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ASK FOR THE LIST OF READERS, NOT THE ENCRYPTION SETTING</span><span class="nl">AANBEVOLEN: VRAAG DE LIJST LEZERS, NIET DE VERSLEUTELINGSINSTELLING</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Tokens for HCP Terraform or GitLab leak in logs and code. AI tools scan public code for them at scale.</span><span class="nl">Tokens voor HCP Terraform of GitLab lekken in logs en code. AI-tools zoeken daar op grote schaal naar in openbare code.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">High</span><span class="nl">Hoog</span></b><p><span class="en">AI agents are often handed one broad token for convenience. That token can then read every state, and every secret in it.</span><span class="nl">AI-agents krijgen voor het gemak vaak één ruim token. Dat token kan dan elke state lezen, en elk geheim erin.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Review access</span><span class="nl">Toets toegang</span></b><p><span class="en">AI can help list who and what can read each state store, and flag access nobody has used in months.</span><span class="nl">AI kan helpen opsommen wie en wat elke stateopslag kan lezen, en toegang aanwijzen die al maanden niemand gebruikt.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What keeps the map <em>safe, current and recoverable.</em></span>
+      <span class="nl">Wat de kaart <em>veilig, actueel en herstelbaar houdt.</em></span>
+    </h2>
+    <span class="term"><span class="en">one line per control</span><span class="nl">één regel per maatregel</span></span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">REMOTE STATE</span><span class="nl">STATE OP AFSTAND</span></span>
+        <span class="chip c2"><span class="en">SHORT READER LIST</span><span class="nl">KORTE LIJST LEZERS</span></span>
+        <span class="chip c3"><span class="en">NO SECRETS IN STATE</span><span class="nl">GEEN GEHEIMEN IN STATE</span></span>
+        <span class="chip c4"><span class="en">LOCK + VERSIONS</span><span class="nl">SLOT + VERSIES</span></span>
+        <span class="chip c5"><span class="en">OWNED BOOTSTRAP</span><span class="nl">BOOTSTRAP MET EIGENAAR</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Addresses</th><th>In one line</th></tr>
+        <tr><td class="ctl">Remote state, never in Git</td><td>The map (01)</td><td>State lives in one managed backend, not on laptops and not in a code repository, where HashiCorp warns it can expose secrets.</td></tr>
+        <tr><td class="ctl">Changes only through the pipeline</td><td>The map (01)</td><td>People propose changes; the pipeline plans, a second person approves, the pipeline applies. Nobody applies to production from a laptop.</td></tr>
+        <tr><td class="ctl">Secrets out of state</td><td>Secrets (02)</td><td>Passwords come from a secrets vault at run time, or through features that keep them out of state where the provider supports it.</td></tr>
+        <tr><td class="ctl">Short, reviewed reader list</td><td>Secrets (02)</td><td>Read access to state is treated like access to the secrets in it, and reviewed every quarter. A customer-managed key adds a second gate.</td></tr>
+        <tr><td class="ctl">Locking and versioning on</td><td>Locking (03)</td><td>Every backend locks during a change and keeps earlier versions. A restore of an old version is tested at least once a year.</td></tr>
+        <tr><td class="ctl">A documented bootstrap</td><td>Chicken &amp; egg (04)</td><td>The storage that holds state is built one known way, has a named owner, is protected against deletion, and its builder account keeps no standing rights.</td></tr>
+        <tr><td class="ctl">Tokens with narrow scope</td><td>Where it lives (05)</td><td>Pipelines and AI agents get a token per workspace or project, not one for the whole organisation.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Pakt aan</th><th>In één zin</th></tr>
+        <tr><td class="ctl">State op afstand, nooit in Git</td><td>De kaart (01)</td><td>State staat in één beheerde backend, niet op laptops en niet in een coderepository, waar HashiCorp waarschuwt dat geheimen kunnen uitlekken.</td></tr>
+        <tr><td class="ctl">Wijzigen alleen via de pipeline</td><td>De kaart (01)</td><td>Mensen stellen wijzigingen voor; de pipeline maakt het plan, een tweede persoon keurt goed, de pipeline voert uit. Niemand past productie aan vanaf een laptop.</td></tr>
+        <tr><td class="ctl">Geheimen buiten de state</td><td>Geheimen (02)</td><td>Wachtwoorden komen tijdens de run uit een kluis, of via functies die ze buiten de state houden waar de provider dat ondersteunt.</td></tr>
+        <tr><td class="ctl">Korte, getoetste lijst lezers</td><td>Geheimen (02)</td><td>Leesrecht op state geldt als toegang tot de geheimen erin, en wordt elk kwartaal getoetst. Een eigen sleutel voegt een tweede slot toe.</td></tr>
+        <tr><td class="ctl">Vergrendeling en versiebeheer aan</td><td>Vergrendelen (03)</td><td>Elke backend vergrendelt tijdens een wijziging en bewaart eerdere versies. Het terugzetten van een oude versie wordt minstens eens per jaar getest.</td></tr>
+        <tr><td class="ctl">Een vastgelegde bootstrap</td><td>Kip &amp; ei (04)</td><td>De opslag voor de state wordt op één bekende manier gebouwd, heeft een benoemde eigenaar, is beschermd tegen verwijderen, en het bouwaccount houdt geen vaste rechten.</td></tr>
+        <tr><td class="ctl">Tokens met een smalle reikwijdte</td><td>Waar het staat (05)</td><td>Pipelines en AI-agents krijgen een token per workspace of project, niet één voor de hele organisatie.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> you do not need to know Terraform to ask five useful questions. Where is our state kept, and is that one place or many? Who and what can read it, and is the list shorter than we fear? Are there passwords in it? If it were lost or corrupted tomorrow, could we restore it, and have we tried? And who owns the storage at the bottom that holds it all? Clear answers usually mean the map is in good hands.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> u hoeft Terraform niet te kennen om vijf nuttige vragen te stellen. Waar bewaren we onze state, en is dat één plek of veel? Wie en wat kan hem lezen, en is die lijst korter dan we vrezen? Staan er wachtwoorden in? Als hij morgen kwijt of beschadigd is, kunnen we hem dan terugzetten, en hebben we dat geprobeerd? En wie is eigenaar van de onderste opslag die alles bewaart? Duidelijke antwoorden betekenen meestal dat de kaart in goede handen is.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">Secrets end up in state unless a team takes steps to keep them out, and read access tends to grow as teams and pipelines are added.</span><span class="nl">Geheimen komen in de state terecht tenzij een team stappen zet om ze erbuiten te houden, en leesrechten groeien mee met elk nieuw team en elke nieuwe pipeline.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">A leaked state hands over a map and the keys together. A lost or corrupted state can stall every infrastructure change until it is rebuilt by hand.</span><span class="nl">Een gelekte state geeft een kaart en de sleutels tegelijk weg. Een verloren of beschadigde state kan elke infrastructuurwijziging stilleggen tot hij met de hand is herbouwd.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v lo"><span class="en">Low</span><span class="nl">Laag</span></span><p><span class="en">With secrets kept out, a short reader list, locking, versions and an owned bootstrap, a leak exposes a map without keys, and a bad write can be undone.</span><span class="nl">Met geheimen erbuiten, een korte lijst lezers, vergrendeling, versies en een bootstrap met eigenaar onthult een lek een kaart zonder sleutels, en is een foute schrijfactie terug te draaien.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">Head of platform</span><span class="nl">Hoofd platform</span></span><p><span class="en">The platform or cloud lead owns the state stores and the bootstrap. The <abbr class="tip" tabindex="0" data-tip="Chief information security officer: the executive responsible for information security.">CISO</abbr> reviews who can read them.</span><span class="nl">De platform- of cloudlead is eigenaar van de stateopslag en de bootstrap. De <abbr class="tip" tabindex="0" data-tip="Chief information security officer: de bestuurder die verantwoordelijk is voor informatiebeveiliging.">CISO</abbr> toetst wie ze kan lezen.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">People and machine accounts that can read production state · state stores without locking or versioning · live secrets found in state by the last scan · months since the last restore test.</span><span class="nl">Mensen en machineaccounts die productiestate kunnen lezen · stateopslagen zonder vergrendeling of versiebeheer · werkende geheimen in state bij de laatste scan · maanden sinds de laatste hersteltest.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Infrastructure state files are readable by too many people or systems, contain live secrets, or cannot be restored, so that a leak exposes our estate and its credentials, or a lost state halts or damages production, which can lead to a breach and a notifiable incident.”</span><span class="nl">“Statebestanden van onze infrastructuur zijn leesbaar voor te veel mensen of systemen, bevatten werkende geheimen, of zijn niet te herstellen, zodat een lek onze omgeving en inloggegevens blootlegt, of een verloren state productie stillegt of beschadigt, wat kan leiden tot een inbraak en een meldplichtig incident.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU directive on cybersecurity for essential and important entities; in the Netherlands the Cyberbeveiligingswet.">NIS2</abbr> Art. 21(2) requires measures including backup (c), security in development and maintenance (e), cryptography (h), and access control and asset management (i). Well-run state can support all four. The Cyberbeveiligingswet has been in force since 15 August 2026.</td><td>If a supplier runs Terraform for you, ask where your state is kept, who on their side can read it, whether secrets are in it, and how they would restore it.</td><td>A leaked state with live credentials can count as a significant incident if it meets the thresholds. Early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Art. 8(4) requires mapping the configuration of <abbr class="tip" tabindex="0" data-tip="Information and communication technology: in DORA, any digital or data service a financial entity relies on.">ICT</abbr> assets and their links; state can feed that map. Art. 9(4) requires access limited to what is needed and controlled, recorded change management. Art. 12 requires backups and tested restores. DORA has applied since 17 January 2025.</td><td>For ICT providers behind critical functions, ask for their state access list and restore evidence, and agree a right to see them in the contract.</td><td>Classify promptly. Initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterion CC6.1 covers logical access, which includes who can read state. CC8.1 covers change management, which includes how infrastructure changes are approved and applied.</td><td>Check whether the infrastructure pipeline and its state storage are in the system description. If they are not, the report says nothing about them.</td><td>A leak through over-broad state access will likely appear as an exception in the next report.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>The focus is financial reporting. State appears only through general IT controls on access and change, where the infrastructure supports the financial process.</td><td>The report rarely mentions infrastructure as code. Ask in the contract how changes to the platform under your service are controlled.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor cyberbeveiliging van essentiële en belangrijke entiteiten; in Nederland de Cyberbeveiligingswet.">NIS2</abbr> art. 21 lid 2 vereist maatregelen waaronder back-ups (c), beveiliging bij ontwikkeling en onderhoud (e), cryptografie (h), en toegangsbeleid en beheer van bedrijfsmiddelen (i). Goed beheerde state kan alle vier ondersteunen. De Cyberbeveiligingswet is van kracht sinds 15 augustus 2026.</td><td>Draait een leverancier Terraform voor u, vraag dan waar uw state staat, wie aan hun kant hem kan lezen, of er geheimen in staan, en hoe ze hem zouden herstellen.</td><td>Een gelekte state met werkende inloggegevens kan als significant incident gelden als het de drempels haalt. Vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindverslag binnen een maand.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Art. 8 lid 4 vereist het in kaart brengen van de configuratie van <abbr class="tip" tabindex="0" data-tip="Informatie- en communicatietechnologie: onder DORA elke digitale of datadienst waarop een financiële instelling leunt.">ICT</abbr>-middelen en hun verbanden; state kan die kaart voeden. Art. 9 lid 4 vereist toegang beperkt tot wat nodig is en gecontroleerd, vastgelegd wijzigingsbeheer. Art. 12 vereist back-ups en periodiek geteste herstelprocedures. DORA geldt sinds 17 januari 2025.</td><td>Vraag ICT-leveranciers achter kritieke functies om hun lijst met toegang tot state en hun herstelbewijs, en leg een inzagerecht vast in het contract.</td><td>Classificeer snel. Eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterium CC6.1 gaat over logische toegang, inclusief wie state kan lezen. CC8.1 gaat over wijzigingsbeheer, inclusief hoe infrastructuurwijzigingen worden goedgekeurd en doorgevoerd.</td><td>Controleer of de infrastructuurpipeline en de stateopslag in de systeembeschrijving staan. Staan ze er niet in, dan zegt het rapport er niets over.</td><td>Een lek via te ruime toegang tot state komt waarschijnlijk als afwijking in het volgende rapport.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>De focus ligt op de financiële verslaggeving. State komt alleen in beeld via algemene IT-beheersmaatregelen voor toegang en wijzigingen, waar de infrastructuur het financiële proces ondersteunt.</td><td>Het rapport noemt infrastructure as code zelden. Vraag in het contract hoe wijzigingen aan het platform onder uw dienst worden beheerst.</td><td>ISAE 3402 schept geen meldplicht aan de auditors van gebruikers. Verwacht een afwijking in het volgende rapport en vraag in het contract om tussentijdse melding.</td></tr>
+      </table>
+      <p class="sources en">Checked against: HashiCorp Terraform documentation on <a href="https://developer.hashicorp.com/terraform/language/state">state</a>, <a href="https://developer.hashicorp.com/terraform/language/state/sensitive-data">sensitive data</a>, <a href="https://developer.hashicorp.com/terraform/language/state/locking">locking</a>, <a href="https://developer.hashicorp.com/terraform/language/backend">backends</a>, the <a href="https://developer.hashicorp.com/terraform/language/backend/s3">S3</a> and <a href="https://developer.hashicorp.com/terraform/language/backend/azurerm">azurerm</a> backends and <a href="https://developer.hashicorp.com/terraform/cli/commands/init">terraform init</a> (Oct 2026), <a href="https://developer.hashicorp.com/terraform/cloud-docs">HCP Terraform</a> and its <a href="https://developer.hashicorp.com/terraform/cloud-docs/architectural-details/data-security">data security</a> page (Oct 2026), <a href="https://docs.gitlab.com/user/infrastructure/iac/terraform_state/">GitLab-managed state</a> (Oct 2026), <a href="https://opentofu.org/docs/language/state/encryption/">OpenTofu state encryption</a> (Oct 2026), <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/default-encryption-faq.html">AWS S3 default encryption FAQ</a> (Jan 2023), <a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-service-encryption">Microsoft Azure Storage encryption</a> (Aug 2026), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 21 and 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 8, 9, 12 and 19, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL</a> (Aug 2026), AICPA Trust Services Criteria CC6.1 and CC8.1 (2017, points of focus 2022) · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: documentatie van HashiCorp Terraform over <a href="https://developer.hashicorp.com/terraform/language/state">state</a>, <a href="https://developer.hashicorp.com/terraform/language/state/sensitive-data">gevoelige gegevens</a>, <a href="https://developer.hashicorp.com/terraform/language/state/locking">vergrendeling</a>, <a href="https://developer.hashicorp.com/terraform/language/backend">backends</a>, de <a href="https://developer.hashicorp.com/terraform/language/backend/s3">S3</a>- en <a href="https://developer.hashicorp.com/terraform/language/backend/azurerm">azurerm</a>-backends en <a href="https://developer.hashicorp.com/terraform/cli/commands/init">terraform init</a> (okt 2026), <a href="https://developer.hashicorp.com/terraform/cloud-docs">HCP Terraform</a> en de pagina over <a href="https://developer.hashicorp.com/terraform/cloud-docs/architectural-details/data-security">gegevensbeveiliging</a> (okt 2026), <a href="https://docs.gitlab.com/user/infrastructure/iac/terraform_state/">state in GitLab</a> (okt 2026), <a href="https://opentofu.org/docs/language/state/encryption/">OpenTofu-stateversleuteling</a> (okt 2026), <a href="https://docs.aws.amazon.com/AmazonS3/latest/userguide/default-encryption-faq.html">AWS S3 FAQ standaardversleuteling</a> (jan 2023), <a href="https://learn.microsoft.com/en-us/azure/storage/common/storage-service-encryption">Microsoft Azure Storage-versleuteling</a> (aug 2026), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 21 en 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 8, 9, 12 en 19, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC</a> (aug 2026), AICPA Trust Services Criteria CC6.1 en CC8.1 (2017, aandachtspunten 2022) · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../cloud/"><span class="en">Cloud</span><span class="nl">Cloud</span></a> ·
+  <a href="../secure-development/"><span class="en">Secure development</span><span class="nl">Veilig ontwikkelen</span></a> ·
+  <a href="../backups-and-restore/"><span class="en">Backups and restore</span><span class="nl">Back-ups en herstel</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=terraform-state&amp;title=Missing%3A%20terraform-state"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=terraform-state&amp;title=Correction%3A%20terraform-state"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">TERRAFORM STATE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">TERRAFORM STATE BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>
+

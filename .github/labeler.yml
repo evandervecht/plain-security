@@ -83,6 +83,8 @@ sponsor:
   - '(pentest|penetration test|penetratietest|red.?team|vulnerability scan|kwetsbaarhedenscan|\btlpt\b|tiber|bug bounty|security\.txt|vulnerability disclosure|\bcvd\b|responsible disclosure|retest|hertest)'
 'page: acquisitions':
   - '(acquisitions|buying a company|acquiring a company|merger|\bm&a\b|due diligence|inherited breach|warrant(y|ies)|indemnit|w&i|change of control|overname|fusie|boekenonderzoek|vrijwaring|zeggenschapswijziging)'
+'page: terraform-state':
+  - '(terraform|opentofu|tfstate|state ?file|statebestand|state locking|remote state|hcp terraform)'
 'page: security-governance':
   - '(security governance|how much security|security budget|beveiligingsbudget|security spend|\bciso\b|reporting line|rapportagelijn|board dashboard|bestuursdashboard|risk appetite|risicobereidheid|external review|externe toetsing|management body|leidinggevend orgaan)'
 'page: board-as-target':
