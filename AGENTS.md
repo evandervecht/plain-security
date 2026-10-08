@@ -88,6 +88,25 @@ Use it for any timeline or deadline list. It goes under a roadmap diagram, and o
   <a href="../identity/"><span class="en">Passwords and MFA</span><span class="nl">Wachtwoorden en MFA</span></a></p>
 ```
 
+### What AI changes here
+
+Optional, within each major section. Three-tile risk view (Break it, Abuse it, Enforce it) showing attack surface, misuse risk, and control opportunity. Use when the section covers a capability that AI materially changes.
+
+```html
+<div class="ai3">
+  <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+  <div class="g">
+    <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Attack surface that AI creates or expands.</span><span class="nl">Aanvalsoppervlak dat AI creëert of uitbreidt.</span></p></div>
+    <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Misuse risk or unintended consequence of AI in scope.</span><span class="nl">Misbruikrisico of onbedoeld gevolg van AI in bereik.</span></p></div>
+    <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Low</span><span class="nl">Laag</span></b><p><span class="en">Control opportunity: how AI can help enforce this requirement.</span><span class="nl">Controlekans: hoe AI kan helpen deze eis af te dwingen.</span></p></div>
+  </div>
+</div>
+```
+
+```css
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+```
+
 ### Reference-architecture diagram
 
 - **Markup:** inline `<svg>` inside `<figure class="arch">`, with `role="img"`, a `<title>` and a `<desc>`.
@@ -103,9 +122,16 @@ Use it for any timeline or deadline list. It goes under a roadmap diagram, and o
 - **Build:** write the SVG by hand, or with a small script in `tools/`. `tools/gen_cmap.py` and `tools/gen_roadmap.py` are worked examples; the output is static HTML either way.
 - **Embed** with `python3 tools/embed.py <slug> tools/out/<file>.svg-section.html`. It inserts the section before CONTROLS between `<!-- diagram:<id> -->` markers, and re-running it replaces the section. `quantum-and-ai/` is the reference page.
 
+### Animated scenes (pure CSS, no JavaScript)
+
+Some briefings include animated scenes (e.g., `backups-and-restore/` has four). Currently built by hand, with scene-specific CSS and animations. As a demo of the pattern, animation durations are parameterized as CSS variables (e.g., `--scene-duration: 7s`) to allow global pacing adjustments. **When to invest in tooling:**
+- After 5–6 briefings with similar scene patterns emerge, write a `tools/scene-builder.js` that takes a JSON scene description and generates the hand-coded CSS output. Until then, hand-code and reuse where you can.
+- Animation durations are inherited from `:root` CSS variables; keep them consistent across all scenes of the same visual pattern (e.g., all step-by-step reveals at 7s).
+- Test at 1260px and 390px to check for overlaps and responsive layout issues; use headless Chromium to catch mobile rendering bugs.
+
 ## Canonical regulatory text
 
-Last verified 28 Sep 2026. Re-verify before reuse, and use the same wording on every page.
+Last verified 6 Oct 2026. Re-verify before reuse, and use the same wording on every page.
 
 | Topic | Text |
 |---|---|

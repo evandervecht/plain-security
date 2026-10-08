@@ -35,6 +35,7 @@ fi
 
 # GitHub Actions Version Check
 # ============================
+# Check all workflows
 for workflow in .github/workflows/*.yml; do
   if [ ! -f "$workflow" ]; then
     continue

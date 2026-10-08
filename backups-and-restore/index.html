@@ -55,6 +55,9 @@
   --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
   --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+  /* scene animation durations (parameterized for consistency) */
+  --scene-duration:7s;
+  --scene3-duration:8s;
 }
 
 *{box-sizing:border-box}
@@ -158,14 +161,14 @@ h2 em{font-style:normal;color:var(--muted)}
 .s1 .mk b{display:block;font-size:22px;margin-bottom:4px}
 .s1 .mk.a{left:12%}.s1 .mk.b{left:44%}.s1 .mk.c{left:88%}
 .s1 .sp{position:absolute;top:149px;height:4px;transform-origin:left;transform:scaleX(0)}
-.s1 .sp.rpo{left:12%;width:32%;background:var(--warn);animation:grow 7s ease-in-out infinite}
-.s1 .sp.rto{left:44%;width:44%;background:var(--bad);animation:grow 7s ease-in-out infinite 1.2s}
-.s1 .lb{position:absolute;top:168px;font-size:10px;letter-spacing:.14em;font-weight:700;text-transform:uppercase;text-align:center;opacity:0;animation:show7 7s ease-in-out infinite}
+.s1 .sp.rpo{left:12%;width:32%;background:var(--warn);animation:grow var(--scene-duration) ease-in-out infinite}
+.s1 .sp.rto{left:44%;width:44%;background:var(--bad);animation:grow var(--scene-duration) ease-in-out infinite 1.2s}
+.s1 .lb{position:absolute;top:168px;font-size:10px;letter-spacing:.14em;font-weight:700;text-transform:uppercase;text-align:center;opacity:0;animation:show7 var(--scene-duration) ease-in-out infinite}
 .s1 .lb.rpo{left:12%;width:32%;color:var(--warn)}
 .s1 .lb.rto{left:44%;width:44%;color:var(--bad-soft);animation-delay:1.2s}
 @keyframes grow{0%,10%{transform:scaleX(0)}40%,86%{transform:scaleX(1)}96%,100%{transform:scaleX(0)}}
 @keyframes show7{0%,36%{opacity:0}46%,86%{opacity:1}96%,100%{opacity:0}}
-.s1 .banner{animation-duration:7s}
+.s1 .banner{animation-duration:var(--scene-duration)}
 
 /* --- scene 2 : three copies, one survives --- */
 .s2 .bx{position:absolute;top:84px;width:27%;height:120px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 10px}
@@ -173,33 +176,33 @@ h2 em{font-style:normal;color:var(--muted)}
 .s2 .bx.a{left:5%}
 .s2 .bx.b{left:36.5%}
 .s2 .bx.c{right:5%;border-color:rgba(55,211,155,.5)}
-.s2 .bx.a::after,.s2 .bx.b::after{content:"";position:absolute;inset:0;background:rgba(255,93,115,.3);border:1px solid var(--bad);opacity:0;animation:expose 7s ease-in-out infinite}
+.s2 .bx.a::after,.s2 .bx.b::after{content:"";position:absolute;inset:0;background:rgba(255,93,115,.3);border:1px solid var(--bad);opacity:0;animation:expose var(--scene-duration) ease-in-out infinite}
 .s2 .bx.b::after{animation-delay:1s}
-.s2 .q{position:absolute;top:34px;left:0;font-size:24px;z-index:3;animation:sweep2 7s ease-in-out infinite}
+.s2 .q{position:absolute;top:34px;left:0;font-size:24px;z-index:3;animation:sweep2 var(--scene-duration) ease-in-out infinite}
 @keyframes sweep2{0%{left:4%;opacity:0}8%{opacity:1}50%{left:calc(63% - 24px);opacity:1}62%,100%{left:calc(63% - 24px);opacity:0}}
-.s2 .banner{animation-duration:7s}
+.s2 .banner{animation-duration:var(--scene-duration)}
 
 /* --- scene 3 : seven green nights, one red day --- */
 .s3 .log{position:absolute;left:40px;top:60px;width:44%;display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.s3 .d{height:36px;display:grid;place-items:center;font-size:15px;color:#8ff0cd;background:rgba(55,211,155,.07);border:1px solid rgba(55,211,155,.4);opacity:0;animation:tick 8s ease-in-out infinite}
+.s3 .d{height:36px;display:grid;place-items:center;font-size:15px;color:#8ff0cd;background:rgba(55,211,155,.07);border:1px solid rgba(55,211,155,.4);opacity:0;animation:tick var(--scene3-duration) ease-in-out infinite}
 .s3 .d:nth-child(2){animation-delay:.4s}.s3 .d:nth-child(3){animation-delay:.8s}.s3 .d:nth-child(4){animation-delay:1.2s}
 .s3 .d:nth-child(5){animation-delay:1.6s}.s3 .d:nth-child(6){animation-delay:2s}.s3 .d:nth-child(7){animation-delay:2.4s}
 .s3 .cap{position:absolute;left:40px;top:106px;width:44%;font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .s3 .res{position:absolute;right:40px;top:60px;width:40%;height:120px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 10px}
 .s3 .res b{display:block;font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--white);text-transform:none}
-.s3 .f{position:absolute;inset:0;display:grid;place-items:center;background:#3a1430;border:1px solid var(--bad);color:var(--bad-soft);font-weight:700;font-size:11px;letter-spacing:.16em;padding:0 10px;line-height:1.5;opacity:0;animation:fail 8s ease-in-out infinite}
+.s3 .f{position:absolute;inset:0;display:grid;place-items:center;background:#3a1430;border:1px solid var(--bad);color:var(--bad-soft);font-weight:700;font-size:11px;letter-spacing:.16em;padding:0 10px;line-height:1.5;opacity:0;animation:fail var(--scene3-duration) ease-in-out infinite}
 @keyframes tick{0%,8%{opacity:0}16%,92%{opacity:1}100%{opacity:0}}
 @keyframes fail{0%,56%{opacity:0}64%,92%{opacity:1}100%{opacity:0}}
-.s3 .banner{animation-duration:8s}
+.s3 .banner{animation-duration:var(--scene3-duration)}
 
 /* --- scene 4 : what the provider keeps after a delete --- */
 .s4 .tile{position:absolute;top:66px;width:27%;height:136px;display:grid;place-items:center;align-content:center;gap:4px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:9.5px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;padding:0 8px;line-height:1.35}
 .s4 .tile b{display:block;font-size:24px}
 .s4 .tile i{display:block;font-style:normal;font-family:var(--sans);font-weight:800;font-size:18px;color:var(--warn);letter-spacing:0;text-transform:none;line-height:1.2}
 .s4 .tile.a{left:5%}.s4 .tile.b{left:36.5%}.s4 .tile.c{right:5%}
-.s4 .tile::after{content:"";position:absolute;inset:0;background:rgba(255,93,115,.3);border:1px solid var(--bad);opacity:0;animation:expose 7s ease-in-out infinite}
+.s4 .tile::after{content:"";position:absolute;inset:0;background:rgba(255,93,115,.3);border:1px solid var(--bad);opacity:0;animation:expose var(--scene-duration) ease-in-out infinite}
 .s4 .tile.b::after{animation-delay:.6s}.s4 .tile.c::after{animation-delay:1.2s}
-.s4 .banner{animation-duration:7s}
+.s4 .banner{animation-duration:var(--scene-duration)}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important}
