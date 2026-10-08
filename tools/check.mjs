@@ -77,6 +77,10 @@ function staticChecks(p, html) {
       if (!m[1].trim()) fail(p.slug, "empty data-tip");
       else if (m[1].length > 160) fail(p.slug, `tooltip too long (${m[1].length} > 160): ${m[1].slice(0, 40)}…`);
     }
+    // bilingual parity: every .en span should have a corresponding .nl span
+    const enCount = (html.match(/<span class="en">/g) || []).length;
+    const nlCount = (html.match(/<span class="nl">/g) || []).length;
+    if (enCount !== nlCount) fail(p.slug, `bilingual parity: ${enCount} .en spans but ${nlCount} .nl spans`);
     // at most one reference-architecture figure (quantum-and-ai has map + roadmap)
     const figs = (html.match(/<figure class="(arch|cmap|rmap)"/g) || []).length;
     if (figs > (p.slug === "quantum-and-ai" ? 2 : 1)) fail(p.slug, `${figs} diagrams — at most one per page`);

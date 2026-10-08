@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Prevent accidental downgrade or loose pinning of GitHub Actions versions.
+# Exits 1 if any workflow uses v4.x or v6.x (regression vs v7.0.x requirement in CLAUDE.md),
+# or if versions are not SHA-pinned.
+
+set -e
+
+# Check all workflows
+for workflow in .github/workflows/*.yml; do
+  if [ ! -f "$workflow" ]; then
+    continue
+  fi
+
+  # Extract action lines
+  grep -E "^\s*-\s+uses:\s+(actions/checkout|actions/setup-node)@" "$workflow" | while read -r line; do
+    # Extract the version/SHA part (after @)
+    version=$(echo "$line" | sed -E 's/.*@([^ #]+).*/\1/')
+
+    # Check for loose version pins (v7, v7.0, etc. without SHA)
+    if echo "$version" | grep -qE '^v[0-9]'; then
+      echo "✗ $workflow: Loose version pin found: $version"
+      echo "  Use SHA-pinned versions (e.g., 3d3c42e5... # v7.0.1)"
+      exit 1
+    fi
+
+    # Check for regressions (v4.x or v6.x)
+    action_name=$(echo "$line" | sed -E 's/.*uses:\s*([^ @]+).*/\1/')
+    if git show HEAD:"$workflow" 2>/dev/null | grep -E "^\s*-\s+uses:\s+$action_name@" | grep -qE '@(v4|v6)'; then
+      # Version changed; check if it's a downgrade
+      if echo "$version" | grep -qE '^(v4|v6)'; then
+        echo "✗ $workflow: Regression detected in $action_name"
+        echo "  CLAUDE.md requires v7.0.x (SHA-pinned). Found: $version"
+        exit 1
+      fi
+    fi
+  done
+done
+
+# All checks passed
+exit 0
