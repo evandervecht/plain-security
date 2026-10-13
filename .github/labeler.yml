@@ -66,7 +66,7 @@ sponsor:
 'page: secure-development':
   - '(secure development|devsecops|pipeline|source code|broncode|repository|\bsdlc\b)'
 'page: code-security':
-  - '(code security|codebeveiliging|\bsast\b|\bsca\b|software composition|dependency scan|afhankelijkheidsscan|\bkev\b|\bepss\b|\bvex\b|container image|containerimage)'
+  - '(code security|codebeveiliging|\bsast\b|software composition|dependency scan|afhankelijkheidsscan|\bkev\b|\bepss\b|\bvex\b|container image|containerimage)'
 'page: incident-response':
   - '(incident response|incidentrespons|72 hours|72 uur|crisis|tabletop|forensic)'
 'page: cyber-insurance':
