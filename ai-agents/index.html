@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>How AI agents work: the model, the harness, and what you plug in // Plain Security</title>
+<meta name="description" content="How AI agents such as Claude Code, Codex and Hermes Agent work: the model and the harness, agents, skills and MCP servers, why to review skills and servers before installing, and what keeps them contained.">
+<link rel="canonical" href="https://plain-security.fyi/ai-agents/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How AI agents work: the model, the harness, and what you plug in // Plain Security">
+<meta property="og:description" content="How AI agents such as Claude Code, Codex and Hermes Agent work: the model and the harness, agents, skills and MCP servers, why to review skills and servers before installing, and what keeps them contained.">
+<meta property="og:url" content="https://plain-security.fyi/ai-agents/">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="nl_NL">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   AI AGENTS // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel p a{color:var(--white);text-decoration:underline dotted var(--slate);text-underline-offset:3px}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 7s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+
+/* --- scene 1 : model, harness, your systems --- */
+.s1 .col{position:absolute;top:58px;width:24%;height:132px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 8px}
+.s1 .col b{display:block;font-family:var(--sans);font-size:15px;letter-spacing:0;color:var(--white);text-transform:none}
+.s1 .col.c{left:5%}.s1 .col.m{left:38%;border-color:var(--brand)}.s1 .col.r{right:5%}
+.s1 .col.m{animation:gate 8s ease-in-out infinite}
+@keyframes gate{0%,40%{border-color:var(--brand)}50%,90%{border-color:var(--bad)}100%{border-color:var(--brand)}}
+.s1 .ln{position:absolute;top:122px;height:2px;width:9%;background:var(--brand)}
+.s1 .ln.b{animation:act 8s ease-in-out infinite}
+.s1 .ln.a{left:29%}.s1 .ln.b{left:62%}
+@keyframes act{0%,40%{background:var(--brand)}50%,90%{background:var(--bad)}100%{background:var(--brand)}}
+
+/* --- scene 2 : agent, skill, MCP server --- */
+.s2 .rung{position:absolute;left:40px;right:40px;height:54px;display:flex;align-items:center;gap:16px;padding:0 16px;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.s2 .rung b{flex:none;width:130px;font-family:var(--sans);font-size:14px;letter-spacing:0;color:var(--white);text-transform:none}
+.s2 .rung span.en,.s2 .rung span.nl{flex:1}
+.s2 .rung.r1{top:48px}.s2 .rung.r2{top:112px}.s2 .rung.r3{top:176px}
+.s2 .rung::after{content:"";position:absolute;inset:0;border:1px solid var(--brand);background:rgba(90,200,250,.08);opacity:0;animation:climb 9s ease-in-out infinite}
+.s2 .rung.r2::after{animation-delay:3s}.s2 .rung.r3::after{animation-delay:6s}
+@keyframes climb{0%,2%{opacity:0}8%,28%{opacity:1}34%,100%{opacity:0}}
+.s2 .banner{animation-duration:9s}
+
+/* --- scene 3 : a skill with an invisible line --- */
+.s3 .file{position:absolute;left:40px;width:56%;top:50px;display:grid;gap:8px}
+.s3 .f{height:38px;display:flex;align-items:center;gap:12px;padding:0 14px;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.1em;color:var(--muted)}
+.s3 .f b{flex:none;width:110px;color:var(--white);font-weight:700}
+.s3 .f .sec{color:var(--bad-soft);font-weight:700;opacity:0;animation:reveal 8s ease-in-out infinite}
+@keyframes reveal{0%,30%{opacity:0}40%,90%{opacity:1}100%{opacity:0}}
+.s3 .bkt{position:absolute;right:40px;top:50px;width:30%;height:132px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;border:1px solid rgba(55,211,155,.55);background:rgba(55,211,155,.06);font-size:10px;letter-spacing:.14em;color:#8ff0cd;text-transform:uppercase;padding:0 8px}
+.s3 .bkt b{display:block;font-family:var(--sans);font-size:15px;letter-spacing:0;color:var(--white);text-transform:none}
+
+/* --- scene 4 : four questions for an MCP server --- */
+.s4 .bx{position:absolute;top:66px;width:21%;height:124px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase;padding:0 8px}
+.s4 .bx b{display:block;font-family:var(--sans);font-size:14px;letter-spacing:0;color:var(--white);text-transform:none}
+.s4 .bx.b1{left:3%}.s4 .bx.b2{left:27.3%}.s4 .bx.b3{left:51.6%}.s4 .bx.b4{left:76%}
+.s4 .bx::after{content:"";position:absolute;inset:0;border:1px solid var(--brand);opacity:0;animation:look 12s ease-in-out infinite}
+.s4 .bx.b2::after{animation-delay:3s}.s4 .bx.b3::after{animation-delay:6s}.s4 .bx.b4::after{animation-delay:9s}
+@keyframes look{0%,2%{opacity:0}6%,22%{opacity:1}26%,100%{opacity:0}}
+.s4 .banner{animation-duration:12s}
+
+/* --- scene 5 : limits outside the model --- */
+.sg .who{position:absolute;left:6%;width:26%;height:54px;display:flex;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.sg .who.w1{top:56px}.sg .who.w2{top:150px}
+.sg .ar{position:absolute;left:33%;width:28%;height:2px;background:var(--good)}
+.sg .ar.a1{top:82px;animation:go1 8s ease-in-out infinite}.sg .ar.a2{top:176px;background:var(--bad);animation:go2 8s ease-in-out infinite}
+@keyframes go1{0%,10%{opacity:0}18%,45%{opacity:1}55%,100%{opacity:0}}
+@keyframes go2{0%,30%{opacity:0}38%,45%{opacity:1}52%,100%{opacity:0}}
+.sg .st{position:absolute;right:8%;top:70px;width:28%;height:120px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--brand);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.sg .st b{display:block;font-family:var(--sans);font-size:15px;letter-spacing:0;color:var(--white);text-transform:none}
+.sg .lk{position:absolute;right:8%;top:42px;font-size:10px;letter-spacing:.16em;font-weight:700;color:var(--warn);border:1px solid rgba(255,200,87,.5);padding:2px 8px;opacity:0;animation:lock 8s ease-in-out infinite}
+@keyframes lock{0%,35%{opacity:0}40%,55%{opacity:1}62%,100%{opacity:0}}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .s3 .f .sec{opacity:1}
+  .sg .ar,.sg .lk{opacity:1}
+  .s2 .rung::after,.s4 .bx::after{opacity:0}
+  .banner{opacity:1}.shield .tick{stroke-dashoffset:0}
+}
+@media (max-width:820px){
+  .s1 .col{width:28%;font-size:8px;letter-spacing:.04em}.s1 .col.c{left:2%}.s1 .col.m{left:36%}.s1 .col.r{right:2%}
+  .s1 .col b{font-size:12px}.s1 .ln{width:6%}.s1 .ln.a{left:30%}.s1 .ln.b{left:64%}
+  .s3 .file{left:12px;width:58%}.s3 .f{font-size:8px;letter-spacing:.02em;gap:6px;padding:0 6px}.s3 .f b{width:62px}
+  .s3 .bkt{right:12px;width:34%;font-size:8px;letter-spacing:.04em}.s3 .bkt b{font-size:12px}
+  .sg .who{font-size:8px;letter-spacing:.04em;width:30%;left:3%}.sg .ar{left:34%;width:24%}
+  .sg .st{font-size:8px;letter-spacing:.04em;width:34%;right:3%;padding:0 6px}.sg .st b{font-size:12px}.sg .lk{right:3%;font-size:8px}
+  .stage.s2,.stage.s3{height:330px}
+  .s2 .rung{left:12px;right:12px;font-size:8px;letter-spacing:.04em;gap:8px;padding:0 10px}
+  .s2 .rung b{width:86px;font-size:11px}
+  .s4 .bx{width:23%;font-size:7px;letter-spacing:.02em;padding:0 4px}.s4 .bx b{font-size:10.5px}
+  .s4 .bx.b1{left:1.5%}.s4 .bx.b2{left:26.2%}.s4 .bx.b3{left:50.8%}.s4 .bx.b4{left:75.5%}
+  .stage .banner{white-space:normal;text-align:center;width:calc(100% - 24px);line-height:1.4}
+}
+
+
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> <span class="en">AI AGENTS</span><span class="nl">AI-AGENTS</span></a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">MODEL &amp; HARNESS</span><span class="nl">MODEL &amp; HARNESS</span></a>
+      <a href="#r2"><span class="en">THE PARTS</span><span class="nl">DE ONDERDELEN</span></a>
+      <a href="#r3"><span class="en">SKILLS</span><span class="nl">SKILLS</span></a>
+      <a href="#r4"><span class="en">MCP SERVERS</span><span class="nl">MCP-SERVERS</span></a>
+      <a href="#r5"><span class="en">WHAT KEEPS IT SAFE</span><span class="nl">WAT HET VEILIG HOUDT</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">How AI agents work: <em>the model, the harness, and what you plug in.</em></span>
+      <span class="nl">Hoe AI-agents werken: <em>het model, de harness, en wat u erop aansluit.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Claude, Codex and Hermes are names you now hear in the boardroom. Each name covers two things: a model that writes text, and a program around it that lets it act on your computers. On top come skills and MCP servers, which your teams install like apps. Five things decide whether that is a productivity gain or a new way in.</span>
+      <span class="nl">Claude, Codex en Hermes zijn namen die u nu in de bestuurskamer hoort. Elke naam dekt twee dingen: een model dat tekst schrijft, en een programma eromheen waarmee het op uw computers kan handelen. Daarbovenop komen skills en MCP-servers, die uw teams installeren zoals apps. Vijf dingen bepalen of dat productiviteit oplevert of een nieuwe weg naar binnen.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FIVE</span><span class="nl">BEKIJK DE VIJF</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT KEEPS IT SAFE</span><span class="nl">WAT HET VEILIG HOUDT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">The model writes, <em>the harness acts.</em></span>
+      <span class="nl">Het model schrijft, <em>de harness handelt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">model / harness / permissions</span>
+      <span class="nl">model / harness / rechten</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">ONE NAME, TWO THINGS</span><span class="nl">ÉÉN NAAM, TWEE DINGEN</span></div>
+      <div class="col c"><b><span class="en">The model</span><span class="nl">Het model</span></b><span class="en">Claude · GPT · Hermes</span><span class="nl">Claude · GPT · Hermes</span></div>
+      <div class="ln a"></div>
+      <div class="col m"><b><span class="en">The harness</span><span class="nl">De harness</span></b><span class="en">Claude Code · Codex · Hermes Agent</span><span class="nl">Claude Code · Codex · Hermes Agent</span></div>
+      <div class="ln b"></div>
+      <div class="col r"><b><span class="en">Your systems</span><span class="nl">Uw systemen</span></b><span class="en">files · commands · network</span><span class="nl">bestanden · opdrachten · netwerk</span></div>
+      <div class="banner"><span class="en">SAME MODEL · DIFFERENT HARNESS · DIFFERENT RISK</span><span class="nl">ZELFDE MODEL · ANDERE HARNESS · ANDER RISICO</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A <abbr class="tip" tabindex="0" data-tip="Large language model: software trained on huge amounts of text that predicts and writes text.">model</abbr>, such as Anthropic's Claude, OpenAI's GPT or Nous Research's Hermes, reads text and writes text. On its own it cannot open a file. The <abbr class="tip" tabindex="0" data-tip="The program around a model that gives it tools, runs what it asks for, and decides what needs your approval.">harness</abbr> is the program around it. It gives the model tools, runs the commands the model asks for, and decides what needs your approval. Claude Code is Anthropic's harness, Codex is OpenAI's, and Hermes Agent is an open-source harness from Nous Research that works with many models.</p>
+      <p class="en"><strong>Business impact:</strong> the model decides what to try; the harness decides what is allowed. Most of the security lives in the harness and its settings: which folders, which commands, which network. The same model can be safe in one setup and dangerous in another. So it is worth asking two questions: which model, from which provider, and where does our data go? And which harness, with which permissions?</p>
+      <p class="nl">Een <abbr class="tip" tabindex="0" data-tip="Large language model: software die getraind is op enorme hoeveelheden tekst en tekst voorspelt en schrijft.">model</abbr>, zoals Claude van Anthropic, GPT van OpenAI of Hermes van Nous Research, leest tekst en schrijft tekst. Op zichzelf kan het geen bestand openen. De <abbr class="tip" tabindex="0" data-tip="Het programma rond een model dat het gereedschap geeft, uitvoert wat het vraagt, en bepaalt wat uw goedkeuring nodig heeft.">harness</abbr> is het programma eromheen. Die geeft het model gereedschap, voert de opdrachten uit waar het model om vraagt, en bepaalt wat uw goedkeuring nodig heeft. Claude Code is de harness van Anthropic, Codex die van OpenAI, en Hermes Agent is een opensource-harness van Nous Research die met veel modellen werkt.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> het model bepaalt wat het probeert; de harness bepaalt wat mag. De meeste beveiliging zit in de harness en de instellingen ervan: welke mappen, welke opdrachten, welk netwerk. Hetzelfde model kan in de ene opzet veilig zijn en in de andere gevaarlijk. Het loont dus om twee vragen te stellen: welk model, van welke aanbieder, en waar gaan onze gegevens heen? En welke harness, met welke rechten?</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">A SAFE MODEL IN A WIDE-OPEN HARNESS IS NOT SAFE</span><span class="nl">EEN VEILIG MODEL IN EEN WIJD OPEN HARNESS IS NIET VEILIG</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: APPROVE THE HARNESS AND ITS SETTINGS, NOT ONLY THE MODEL</span><span class="nl">AANBEVOLEN: KEUR DE HARNESS EN ZIJN INSTELLINGEN GOED, NIET ALLEEN HET MODEL</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Attackers use the same agents to read code and probe systems faster than a person could.</span><span class="nl">Aanvallers gebruiken dezelfde agents om code te lezen en systemen sneller af te tasten dan een mens kan.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">High</span><span class="nl">Hoog</span></b><p><span class="en">A harness set to full access lets the model run any command the user could run.</span><span class="nl">Een harness op volledige toegang laat het model elke opdracht uitvoeren die de gebruiker zelf kan uitvoeren.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Managed settings</span><span class="nl">Centrale instellingen</span></b><p><span class="en">Claude Code and Codex both support settings that the organisation fixes for every user.</span><span class="nl">Claude Code en Codex ondersteunen allebei instellingen die de organisatie voor elke gebruiker vastlegt.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">Agents, skills and MCP servers, <em>in plain words.</em></span>
+      <span class="nl">Agents, skills en MCP-servers, <em>in gewone woorden.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">agent / skill / MCP server</span>
+      <span class="nl">agent / skill / MCP-server</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">THREE WORDS YOU WILL HEAR</span><span class="nl">DRIE WOORDEN DIE U ZULT HOREN</span></div>
+      <div class="rung r1"><b>Agent</b><span class="en">model + harness, working in a loop until the task is done</span><span class="nl">model + harness, in een lus tot de taak klaar is</span></div>
+      <div class="rung r2"><b>Skill</b><span class="en">a folder of instructions and scripts for one task</span><span class="nl">een map met instructies en scripts voor één taak</span></div>
+      <div class="rung r3"><b><span class="en">MCP server</span><span class="nl">MCP-server</span></b><span class="en">a plug into another system: mail, tickets, a database</span><span class="nl">een stekker naar een ander systeem: mail, tickets, een database</span></div>
+      <div class="banner"><span class="en">EACH ONE ADDS POWER · AND A WAY TO MISUSE IT</span><span class="nl">ELK ERVAN GEEFT KRACHT · EN EEN MANIER OM DIE TE MISBRUIKEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">An <strong>agent</strong> is a model and a harness in a loop: it plans, acts, looks at the result and tries again until the task is done. A <strong>skill</strong> is a folder with instructions, and often scripts, that teaches the agent one task. An <abbr class="tip" tabindex="0" data-tip="Model Context Protocol: an open standard to plug tools and data sources into an AI assistant or agent.">MCP</abbr> server connects the agent to another system, such as a calendar, a ticket system or a database. The MCP project compares it to a USB-C port for AI.</p>
+      <p class="en"><strong>Business impact:</strong> Anthropic's documentation describes a skill in levels. Level 1, its name and description, is always loaded. Level 2, the instructions, loads when a task matches. Level 3, the scripts, is run, and only the output reaches the model. Every skill and server widens what the agent can do, and what it can be tricked into doing. They are software your teams install, and worth treating that way.</p>
+      <p class="nl">Een <strong>agent</strong> is een model en een harness in een lus: hij plant, handelt, bekijkt het resultaat en probeert opnieuw tot de taak klaar is. Een <strong>skill</strong> is een map met instructies, en vaak scripts, die de agent één taak leert. Een <abbr class="tip" tabindex="0" data-tip="Model Context Protocol: een open standaard om tools en databronnen aan een AI-assistent of -agent te koppelen.">MCP</abbr>-server koppelt de agent aan een ander systeem, zoals een agenda, een ticketsysteem of een database. Het MCP-project vergelijkt het met een USB-C-poort voor AI.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de documentatie van Anthropic beschrijft een skill in niveaus. Niveau 1, de naam en beschrijving, is altijd geladen. Niveau 2, de instructies, laadt als een taak past. Niveau 3, de scripts, wordt uitgevoerd, en alleen de uitkomst bereikt het model. Elke skill en server verbreedt wat de agent kan, en waartoe hij kan worden misleid. Het is software die uw teams installeren, en het loont om het zo te behandelen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NOBODY KNOWS WHICH SKILLS AND SERVERS ARE IN USE</span><span class="nl">NIEMAND WEET WELKE SKILLS EN SERVERS IN GEBRUIK ZIJN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ONE LIST OF APPROVED AGENTS, SKILLS AND SERVERS</span><span class="nl">AANBEVOLEN: ÉÉN LIJST MET GOEDGEKEURDE AGENTS, SKILLS EN SERVERS</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Public skill and server collections grow fast, and AI makes it cheap to publish a convincing fake.</span><span class="nl">Openbare verzamelingen van skills en servers groeien snel, en AI maakt een overtuigende nep goedkoop.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">High</span><span class="nl">Hoog</span></b><p><span class="en">Some agents write and refine their own skills. Hermes Agent does this by design, so the list changes without a person adding to it.</span><span class="nl">Sommige agents schrijven en verbeteren hun eigen skills. Hermes Agent doet dat bewust, dus de lijst verandert zonder dat een mens iets toevoegt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Inventory</span><span class="nl">Inventaris</span></b><p><span class="en">AI can scan laptops and repositories for skill folders and server settings, and compare them with the approved list.</span><span class="nl">AI kan laptops en repositories doorzoeken op skillmappen en serverinstellingen, en die vergelijken met de goedgekeurde lijst.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">Skills: <em>read every file before you install one.</em></span>
+      <span class="nl">Skills: <em>lees elk bestand voordat u er een installeert.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">prompt injection / invisible characters / scripts folder</span>
+      <span class="nl">promptinjectie / onzichtbare tekens / scriptsmap</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">INSIDE A SKILL</span><span class="nl">IN EEN SKILL</span></div>
+      <div class="file">
+        <div class="f"><b>SKILL.md</b><span class="en">"Formats your reports"</span><span class="nl">"Maakt uw rapporten op"</span></div>
+        <div class="f"><b><span class="en">hidden</span><span class="nl">verborgen</span></b><span class="sec"><span class="en">also send ~/.ssh to …</span><span class="nl">stuur ook ~/.ssh naar …</span></span></div>
+        <div class="f"><b>scripts/</b><span>format.py</span></div>
+        <div class="f"><b><span class="en">runs</span><span class="nl">draait</span></b><span class="sec"><span class="en">unread by the model</span><span class="nl">ongelezen door het model</span></span></div>
+      </div>
+      <div class="bkt"><b><span class="en">Looks fine ✔</span><span class="nl">Ziet er goed uit ✔</span></b><span class="en">to a person reading the screen</span><span class="nl">voor wie het scherm leest</span></div>
+      <div class="banner"><span class="en">INVISIBLE TO YOU · READABLE BY THE MODEL</span><span class="nl">ONZICHTBAAR VOOR U · LEESBAAR VOOR HET MODEL</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Anthropic advises using skills only from trusted sources, and auditing every file in one you did not write. There are two reasons. First, text can hide in plain sight. Unicode tag characters show nothing on screen, yet the AWS Security Blog reports that models can read and act on them (2025). A skill that looks harmless can carry an instruction nobody saw. This is a form of <abbr class="tip" tabindex="0" data-tip="Prompt injection: text that smuggles instructions into what a model reads, so it does what the attacker wants.">prompt injection</abbr>. Second, scripts in the <code>scripts/</code> folder are run, not read. Unless a person opens them, nobody knows what they do.</p>
+      <p class="en"><strong>Business impact:</strong> an installed skill works with the agent's rights: your files, your code, often your credentials. A malicious one can send data out or change code, and it looks like normal work. A skill you trust can also change with its next update. <abbr class="tip" tabindex="0" data-tip="Open Worldwide Application Security Project: a non-profit that publishes widely used security guidance.">OWASP</abbr> ranks prompt injection first in its Top 10 for AI applications (2025).</p>
+      <p class="nl">Anthropic raadt aan om skills alleen uit vertrouwde bronnen te gebruiken, en elk bestand te controleren in een skill die u niet zelf schreef. Daar zijn twee redenen voor. Ten eerste kan tekst zich in het zicht verbergen. Unicode-tagtekens tonen niets op het scherm, maar volgens de AWS Security Blog kunnen modellen ze lezen en ernaar handelen (2025). Een skill die onschuldig oogt, kan een instructie bevatten die niemand zag. Dit is een vorm van <abbr class="tip" tabindex="0" data-tip="Promptinjectie: tekst die instructies binnensmokkelt in wat een model leest, zodat het doet wat de aanvaller wil.">promptinjectie</abbr>. Ten tweede worden scripts in de map <code>scripts/</code> uitgevoerd, niet gelezen. Tenzij iemand ze opent, weet niemand wat ze doen.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een geïnstalleerde skill werkt met de rechten van de agent: uw bestanden, uw code, vaak uw inloggegevens. Een kwaadaardige skill kan gegevens naar buiten sturen of code wijzigen, en het lijkt op gewoon werk. Een skill die u vertrouwt, kan bij de volgende update ook veranderen. <abbr class="tip" tabindex="0" data-tip="Open Worldwide Application Security Project: een non-profit die veelgebruikte beveiligingsrichtlijnen publiceert.">OWASP</abbr> zet promptinjectie op één in zijn Top 10 voor AI-toepassingen (2025).</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">A SKILL IS SOFTWARE · HIDDEN TEXT INCLUDED</span><span class="nl">EEN SKILL IS SOFTWARE · VERBORGEN TEKST INBEGREPEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: REVIEW EVERY FILE, SCAN FOR HIDDEN CHARACTERS, PIN THE VERSION</span><span class="nl">AANBEVOLEN: CONTROLEER ELK BESTAND, ZOEK VERBORGEN TEKENS, LEG DE VERSIE VAST</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">Hiding an instruction in invisible characters takes a few lines of code. No expertise is needed to do it.</span><span class="nl">Een instructie verbergen in onzichtbare tekens kost een paar regels code. Daar is geen vakkennis voor nodig.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">High</span><span class="nl">Hoog</span></b><p><span class="en">The agent follows the hidden instruction with your rights, and its log shows a normal task.</span><span class="nl">De agent volgt de verborgen instructie met uw rechten, en zijn logboek toont een gewone taak.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="mid"><span class="en">Assisted review</span><span class="nl">Ondersteunde review</span></b><p><span class="en">AI can read every script and flag network calls or file access. A simple filter can strip invisible characters first.</span><span class="nl">AI kan elk script lezen en netwerkverkeer of bestandstoegang aanwijzen. Een eenvoudig filter kan eerst onzichtbare tekens verwijderen.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">MCP servers: <em>software that runs with your rights.</em></span>
+      <span class="nl">MCP-servers: <em>software die met uw rechten draait.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">local server / startup command / tokens</span>
+      <span class="nl">lokale server / opstartopdracht / tokens</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">FOUR QUESTIONS PER SERVER</span><span class="nl">VIER VRAGEN PER SERVER</span></div>
+      <div class="bx b1"><b><span class="en">What starts it</span><span class="nl">Wat start hem</span></b><span class="en">the install command</span><span class="nl">de installatie</span></div>
+      <div class="bx b2"><b><span class="en">What it runs</span><span class="nl">Wat hij draait</span></b><span class="en">its code and scripts</span><span class="nl">zijn code en scripts</span></div>
+      <div class="bx b3"><b><span class="en">What it may do</span><span class="nl">Wat hij mag</span></b><span class="en">files, network, tokens</span><span class="nl">bestanden, netwerk, tokens</span></div>
+      <div class="bx b4"><b><span class="en">Who maintains it</span><span class="nl">Wie onderhoudt hem</span></b><span class="en">and who updates it</span><span class="nl">en wie werkt hem bij</span></div>
+      <div class="banner"><span class="en">A NEW CONNECTOR IS A NEW DOOR</span><span class="nl">EEN NIEUWE KOPPELING IS EEN NIEUWE DEUR</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Many <abbr class="tip" tabindex="0" data-tip="Model Context Protocol: an open standard to plug tools and data sources into an AI assistant or agent.">MCP</abbr> servers run on the user's own laptop. The MCP specification warns that they run with the same rights as the AI application that starts them. A malicious startup command or package can then run any command, for example to send private keys out. Other servers run online and hold tokens to your systems. A broad token stolen there opens everything it covers.</p>
+      <p class="en"><strong>Business impact:</strong> a connector to the finance system or a mailbox is a new door into it, and the agent decides when to open it. What a server returns can also carry instructions: a poisoned ticket or web page can steer the agent. Before approving one, it is worth asking four things. What starts it? What code and scripts does it bring? What may it reach? And who maintains it?</p>
+      <p class="nl">Veel <abbr class="tip" tabindex="0" data-tip="Model Context Protocol: een open standaard om tools en databronnen aan een AI-assistent of -agent te koppelen.">MCP</abbr>-servers draaien op de eigen laptop van de gebruiker. De MCP-specificatie waarschuwt dat ze dezelfde rechten hebben als de AI-toepassing die ze start. Een kwaadaardige opstartopdracht of een kwaadaardig pakket kan dan elke opdracht uitvoeren, bijvoorbeeld om privésleutels naar buiten te sturen. Andere servers draaien online en bewaren tokens voor uw systemen. Een ruim token dat daar gestolen wordt, opent alles wat het dekt.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een koppeling met het financiële systeem of een mailbox is een nieuwe deur naar binnen, en de agent bepaalt wanneer die opengaat. Wat een server teruggeeft, kan ook instructies bevatten: een vergiftigd ticket of een vergiftigde webpagina kan de agent sturen. Voordat u er een goedkeurt, loont het om vier dingen te vragen. Wat start hem? Welke code en scripts brengt hij mee? Waar mag hij bij? En wie onderhoudt hem?</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">EVERY SERVER IS CODE ON YOUR MACHINE OR A KEY TO YOUR DATA</span><span class="nl">ELKE SERVER IS CODE OP UW MACHINE OF EEN SLEUTEL TOT UW DATA</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: APPROVED SERVERS ONLY, NARROW TOKENS, PINNED VERSIONS</span><span class="nl">AANBEVOLEN: ALLEEN GOEDGEKEURDE SERVERS, SMALLE TOKENS, VASTE VERSIES</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Attackers plant instructions in tickets, mails and web pages that an agent will read through a server.</span><span class="nl">Aanvallers planten instructies in tickets, mails en webpagina's die een agent via een server leest.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">High</span><span class="nl">Hoog</span></b><p><span class="en">An agent with servers for both mail and files can be steered to read one and send it through the other.</span><span class="nl">Een agent met servers voor zowel mail als bestanden kan worden gestuurd om het ene te lezen en via het andere te versturen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="mid"><span class="en">Gateway</span><span class="nl">Gateway</span></b><p><span class="en">A central gateway can allow only approved servers and log every tool call for review.</span><span class="nl">Een centrale gateway kan alleen goedgekeurde servers toelaten en elke toolaanroep vastleggen voor controle.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 05 ============================ -->
+<section class="risk-block" id="r5">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 05</span><span class="nl">STAP 05</span></span>
+    <h2>
+      <span class="en">What makes it secure: <em>limits outside the model.</em></span>
+      <span class="nl">Wat het veilig maakt: <em>grenzen buiten het model.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">sandbox / approvals / least privilege</span>
+      <span class="nl">sandbox / goedkeuring / minimale rechten</span>
+    </span>
+
+    <div class="stage sg">
+      <div class="stage-label"><span class="en">THE HARNESS DECIDES</span><span class="nl">DE HARNESS BESLIST</span></div>
+      <div class="who w1"><span class="en">Edit project file</span><span class="nl">Projectbestand wijzigen</span></div>
+      <div class="ar a1"></div>
+      <div class="who w2"><span class="en">Delete · send out</span><span class="nl">Verwijderen · versturen</span></div>
+      <div class="ar a2"></div>
+      <div class="lk"><span class="en">ASKS A PERSON</span><span class="nl">VRAAGT EEN MENS</span></div>
+      <div class="st"><b>Sandbox</b><span class="en">project folder only</span><span class="nl">alleen de projectmap</span></div>
+      <div class="banner"><span class="en">THE MODEL SAYING NO IS NOT A CONTROL</span><span class="nl">EEN MODEL DAT NEE ZEGT IS GEEN MAATREGEL</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">A model can be talked into things; that is what prompt injection means. So protection does not rely on the model saying no. It comes from limits around it. The harness runs in a <abbr class="tip" tabindex="0" data-tip="A sealed-off space where software runs and can reach only what it is explicitly allowed to.">sandbox</abbr> that reaches only the project folder. Network access is off or limited to a list. Risky actions wait for a person, and tokens give only what the task needs. OpenAI's documentation, for example, says Codex works inside its workspace by default and asks before going beyond it.</p>
+      <p class="en"><strong>Business impact:</strong> with those limits, a tricked agent can do little harm. Without them, it can do anything the user can. Our <a href="../ai-sandboxing/">AI sandbox briefing</a> describes the layers one by one.</p>
+      <p class="nl">Een model kan worden overgehaald; dat is wat promptinjectie betekent. Bescherming hangt dus niet af van een model dat nee zegt. Ze komt van grenzen eromheen. De harness draait in een <abbr class="tip" tabindex="0" data-tip="Een afgesloten ruimte waarin software draait en alleen bij wat uitdrukkelijk is toegestaan kan komen.">sandbox</abbr> die alleen bij de projectmap kan. Netwerktoegang staat uit of is beperkt tot een lijst. Riskante acties wachten op een mens, en tokens geven alleen wat de taak nodig heeft. Volgens de documentatie van OpenAI werkt Codex bijvoorbeeld standaard binnen zijn werkruimte en vraagt het toestemming om daarbuiten te gaan.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> met die grenzen kan een misleide agent weinig schade doen. Zonder die grenzen kan hij alles wat de gebruiker kan. Onze <a href="../ai-sandboxing/">briefing over de AI-sandbox</a> beschrijft de lagen een voor een.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">AN AGENT WITHOUT LIMITS CAN DO ALL THE USER CAN</span><span class="nl">EEN AGENT ZONDER GRENZEN KAN ALLES WAT DE GEBRUIKER KAN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: SANDBOX, APPROVALS AND NARROW RIGHTS AS THE DEFAULT</span><span class="nl">AANBEVOLEN: SANDBOX, GOEDKEURING EN SMALLE RECHTEN ALS STANDAARD</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Agents try many routes to finish a task, so a gap in the sandbox tends to be found.</span><span class="nl">Agents proberen veel routes om een taak af te maken, dus een gat in de sandbox wordt meestal gevonden.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Users who approve every prompt out of habit turn the approval step into a formality.</span><span class="nl">Gebruikers die uit gewoonte elke vraag goedkeuren, maken van de goedkeuring een formaliteit.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Built in</span><span class="nl">Ingebouwd</span></b><p><span class="en">Current harnesses ship with sandboxes and approval modes. The work is choosing safe defaults and fixing them centrally.</span><span class="nl">Huidige harnesses hebben sandboxes en goedkeuringsmodi ingebouwd. Het werk zit in veilige standaarden kiezen en die centraal vastleggen.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What keeps agents <em>useful and contained.</em></span>
+      <span class="nl">Wat agents <em>nuttig en begrensd houdt.</em></span>
+    </h2>
+    <span class="term"><span class="en">one line per control</span><span class="nl">één regel per maatregel</span></span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">APPROVED HARNESS</span><span class="nl">GOEDGEKEURDE HARNESS</span></span>
+        <span class="chip c2"><span class="en">APPROVED LIST</span><span class="nl">GOEDGEKEURDE LIJST</span></span>
+        <span class="chip c3"><span class="en">REVIEW BEFORE INSTALL</span><span class="nl">CONTROLE VOOR INSTALLATIE</span></span>
+        <span class="chip c4"><span class="en">NARROW TOKENS</span><span class="nl">SMALLE TOKENS</span></span>
+        <span class="chip c5"><span class="en">SANDBOX + APPROVALS</span><span class="nl">SANDBOX + GOEDKEURING</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Addresses</th><th>In one line</th></tr>
+        <tr><td class="ctl">Approved harnesses, managed settings</td><td>Model &amp; harness (01)</td><td>Teams use agents the organisation chose, with settings fixed centrally. Full access is the exception, not the default.</td></tr>
+        <tr><td class="ctl">Know the model and the data route</td><td>Model &amp; harness (01)</td><td>For each agent, record which model it uses, which provider runs it, and where prompts and code go.</td></tr>
+        <tr><td class="ctl">One approved list</td><td>The parts (02)</td><td>Agents, skills and MCP servers in use are on one list with an owner. Anything else is removed.</td></tr>
+        <tr><td class="ctl">Review before install</td><td>Skills (03), MCP servers (04)</td><td>A person reads every file, including the scripts, and a scan strips or flags invisible characters.</td></tr>
+        <tr><td class="ctl">Pinned versions</td><td>Skills (03), MCP servers (04)</td><td>Updates are reviewed like the first install, because a trusted skill or server can change.</td></tr>
+        <tr><td class="ctl">Narrow tokens per server</td><td>MCP servers (04)</td><td>Each server gets its own token, read-only where possible, never one key for everything.</td></tr>
+        <tr><td class="ctl">Sandbox, approvals and logging</td><td>What keeps it safe (05)</td><td>Agents run sandboxed, risky actions wait for a person, and every action is logged.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Pakt aan</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Goedgekeurde harnesses, centrale instellingen</td><td>Model &amp; harness (01)</td><td>Teams gebruiken agents die de organisatie koos, met centraal vastgelegde instellingen. Volledige toegang is de uitzondering, niet de standaard.</td></tr>
+        <tr><td class="ctl">Ken het model en de route van de data</td><td>Model &amp; harness (01)</td><td>Leg per agent vast welk model het gebruikt, welke aanbieder het draait, en waar prompts en code heen gaan.</td></tr>
+        <tr><td class="ctl">Eén goedgekeurde lijst</td><td>De onderdelen (02)</td><td>Agents, skills en MCP-servers in gebruik staan op één lijst met een eigenaar. Al het andere wordt verwijderd.</td></tr>
+        <tr><td class="ctl">Controle voor installatie</td><td>Skills (03), MCP-servers (04)</td><td>Een mens leest elk bestand, ook de scripts, en een scan verwijdert of markeert onzichtbare tekens.</td></tr>
+        <tr><td class="ctl">Vaste versies</td><td>Skills (03), MCP-servers (04)</td><td>Updates worden getoetst zoals de eerste installatie, want een vertrouwde skill of server kan veranderen.</td></tr>
+        <tr><td class="ctl">Smalle tokens per server</td><td>MCP-servers (04)</td><td>Elke server krijgt een eigen token, waar mogelijk alleen-lezen, nooit één sleutel voor alles.</td></tr>
+        <tr><td class="ctl">Sandbox, goedkeuring en logging</td><td>Wat het veilig houdt (05)</td><td>Agents draaien in een sandbox, riskante acties wachten op een mens, en elke actie wordt vastgelegd.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> you do not need to understand models to ask five useful questions. Which AI agents do our people use, and who chose them? Which model sits behind each one, and where does our data go? Which skills and MCP servers are installed, and who reviewed them? Can an agent delete or send anything without a person approving? And would we notice if one did something it should not? Clear answers usually mean the gain comes without a new way in.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> u hoeft modellen niet te begrijpen om vijf nuttige vragen te stellen. Welke AI-agents gebruiken onze mensen, en wie heeft ze gekozen? Welk model zit achter elk ervan, en waar gaan onze gegevens heen? Welke skills en MCP-servers zijn geïnstalleerd, en wie heeft ze gecontroleerd? Kan een agent iets verwijderen of versturen zonder dat een mens goedkeurt? En zouden we merken als er een iets deed wat niet mocht? Duidelijke antwoorden betekenen meestal dat de winst komt zonder een nieuwe weg naar binnen.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">Teams adopt agents, skills and servers faster than anyone reviews them, and prompt injection has no complete fix yet.</span><span class="nl">Teams nemen agents, skills en servers sneller in gebruik dan iemand ze toetst, en voor promptinjectie bestaat nog geen volledige oplossing.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">An agent acts with the user's rights. A tricked one can leak code, data or credentials, or change systems, at machine speed.</span><span class="nl">Een agent handelt met de rechten van de gebruiker. Een misleide agent kan code, gegevens of inloggegevens lekken, of systemen wijzigen, op machinesnelheid.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium-low</span><span class="nl">Gemiddeld-laag</span></span><p><span class="en">With an approved list, reviews, narrow tokens and a sandbox, a tricked agent reaches little. Injection itself remains possible.</span><span class="nl">Met een goedgekeurde lijst, controles, smalle tokens en een sandbox bereikt een misleide agent weinig. Injectie zelf blijft mogelijk.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">Head of engineering</span><span class="nl">Hoofd engineering</span></span><p><span class="en">Engineering owns the approved list and the harness settings. The <abbr class="tip" tabindex="0" data-tip="Chief information security officer: the executive responsible for information security.">CISO</abbr> reviews skills and servers before they are approved.</span><span class="nl">Engineering is eigenaar van de goedgekeurde lijst en de instellingen van de harness. De <abbr class="tip" tabindex="0" data-tip="Chief information security officer: de bestuurder die verantwoordelijk is voor informatiebeveiliging.">CISO</abbr> toetst skills en servers voordat ze worden goedgekeurd.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Agents running with full access · skills and MCP servers in use that are not on the approved list · server tokens with write or admin rights · months since the last review of the list.</span><span class="nl">Agents die met volledige toegang draaien · skills en MCP-servers in gebruik die niet op de goedgekeurde lijst staan · servertokens met schrijf- of beheerrechten · maanden sinds de laatste toetsing van de lijst.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“AI agents, skills or MCP servers are used without review, sandbox or narrow rights, so that hidden instructions or malicious code act with our staff's access, which can lead to data leaks, unwanted changes and a notifiable incident.”</span><span class="nl">“AI-agents, skills of MCP-servers worden gebruikt zonder controle, sandbox of smalle rechten, zodat verborgen instructies of kwaadaardige code handelen met de toegang van onze medewerkers, wat kan leiden tot datalekken, ongewenste wijzigingen en een meldplichtig incident.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU directive on cybersecurity for essential and important entities; in the Netherlands the Cyberbeveiligingswet.">NIS2</abbr> Art. 21(2) requires measures including supply chain security (d), security in acquisition and development (e), and access control (i). Skills and MCP servers are supplier code, so all three apply. The Cyberbeveiligingswet has been in force since 15 August 2026.</td><td>If a supplier uses agents on your code or data, ask which ones, with which skills and servers, and what limits they run under.</td><td>A leak through a tricked agent can count as a significant incident if it meets the thresholds. Early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Art. 9(4)(c) requires access limited to what legitimate, approved functions need; that includes agents. Art. 28 treats AI providers like any other <abbr class="tip" tabindex="0" data-tip="Information and communication technology: in DORA, any digital or data service a financial entity relies on.">ICT</abbr> third party. DORA has applied since 17 January 2025.</td><td>For ICT providers behind critical functions, ask how they govern agents on your systems, and agree a right to see it in the contract.</td><td>Classify promptly. Initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterion CC6.1 covers logical access, which includes what agents and their tokens can reach. CC8.1 covers change management, which includes changes an agent makes.</td><td>Check whether AI agents are in the system description. If they are not, the report says nothing about them.</td><td>A leak through an over-privileged agent will likely appear as an exception in the next report.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>The focus is financial reporting. Agents appear only through general IT controls on access and change, where they touch the financial process.</td><td>The report rarely mentions AI agents. Ask in the contract whether agents can change systems under your service, and how that is controlled.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor cyberbeveiliging van essentiële en belangrijke entiteiten; in Nederland de Cyberbeveiligingswet.">NIS2</abbr> art. 21 lid 2 vereist maatregelen waaronder beveiliging van de toeleveringsketen (d), beveiliging bij aanschaf en ontwikkeling (e), en toegangsbeleid (i). Skills en MCP-servers zijn code van derden, dus alle drie zijn van toepassing. De Cyberbeveiligingswet is van kracht sinds 15 augustus 2026.</td><td>Gebruikt een leverancier agents op uw code of gegevens, vraag dan welke, met welke skills en servers, en binnen welke grenzen.</td><td>Een lek via een misleide agent kan als significant incident gelden als het de drempels haalt. Vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindverslag binnen een maand.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Art. 9 lid 4 onder c vereist toegang die beperkt is tot wat legitieme, goedgekeurde functies nodig hebben; dat geldt ook voor agents. Art. 28 behandelt AI-aanbieders als elke andere <abbr class="tip" tabindex="0" data-tip="Informatie- en communicatietechnologie: onder DORA elke digitale of datadienst waarop een financiële instelling leunt.">ICT</abbr>-derde partij. DORA geldt sinds 17 januari 2025.</td><td>Vraag ICT-leveranciers achter kritieke functies hoe ze agents op uw systemen beheersen, en leg een inzagerecht vast in het contract.</td><td>Classificeer snel. Eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterium CC6.1 gaat over logische toegang, inclusief waar agents en hun tokens bij kunnen. CC8.1 gaat over wijzigingsbeheer, inclusief wijzigingen die een agent doet.</td><td>Controleer of AI-agents in de systeembeschrijving staan. Staan ze er niet in, dan zegt het rapport er niets over.</td><td>Een lek via een agent met te veel rechten komt waarschijnlijk als afwijking in het volgende rapport.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>De focus ligt op de financiële verslaggeving. Agents komen alleen in beeld via algemene IT-beheersmaatregelen voor toegang en wijzigingen, waar ze het financiële proces raken.</td><td>Het rapport noemt AI-agents zelden. Vraag in het contract of agents systemen onder uw dienst kunnen wijzigen, en hoe dat wordt beheerst.</td><td>ISAE 3402 schept geen meldplicht aan de auditors van gebruikers. Verwacht een afwijking in het volgende rapport en vraag in het contract om tussentijdse melding.</td></tr>
+      </table>
+      <p class="sources en">Checked against: Anthropic <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview">Agent Skills</a> and <a href="https://code.claude.com/docs/en/overview">Claude Code</a> documentation, including <a href="https://code.claude.com/docs/en/settings">managed settings</a> (Oct 2026), OpenAI Codex documentation on <a href="https://learn.chatgpt.com/docs/sandboxing">sandboxing</a> and <a href="https://developers.openai.com/codex/enterprise/managed-configuration">managed configuration</a> (Oct 2026), Nous Research <a href="https://github.com/NousResearch/hermes-agent">Hermes Agent</a> (Oct 2026), <a href="https://modelcontextprotocol.io/docs/getting-started/intro">Model Context Protocol</a> and its <a href="https://modelcontextprotocol.io/docs/2026-07-28/tutorials/security/security_best_practices">security best practices</a> (Oct 2026), <a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/">OWASP LLM01:2025</a>, <a href="https://www.unicode.org/faq/languagetagging.html">Unicode FAQ on tag characters</a>, <a href="https://aws.amazon.com/blogs/security/defending-llm-applications-against-unicode-character-smuggling/">AWS Security Blog</a> (Sep 2025), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 21 and 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> Art. 9, 28 and 64, <a href="https://eur-lex.europa.eu/eli/reg_del/2025/301/oj">RTS (EU) 2025/301</a> (Feb 2025), <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL</a> (Aug 2026), AICPA Trust Services Criteria CC6.1 and CC8.1 (2017, points of focus 2022) · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: documentatie van Anthropic over <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview">Agent Skills</a> en <a href="https://code.claude.com/docs/en/overview">Claude Code</a>, inclusief <a href="https://code.claude.com/docs/en/settings">centrale instellingen</a> (okt 2026), documentatie van OpenAI Codex over <a href="https://learn.chatgpt.com/docs/sandboxing">sandboxing</a> en <a href="https://developers.openai.com/codex/enterprise/managed-configuration">centrale configuratie</a> (okt 2026), Nous Research <a href="https://github.com/NousResearch/hermes-agent">Hermes Agent</a> (okt 2026), <a href="https://modelcontextprotocol.io/docs/getting-started/intro">Model Context Protocol</a> en de <a href="https://modelcontextprotocol.io/docs/2026-07-28/tutorials/security/security_best_practices">beveiligingsrichtlijnen</a> (okt 2026), <a href="https://genai.owasp.org/llmrisk/llm01-prompt-injection/">OWASP LLM01:2025</a>, <a href="https://www.unicode.org/faq/languagetagging.html">Unicode-FAQ over tagtekens</a>, <a href="https://aws.amazon.com/blogs/security/defending-llm-applications-against-unicode-character-smuggling/">AWS Security Blog</a> (sep 2025), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 21 en 23, <a href="https://eur-lex.europa.eu/eli/reg/2022/2554/oj">DORA</a> art. 9, 28 en 64, <a href="https://eur-lex.europa.eu/eli/reg_del/2025/301/oj">RTS (EU) 2025/301</a> (feb 2025), <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC</a> (aug 2026), AICPA Trust Services Criteria CC6.1 en CC8.1 (2017, aandachtspunten 2022) · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../ai-sandboxing/"><span class="en">A sandbox for AI</span><span class="nl">Een zandbak voor AI</span></a> ·
+  <a href="../ai-security/"><span class="en">AI security</span><span class="nl">AI-beveiliging</span></a> ·
+  <a href="../supply-chain/"><span class="en">Supply chain</span><span class="nl">Toeleveringsketen</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=ai-agents&amp;title=Missing%3A%20ai-agents"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=ai-agents&amp;title=Correction%3A%20ai-agents"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">AI AGENTS BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">AI-AGENTS BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>
