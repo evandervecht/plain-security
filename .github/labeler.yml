@@ -53,6 +53,8 @@ sponsor:
   - '(\bai\b|llm|chatgpt|copilot|deepfake|prompt injection)'
 'page: ai-sandboxing':
   - '(sandbox|zandbak|microvm|gvisor)'
+'page: ai-agents':
+  - '(ai agents?|ai-agents?|harness|\bmcp\b|model context protocol|agent skills?|skill\.md|claude code|codex|hermes)'
 'page: web-security':
   - '(website|web.?security|webshop|injection|\bwaf\b|skimm)'
 'page: endpoints':
