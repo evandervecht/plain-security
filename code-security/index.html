@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>Code security // Plain Security</title>
+<meta name="description" content="Your own code, open-source parts, server templates and container images: where security flaws hide, and how to tell which ones matter.">
+<link rel="canonical" href="https://plain-security.fyi/code-security/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Code security // Plain Security">
+<meta property="og:description" content="Your own code, open-source parts, server templates and container images: where security flaws hide, and how to tell which ones matter.">
+<meta property="og:url" content="https://plain-security.fyi/code-security/">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="nl_NL">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   CODE SECURITY // BRIEFING
+   Palette sampled from the blog screenshot:
+     #051324  deepest navy (nav / footer)
+     #0b1b2b  page background
+     #081727  low background / stages
+     #0d1e2d  alternate section background
+     #2a4858  surface / cards
+     #637b88  slate accent
+     #87a2b0  muted heading / secondary
+     #bbccd4  body text
+     #ffffff  headings
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents (kept from the original scenes) */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+
+.node{position:absolute;top:50%;transform:translateY(-50%);width:96px;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+.node .box{width:66px;height:66px;margin:0 auto 12px;display:grid;place-items:center;font-size:26px;color:var(--white);background:var(--surface);border:1px solid var(--line)}
+.node.left{left:20px}
+.node.right{right:20px}
+
+.wire{position:absolute;left:118px;right:118px;top:50%;height:1px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+
+.env{position:absolute;top:50%;width:52px;height:34px;margin-top:-17px;z-index:3;background:var(--white);display:grid;place-items:center;font-size:17px;color:var(--deep);font-weight:700}
+.env{border:1px solid #9fb3c0}
+
+.actor{position:absolute;width:62px;height:62px;display:grid;place-items:center;z-index:3;font-size:26px;color:var(--white);background:#3a1430;border:1px solid rgba(255,93,115,.55)}
+.actor .tag{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px}
+.pulse{animation:pulse 2.6s ease-out infinite}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,93,115,.5)}
+  70%{box-shadow:0 0 0 24px rgba(255,93,115,0)}
+  100%{box-shadow:0 0 0 0 rgba(255,93,115,0)}
+}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 8s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+.tagline{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:9.5px;letter-spacing:.2em;font-weight:700;color:var(--bad-soft);background:var(--deep);border:1px solid rgba(255,93,115,.4);padding:3px 9px;z-index:4}
+
+/* --- scenes 1 and 2 : a code listing --- */
+.listing{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:320px;max-width:calc(100% - 28px);padding:14px 18px;background:var(--deep);border:1px solid var(--line);font-family:var(--mono);font-size:12px;line-height:1.9;color:var(--muted);z-index:2;text-align:left}
+.listing b{color:var(--white);font-weight:500}
+.listing .ln{position:relative;white-space:nowrap}
+.listing .flag{position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:9px;letter-spacing:.14em;font-weight:700;padding:1px 7px;line-height:1.6;opacity:0;animation:fadeIn 8s ease-in-out infinite}
+.listing .flag.ok{background:var(--good);color:#04291d}
+.listing .flag.miss{background:var(--bad);color:var(--white)}
+.s1 .listing{top:42%}
+.s1 .scan{position:absolute;left:50%;width:320px;max-width:calc(100% - 28px);transform:translateX(-50%);height:2px;background:var(--brand);box-shadow:0 0 12px var(--brand);z-index:3;animation:sweep 8s linear infinite}
+@keyframes sweep{0%{top:22%;opacity:0}5%{opacity:1}45%{top:64%;opacity:1}50%,100%{top:64%;opacity:0}}
+.s2 .listing{top:42%}
+.s2 .listing .hit{color:var(--bad-soft);animation:glow 8s ease-in-out infinite}
+@keyframes glow{0%,40%{background:transparent}50%,100%{background:rgba(255,93,115,.22)}}
+
+/* --- scene 3 : one template, every environment --- */
+.s3 .env{animation:ship 6s linear infinite;background:var(--warn);color:#33240a;border-color:var(--deep)}
+@keyframes ship{0%{left:118px;opacity:0}8%{opacity:1}85%{left:calc(100% - 170px);opacity:1}100%{left:calc(100% - 170px);opacity:0}}
+.s3 .tagline{top:30px;color:var(--warn);border-color:rgba(255,200,87,.45);text-transform:none;letter-spacing:.06em;font-family:var(--mono)}
+
+/* --- scene 4 : the funnel --- */
+.s4 .fl{position:absolute;left:50%;transform:translateX(-50%);height:38px;display:grid;place-items:center;font-size:9.5px;letter-spacing:.12em;font-weight:700;white-space:nowrap;opacity:0;animation:appear 8s ease-in-out infinite;animation-delay:var(--d)}
+@keyframes appear{0%{opacity:0}8%,88%{opacity:1}96%,100%{opacity:0}}
+.s4 .f1{top:44px;width:min(560px,90%);background:rgba(255,200,87,.12);border:1px solid rgba(255,200,87,.45);color:var(--warn)}
+.s4 .f2{top:96px;width:min(380px,70%);background:rgba(255,93,115,.10);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.s4 .f3{top:148px;width:min(220px,52%);background:var(--bad);border:1px solid var(--bad);color:var(--white)}
+/* --- scene 5 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+@media (max-width:820px){.banner{white-space:normal;width:calc(100% - 28px);text-align:center}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .node{width:78px}.node .box{width:54px;height:54px;font-size:21px}
+  .wire{left:98px;right:98px}
+  .s3{flex-direction:column;gap:18px}
+  .magnify{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important}
+  .listing .flag{opacity:1}
+  .s1 .scan{display:none}
+  .s2 .listing .hit{background:rgba(255,93,115,.22)}
+  .s3 .env{left:calc(100% - 170px);opacity:1}
+  .s4 .fl{opacity:1}
+  .banner{opacity:1}
+}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources{font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;color:var(--slate);margin:18px 0 0}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> CODE</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">OWN CODE</span><span class="nl">EIGEN CODE</span></a>
+      <a href="#r2"><span class="en">OPEN SOURCE</span><span class="nl">OPEN SOURCE</span></a>
+      <a href="#r3"><span class="en">CONFIGURATION</span><span class="nl">CONFIGURATIE</span></a>
+      <a href="#r4"><span class="en">FINDINGS</span><span class="nl">BEVINDINGEN</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">Code security: <em>what is inside the software we ship.</em></span>
+      <span class="nl">Codebeveiliging: <em>wat er in de software zit die wij leveren.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">Code security means finding, fixing and preventing security flaws before software reaches production. It covers the code you write, the open-source parts you reuse, and the files that describe your servers and containers. Four places flaws hide, and how to tell which ones matter.</span>
+      <span class="nl">Codebeveiliging betekent beveiligingsfouten vinden, herstellen en voorkomen voordat software in productie gaat. Het gaat om de code die u zelf schrijft, de open-sourceonderdelen die u hergebruikt, en de bestanden die uw servers en containers beschrijven. Vier plekken waar fouten zitten, en hoe u ziet welke ertoe doen.</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE FOUR</span><span class="nl">BEKIJK DE VIER</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT HELPS</span><span class="nl">WAT HELPT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 01</span><span class="nl">STAP 01</span></span>
+    <h2>
+      <span class="en">The scanner passed it. <em>Any customer can read any invoice.</em></span>
+      <span class="nl">De scanner keurde het goed. <em>Elke klant kan elke factuur lezen.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">flaws in your own code / what scanning catches and misses</span>
+      <span class="nl">fouten in uw eigen code / wat scannen vindt en mist</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">OUR CODE</span><span class="nl">ONZE CODE</span></div>
+      <div class="listing">
+        <div class="ln"><b>id</b>  = form("invoice")</div>
+        <div class="ln"><b>sql</b> = "SELECT …" + id<span class="flag ok"><span class="en">FLAGGED</span><span class="nl">GEVONDEN</span></span></div>
+        <div class="ln"><b>inv</b> = db.get(id)</div>
+        <div class="ln"><b>return</b> inv<span class="flag miss"><span class="en">MISSED</span><span class="nl">GEMIST</span></span></div>
+      </div>
+      <div class="scan"></div>
+      <div class="banner"><span class="en">SCANNERS FIND PATTERNS, NOT MISSING CHECKS</span><span class="nl">SCANNERS VINDEN PATRONEN, GEEN ONTBREKENDE CONTROLES</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Every application has flaws its developers did not intend. <abbr class="tip" tabindex="0" data-tip="Open Worldwide Application Security Project: a non-profit that publishes free, widely used guidance on application security.">OWASP</abbr> lists the most common ones in its Top 10:2025, and broken access control is number one: the software forgets to check whether you may see what you ask for. Automated <abbr class="tip" tabindex="0" data-tip="Static application security testing: a tool that reads source code for known risky patterns, without running it.">code scanning</abbr> is good at known patterns, such as text from a web form pasted straight into a database query. It is poor at business logic. It cannot know that invoice 1043 belongs to another customer.</p>
+      <p class="en"><strong>Business impact:</strong> a missing access check leaks customer data quietly, through normal-looking requests, and no scanner warns you. We suggest two layers: scanning on every change for the known patterns, and a human review of any code that decides who may see or change what.</p>
+      <p class="nl">Elke applicatie bevat fouten die de ontwikkelaars niet bedoelden. <abbr class="tip" tabindex="0" data-tip="Open Worldwide Application Security Project: een non-profit die gratis, veelgebruikte richtlijnen voor applicatiebeveiliging publiceert.">OWASP</abbr> zet de meest voorkomende op een rij in de Top 10:2025, en gebrekkige toegangscontrole staat op één: de software vergeet te controleren of u mag zien wat u opvraagt. Geautomatiseerde <abbr class="tip" tabindex="0" data-tip="Static application security testing: een tool die broncode op bekende riskante patronen leest, zonder die uit te voeren.">codescans</abbr> zijn goed in bekende patronen, zoals tekst uit een webformulier die rechtstreeks in een databasevraag belandt. In bedrijfslogica zijn ze zwak. Een scanner weet niet dat factuur 1043 van een andere klant is.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een ontbrekende toegangscontrole lekt klantgegevens stil, via normaal ogende verzoeken, en geen scanner waarschuwt u. Wij raden twee lagen aan: scans bij elke wijziging voor de bekende patronen, en een menselijke review van alle code die bepaalt wie wat mag zien of wijzigen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">DATA LEAK · LOOKS LIKE NORMAL USE · NO ALARM</span><span class="nl">DATALEK · LIJKT OP NORMAAL GEBRUIK · GEEN ALARM</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: SCANNING ON EVERY CHANGE + REVIEW OF ACCESS LOGIC</span><span class="nl">AANBEVOLEN: SCANS BIJ ELKE WIJZIGING + REVIEW VAN TOEGANGSLOGICA</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI tools help an attacker study a public application, guess where an access check is missing, and try many variations of a request automatically.</span><span class="nl">AI-tools helpen een aanvaller een openbare applicatie te bestuderen, te raden waar een toegangscontrole ontbreekt en automatisch veel varianten van een verzoek te proberen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI coding assistants write working code fast, and working is not the same as safe. Generated code can skip an access check as easily as a rushed developer can.</span><span class="nl">AI-codeerassistenten schrijven snel werkende code, en werkend is niet hetzelfde als veilig. Gegenereerde code kan een toegangscontrole net zo makkelijk overslaan als een ontwikkelaar met haast.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Review every change</span><span class="nl">Elke wijziging reviewen</span></b><p><span class="en">AI-assisted review can read each change for logic flaws, not just patterns, and explain the finding to the developer. A person still approves code that guards money or personal data.</span><span class="nl">AI-ondersteunde review kan elke wijziging lezen op logicafouten, niet alleen op patronen, en de bevinding aan de ontwikkelaar uitleggen. Code die geld of persoonsgegevens bewaakt, keurt nog steeds een mens goed.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 02</span><span class="nl">STAP 02</span></span>
+    <h2>
+      <span class="en">We didn't write it. <em>We still ship it.</em></span>
+      <span class="nl">Wij schreven het niet. <em>Wij leveren het wel.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">known vulnerabilities in open-source components</span>
+      <span class="nl">bekende kwetsbaarheden in open-sourceonderdelen</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">ONE RELEASE</span><span class="nl">ÉÉN RELEASE</span></div>
+      <div class="listing">
+        <div class="ln"><b>our-portal</b> 4.2<span class="flag ok"><span class="en">OURS</span><span class="nl">VAN ONS</span></span></div>
+        <div class="ln"><b>web-framework</b> 6.1</div>
+        <div class="ln hit"><b>logging-lib</b> 2.14<span class="flag miss"><span class="en">KNOWN FLAW</span><span class="nl">BEKENDE FOUT</span></span></div>
+        <div class="ln"><b>pdf-parser</b> 3.2</div>
+      </div>
+      <div class="banner"><span class="en">FLAW PUBLISHED TODAY · ALREADY IN PRODUCTION</span><span class="nl">FOUT VANDAAG GEPUBLICEERD · AL IN PRODUCTIE</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Modern software is assembled. Your developers write the part that makes it yours and reuse open-source components for the rest: logging, web frameworks, file readers. When a flaw in one of those components is published, every application that ships the old version has it too, including yours. <abbr class="tip" tabindex="0" data-tip="Also called software composition analysis: a tool that lists the open-source components you use and flags versions with known flaws.">Dependency scanning</abbr> compares the list of components in each release, its <abbr class="tip" tabindex="0" data-tip="Software bill of materials: the ingredient list of a release, every component and its version.">SBOM</abbr>, with public vulnerability databases.</p>
+      <p class="en"><strong>Business impact:</strong> once a flaw is public, attackers can search for every system running that version. You cannot fix what you do not know you ship. This step is about honest components with known holes; packages that are malicious on purpose are covered in the supply chain briefing.</p>
+      <p class="nl">Moderne software wordt samengesteld. Uw ontwikkelaars schrijven het deel dat het van u maakt en hergebruiken open-sourceonderdelen voor de rest: logging, webframeworks, bestandslezers. Wordt een fout in zo'n onderdeel gepubliceerd, dan heeft elke applicatie met de oude versie die fout ook, de uwe inbegrepen. <abbr class="tip" tabindex="0" data-tip="Ook wel software composition analysis: een tool die de open-sourceonderdelen in uw software opsomt en versies met bekende fouten markeert.">Afhankelijkheidsscans</abbr> vergelijken de lijst met onderdelen van elke release, de <abbr class="tip" tabindex="0" data-tip="Software bill of materials: de ingrediëntenlijst van een release, elk onderdeel met zijn versie.">SBOM</abbr>, met openbare kwetsbaarheidsdatabases.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> zodra een fout openbaar is, kunnen aanvallers zoeken naar elk systeem met die versie. U kunt niet herstellen waarvan u niet weet dat u het levert. Deze stap gaat over eerlijke onderdelen met bekende gaten; pakketten die bewust kwaadaardig zijn, staan in de briefing over de toeleveringsketen.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">PUBLIC FLAW · OUR NAME ON IT · IN EVERY RELEASE</span><span class="nl">OPENBARE FOUT · ONZE NAAM EROP · IN ELKE RELEASE</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: DEPENDENCY SCANNING + AN SBOM PER RELEASE</span><span class="nl">AANBEVOLEN: AFHANKELIJKHEIDSSCANS + EEN SBOM PER RELEASE</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">When a fixed version of a component is published, AI tools can help an attacker compare old and new code and work out the flaw faster than before.</span><span class="nl">Zodra een herstelde versie van een onderdeel verschijnt, kunnen AI-tools een aanvaller helpen oude en nieuwe code te vergelijken en de fout sneller dan vroeger te achterhalen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI assistants suggest components and versions from what they learned, which can be an old version with a known flaw. The suggestion sounds just as confident either way.</span><span class="nl">AI-assistenten stellen onderdelen en versies voor op basis van wat ze leerden, en dat kan een oude versie met een bekende fout zijn. Het voorstel klinkt in beide gevallen even zeker.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Cheaper upgrades</span><span class="nl">Goedkoper upgraden</span></b><p><span class="en">AI tools can propose the upgrade and adjust the code that calls the component, so staying current costs less effort. Tests and a review still decide whether it ships.</span><span class="nl">AI-tools kunnen de upgrade voorstellen en de code aanpassen die het onderdeel aanroept, zodat bijblijven minder moeite kost. Tests en een review beslissen nog steeds of het live gaat.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 03</span><span class="nl">STAP 03</span></span>
+    <h2>
+      <span class="en">The server is code too, <em>and so are its mistakes.</em></span>
+      <span class="nl">Ook de server is code, <em>en zijn fouten ook.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">infrastructure as code / container images</span>
+      <span class="nl">infrastructure as code / containerimages</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">ONE TEMPLATE</span><span class="nl">ÉÉN SJABLOON</span></div>
+      <div class="node left"><div class="box">📄</div><span class="en">Template</span><span class="nl">Sjabloon</span></div>
+      <div class="node right"><div class="box">☁️</div><span class="en">Every environment</span><span class="nl">Elke omgeving</span></div>
+      <div class="wire"></div>
+      <div class="tagline">public_access = true</div>
+      <div class="env">⚠</div>
+      <div class="banner"><span class="en">COPIED TO EVERY DEPLOYMENT</span><span class="nl">GEKOPIEERD NAAR ELKE UITROL</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Servers, networks and storage are now often described in text files, <abbr class="tip" tabindex="0" data-tip="Infrastructure as code: servers, networks and accounts described in text files that a tool builds, instead of set up by hand.">infrastructure as code</abbr>, and software is packed into <abbr class="tip" tabindex="0" data-tip="A packaged copy of an application with everything it needs to run, including parts of an operating system.">container images</abbr>. That makes them code too. One line that opens a storage bucket to the internet is copied to every environment built from that template. An image built two years ago still carries the operating-system libraries of two years ago. OWASP ranks security misconfiguration second in its Top 10:2025.</p>
+      <p class="en"><strong>Business impact:</strong> one wrong setting becomes the default everywhere, and an old image brings old holes into new deployments. We suggest scanning templates and images before they are deployed, and rebuilding images on a schedule, not only when the application changes.</p>
+      <p class="nl">Servers, netwerken en opslag worden tegenwoordig vaak in tekstbestanden beschreven, <abbr class="tip" tabindex="0" data-tip="Infrastructure as code: servers, netwerken en accounts beschreven in tekstbestanden die een tool bouwt, in plaats van met de hand ingericht.">infrastructure as code</abbr>, en software wordt verpakt in <abbr class="tip" tabindex="0" data-tip="Een verpakte kopie van een applicatie met alles wat ze nodig heeft om te draaien, inclusief delen van een besturingssysteem.">containerimages</abbr>. Daarmee zijn ook dat code. Eén regel die een opslagbucket voor internet openzet, wordt gekopieerd naar elke omgeving die met dat sjabloon wordt gebouwd. Een image van twee jaar geleden bevat nog de besturingssysteembibliotheken van twee jaar geleden. OWASP zet verkeerde beveiligingsconfiguratie op twee in de Top 10:2025.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> één verkeerde instelling wordt overal de standaard, en een oud image brengt oude gaten mee in nieuwe uitrol. Wij raden aan sjablonen en images te scannen vóór de uitrol, en images volgens schema opnieuw te bouwen, niet alleen als de applicatie verandert.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">ONE LINE · EVERY ENVIRONMENT · OLD HOLES IN NEW SERVERS</span><span class="nl">ÉÉN REGEL · ELKE OMGEVING · OUDE GATEN IN NIEUWE SERVERS</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: SCAN TEMPLATES AND IMAGES BEFORE DEPLOYMENT + REBUILD ON A SCHEDULE</span><span class="nl">AANBEVOLEN: SJABLONEN EN IMAGES SCANNEN VÓÓR UITROL + VOLGENS SCHEMA HERBOUWEN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Bots already sweep the internet for open storage and exposed services. AI helps them recognise what they found and what it is worth.</span><span class="nl">Bots doorzoeken het internet al naar open opslag en blootgestelde diensten. AI helpt ze herkennen wat ze vonden en wat het waard is.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI assistants write templates in seconds, often with permissive example settings that make it work first time. Copied into production, the shortcut becomes the standard.</span><span class="nl">AI-assistenten schrijven sjablonen in seconden, vaak met ruime voorbeeldinstellingen zodat het meteen werkt. Eenmaal naar productie gekopieerd wordt die snelkoppeling de standaard.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Check every template</span><span class="nl">Elk sjabloon controleren</span></b><p><span class="en">Policy checks, increasingly AI-assisted, read every template and image before deployment and explain why a setting is risky. The block itself stays a simple, agreed rule.</span><span class="nl">Beleidscontroles, steeds vaker AI-ondersteund, lezen elk sjabloon en image vóór de uitrol en leggen uit waarom een instelling riskant is. De blokkade zelf blijft een eenvoudige, afgesproken regel.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 04 ============================ -->
+<section class="risk-block" id="r4">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">STEP 04</span><span class="nl">STAP 04</span></span>
+    <h2>
+      <span class="en">A long list of findings. <em>Which one matters?</em></span>
+      <span class="nl">Een lange lijst bevindingen. <em>Welke doet ertoe?</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">prioritising vulnerabilities / reachable and exploited</span>
+      <span class="nl">kwetsbaarheden prioriteren / bereikbaar en misbruikt</span>
+    </span>
+
+    <div class="stage s4">
+      <div class="stage-label"><span class="en">TRIAGE</span><span class="nl">TRIAGE</span></div>
+      <div class="fl f1" style="--d:0s"><span class="en">ALL FINDINGS</span><span class="nl">ALLE BEVINDINGEN</span></div>
+      <div class="fl f2" style="--d:1.2s"><span class="en">REACHABLE IN WHAT WE RUN</span><span class="nl">BEREIKBAAR IN WAT WE DRAAIEN</span></div>
+      <div class="fl f3" style="--d:2.4s"><span class="en">EXPLOITED NOW</span><span class="nl">NU MISBRUIKT</span></div>
+      <div class="banner"><span class="en">FIX THESE FIRST</span><span class="nl">DEZE EERST HERSTELLEN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Scanners report every known flaw in every component, whether or not your software ever uses the flawed part. Teams get a list longer than they can fix, and sorting by severity score alone keeps it long. Three questions shrink it. Is the flawed code <abbr class="tip" tabindex="0" data-tip="Your running software actually calls the flawed part, so an attacker can trigger it. A flaw in unused code is a lower risk.">reachable</abbr> in what we run? Is it being exploited now, according to the <abbr class="tip" tabindex="0" data-tip="Known Exploited Vulnerabilities: a public CISA list of flaws seen exploited in the wild. CISA advises organisations to use it to prioritise.">KEV</abbr> catalogue? How likely is exploitation soon, according to <abbr class="tip" tabindex="0" data-tip="Exploit Prediction Scoring System by FIRST: a daily estimate of the chance a published flaw is exploited in the next 30 days.">EPSS</abbr>? Suppliers can answer the first question for their product with a <abbr class="tip" tabindex="0" data-tip="Vulnerability Exploitability eXchange: a supplier statement that a product is, or is not, affected by a known flaw.">VEX</abbr> statement.</p>
+      <p class="en"><strong>Business impact:</strong> the flaw that is exploited today waits in the same queue as many that never will be. We suggest triage on reachability and active exploitation first. Ask for one number instead of the total: known-exploited flaws that are reachable in production, and how long each has been open.</p>
+      <p class="nl">Scanners melden elke bekende fout in elk onderdeel, of uw software het foute deel nu gebruikt of niet. Teams krijgen een lijst die langer is dan ze kunnen herstellen, en sorteren op alleen een ernstscore houdt die lang. Drie vragen maken hem korter. Is de foute code <abbr class="tip" tabindex="0" data-tip="Uw draaiende software roept het foute deel echt aan, dus een aanvaller kan het activeren. Een fout in ongebruikte code is een kleiner risico.">bereikbaar</abbr> in wat wij draaien? Wordt hij nu misbruikt, volgens de <abbr class="tip" tabindex="0" data-tip="Known Exploited Vulnerabilities: een openbare CISA-lijst van fouten die in de praktijk worden misbruikt. CISA raadt aan er prioriteit mee te stellen.">KEV</abbr>-catalogus? Hoe waarschijnlijk is misbruik binnenkort, volgens <abbr class="tip" tabindex="0" data-tip="Exploit Prediction Scoring System van FIRST: een dagelijkse schatting van de kans dat een gepubliceerde fout binnen 30 dagen wordt misbruikt.">EPSS</abbr>? Leveranciers kunnen de eerste vraag voor hun product beantwoorden met een <abbr class="tip" tabindex="0" data-tip="Vulnerability Exploitability eXchange: een verklaring van de leverancier dat een product wel of niet door een bekende fout wordt geraakt.">VEX</abbr>-verklaring.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de fout die vandaag wordt misbruikt, staat in dezelfde rij als vele die dat nooit worden. Wij raden aan eerst te sorteren op bereikbaarheid en actief misbruik. Vraag om één getal in plaats van het totaal: bekende misbruikte fouten die in productie bereikbaar zijn, en hoe lang elk al openstaat.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">THE REAL ONE WAITS IN THE QUEUE</span><span class="nl">DE ECHTE WACHT IN DE RIJ</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: TRIAGE ON REACHABLE + EXPLOITED, NOT ON COUNT</span><span class="nl">AANBEVOLEN: SORTEREN OP BEREIKBAAR + MISBRUIKT, NIET OP AANTAL</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">Easy</span><span class="nl">Makkelijk</span></b><p><span class="en">AI can shorten the time from a published flaw to a working attack, so the window to act on what is actively exploited gets smaller.</span><span class="nl">AI kan de tijd tussen een gepubliceerde fout en een werkende aanval verkorten, waardoor de tijd om te handelen op wat actief wordt misbruikt kleiner wordt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI triage tools can label a finding "not reachable" with confidence and be wrong. A dismissed finding that nobody re-checks is a blind spot with a sign-off.</span><span class="nl">AI-triagetools kunnen een bevinding vol overtuiging "niet bereikbaar" noemen en zich vergissen. Een weggezette bevinding die niemand opnieuw bekijkt, is een blinde vlek met een handtekening.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Sort, explain, group</span><span class="nl">Sorteren, uitleggen, bundelen</span></b><p><span class="en">AI can check reachability across a large codebase, combine it with KEV and EPSS, and group findings by the one upgrade that fixes them. People keep the decision on what waits.</span><span class="nl">AI kan bereikbaarheid in een grote codebase nagaan, dat combineren met KEV en EPSS, en bevindingen bundelen per upgrade die ze oplost. Mensen houden de beslissing over wat mag wachten.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>helps.</em></span>
+      <span class="nl">Wat <em>helpt.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">mostly tools the developers already have, used on every change</span>
+      <span class="nl">vooral tools die de ontwikkelaars al hebben, gebruikt bij elke wijziging</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">CODE SCANNING</span><span class="nl">CODESCANS</span></span>
+        <span class="chip c2"><span class="en">ACCESS REVIEW</span><span class="nl">TOEGANGSREVIEW</span></span>
+        <span class="chip c3"><span class="en">SBOM PER RELEASE</span><span class="nl">SBOM PER RELEASE</span></span>
+        <span class="chip c4"><span class="en">TEMPLATE CHECKS</span><span class="nl">SJABLOONCONTROLES</span></span>
+        <span class="chip c5"><span class="en">EXPLOITED FIRST</span><span class="nl">MISBRUIKT EERST</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Helps with</th><th>In one line</th></tr>
+        <tr><td class="ctl">Code scanning</td><td>Own code (01)</td><td>Known risky patterns are flagged on every change. Findings above an agreed severity block the release.</td></tr>
+        <tr><td class="ctl">Access-logic review</td><td>Own code (01)</td><td>A second person reads any change that decides who may see or change what. Scanners don't.</td></tr>
+        <tr><td class="ctl">Dependency scanning + SBOM</td><td>Open source (02)</td><td>Each release has an <abbr class="tip" tabindex="0" data-tip="Software bill of materials: the ingredient list of a release, every component and its version.">SBOM</abbr>, and new vulnerability reports are matched against it every day, not only at build time.</td></tr>
+        <tr><td class="ctl">Template and image checks</td><td>Configuration (03)</td><td>Infrastructure templates and container images are scanned before deployment, with a short list of settings that always block.</td></tr>
+        <tr><td class="ctl">Scheduled rebuilds</td><td>Configuration (03)</td><td>Images are rebuilt from an updated base on a fixed rhythm, even when the application did not change.</td></tr>
+        <tr><td class="ctl">Exploited-first triage</td><td>Findings (04)</td><td>Reachable flaws on the <abbr class="tip" tabindex="0" data-tip="Known Exploited Vulnerabilities: a public CISA list of flaws seen exploited in the wild.">KEV</abbr> list go first, then high <abbr class="tip" tabindex="0" data-tip="Exploit Prediction Scoring System by FIRST: the estimated chance a flaw is exploited in the next 30 days.">EPSS</abbr> scores, then the rest by severity.</td></tr>
+        <tr><td class="ctl">VEX from suppliers</td><td>Findings (04)</td><td>Ask suppliers for <abbr class="tip" tabindex="0" data-tip="Vulnerability Exploitability eXchange: a supplier statement that a product is, or is not, affected by a known flaw.">VEX</abbr> statements, so you don't chase flaws in parts their product doesn't use.</td></tr>
+        <tr><td class="ctl">Pentest</td><td>All four</td><td>An independent test finds what the tools missed, especially in business logic.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Helpt bij</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Codescans</td><td>Eigen code (01)</td><td>Bekende riskante patronen worden bij elke wijziging gemarkeerd. Bevindingen boven een afgesproken ernst blokkeren de release.</td></tr>
+        <tr><td class="ctl">Review van toegangslogica</td><td>Eigen code (01)</td><td>Een tweede persoon leest elke wijziging die bepaalt wie wat mag zien of wijzigen. Scanners doen dat niet.</td></tr>
+        <tr><td class="ctl">Afhankelijkheidsscans + SBOM</td><td>Open source (02)</td><td>Elke release heeft een <abbr class="tip" tabindex="0" data-tip="Software bill of materials: de ingrediëntenlijst van een release, elk onderdeel met zijn versie.">SBOM</abbr>, en nieuwe kwetsbaarheidsmeldingen worden er elke dag tegen gelegd, niet alleen bij het bouwen.</td></tr>
+        <tr><td class="ctl">Sjabloon- en imagecontroles</td><td>Configuratie (03)</td><td>Infrastructuursjablonen en containerimages worden vóór de uitrol gescand, met een korte lijst instellingen die altijd blokkeren.</td></tr>
+        <tr><td class="ctl">Herbouwen volgens schema</td><td>Configuratie (03)</td><td>Images worden in een vast ritme opnieuw gebouwd op een bijgewerkte basis, ook als de applicatie niet veranderde.</td></tr>
+        <tr><td class="ctl">Triage: misbruikt eerst</td><td>Bevindingen (04)</td><td>Bereikbare fouten op de <abbr class="tip" tabindex="0" data-tip="Known Exploited Vulnerabilities: een openbare CISA-lijst van fouten die in de praktijk worden misbruikt.">KEV</abbr>-lijst gaan voor, dan hoge <abbr class="tip" tabindex="0" data-tip="Exploit Prediction Scoring System van FIRST: de geschatte kans dat een fout binnen 30 dagen wordt misbruikt.">EPSS</abbr>-scores, dan de rest op ernst.</td></tr>
+        <tr><td class="ctl">VEX van leveranciers</td><td>Bevindingen (04)</td><td>Vraag leveranciers om <abbr class="tip" tabindex="0" data-tip="Vulnerability Exploitability eXchange: een verklaring van de leverancier dat een product wel of niet door een bekende fout wordt geraakt.">VEX</abbr>-verklaringen, zodat u geen fouten najaagt in delen die hun product niet gebruikt.</td></tr>
+        <tr><td class="ctl">Pentest</td><td>Alle vier</td><td>Een onafhankelijke test vindt wat de tools misten, vooral in bedrijfslogica.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> code security is not a tool you buy but a habit on every change. The total number of findings tells you little. We suggest asking for two numbers: known-exploited flaws that are reachable in production, and how many days the oldest one has been open.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> codebeveiliging is geen tool die u koopt, maar een gewoonte bij elke wijziging. Het totaal aantal bevindingen zegt weinig. Wij raden aan om twee getallen te vragen: bekende misbruikte fouten die in productie bereikbaar zijn, en hoeveel dagen de oudste al openstaat.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Most business software reuses open-source components, and new flaws in them are published all the time. Every codebase has some.</span><span class="nl">De meeste bedrijfssoftware hergebruikt open-sourceonderdelen, en er worden voortdurend nieuwe fouten in gepubliceerd. Elke codebase heeft er een paar.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Customer data exposed through a missing check or a known flaw, or one public misconfiguration repeated in every environment.</span><span class="nl">Klantgegevens blootgesteld door een ontbrekende controle of een bekende fout, of één openbare misconfiguratie die in elke omgeving terugkomt.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Middel</span></span><p><span class="en">Flaws will still ship. Scanning on every change and exploited-first triage mean the dangerous ones are found and fixed first.</span><span class="nl">Er gaan nog steeds fouten mee. Scans bij elke wijziging en triage op misbruik zorgen dat de gevaarlijke het eerst worden gevonden en hersteld.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CTO / CIO</span><span class="nl">CTO / CIO</span></span><p><span class="en">Executes through engineering leads. The CISO sets the triage rules and reports the two numbers.</span><span class="nl">Uitvoering via de engineeringleads. De CISO stelt de triageregels vast en rapporteert de twee getallen.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">Known-exploited flaws reachable in production · days the oldest of those has been open · % of releases with an SBOM · % of repositories scanned on every change.</span><span class="nl">Bekende misbruikte fouten die in productie bereikbaar zijn · dagen dat de oudste daarvan openstaat · % releases met een SBOM · % repositories dat bij elke wijziging wordt gescand.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“Security flaws in our own code, open-source components, infrastructure templates or container images reach production undetected or unprioritised, leading to exposure of customer data or disruption of service.”</span><span class="nl">“Beveiligingsfouten in eigen code, open-sourceonderdelen, infrastructuursjablonen of containerimages bereiken onopgemerkt of zonder prioriteit de productie, met blootstelling van klantgegevens of verstoring van de dienstverlening tot gevolg.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Security in the acquisition, development and maintenance of systems, including vulnerability handling and disclosure, is a named measure (Art. 21). NIS2 requires management to approve the measures and oversee them, and it can be held liable.</td><td>Ask suppliers how they find and prioritise flaws in what they deliver, and how fast they fix exploited ones. Put that in the contract.</td><td>An exploited flaw in your software can count as a significant incident if it meets the thresholds: early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month. Confirm with legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>For financial entities, the ICT risk standard requires source-code reviews with static and dynamic testing before systems go live, including open-source code where feasible (RTS (EU) 2024/1774, Art. 16).</td><td>Code a supplier builds or delivers falls under the same rule. Ask how they test it, and whether you can see the results.</td><td>An exploited flaw in a critical function can count as a major ICT-related incident: initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month. Confirm with legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Vulnerability management and change management are core: flaws found, assessed and fixed, and changes tested before deployment, all tested over the period.</td><td>Read the vulnerability-management controls and their exceptions. Check whether open-source components and container images are in scope.</td><td>A known flaw left open becomes an exception in the next report if the control failed. Customers ask for a bridge letter and a root-cause analysis.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant where the software touches financial reporting: auditors expect program changes to be tested and approved before production.</td><td>Check whether program-change controls cover the application you rely on.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+        <tr><td class="ctl">CRA</td><td>For manufacturers of software or connected products, the CRA requires products without known exploitable vulnerabilities and an <abbr class="tip" tabindex="0" data-tip="Software bill of materials: the ingredient list of a release, every component and its version.">SBOM</abbr> covering at least the top-level dependencies (Annex I), from 11 December 2027. Reporting applies from 11 September 2026.</td><td>Ask whether the product falls under the CRA, and whether the vendor shares its SBOM and VEX statements.</td><td>An actively exploited vulnerability in your product: early warning within 24 hours, notification within 72 hours, via the ENISA Single Reporting Platform. Confirm with legal.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td>Beveiliging bij het verwerven, ontwikkelen en onderhouden van systemen, inclusief het afhandelen en melden van kwetsbaarheden, is een benoemde maatregel (art. 21). NIS2 eist dat het bestuur de maatregelen goedkeurt en erop toeziet; het kan aansprakelijk worden gesteld.</td><td>Vraag leveranciers hoe zij fouten vinden en prioriteren in wat zij leveren, en hoe snel ze misbruikte fouten herstellen. Leg dat vast in het contract.</td><td>Een misbruikte fout in uw software kan een significant incident zijn als het de drempels haalt: vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindrapport binnen een maand. Stem af met legal.</td></tr>
+        <tr><td class="ctl">DORA</td><td>Voor financiële instellingen eist de ICT-risicostandaard broncodereviews met statische en dynamische tests voordat systemen live gaan, waar haalbaar ook van open-sourcecode (RTS (EU) 2024/1774, art. 16).</td><td>Code die een leverancier bouwt of levert, valt onder dezelfde regel. Vraag hoe zij die testen, en of u de resultaten kunt inzien.</td><td>Een misbruikte fout in een kritieke functie kan een ernstig ICT-gerelateerd incident zijn: eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand. Stem af met legal.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Kwetsbaarheidsbeheer en wijzigingsbeheer zijn kern: fouten gevonden, beoordeeld en hersteld, en wijzigingen getest vóór de uitrol, allemaal over de periode getest.</td><td>Lees de maatregelen voor kwetsbaarheidsbeheer en hun afwijkingen. Controleer of open-sourceonderdelen en containerimages binnen de reikwijdte vallen.</td><td>Een bekende fout die openbleef, wordt een afwijking in het volgende rapport als de maatregel faalde. Klanten vragen om een bridge letter en een oorzaakanalyse.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>Relevant waar de software de financiële verslaggeving raakt: auditors verwachten dat programmawijzigingen getest en goedgekeurd zijn vóór productie.</td><td>Controleer of de maatregelen voor programmawijzigingen de applicatie dekken waarop u vertrouwt.</td><td>ISAE 3402 verplicht niet tot melden aan de auditors van klanten. Verwacht een afwijking in het volgende rapport, en vraag in het contract om tussentijdse melding.</td></tr>
+        <tr><td class="ctl">CRA</td><td>Voor fabrikanten van software of verbonden producten eist de CRA producten zonder bekende misbruikbare kwetsbaarheden en een <abbr class="tip" tabindex="0" data-tip="Software bill of materials: de ingrediëntenlijst van een release, elk onderdeel met zijn versie.">SBOM</abbr> die minstens de directe afhankelijkheden dekt (bijlage I), vanaf 11 december 2027. De meldplicht geldt vanaf 11 september 2026.</td><td>Vraag of het product onder de CRA valt, en of de leverancier zijn SBOM en VEX-verklaringen deelt.</td><td>Een actief misbruikte kwetsbaarheid in uw product: vroegtijdige waarschuwing binnen 24 uur, melding binnen 72 uur, via het Single Reporting Platform van ENISA. Stem af met legal.</td></tr>
+      </table>
+      <p class="sources en">Checked against: <a href="https://eur-lex.europa.eu/eli/reg/2024/2847/oj/eng">CRA (EU) 2024/2847</a> Annex I and Art. 71, and the <a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">Commission CRA reporting page</a> (2026), NIS2 Art. 20, 21 and 23, <a href="https://eur-lex.europa.eu/eli/reg_del/2024/1774/oj/eng">DORA RTS (EU) 2024/1774</a> Art. 16 and <a href="https://eur-lex.europa.eu/eli/reg_del/2025/301/oj/eng">(EU) 2025/301</a>, <a href="https://top10.owasp.org/2025">OWASP Top 10:2025</a>, <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV catalog</a>, <a href="https://www.first.org/epss/">FIRST EPSS</a>, <a href="https://www.cisa.gov/resources-tools/resources/minimum-requirements-vulnerability-exploitability-exchange-vex">CISA VEX minimum requirements</a> (Apr 2023) · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://eur-lex.europa.eu/eli/reg/2024/2847/oj/nld">CRA (EU) 2024/2847</a> bijlage I en art. 71, en de <a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">CRA-meldpagina van de Commissie</a> (2026), NIS2 art. 20, 21 en 23, <a href="https://eur-lex.europa.eu/eli/reg_del/2024/1774/oj/nld">DORA-RTS (EU) 2024/1774</a> art. 16 en <a href="https://eur-lex.europa.eu/eli/reg_del/2025/301/oj/nld">(EU) 2025/301</a>, <a href="https://top10.owasp.org/2025">OWASP Top 10:2025</a>, <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV-catalogus</a>, <a href="https://www.first.org/epss/">FIRST EPSS</a>, <a href="https://www.cisa.gov/resources-tools/resources/minimum-requirements-vulnerability-exploitability-exchange-vex">CISA-minimumeisen voor VEX</a> (apr 2023) · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../secure-development/"><span class="en">Building software that holds</span><span class="nl">Software bouwen die standhoudt</span></a> ·
+  <a href="../supply-chain/"><span class="en">Supply chain attacks</span><span class="nl">Aanvallen via de toeleveringsketen</span></a> ·
+  <a href="../patching/"><span class="en">The unpatched server</span><span class="nl">De ongepatchte server</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=code-security&amp;title=Missing%3A%20code-security"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=code-security&amp;title=Correction%3A%20code-security"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">CODE SECURITY BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">CODEBEVEILIGING BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>
