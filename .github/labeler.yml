@@ -55,6 +55,8 @@ sponsor:
   - '(sandbox|zandbak|microvm|gvisor)'
 'page: ai-vulnerability-remediation':
   - '(autofix|dependabot|renovate|auto.?merge|remediation|coding agent|fixing agent|herstelagent|kwetsbaarheden dichten|automatisch herstel)'
+'page: ai-agents':
+  - '(ai agents?|ai-agents?|harness|\bmcp\b|model context protocol|agent skills?|skill\.md|claude code|codex|hermes)'
 'page: web-security':
   - '(website|web.?security|webshop|injection|\bwaf\b|skimm)'
 'page: endpoints':
@@ -67,6 +69,8 @@ sponsor:
   - '(\bot\b|\biot\b|scada|factory|fabriek|camera|building system|gebouwbeheer)'
 'page: secure-development':
   - '(secure development|devsecops|pipeline|source code|broncode|repository|\bsdlc\b)'
+'page: code-security':
+  - '(code security|codebeveiliging|\bsast\b|software composition|dependency scan|afhankelijkheidsscan|\bkev\b|\bepss\b|\bvex\b|container image|containerimage)'
 'page: incident-response':
   - '(incident response|incidentrespons|72 hours|72 uur|crisis|tabletop|forensic)'
 'page: cyber-insurance':
