@@ -53,6 +53,8 @@ sponsor:
   - '(\bai\b|llm|chatgpt|copilot|deepfake|prompt injection)'
 'page: ai-sandboxing':
   - '(sandbox|zandbak|microvm|gvisor)'
+'page: ai-vulnerability-remediation':
+  - '(autofix|dependabot|renovate|auto.?merge|remediation|coding agent|fixing agent|herstelagent|kwetsbaarheden dichten|automatisch herstel)'
 'page: web-security':
   - '(website|web.?security|webshop|injection|\bwaf\b|skimm)'
 'page: endpoints':
