@@ -4,7 +4,7 @@
 
 ### GitHub Actions version pinning
 
-All action versions in `.github/workflows/*.yml` use v7.0.x (actions/checkout@v7.0.1, actions/setup-node@v7.0.0). These are SHA-pinned in the workflow files to avoid accidental downgrades. If you see a workflow with v4.x or v6.x actions, correct it to v7.0.x and verify against the main branch before committing.
+All action versions in `.github/workflows/*.yml` use v7.0.x (actions/checkout@v7.0.1, actions/setup-node@v7.1.0). These are SHA-pinned in the workflow files to avoid accidental downgrades. If you see a workflow with v4.x or v6.x actions, correct it to v7.0.x and verify against the main branch before committing.
 
 **Why:** Browser startup in CI depends on v7.0.0+ to properly report the DevTools port. v4.x causes timeouts ("failed to find open port for DevTools").
 
