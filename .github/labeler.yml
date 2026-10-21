@@ -85,6 +85,8 @@ sponsor:
   - '(encryption at rest|encrypted at rest|data at rest|versleuteld opgeslagen|versleutelde opslag|key management|sleutelbeheer|bitlocker|kms|hsm)'
 'page: edge-devices':
   - '(edge device|randapparatuur|\bvpn\b|firewall|netscaler|fortigate|fortinet|ivanti|palo alto|remote.?access gateway|load balancer|zero.?trust|ztna|management interface|beheerinterface)'
+'page: php2shell':
+  - '(php2shell|\bphp\b|cve-2026-10961[89]|mod_php|php-fpm)'
 'page: pentest':
   - '(pentest|penetration test|penetratietest|red.?team|vulnerability scan|kwetsbaarhedenscan|\btlpt\b|tiber|bug bounty|security\.txt|vulnerability disclosure|\bcvd\b|responsible disclosure|retest|hertest)'
 'page: acquisitions':

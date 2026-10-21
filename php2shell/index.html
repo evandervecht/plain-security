@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<title>php2shell: one request, and the web server is theirs // Plain Security</title>
+<meta name="description" content="Two critical PHP flaws (CVE-2026-109618 and CVE-2026-109619) can let anyone run code on a web server without logging in. Update, find old PHP, and ask your suppliers.">
+<link rel="canonical" href="https://plain-security.fyi/php2shell/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="php2shell: one request, and the web server is theirs // Plain Security">
+<meta property="og:description" content="Two critical PHP flaws (CVE-2026-109618 and CVE-2026-109619) can let anyone run code on a web server without logging in. Update, find old PHP, and ask your suppliers.">
+<meta property="og:url" content="https://plain-security.fyi/php2shell/">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="nl_NL">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ===============================================================
+   PHP2SHELL // BRIEFING
+   Same palette and generic CSS as edge-devices/.
+   Sharp corners, mono body, heavy geometric headings.
+   Pure CSS animations. No JavaScript.
+   =============================================================== */
+
+:root{
+  --deep:#051324;
+  --bg:#0b1b2b;
+  --bg-lo:#081727;
+  --bg-hi:#0d1e2d;
+  --surface:#2a4858;
+  --slate:#637b88;
+  --muted:#87a2b0;
+  --body:#c8d8e1;
+  --prose:#e6eff5;
+  --white:#ffffff;
+  --line:#335364;
+  --line-soft:#1d3444;
+  /* animation accents */
+  --good:#37d39b;
+  --warn:#ffc857;
+  --bad:#ff5d73;
+  --bad-soft:#ffb3be;
+  --brand:#5ac8fa;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --read:"Inter",system-ui,-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+  --sans:"Poppins","Montserrat",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--body);
+  font-family:var(--mono);
+  font-size:15px;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--slate);color:var(--deep)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:0 40px}
+
+/* ---------- nav ---------- */
+nav{background:var(--deep);border-bottom:1px solid var(--line-soft);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.22em;font-size:13px;color:var(--white)}
+.brand i{width:13px;height:13px;background:var(--slate);display:block}
+.nav-links{display:flex;gap:26px;margin-left:auto;font-size:12px;letter-spacing:.18em}
+.nav-links a{color:var(--muted);text-decoration:none;padding:6px 0;border-bottom:2px solid transparent}
+.nav-links a:hover{color:var(--white);border-bottom-color:var(--slate)}
+@media (max-width:1119px){.nav-links{display:none}.lang{margin-left:auto}}
+
+.lang{display:flex;border:1px solid var(--line);margin-left:8px}
+.lang input{position:absolute;opacity:0;pointer-events:none}
+.lang label{cursor:pointer;padding:6px 14px;font-size:11px;letter-spacing:.18em;font-weight:700;color:var(--muted);user-select:none;transition:.15s}
+.lang label:hover{color:var(--white)}
+#lang-en:checked ~ label[for=lang-en],
+#lang-nl:checked ~ label[for=lang-nl]{background:var(--slate);color:var(--deep)}
+
+/* ---------- i18n ---------- */
+.en,.nl{display:none}
+body:has(#lang-en:checked) .en{display:revert}
+body:has(#lang-nl:checked) .nl{display:revert}
+
+/* ---------- hero ---------- */
+.hero{padding:86px 0 70px;background:linear-gradient(180deg,var(--bg-lo),var(--bg))}
+.kicker{font-size:12px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:20px;font-weight:500}
+.kicker b{color:var(--slate);font-weight:700;margin-right:10px}
+h1{font-family:var(--sans);font-weight:800;color:var(--white);font-size:clamp(28px,4vw,52px);line-height:1.04;letter-spacing:-.025em;margin:0 0 22px}
+h1 em{font-style:normal;color:var(--muted)}
+.lede{font-family:var(--read);font-size:clamp(15px,1.5vw,18px);line-height:1.65;color:var(--prose);max-width:62ch;margin:0}
+.btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:38px}
+.btn{display:inline-block;padding:16px 34px;font-size:12px;font-weight:700;letter-spacing:.2em;text-decoration:none;text-transform:uppercase;transition:.16s}
+.btn.solid{background:var(--slate);color:var(--deep)}
+.btn.solid:hover{background:var(--white)}
+.btn.ghost{border:1px solid var(--line);color:var(--body)}
+.btn.ghost:hover{border-color:var(--slate);color:var(--white)}
+
+/* ---------- segmented divider ---------- */
+.divider{display:flex;height:4px;width:100%}
+.divider i{display:block;height:100%}
+.divider i:nth-child(1){width:5%;background:var(--white)}
+.divider i:nth-child(2){width:30%;background:var(--slate)}
+.divider i:nth-child(3){width:30%;background:var(--surface)}
+.divider i:nth-child(4){width:35%;background:#242424}
+
+/* ---------- sections ---------- */
+section.risk-block{padding:74px 0 78px}
+section.risk-block:nth-of-type(even){background:var(--bg-hi)}
+h2{font-family:var(--sans);font-weight:700;color:var(--white);font-size:clamp(21px,2.6vw,32px);line-height:1.15;letter-spacing:-.015em;margin:0 0 20px}
+h2 em{font-style:normal;color:var(--muted)}
+.term{display:block;font-size:12px;letter-spacing:.2em;color:var(--slate);text-transform:uppercase;margin:-14px 0 30px}
+
+/* ---------- panel ---------- */
+.panel{background:var(--surface);border:1px solid var(--line);padding:36px 40px}
+.panel:has(> p){max-width:900px}
+.panel p{font-family:var(--read);font-size:16px;line-height:1.72;letter-spacing:.005em;margin:0 0 18px;color:var(--prose);max-width:70ch}
+.panel p:last-of-type{margin-bottom:0}
+.panel strong{color:var(--white);font-weight:700}
+.panel em{font-style:italic;color:var(--white)}
+.panel code{font-family:var(--mono);background:var(--bg-lo);border:1px solid var(--line);padding:1px 7px;color:var(--white);font-size:13px}
+
+.pills{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+.pill{font-size:11px;letter-spacing:.16em;font-weight:700;text-transform:uppercase;padding:12px 18px;display:inline-flex;gap:10px;align-items:center}
+.pill.risk{background:rgba(255,93,115,.12);border:1px solid rgba(255,93,115,.4);color:var(--bad-soft)}
+.pill.fix{background:rgba(55,211,155,.1);border:1px solid rgba(55,211,155,.4);color:#8ff0cd}
+
+/* =========================================================
+   ANIMATION STAGES
+   ========================================================= */
+.stage{position:relative;height:280px;margin:0 0 30px;overflow:hidden;background:var(--bg-lo);border:1px solid var(--line)}
+.stage::after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(rgba(99,123,136,.08) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(99,123,136,.08) 1px,transparent 1px);
+  background-size:30px 30px
+}
+.stage-label{position:absolute;top:0;left:0;z-index:4;font-size:10px;letter-spacing:.24em;color:var(--deep);background:var(--slate);padding:5px 12px;font-weight:700}
+.banner{position:absolute;left:50%;transform:translateX(-50%);bottom:16px;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--bad-soft);background:rgba(255,93,115,.14);border:1px solid rgba(255,93,115,.45);padding:6px 14px;white-space:nowrap;z-index:4;animation:fadeIn 7s ease-in-out infinite}
+@keyframes fadeIn{0%,50%{opacity:0}58%,100%{opacity:1}}
+
+/* --- scene 1 : one request reaches PHP before the application runs --- */
+.s1 .bx{position:absolute;top:84px;width:38%;height:120px;display:grid;place-items:center;align-content:center;gap:6px;text-align:center;background:var(--surface);border:1px solid var(--line);font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:0 10px}
+.s1 .bx b{display:block;font-family:var(--sans);font-size:17px;letter-spacing:0;color:var(--white);text-transform:none}
+.s1 .bx.a{left:6%}
+.s1 .bx.a::after{content:"";position:absolute;inset:0;background:rgba(255,93,115,.3);border:1px solid var(--bad);opacity:0;animation:expose 7s ease-in-out infinite}
+.s1 .bx.b{right:6%}
+@keyframes expose{0%,55%{opacity:0}62%,90%{opacity:1}96%,100%{opacity:0}}
+.s1 .q{position:absolute;top:34px;left:0;font-size:24px;z-index:3;animation:sweep1 7s ease-in-out infinite}
+@keyframes sweep1{0%{left:4%;opacity:0}8%{opacity:1}45%{left:calc(44% - 24px);opacity:1}55%,100%{left:calc(44% - 24px);opacity:0}}
+
+/* --- scene 2 : supported branches get a release, old ones do not --- */
+.s2 .shelf{position:absolute;left:40px;right:40px;top:56px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.s2 .loc{position:relative;height:118px;background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--sans);font-weight:700;font-size:22px;color:var(--white)}
+.s2 .loc i{position:absolute;bottom:8px;left:0;right:0;text-align:center;font-family:var(--mono);font-weight:400;font-style:normal;font-size:9px;letter-spacing:.12em;color:var(--muted);text-transform:uppercase}
+.s2 .loc b{position:absolute;top:6px;left:0;right:0;text-align:center;font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:#8ff0cd;font-weight:700;text-transform:uppercase}
+.s2 .loc.open{border-color:rgba(255,93,115,.55)}
+.s2 .loc.open b{color:var(--bad-soft)}
+.s2 .loc.open::after{content:"✕";position:absolute;inset:0;display:grid;place-items:center;font-family:var(--sans);font-weight:800;font-size:46px;color:var(--bad);background:rgba(58,20,48,.85);opacity:0;animation:flag 6s ease-in-out infinite}
+@keyframes flag{0%,20%{opacity:0}30%,80%{opacity:1}90%,100%{opacity:0}}
+.s2 .banner{animation-duration:6s}
+
+/* --- scene 3 : your servers patched today, the supplier's later --- */
+.s3 .row{position:absolute;left:24px;right:24px;height:76px;display:flex;align-items:center;gap:14px}
+.s3 .row.a{top:42px}.s3 .row.b{top:134px}
+.s3 .who{flex:none;width:128px;height:64px;display:grid;place-items:center;text-align:center;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;background:var(--surface);border:1px solid var(--line);line-height:1.3}
+.s3 .who b{display:block;font-size:22px}
+.s3 .row.b .who{background:#3a1430;border-color:rgba(255,93,115,.55);color:var(--bad-soft)}
+.s3 .path{flex:1;position:relative;height:1px;background:repeating-linear-gradient(90deg,var(--line) 0 10px,transparent 10px 20px)}
+.s3 .path::after{content:"";position:absolute;top:-4px;left:0;width:9px;height:9px;background:var(--white)}
+.s3 .row.a .path::after{animation:tfast 8s linear infinite}
+.s3 .row.b .path::after{animation:tslow 8s linear infinite}
+@keyframes tfast{0%{left:0;opacity:0}3%{opacity:1}15%{left:calc(100% - 9px);opacity:1}20%,100%{left:calc(100% - 9px);opacity:0}}
+@keyframes tslow{0%{left:0;opacity:0}3%{opacity:1}85%{left:calc(100% - 9px);opacity:1}90%,100%{left:calc(100% - 9px);opacity:0}}
+.s3 .out{flex:none;width:190px;padding:10px 12px;font-size:11px;letter-spacing:.06em;line-height:1.45;border:1px solid;opacity:0}
+.s3 .out.good{color:#8ff0cd;border-color:rgba(55,211,155,.5);background:rgba(55,211,155,.07);animation:rfast 8s ease-in-out infinite}
+.s3 .out.bad{color:var(--bad-soft);border-color:rgba(255,93,115,.55);background:rgba(255,93,115,.1);animation:rslow 8s ease-in-out infinite}
+@keyframes rfast{0%,15%{opacity:0}20%,100%{opacity:1}}
+@keyframes rslow{0%,85%{opacity:0}90%,100%{opacity:1}}
+.s3 .banner{animation-duration:8s}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important}
+  .s1 .bx.a::after{opacity:1}.s1 .q{display:none}
+  .s2 .loc.open::after{opacity:1}
+  .s3 .out{opacity:1}.s3 .path::after{left:calc(100% - 9px)}
+  .banner{opacity:1}.shield .tick{stroke-dashoffset:0}
+}
+@media (max-width:820px){
+  .s1 .bx{width:42%;font-size:8.5px;letter-spacing:.06em}.s1 .bx.a{left:4%}.s1 .bx.b{right:4%}
+  .s1 .bx b{font-size:14px}
+  .s2 .shelf{left:12px;right:12px;gap:6px}
+  .s2 .loc{font-size:16px}
+  .s2 .loc i,.s2 .loc b{font-size:7.5px;letter-spacing:.04em}
+  .s3 .row{left:12px;right:12px;gap:8px}
+  .s3 .who{width:86px;font-size:8.5px;letter-spacing:.08em}
+  .s3 .out{width:128px;font-size:9.5px;padding:8px}
+  .stage .banner{white-space:normal;text-align:center;width:calc(100% - 24px);line-height:1.4}
+}
+/* --- scene 4 : controls --- */
+.s5{height:330px;display:grid;place-items:center}
+.shield{position:relative;width:132px;height:156px;animation:beat 3.4s ease-in-out infinite}
+.shield svg{width:100%;height:100%;display:block;overflow:visible}
+.shield .body{fill:rgba(55,211,155,.07);stroke:var(--good);stroke-width:3}
+.shield .tick{
+  fill:none;stroke:var(--good);stroke-width:8;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:70;stroke-dashoffset:70;animation:draw 3.4s ease-in-out infinite
+}
+@keyframes draw{0%{stroke-dashoffset:70}35%,100%{stroke-dashoffset:0}}
+@keyframes beat{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 rgba(55,211,155,0))}50%{transform:scale(1.04);filter:drop-shadow(0 0 20px rgba(55,211,155,.3))}}
+.orbit{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+.chip{position:absolute;font-size:10.5px;letter-spacing:.18em;font-weight:700;padding:8px 14px;background:var(--bg-lo);border:1px solid rgba(90,200,250,.35);color:#cfe6f7}
+.chip.c1{animation:float 5.4s ease-in-out infinite;transform:translate(-250px,-78px)}
+.chip.c2{animation:float 5.4s ease-in-out infinite .7s;transform:translate(250px,-78px)}
+.chip.c3{animation:float 5.4s ease-in-out infinite 1.4s;transform:translate(-250px,46px)}
+.chip.c4{animation:float 5.4s ease-in-out infinite 2.1s;transform:translate(250px,46px)}
+.chip.c5{animation:float 5.4s ease-in-out infinite 2.8s;transform:translate(0,132px)}
+@keyframes float{0%,100%{margin-top:0;opacity:.8}50%{margin-top:-10px;opacity:1}}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;margin-top:2px}
+th{text-align:left;padding:12px 14px;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--deep);background:var(--slate);font-weight:700}
+td{font-family:var(--read);font-size:15px;line-height:1.6;text-align:left;padding:15px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--prose)}
+td.ctl{font-family:var(--mono);font-weight:700;color:var(--white);white-space:nowrap;letter-spacing:.04em;font-size:13.5px}
+tr:last-child td{border-bottom:none}
+
+.callout{font-family:var(--read);margin-top:28px;padding:24px 28px;background:var(--bg-lo);border:1px solid var(--line);border-left:4px solid var(--good);color:var(--prose);font-size:15.5px;line-height:1.7;max-width:76ch}
+.callout strong{color:var(--white)}
+
+/* ---------- footer ---------- */
+footer{background:var(--deep);border-top:1px solid var(--line-soft);padding:34px 0}
+.meta{font-size:11px;letter-spacing:.18em;color:var(--slate);text-transform:uppercase}
+.meta .sep{color:var(--line)}
+
+/* ---------- responsive ---------- */
+@media (max-width:820px){
+  .wrap,.nav-in{padding:0 22px}
+  .nav-links{display:none}
+  .chip{display:none}
+  .panel{padding:24px 22px}
+  table{font-size:12.5px}
+  .brand{font-size:11px;letter-spacing:.14em;min-width:0}
+  .lang{flex:none;margin-left:auto}
+  @media (max-width:480px){.brand .ps{display:none}}
+  .panel tbody,.panel tr,.panel td{display:block;width:100%;box-sizing:border-box}
+  body:has(#lang-en:checked) .panel table.en,body:has(#lang-nl:checked) .panel table.nl{display:block;width:100%}
+  .panel tr:first-child{display:none}
+  .panel tr{padding:14px 0;border-bottom:1px solid var(--line)}
+  .panel tr:last-child{border-bottom:none}
+  .panel td{padding:3px 0;border-bottom:none;white-space:normal}
+  td.ctl{font-size:14px;padding-bottom:6px}
+  #risk td:nth-child(n+2)::before{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin:8px 0 2px}
+  #risk table.en td:nth-child(2)::before{content:"What it requires of you"}
+  #risk table.en td:nth-child(3)::before{content:"When a supplier hands you their report"}
+  #risk table.en td:nth-child(4)::before{content:"When this incident happens"}
+  #risk table.nl td:nth-child(2)::before{content:"Wat het van u vraagt"}
+  #risk table.nl td:nth-child(3)::before{content:"Als een leverancier u zijn rapport geeft"}
+  #risk table.nl td:nth-child(4)::before{content:"Als dit incident u treft"}
+}
+
+/* ---------- risk & compliance ---------- */
+.risk-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:26px}
+.risk-item{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}
+.risk-item .k{display:block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.risk-item .v{display:block;font-family:var(--sans);font-weight:700;font-size:18px;color:var(--white);margin-bottom:6px}
+.risk-item .v.hi{color:var(--bad-soft)}.risk-item .v.mid{color:var(--warn)}.risk-item .v.lo{color:#8ff0cd}
+.risk-item p{font-family:var(--read);font-size:14px;line-height:1.55;color:var(--body);margin:0}
+.risk-item.w2{grid-column:span 2}.risk-item.wide{grid-column:1/-1}
+@media (max-width:820px){.risk-grid{grid-template-columns:1fr}.risk-item.w2{grid-column:auto}}
+.fb{max-width:1180px;margin:0 auto;padding:32px 40px 48px;box-sizing:border-box;display:flex;flex-wrap:wrap;gap:12px}.fb a{display:inline-block;padding:12px 22px;font-family:"JetBrains Mono",ui-monospace,Consolas,monospace;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:#c8d8e1;border:1px solid #335364}.fb a:hover{color:#fff;border-color:#87a2b0}
+.ai3{margin-top:26px}.ai3>.cap{display:block;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:10px}.ai3>.g{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.ai3 .t{background:var(--bg-lo);border:1px solid var(--line);padding:18px 20px}.ai3 .k{display:block;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted,#87a2b0);margin-bottom:6px}.ai3 b{display:block;font-family:var(--sans,system-ui),sans-serif;font-size:17px;color:#fff;margin-bottom:8px}.ai3 b.hi{color:var(--bad)}.ai3 b.mid{color:var(--warn)}.ai3 b.lo{color:var(--good)}.ai3 p{font-family:var(--read);font-size:14px;line-height:1.6;color:var(--prose,#e6eff5);margin:0}@media (max-width:820px){.ai3>.g{grid-template-columns:1fr}}
+.sources,.panel p.sources{font-family:var(--mono);font-size:11.5px;line-height:1.6;letter-spacing:.02em;color:var(--slate);margin:18px 0 0;max-width:none}
+.sources a{color:var(--muted)}
+.related{max-width:1180px;margin:0 auto;padding:40px 40px 0;box-sizing:border-box;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted)}
+.related a{color:var(--body);text-decoration:none;border-bottom:1px solid var(--line)}
+.related a:hover{color:var(--white);border-bottom-color:var(--slate)}
+.related > span:first-child, .related > span:nth-child(2){margin-right:8px;text-transform:uppercase;letter-spacing:.18em;font-size:11px;color:var(--slate)}
+/* ---------- acronym tooltips in text ---------- */
+abbr.tip{position:relative;text-decoration:underline dotted var(--slate);text-underline-offset:3px;cursor:help;outline:none}
+abbr.tip::after{content:attr(data-tip);position:absolute;left:0;bottom:calc(100% + 8px);width:max-content;max-width:36ch;white-space:normal;background:var(--deep);border:1px solid var(--line);border-left:3px solid var(--brand);color:var(--prose);font:400 12px/1.55 var(--mono);letter-spacing:0;text-transform:none;padding:9px 12px;display:none;pointer-events:none;z-index:30}
+abbr.tip:hover::after,abbr.tip:focus::after{display:block}
+@media (max-width:600px){abbr.tip::after{position:fixed;left:16px;right:16px;bottom:16px;width:auto;max-width:none}}
+abbr.tip:focus-visible{outline:1px dashed var(--brand);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-in">
+    <a class="brand" href="../" style="text-decoration:none"><img src="../favicon.svg" width="20" height="20" alt="" style="display:block"> <span class="ps">PLAIN SECURITY</span> <span style="color:var(--slate)">//</span> PHP2SHELL</a>
+    <div class="nav-links">
+      <a href="#r1"><span class="en">UPDATE</span><span class="nl">BIJWERKEN</span></a>
+      <a href="#r2"><span class="en">OLD PHP</span><span class="nl">OUDE PHP</span></a>
+      <a href="#r3"><span class="en">SUPPLIERS</span><span class="nl">LEVERANCIERS</span></a>
+      <a href="#risk"><span class="en">RISK</span><span class="nl">RISICO</span></a>
+      <a href="#fix"><span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></a>
+    </div>
+    <div class="lang">
+      <input type="radio" name="lang" id="lang-en" checked>
+      <input type="radio" name="lang" id="lang-nl">
+      <label for="lang-en">EN</label>
+      <label for="lang-nl">NL</label>
+    </div>
+<script>
+(function(){var k='plain-security-lang',r=null;try{r=localStorage.getItem(k)}catch(e){}
+if(r==='nl'||r==='en'){document.getElementById('lang-'+r).checked=true;document.documentElement.lang=r}
+document.querySelectorAll('input[name=lang]').forEach(function(i){i.addEventListener('change',function(){var l=i.id.slice(5);document.documentElement.lang=l;try{localStorage.setItem(k,l)}catch(e){}})})})();
+</script>
+  </div>
+</nav>
+
+<!-- ============================ HERO ============================ -->
+<div class="hero">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> BRIEFING</span>
+    <h1>
+      <span class="en">php2shell. <em>One request, and the web server is theirs.</em></span>
+      <span class="nl">php2shell. <em>Eén verzoek, en de webserver is van hen.</em></span>
+    </h1>
+    <p class="lede">
+      <span class="en">On 21 October 2026 the PHP project fixed two critical flaws, <abbr class="tip" tabindex="0" data-tip="Common Vulnerabilities and Exposures: the public ID number every known security flaw gets.">CVE</abbr>-2026-109618 and CVE-2026-109619. They can let anyone on the internet run their own code on a web server, without logging in. <abbr class="tip" tabindex="0" data-tip="Nationaal Cyber Security Centrum: the Dutch government's cybersecurity centre.">NCSC-NL</abbr> tracks them as php2shell. PHP is widely used for websites, and it also sits inside appliances and hosted products. Three questions matter: are you updated, is any of your PHP too old to get a fix, and where does PHP run that you don't manage yourself?</span>
+      <span class="nl">Op 21 oktober 2026 heeft het PHP-project twee kritieke lekken gedicht: <abbr class="tip" tabindex="0" data-tip="Common Vulnerabilities and Exposures: het openbare nummer dat elk bekend beveiligingslek krijgt.">CVE</abbr>-2026-109618 en CVE-2026-109619. Daarmee kan iedereen op internet eigen code uitvoeren op een webserver, zonder in te loggen. Het <abbr class="tip" tabindex="0" data-tip="Nationaal Cyber Security Centrum: het cybersecuritycentrum van de Rijksoverheid.">NCSC</abbr> volgt ze onder de naam php2shell. PHP wordt veel gebruikt voor websites, en het zit ook in apparaten en gehoste producten. Drie vragen tellen: bent u bijgewerkt, is een deel van uw PHP te oud voor een fix, en waar draait PHP dat u niet zelf beheert?</span>
+    </p>
+    <div class="btns">
+      <a class="btn solid" href="#r1"><span class="en">SEE THE THREE</span><span class="nl">BEKIJK DE DRIE</span></a>
+      <a class="btn ghost" href="#fix"><span class="en">WHAT CLOSES THE DOOR</span><span class="nl">WAT DE DEUR SLUIT</span></a>
+    </div>
+  </div>
+</div>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<!-- ============================ 01 ============================ -->
+<section class="risk-block" id="r1">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 01</span><span class="nl">RISICO 01</span></span>
+    <h2>
+      <span class="en">One request, no login. <em>Before your code even runs.</em></span>
+      <span class="nl">Eén verzoek, geen inlog. <em>Nog voordat uw code draait.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">remote code execution / the flaw is in PHP itself, not in your website</span>
+      <span class="nl">code uitvoeren op afstand / het lek zit in PHP zelf, niet in uw website</span>
+    </span>
+
+    <div class="stage s1">
+      <div class="stage-label"><span class="en">WHERE THE REQUEST LANDS</span><span class="nl">WAAR HET VERZOEK AANKOMT</span></div>
+      <span class="q">🕵️</span>
+      <div class="bx a"><span class="en">first stop</span><span class="nl">eerste halte</span><b>PHP</b></div>
+      <div class="bx b"><span class="en">never reached</span><span class="nl">nooit bereikt</span><b><span class="en">Your website</span><span class="nl">Uw website</span></b></div>
+      <div class="banner"><span class="en">ONE REQUEST · NO LOGIN · CODE RUNS ON YOUR SERVER</span><span class="nl">ÉÉN VERZOEK · GEEN INLOG · CODE DRAAIT OP UW SERVER</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">Both flaws sit in PHP itself, not in your application. PHP says every installation that serves web requests is at risk, including PHP-FPM, Apache with mod_php, php-cgi, FrankenPHP and LiteSpeed. The risk is highest with mod_php: PHP has seen a working exploit in which one request, without a login, triggers the attack before any of your own code runs. Both flaws are rated 9.2 out of 10 on <abbr class="tip" tabindex="0" data-tip="Common Vulnerability Scoring System: the industry scale from 0 to 10 for how severe a flaw is. 9.0 and above counts as critical.">CVSS</abbr> v4.0, which is critical. The fixed versions are 8.5.12, 8.4.27, 8.3.36 and 8.2.35.</p>
+      <p class="en"><strong>Business impact:</strong> whoever runs code on the web server can read what the website reads: customer data, database passwords, payment flows. That can also be a personal-data breach. The <abbr class="tip" tabindex="0" data-tip="General Data Protection Regulation: the EU privacy law, called the AVG in the Netherlands.">GDPR</abbr> requires you to report it to the Autoriteit Persoonsgegevens within 72 hours of becoming aware of it, unless it is unlikely to risk people's rights and freedoms. PHP is clear that settings in php.ini reduce some attack paths but do not make a server safe; only the update does. <abbr class="tip" tabindex="0" data-tip="The cybersecurity service of the EU institutions, bodies and agencies.">CERT-EU</abbr> reports that proof-of-concept code is circulating and considers exploitation likely. On 21 October 2026 neither flaw was yet on CISA's list of known exploited vulnerabilities.</p>
+      <p class="nl">Beide lekken zitten in PHP zelf, niet in uw applicatie. Volgens PHP loopt elke installatie die webverzoeken afhandelt risico, waaronder PHP-FPM, Apache met mod_php, php-cgi, FrankenPHP en LiteSpeed. Het risico is het hoogst bij mod_php: PHP heeft een werkende aanval gezien waarbij één verzoek, zonder inlog, de aanval start voordat er ook maar iets van uw eigen code draait. Beide lekken scoren 9,2 op 10 op <abbr class="tip" tabindex="0" data-tip="Common Vulnerability Scoring System: de gangbare schaal van 0 tot 10 voor hoe ernstig een lek is. Vanaf 9,0 heet het kritiek.">CVSS</abbr> v4.0, en dat is kritiek. De versies met de fix zijn 8.5.12, 8.4.27, 8.3.36 en 8.2.35.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> wie code draait op de webserver, kan lezen wat de website leest: klantgegevens, wachtwoorden van de database, betaalstromen. Dat kan ook een datalek zijn. De <abbr class="tip" tabindex="0" data-tip="Algemene verordening gegevensbescherming: de Europese privacywet.">AVG</abbr> verplicht u dat binnen 72 uur nadat u ervan kennis heeft gekregen te melden bij de Autoriteit Persoonsgegevens, tenzij het waarschijnlijk geen risico oplevert voor de rechten en vrijheden van personen. PHP is duidelijk: instellingen in php.ini verkleinen sommige aanvalspaden, maar maken een server niet veilig; alleen de update doet dat. <abbr class="tip" tabindex="0" data-tip="De cybersecuritydienst van de instellingen, organen en agentschappen van de EU.">CERT-EU</abbr> meldt dat er proof-of-conceptcode rondgaat en acht misbruik waarschijnlijk. Op 21 oktober 2026 stond nog geen van beide lekken op de CISA-lijst van bekend misbruikte kwetsbaarheden.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">NO LOGIN · ONE REQUEST · CVSS 9.2</span><span class="nl">GEEN INLOG · ÉÉN VERZOEK · CVSS 9,2</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: UPDATE NOW, THEN CHECK FOR INTRUDERS</span><span class="nl">AANBEVOLEN: NU BIJWERKEN, DAN CONTROLEREN OP INDRINGERS</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">High</span><span class="nl">Hoog</span></b><p><span class="en">The fixes are public code. AI tools help attackers read a fix, work out the flaw behind it and build an attack in days rather than weeks.</span><span class="nl">De fixes zijn openbare code. AI-tools helpen aanvallers een fix te lezen, het lek erachter te begrijpen en binnen dagen in plaats van weken een aanval te bouwen.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI assistants suggest php.ini tweaks copied from the web as "the fix". PHP itself says those settings reduce exposure but do not make a server safe.</span><span class="nl">AI-assistenten stellen php.ini-aanpassingen van internet voor als "de oplossing". PHP zegt zelf dat die instellingen het risico verkleinen, maar een server niet veilig maken.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Find and watch</span><span class="nl">Vinden en bewaken</span></b><p><span class="en">AI-assisted scanning and log tools can list every PHP version you run and flag odd requests to PHP before and after the update.</span><span class="nl">Scan- en logtools met AI kunnen elke PHP-versie die u draait in kaart brengen en vreemde verzoeken aan PHP signaleren, voor en na de update.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 02 ============================ -->
+<section class="risk-block" id="r2">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 02</span><span class="nl">RISICO 02</span></span>
+    <h2>
+      <span class="en">Old PHP gets no official fix. <em>Old PHP is common.</em></span>
+      <span class="nl">Oude PHP krijgt geen officiële fix. <em>En oude PHP is gewoon.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">end-of-life / versions the PHP project no longer supports</span>
+      <span class="nl">einde levensduur / versies die het PHP-project niet meer ondersteunt</span>
+    </span>
+
+    <div class="stage s2">
+      <div class="stage-label"><span class="en">WHICH VERSIONS GET A RELEASE</span><span class="nl">WELKE VERSIES EEN RELEASE KRIJGEN</span></div>
+      <div class="shelf">
+        <div class="loc">8.5<b><span class="en">fixed</span><span class="nl">gedicht</span></b><i>8.5.12</i></div>
+        <div class="loc">8.4<b><span class="en">fixed</span><span class="nl">gedicht</span></b><i>8.4.27</i></div>
+        <div class="loc">8.3<b><span class="en">fixed</span><span class="nl">gedicht</span></b><i>8.3.36</i></div>
+        <div class="loc">8.2<b><span class="en">fixed</span><span class="nl">gedicht</span></b><i>8.2.35</i></div>
+        <div class="loc open">≤ 8.1<b><span class="en">no release</span><span class="nl">geen release</span></b><i><span class="en">end-of-life</span><span class="nl">einde levensduur</span></i></div>
+      </div>
+      <div class="banner"><span class="en">8.1 AND OLDER · NO OFFICIAL RELEASE</span><span class="nl">8.1 EN OUDER · GEEN OFFICIËLE RELEASE</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">PHP 8.1 reached its end of life on 31 December 2025, and 8.0 and 7.4 earlier. The PHP project gives them no official release with this fix. It did publish minimal source patches for 7.4, 8.0 and 8.1, but someone has to build and test them. Linux distributions and long-term-support vendors may ship them as packages. Older versions get no patch from the PHP project at all. On PHP's own calendar, security support for 8.2 ends on 31 December 2026.</p>
+      <p class="en"><strong>Business impact:</strong> a site on end-of-life PHP stays open until someone upgrades it or builds a patch. That is rarely a one-day job, because old PHP usually means an old application that breaks on a new version. So it is a project with a budget, an owner and a date. Until it is done, CERT-EU suggests isolating internet-facing systems that cannot be patched.</p>
+      <p class="nl">PHP 8.1 bereikte op 31 december 2025 het einde van zijn levensduur, 8.0 en 7.4 al eerder. Het PHP-project geeft ze geen officiële release met deze fix. Het publiceerde wel minimale broncodepatches voor 7.4, 8.0 en 8.1, maar iemand moet die bouwen en testen. Linuxdistributies en leveranciers van langdurige ondersteuning leveren ze mogelijk als pakket. Oudere versies krijgen van het PHP-project helemaal geen patch. Volgens de eigen kalender van PHP stopt de beveiligingsondersteuning voor 8.2 op 31 december 2026.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> een site op verouderde PHP blijft open tot iemand hem bijwerkt of een patch bouwt. Dat is zelden werk van één dag, want oude PHP betekent meestal een oude applicatie die stukgaat op een nieuwe versie. Het is dus een project met een budget, een eigenaar en een datum. Tot het klaar is, raadt CERT-EU aan systemen aan het internet die niet te patchen zijn te isoleren.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">END-OF-LIFE · NO OFFICIAL RELEASE · OFTEN AN OLD APP TOO</span><span class="nl">EINDE LEVENSDUUR · GEEN OFFICIËLE RELEASE · VAAK OOK EEN OUDE APP</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: UPGRADE PLAN WITH A DATE, ISOLATE UNTIL THEN</span><span class="nl">AANBEVOLEN: UPGRADEPLAN MET DATUM, TOT DAN ISOLEREN</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="hi"><span class="en">High</span><span class="nl">Hoog</span></b><p><span class="en">Old PHP versions and old frameworks are easy to recognise from the outside. Automated scanning finds them first, and they stay open the longest.</span><span class="nl">Oude PHP-versies en oude frameworks zijn van buitenaf makkelijk te herkennen. Geautomatiseerd scannen vindt ze als eerste, en ze blijven het langst open.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Under pressure, a team lets an AI tool port an old application overnight. Untested code on the internet is a new risk of its own.</span><span class="nl">Onder druk laat een team een AI-tool een oude applicatie in één nacht overzetten. Ongeteste code aan het internet is een nieuw risico op zich.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Faster upgrades</span><span class="nl">Sneller upgraden</span></b><p><span class="en">With tests and review in place, AI coding assistants can take on much of the dull work of moving an old application to a supported PHP version.</span><span class="nl">Met tests en review erbij kunnen AI-codeassistenten veel van het saaie werk doen om een oude applicatie naar een ondersteunde PHP-versie te brengen.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ 03 ============================ -->
+<section class="risk-block" id="r3">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK 03</span><span class="nl">RISICO 03</span></span>
+    <h2>
+      <span class="en">PHP you never bought as PHP. <em>And cannot update yourself.</em></span>
+      <span class="nl">PHP dat u nooit als PHP kocht. <em>En niet zelf kunt bijwerken.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">hosted sites, plugins, container images, appliances</span>
+      <span class="nl">gehoste sites, plug-ins, containerimages, apparaten</span>
+    </span>
+
+    <div class="stage s3">
+      <div class="stage-label"><span class="en">THE SAME FIX, TWO CLOCKS</span><span class="nl">DEZELFDE FIX, TWEE KLOKKEN</span></div>
+      <div class="row a"><div class="who"><b>🖥️</b><span class="en">Your servers</span><span class="nl">Uw servers</span></div><div class="path"></div><div class="out good"><span class="en">UPDATED · YOUR TEAM</span><span class="nl">BIJGEWERKT · UW TEAM</span></div></div>
+      <div class="row b"><div class="who"><b>📦</b><span class="en">Supplier's box</span><span class="nl">Doos van leverancier</span></div><div class="path"></div><div class="out bad"><span class="en">WAITING · FOR THE VENDOR</span><span class="nl">WACHTEN · OP DE FABRIKANT</span></div></div>
+      <div class="banner"><span class="en">FIX PUBLISHED · YOURS TODAY · THEIRS WHEN THEY SHIP</span><span class="nl">FIX GEPUBLICEERD · DE UWE VANDAAG · DE HUNNE ALS ZIJ LEVEREN</span></div>
+    </div>
+
+    <div class="panel">
+      <p class="en">PHP is not only on your own web servers. It runs in hosted websites and web shops, in content-management plugins and container images, and inside appliances, network devices and management interfaces. There you often cannot update PHP yourself; you wait for the vendor or the host. <abbr class="tip" tabindex="0" data-tip="Nationaal Cyber Security Centrum: the Dutch government's cybersecurity centre.">NCSC-NL</abbr> keeps a public list of software products with a PHP dependency, and CERT-EU points to it. The list is still being expanded.</p>
+      <p class="en"><strong>Business impact:</strong> the open question is rarely "did IT patch?". It is "which suppliers run PHP for us, and have they confirmed the update?". If you make a product with PHP inside and the flaw is actively exploited in it, the <abbr class="tip" tabindex="0" data-tip="Cyber Resilience Act: EU regulation (EU) 2024/2847 that sets security duties for makers of products with digital elements.">CRA</abbr> requires you, as manufacturer, to report it: early warning within 24 hours, notification within 72 hours, via ENISA's Single Reporting Platform.</p>
+      <p class="nl">PHP staat niet alleen op uw eigen webservers. Het draait in gehoste websites en webwinkels, in plug-ins voor contentbeheer en in containerimages, en in apparaten, netwerkapparatuur en beheerinterfaces. Daar kunt u PHP vaak niet zelf bijwerken; u wacht op de fabrikant of de hostingpartij. Het <abbr class="tip" tabindex="0" data-tip="Nationaal Cyber Security Centrum: het cybersecuritycentrum van de Rijksoverheid.">NCSC</abbr> houdt een openbare lijst bij van softwareproducten die PHP gebruiken, en CERT-EU verwijst daarnaar. De lijst wordt nog aangevuld.</p>
+      <p class="nl"><strong>Bedrijfsimpact:</strong> de open vraag is zelden "heeft IT gepatcht?". Het is "welke leveranciers draaien PHP voor ons, en hebben zij de update bevestigd?". Maakt u een product met PHP erin en wordt het lek daarin actief misbruikt, dan verplicht de <abbr class="tip" tabindex="0" data-tip="Cyber Resilience Act: EU-verordening (EU) 2024/2847 met beveiligingsplichten voor makers van producten met digitale elementen.">CRA</abbr> u als fabrikant tot melden: vroegtijdige waarschuwing binnen 24 uur, melding binnen 72 uur, via het Single Reporting Platform van ENISA.</p>
+    </div>
+
+    <div class="pills">
+      <span class="pill risk">⚠ <span class="en">HOSTED · EMBEDDED · NOT YOURS TO PATCH</span><span class="nl">GEHOST · INGEBOUWD · NIET DOOR U TE PATCHEN</span></span>
+      <span class="pill fix">✔ <span class="en">SUGGESTED: ASK EVERY SUPPLIER FOR WRITTEN CONFIRMATION</span><span class="nl">AANBEVOLEN: VRAAG ELKE LEVERANCIER OM SCHRIFTELIJKE BEVESTIGING</span></span>
+    </div>
+
+    <div class="ai3">
+      <span class="cap"><span class="en">What AI changes here</span><span class="nl">Wat AI hier verandert</span></span>
+      <div class="g">
+        <div class="t"><span class="k"><span class="en">Break it with AI</span><span class="nl">Breken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">Attackers unpack appliance firmware with AI help and find the PHP inside. The gap between the PHP fix and the vendor's update is their window.</span><span class="nl">Aanvallers pakken met hulp van AI de firmware van apparaten uit en vinden de PHP erin. De tijd tussen de PHP-fix en de update van de fabrikant is hun kans.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Abuse it with AI</span><span class="nl">Misbruiken met AI</span></span><b class="mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></b><p><span class="en">AI plugins and add-ons for a website bring their own PHP code and dependencies, often installed without anyone listing them.</span><span class="nl">AI-plug-ins en uitbreidingen voor een website brengen hun eigen PHP-code en afhankelijkheden mee, vaak geïnstalleerd zonder dat iemand ze vastlegt.</span></p></div>
+        <div class="t"><span class="k"><span class="en">Enforce it with AI</span><span class="nl">Afdwingen met AI</span></span><b class="lo"><span class="en">Ask the list</span><span class="nl">Vraag het de lijst</span></b><p><span class="en">With a software bill of materials from each supplier, a tool can answer "where do we run PHP?" in minutes instead of weeks.</span><span class="nl">Met een softwarestuklijst van elke leverancier kan een tool de vraag "waar draaien wij PHP?" in minuten beantwoorden in plaats van weken.</span></p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================ CONTROLS ============================ -->
+<section class="risk-block" id="fix">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">CONTROLS</span><span class="nl">MAATREGELEN</span></span>
+    <h2>
+      <span class="en">What <em>closes the door.</em></span>
+      <span class="nl">Wat <em>de deur sluit.</em></span>
+    </h2>
+    <span class="term">
+      <span class="en">the update is quick; the old applications and the suppliers take the time</span>
+      <span class="nl">de update is snel; de oude applicaties en de leveranciers kosten de tijd</span>
+    </span>
+
+    <div class="stage s5">
+      <div class="stage-label"><span class="en">DEFENCE STACK</span><span class="nl">VERDEDIGINGSLAGEN</span></div>
+      <div class="orbit">
+        <span class="chip c1"><span class="en">UPDATE</span><span class="nl">BIJWERKEN</span></span>
+        <span class="chip c2"><span class="en">COMPROMISE CHECK</span><span class="nl">CONTROLE OP INBRAAK</span></span>
+        <span class="chip c3"><span class="en">VERSION LIST</span><span class="nl">VERSIELIJST</span></span>
+        <span class="chip c4"><span class="en">UPGRADE PLAN</span><span class="nl">UPGRADEPLAN</span></span>
+        <span class="chip c5"><span class="en">SUPPLIER CONFIRMATION</span><span class="nl">BEVESTIGING LEVERANCIER</span></span>
+      </div>
+      <div class="shield">
+        <svg viewBox="0 0 100 118" aria-hidden="true">
+          <path class="body" d="M50 4 L93 19 V60 C93 87 73 105 50 114 C27 105 7 87 7 60 V19 Z"/>
+          <path class="tick" d="M31 59 L44 74 L71 40"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Control</th><th>Addresses</th><th>In one line</th></tr>
+        <tr><td class="ctl">Update now</td><td>Update (01)</td><td>8.5.12, 8.4.27, 8.3.36 or 8.2.35, or your Linux distribution's patched package. Restart every PHP worker afterwards.</td></tr>
+        <tr><td class="ctl">Compromise check</td><td>Update (01)</td><td>For servers that were reachable before the update: look for unknown files, new accounts and odd outbound traffic. NCSC-NL collects detection material.</td></tr>
+        <tr><td class="ctl">Interim settings</td><td>Update (01)</td><td>Only where the update takes longer: PHP's own php.ini measures. PHP says they reduce exposure but do not make a server safe.</td></tr>
+        <tr><td class="ctl">Version list</td><td>Old PHP (02)</td><td>Every server, image and site with its PHP version and the end-of-support date from php.net. Kept current, not made once.</td></tr>
+        <tr><td class="ctl">Upgrade plan with a date</td><td>Old PHP (02)</td><td>For 8.1 and older now, and for 8.2 before its support ends. What cannot move in time is isolated from the internet.</td></tr>
+        <tr><td class="ctl">Supplier confirmation</td><td>Suppliers (03)</td><td>Hosting providers and appliance vendors confirm in writing which version they run and when they updated.</td></tr>
+        <tr><td class="ctl">Software bill of materials</td><td>Suppliers (03)</td><td>Asked for in contracts, so the next "do we run this?" is answered from a list, not a survey.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Maatregel</th><th>Pakt aan</th><th>In één zin</th></tr>
+        <tr><td class="ctl">Nu bijwerken</td><td>Bijwerken (01)</td><td>8.5.12, 8.4.27, 8.3.36 of 8.2.35, of het gepatchte pakket van uw Linuxdistributie. Start daarna elk PHP-proces opnieuw.</td></tr>
+        <tr><td class="ctl">Controle op inbraak</td><td>Bijwerken (01)</td><td>Voor servers die vóór de update bereikbaar waren: zoek naar onbekende bestanden, nieuwe accounts en vreemd uitgaand verkeer. Het NCSC verzamelt detectiemateriaal.</td></tr>
+        <tr><td class="ctl">Tijdelijke instellingen</td><td>Bijwerken (01)</td><td>Alleen waar de update langer duurt: de php.ini-maatregelen van PHP zelf. PHP zegt dat die het risico verkleinen, maar een server niet veilig maken.</td></tr>
+        <tr><td class="ctl">Versielijst</td><td>Oude PHP (02)</td><td>Elke server, image en site met zijn PHP-versie en de einddatum van ondersteuning volgens php.net. Bijgehouden, niet één keer gemaakt.</td></tr>
+        <tr><td class="ctl">Upgradeplan met datum</td><td>Oude PHP (02)</td><td>Voor 8.1 en ouder nu, en voor 8.2 voordat de ondersteuning stopt. Wat niet op tijd over kan, wordt van het internet geïsoleerd.</td></tr>
+        <tr><td class="ctl">Bevestiging leverancier</td><td>Leveranciers (03)</td><td>Hostingpartijen en fabrikanten van apparaten bevestigen schriftelijk welke versie zij draaien en wanneer zij bijwerkten.</td></tr>
+        <tr><td class="ctl">Softwarestuklijst</td><td>Leveranciers (03)</td><td>Gevraagd in contracten, zodat de volgende "draaien wij dit?" uit een lijst komt, niet uit een rondvraag.</td></tr>
+      </table>
+
+      <div class="callout">
+        <span class="en"><strong>The board-level point:</strong> "are we affected?" is the natural first question, and we suggest three sharper ones. Which of our internet-facing systems run PHP, including the ones suppliers run for us? Which of them run a version that gets no official fix? Who confirms in writing that each one has been updated or isolated, and by when? How fast to move, and what to take offline in the meantime, is your call.</span>
+        <span class="nl"><strong>De kern voor de directie:</strong> "worden wij geraakt?" is de logische eerste vraag, en wij stellen drie scherpere voor. Welke van onze systemen aan het internet draaien PHP, ook die welke leveranciers voor ons draaien? Welke daarvan draaien een versie die geen officiële fix krijgt? Wie bevestigt schriftelijk dat elk systeem is bijgewerkt of geïsoleerd, en wanneer? Hoe snel u gaat, en wat u in de tussentijd offline haalt, is uw keuze.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============================ RISK & COMPLIANCE ============================ -->
+<section class="risk-block" id="risk">
+  <div class="wrap">
+    <span class="kicker"><b>//</b> <span class="en">RISK &amp; COMPLIANCE</span><span class="nl">RISICO &amp; COMPLIANCE</span></span>
+    <h2>
+      <span class="en">On the register, <em>and in the audit.</em></span>
+      <span class="nl">In het risicoregister, <em>en in de audit.</em></span>
+    </h2>
+    <span class="term"><span class="en">indicative — confirm scope and deadlines with legal and compliance</span><span class="nl">indicatief — bevestig reikwijdte en termijnen met legal en compliance</span></span>
+
+    <div class="risk-grid">
+      <div class="risk-item"><span class="k"><span class="en">Likelihood</span><span class="nl">Kans</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">No login needed, reachable from the internet, and the details are public. CERT-EU considers exploitation likely.</span><span class="nl">Geen inlog nodig, bereikbaar vanaf internet, en de details zijn openbaar. CERT-EU acht misbruik waarschijnlijk.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Impact</span><span class="nl">Impact</span></span><span class="v hi"><span class="en">High</span><span class="nl">Hoog</span></span><p><span class="en">Code running on the web server: data theft, a defaced or skimmed site, and a foothold for ransomware. It can become a notifiable incident.</span><span class="nl">Code die draait op de webserver: datadiefstal, een bekladde website of afgeroomde webwinkel, en een opstap naar ransomware. Het kan een meldplichtig incident worden.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Residual after controls</span><span class="nl">Restrisico na maatregelen</span></span><span class="v mid"><span class="en">Medium</span><span class="nl">Gemiddeld</span></span><p><span class="en">Low for your own updated and checked servers. It stays medium while old PHP and supplier systems lag behind.</span><span class="nl">Laag voor uw eigen bijgewerkte en gecontroleerde servers. Het blijft gemiddeld zolang oude PHP en systemen van leveranciers achterlopen.</span></p></div>
+      <div class="risk-item"><span class="k"><span class="en">Risk owner</span><span class="nl">Risico-eigenaar</span></span><span class="v"><span class="en">CISO</span><span class="nl">CISO</span></span><p><span class="en">The <abbr class="tip" tabindex="0" data-tip="Chief information security officer: the executive responsible for information security.">CISO</abbr> owns the response; each application owner owns their PHP version, and vendor management chases the suppliers.</span><span class="nl">De <abbr class="tip" tabindex="0" data-tip="Chief information security officer: de bestuurder die verantwoordelijk is voor informatiebeveiliging.">CISO</abbr> is eigenaar van de aanpak; elke applicatie-eigenaar van zijn PHP-versie, en leveranciersbeheer volgt de leveranciers op.</span></p></div>
+      <div class="risk-item w2"><span class="k"><span class="en">Key risk indicators</span><span class="nl">Kernrisico-indicatoren</span></span><span class="v"><span class="en">Four numbers to ask for</span><span class="nl">Vier getallen om naar te vragen</span></span><p><span class="en">% of internet-facing PHP on a fixed version · systems on end-of-life PHP · suppliers without written confirmation · days from the advisory to the last update.</span><span class="nl">% van PHP aan het internet op een versie met de fix · systemen op verouderde PHP · leveranciers zonder schriftelijke bevestiging · dagen tussen het advies en de laatste update.</span></p></div>
+      <div class="risk-item wide"><span class="k"><span class="en">Risk register entry</span><span class="nl">Tekst voor het risicoregister</span></span><span class="v"><span class="en">One sentence</span><span class="nl">Eén zin</span></span><p><span class="en">“An unpatched, end-of-life or supplier-managed PHP installation is exploited through php2shell, letting an attacker run code on a web server without logging in, which can lead to data theft, ransomware and a notifiable incident.”</span><span class="nl">“Een ongepatchte, verouderde of door een leverancier beheerde PHP-installatie wordt via php2shell misbruikt, waardoor een aanvaller zonder inlog code op een webserver uitvoert, wat kan leiden tot datadiefstal, ransomware en een meldplichtig incident.”</span></p></div>
+    </div>
+
+    <div class="panel">
+      <table class="en">
+        <tr><th>Framework</th><th>What it requires of you</th><th>When a supplier hands you their report</th><th>When this incident happens</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU directive on cybersecurity for essential and important entities; in the Netherlands the Cyberbeveiligingswet.">NIS2</abbr> requires vulnerability handling (Art. 21(2)(e)) and supply-chain security (Art. 21(2)(d)). In the Netherlands this runs through the Cyberbeveiligingswet, in force since 15 August 2026.</td><td>Ask whether the service you use runs PHP, on which version, and when it was updated for these two flaws.</td><td>An exploited PHP server can count as a significant incident if it meets the thresholds. Early warning within 24 hours of becoming aware, incident notification within 72 hours, final report within one month.</td></tr>
+        <tr><td class="ctl">DORA</td><td>The <abbr class="tip" tabindex="0" data-tip="Regulatory technical standards: detailed EU rules under DORA, here Delegated Regulation (EU) 2024/1774.">RTS</abbr> on ICT risk require an asset inventory that records the end dates of vendor support (Art. 4) and vulnerability and patch management with set timeframes (Art. 10). DORA has applied since 17 January 2025.</td><td>A hosted site or appliance with PHP belongs to an <abbr class="tip" tabindex="0" data-tip="Information and communication technology: in DORA, any digital or data service a financial entity relies on.">ICT</abbr> third party in your register. Ask for its fixed version and the date.</td><td>Classify promptly. Initial notification within 4 hours of classifying it as major (at most 24 hours after becoming aware), intermediate report within 72 hours of the initial notification, final report within one month.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterion CC7.1 covers detecting new vulnerabilities; CC9.2 covers managing the risk of vendors and business partners.</td><td>Check that the web tier is in scope and that patch timelines are tested, not only described. Check whether the hosting provider is carved out.</td><td>An exploited or late-patched PHP server in scope will likely appear as an exception in the next report.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>The focus is financial reporting. Web servers appear only as general IT controls where they support the financial process.</td><td>The report rarely names PHP versions. Ask for them in the contract instead.</td><td>ISAE 3402 creates no duty to notify user auditors. Expect a deviation in the next report, and ask for interim disclosure in the contract.</td></tr>
+      </table>
+
+      <table class="nl">
+        <tr><th>Kader</th><th>Wat het van u vraagt</th><th>Als een leverancier u zijn rapport geeft</th><th>Als dit incident u treft</th></tr>
+        <tr><td class="ctl">NIS2</td><td><abbr class="tip" tabindex="0" data-tip="EU-richtlijn voor cyberbeveiliging van essentiële en belangrijke entiteiten; in Nederland de Cyberbeveiligingswet.">NIS2</abbr> vraagt omgang met kwetsbaarheden (art. 21 lid 2 onder e) en beveiliging van de toeleveringsketen (art. 21 lid 2 onder d). In Nederland loopt dit via de Cyberbeveiligingswet, van kracht sinds 15 augustus 2026.</td><td>Vraag of de dienst die u gebruikt PHP draait, op welke versie, en wanneer die voor deze twee lekken is bijgewerkt.</td><td>Een misbruikte PHP-server kan als significant incident gelden als het de drempels haalt. Vroegtijdige waarschuwing binnen 24 uur na ontdekking, incidentmelding binnen 72 uur, eindverslag binnen een maand.</td></tr>
+        <tr><td class="ctl">DORA</td><td>De <abbr class="tip" tabindex="0" data-tip="Technische reguleringsnormen: gedetailleerde EU-regels onder DORA, hier Gedelegeerde Verordening (EU) 2024/1774.">RTS</abbr> over ICT-risico vragen een inventaris van bedrijfsmiddelen met de einddata van ondersteuning door de leverancier (art. 4) en kwetsbaarheids- en patchbeheer met vaste termijnen (art. 10). DORA geldt sinds 17 januari 2025.</td><td>Een gehoste site of apparaat met PHP hoort bij een <abbr class="tip" tabindex="0" data-tip="Informatie- en communicatietechnologie: onder DORA elke digitale of datadienst waarop een financiële instelling leunt.">ICT</abbr>-derde in uw register. Vraag naar de versie met de fix en de datum.</td><td>Classificeer snel. Eerste melding binnen 4 uur na classificatie als ernstig (uiterlijk 24 uur na ontdekking), tussenrapport binnen 72 uur na de eerste melding, eindrapport binnen een maand.</td></tr>
+        <tr><td class="ctl">SOC 2</td><td>Criterium CC7.1 gaat over het ontdekken van nieuwe kwetsbaarheden; CC9.2 over het beheersen van het risico van leveranciers en zakenpartners.</td><td>Controleer of de weblaag binnen scope valt en of patchtermijnen zijn getest, niet alleen beschreven. Controleer of de hostingpartij buiten het rapport is gelaten.</td><td>Een misbruikte of te laat gepatchte PHP-server binnen scope komt waarschijnlijk als afwijking in het volgende rapport.</td></tr>
+        <tr><td class="ctl">ISAE 3402</td><td>De focus ligt op de financiële verslaggeving. Webservers komen alleen voor als algemene IT-beheersmaatregelen waar ze het financiële proces ondersteunen.</td><td>Het rapport noemt zelden PHP-versies. Vraag daar in het contract naar.</td><td>ISAE 3402 schept geen meldplicht aan de auditors van gebruikers. Verwacht een afwijking in het volgende rapport en vraag in het contract om tussentijdse melding.</td></tr>
+      </table>
+      <p class="sources en">Checked against: <a href="https://www.php.net/archive/2026.php#2026-10-21-5">php.net security advisory</a> (21 Oct 2026), <a href="https://www.php.net/supported-versions.php">php.net supported versions</a> and <a href="https://www.php.net/eol.php">end-of-life table</a> (Oct 2026), CVE records <a href="https://www.cve.org/CVERecord?id=CVE-2026-109618">CVE-2026-109618</a> and <a href="https://www.cve.org/CVERecord?id=CVE-2026-109619">CVE-2026-109619</a> (21 Oct 2026), <a href="https://cert.europa.eu/publications/security-advisories/2026-018/">CERT-EU SA 2026-018</a> (21 Oct 2026), <a href="https://github.com/NCSC-NL/php2shell">NCSC-NL php2shell</a> (21 Oct 2026), <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV</a> (21 Oct 2026), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> Art. 21 and 23, <a href="https://eur-lex.europa.eu/eli/reg_del/2024/1774/oj">RTS (EU) 2024/1774</a> Art. 4 and 10, <a href="https://eur-lex.europa.eu/eli/reg_del/2025/301/oj">RTS (EU) 2025/301</a> Art. 5, <a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">CRA reporting</a> (European Commission), GDPR Art. 33, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC-NL</a> (Aug 2026), AICPA Trust Services Criteria CC7.1 and CC9.2 (2017, points of focus 2022) · October 2026.</p>
+      <p class="sources nl">Gecontroleerd tegen: <a href="https://www.php.net/archive/2026.php#2026-10-21-5">beveiligingsadvies php.net</a> (21 okt 2026), <a href="https://www.php.net/supported-versions.php">ondersteunde versies php.net</a> en <a href="https://www.php.net/eol.php">tabel einde levensduur</a> (okt 2026), CVE-records <a href="https://www.cve.org/CVERecord?id=CVE-2026-109618">CVE-2026-109618</a> en <a href="https://www.cve.org/CVERecord?id=CVE-2026-109619">CVE-2026-109619</a> (21 okt 2026), <a href="https://cert.europa.eu/publications/security-advisories/2026-018/">CERT-EU SA 2026-018</a> (21 okt 2026), <a href="https://github.com/NCSC-NL/php2shell">NCSC php2shell</a> (21 okt 2026), <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog">CISA KEV</a> (21 okt 2026), <a href="https://eur-lex.europa.eu/eli/dir/2022/2555/oj">NIS2</a> art. 21 en 23, <a href="https://eur-lex.europa.eu/eli/reg_del/2024/1774/oj">RTS (EU) 2024/1774</a> art. 4 en 10, <a href="https://eur-lex.europa.eu/eli/reg_del/2025/301/oj">RTS (EU) 2025/301</a> art. 5, <a href="https://digital-strategy.ec.europa.eu/en/policies/cra-reporting">CRA-meldplicht</a> (Europese Commissie), AVG art. 33, <a href="https://www.ncsc.nl/nieuws/cbw-en-wwke-nu-van-kracht">NCSC</a> (aug 2026), AICPA Trust Services Criteria CC7.1 en CC9.2 (2017, aandachtspunten 2022) · oktober 2026.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><i></i><i></i><i></i><i></i></div>
+
+<p class="related"><span class="en">Related:</span><span class="nl">Zie ook:</span>
+  <a href="../patching/"><span class="en">The unpatched server</span><span class="nl">De ongepatchte server</span></a> ·
+  <a href="../edge-devices/"><span class="en">The box at the edge</span><span class="nl">De doos aan de rand</span></a> ·
+  <a href="../web-security/"><span class="en">Your website is a front door</span><span class="nl">Uw website is een voordeur</span></a></p>
+<div class="fb">
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=missing-content.yml&amp;page=php2shell&amp;title=Missing%3A%20php2shell"><span class="en">Missing anything?</span><span class="nl">Mist er iets?</span></a>
+  <a href="https://github.com/evandervecht/plain-security/issues/new?template=correction.yml&amp;page=php2shell&amp;title=Correction%3A%20php2shell"><span class="en">Something not correct?</span><span class="nl">Klopt er iets niet?</span></a>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="meta">
+      <span class="en">PHP2SHELL BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> SINGLE HTML FILE <span class="sep">//</span> NO TRACKING</span>
+      <span class="nl">PHP2SHELL BRIEFING <span class="sep">//</span> PLAIN SECURITY <span class="sep">//</span> ÉÉN HTML-BESTAND <span class="sep">//</span> GEEN TRACKING</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* scrollbar colour follows scroll depth: blue, purple, red, yellow, white */
+(function(){var c=[[90,200,250],[167,139,250],[255,93,115],[255,200,87],[255,255,255]],d=document.documentElement;
+function f(){var x=Math.min(scrollY/Math.max(1,d.scrollHeight-innerHeight),1)*(c.length-1),i=Math.min(Math.floor(x),c.length-2),t=x-i;
+d.style.scrollbarColor="rgb("+c[i].map(function(v,k){return Math.round(v+(c[i+1][k]-v)*t)})+") #051324"}
+addEventListener("scroll",f,{passive:true});addEventListener("resize",f);f()})();
+</script>
+</body>
+</html>
