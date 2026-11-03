@@ -1,3 +1,6 @@
 _t*.html
 tools/out/
 __pycache__/
+media/*/build/
+media/*/out/
+media/*/assets/generated/

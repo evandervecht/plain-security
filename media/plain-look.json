@@ -1,0 +1,13 @@
+{
+  "extends": "midnight",
+  "name": "plain",
+  "bg": "#0b1b2b",
+  "ink": "#e6eff5",
+  "muted": "#87a2b0",
+  "surface": "#2a4858",
+  "accent": "teal",
+  "colors": { "blue": "#4ea1ff", "teal": "#3fd2c7", "yellow": "#ffd166", "green": "#4ade80", "red": "#ff6b7a", "ink": "#e6eff5", "gray": "#637b88" },
+  "background": "plain",
+  "transition": "fade",
+  "music": "calm"
+}
