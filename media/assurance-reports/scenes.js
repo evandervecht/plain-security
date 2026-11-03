@@ -51,7 +51,7 @@ export default {
     s.box('Page 60: exceptions', { id: 'b', x: xs[2], y, size: u * 2.4, icon: 'triangle-alert', color: 'yellow', at: '#p60' });
     s.text('clean opinion with exceptions is normal', { y: s.H * 0.58, size: u * 2.1, color: 'muted', at: '#normal' });
     s.text('read each one for what it means for our service', { y: s.H * 0.68, size: u * 2.1, color: 'yellow', at: '#read' });
-    s.text('configuration, access and data use: never tested', { y: s.H * 0.78, size: u * 2.1, color: 'red', at: '#never' });
+    s.text('customer-side controls: often out of scope',{ y: s.H * 0.78, size: u * 2.1, color: 'red', at: '#never' });
   },
 
   good(s) {

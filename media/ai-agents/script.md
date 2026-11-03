@@ -13,7 +13,7 @@ Second, three words you will hear. [#agent] An agent is a model and a harness in
 Third and fourth, skills and servers are software. [#hidden] Text can hide in a skill. Invisible characters show nothing on screen, yet models can read them. [#scripts] Scripts in a skill are run, not read. [#laptop] An MCP server often runs on a laptop, with the same rights as the AI application that starts it. [#owasp] {OWASP|oh wasp} puts prompt injection at number one in its Top 10 for AI applications.
 
 ## limits
-Fifth, limits outside the model. [#talk] A model can be talked into things, so safety cannot rest on it saying no. [#sandbox] The harness runs in a sandbox that reaches only the project folder. [#person] Risky actions wait for a person.
+Fifth, limits outside the model. [#talk] A model can be talked into things, so safety cannot rest on it saying no. [#sandbox] Recommended: a harness in a sandbox that reaches only the project folder. [#person] Also recommended: risky actions wait for a person. Check whether your agents do this today, because it depends on setup.
 
 ## good {hold=1.2}
 What good looks like. [#list] One approved list of agents, skills and servers, with an owner. [#review] A person reads every file before install. [#narrow] Each server gets its own narrow token. [#sandbox2] Agents run in a sandbox, and every action is logged.

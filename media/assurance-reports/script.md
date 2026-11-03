@@ -13,7 +13,7 @@ Second, the scope. [#line] The opinion covers exactly what the system descriptio
 Third, your part. [#cuec] Every report lists the controls the supplier assumed you run. [#untested] The auditor did not test them. [#names] Typical lines: who gets access, who removes leavers, who reviews the logs. [#owner] They rarely reach the people who run our side.
 
 ## exceptions
-Fourth, the exceptions at the back. [#p3] The opinion is on page three. [#p60] The exceptions are on page sixty. [#normal] A clean opinion with exceptions is normal. [#read] Read each one for what it means for our service. [#never] And configuration, access and data use are never tested.
+Fourth, the exceptions at the back. [#p3] The opinion is on page three. [#p60] The exceptions are on page sixty. [#normal] A clean opinion with exceptions is normal. [#read] Read each one for what it means for our service. [#never] And customer-side controls, such as configuration, access and data use, are often outside the report's scope.
 
 ## good {hold=1.2}
 What good looks like. [#four2] Type, period, date and auditor are recorded before anyone reads on. [#map] A scope map has one line per service: in, carved out, or not covered. [#list] Every assumed control gets a named owner. [#review] Every exception gets a rating for our service. [#cost] This takes an afternoon per report. [#nis2] {NIS2|niss two} requires supply chain security measures, in Article 21, and the report is one way to show them.

@@ -67,8 +67,8 @@ export default {
     s.arrow('m', 'sb', { at: '#sandbox' });
     s.arrow('sb', 'p', { at: '#person' });
     s.text('can be talked into things', { x: xs[0], y: s.H * 0.58, size: u * 1.7, color: 'yellow', maxWidth: s.safe.w * 0.22, at: '#talk' });
-    s.text('reaches only the project folder', { x: xs[1], y: s.H * 0.58, size: u * 1.7, color: 'muted', maxWidth: s.safe.w * 0.22, at: 'folder' });
-    s.text('risky actions wait here', { x: xs[2], y: s.H * 0.58, size: u * 1.7, color: 'muted', maxWidth: s.safe.w * 0.22, at: '#person' });
+    s.text('recommended: project folder only', { x: xs[1], y: s.H * 0.58, size: u * 1.7, color: 'muted', maxWidth: s.safe.w * 0.22, at: 'folder' });
+    s.text('recommended: risky actions wait', { x: xs[2], y: s.H * 0.58, size: u * 1.7, color: 'muted', maxWidth: s.safe.w * 0.22, at: '#person' });
   },
 
   good(s) {
