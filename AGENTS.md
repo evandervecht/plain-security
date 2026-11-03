@@ -196,6 +196,10 @@ Ask a maintainer in the issue, and don't guess, when:
 - [ ] EN and NL say the same thing; Dutch uses formal *u*.
 - [ ] Text grew by 10% or less; `node tools/check.mjs` passes; the PR description is complete.
 
+## Video
+
+Every briefing has a two-minute English explainer video (`media/README.md`): an explainroo project in `media/<slug>/` (script.md, scenes.js, video.json), rendered and uploaded by the hub, and put on the page one a week from `media/queue.txt` (top = next; a new slug goes at the end, or at the top to jump the queue). A new briefing brings its project in the same PR: the script says only what the page says, in the advisory tone, in this order: the board's question, the risks or steps, what good looks like with the named control, one suggested first step. Run `node <explainroo>/bin/explainroo.js check media/<slug>` until clean. Never render or upload from a PR; never commit `build/` or `out/`.
+
 ## Diagram candidates
 
 Add a diagram only when it replaces text.
