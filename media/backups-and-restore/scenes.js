@@ -59,7 +59,7 @@ export default {
   cloud(s) {
     page(s, 'QUESTION 4 OF 4', 'Who backs up our cloud applications?', [
       ['Provider', 'cloud', 'blue', '#up', 'keeps the service running'],
-      ['Deleted content', 'trash-2', 'red', '#days', 'kept at most 30 days'],
+      ['SharePoint, OneDrive', 'trash-2', 'red', '#days', 'recycle bin 93 days, longer by policy'],
       ['Our data', 'database', 'teal', '#own', 'our job to protect'],
     ], [
       ['available is not backed up', 'yellow', '#up'],

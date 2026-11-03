@@ -23,7 +23,7 @@ export default {
 
   logs(s) {
     const u = risk(s, 1, 'Evidence deleted before anyone looked', [['Breach', 'triangle-alert', 'blue', 0.4], ['Logs overwritten', 'file-x', 'yellow', 'erased'], ['"We do not know"', 'circle-question-mark', 'red', '#max']]);
-    s.text('median: 14 days before it is noticed', { y: s.H * 0.62, size: u * 2.1, color: 'muted', at: '#median' });
+    s.text('median 14 days before noticed, Mandiant M-Trends 2026',{ y: s.H * 0.62, size: u * 2.1, color: 'muted', at: '#median' });
     s.text('logs never kept, or erased after two weeks', { y: s.H * 0.78, size: u * 2.1, color: 'muted', at: 'kept' });
     s.text('every customer record possibly affected', { y: s.H * 0.70, size: u * 2.1, color: 'yellow', at: 'record' });
   },

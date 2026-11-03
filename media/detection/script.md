@@ -4,7 +4,7 @@
 Would we even notice an attack? [#four] Four ways it stays invisible.
 
 ## logs
-First, the evidence was deleted before anyone looked. [#median] Breaches often go unnoticed for weeks, with a median of fourteen days. [#overwrite] If logs were never kept, or were erased after two weeks, the answer is "we do not know". [#max] Then every customer record becomes possibly affected.
+First, the evidence was deleted before anyone looked. [#median] Breaches often go unnoticed for weeks. Mandiant reports a global median of fourteen days, in its 2026 report. [#overwrite] If logs were never kept, or were erased after two weeks, the answer is "we do not know". [#max] Then every customer record becomes possibly affected.
 
 ## alarm
 Second, the alarm went off. Nobody was listening. [#tool] A monitoring tool produces alerts, not attention. [#night] The one that mattered, a new administrator at {02:40|two forty} on a Saturday, is read on Monday. [#weekend] A weekend is enough to encrypt everything.

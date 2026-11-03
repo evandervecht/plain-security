@@ -13,7 +13,7 @@ Second, can an attacker reach the backups? [#first] Ransomware crews look for th
 Third, has anyone restored everything? [#green] The backup job says green every night. [#tried] But a report shows the copy was written, not that it can be read back. [#key] One example is the key kept on the server that was just encrypted. [#timed] A timed restore test turns hope into a fact.
 
 ## cloud
-Fourth, who backs up our cloud applications? [#up] The provider keeps the service running. [#days] But Microsoft keeps deleted content for at most 30 days. [#own] Protecting our own data is our job.
+Fourth, who backs up our cloud applications? [#up] The provider keeps the service running. [#days] But a deleted SharePoint or OneDrive file stays in the recycle bin for 93 days, unless a retention policy keeps it longer. [#own] Protecting our own data is our job.
 
 ## good {hold=1.2}
 What good looks like. [#nist] {NIST|nist} defines both recovery targets. [#ncsc] {NCSC|N C S C} UK guidance sets the three copies. [#gdpr] {GDPR|G D P R} Article 32 asks for the ability to restore, and regular testing of it.
