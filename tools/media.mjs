@@ -12,7 +12,7 @@
 import { readFileSync, writeFileSync, existsSync, mkdtempSync, copyFileSync } from "node:fs";
 import { execFileSync, spawnSync } from "node:child_process";
 import { join, resolve } from "node:path";
-import { tmpdir } from "node:os";
+import { tmpdir, cpus } from "node:os";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 export const ROOT = resolve(fileURLToPath(new URL("..", import.meta.url)));
@@ -22,7 +22,8 @@ export const ASSET_URL = `https://github.com/${REPO}/releases/download/${TAG}/`;
 const EXPLAINROO = process.env.EXPLAINROO_DIR || "C:\\Work\\brainstorm_workspaces\\best_practice_training\\video\\explainroo";
 const QUEUE = join(ROOT, "media", "queue.txt");
 
-const sh = (cmd, args, opts = {}) => execFileSync(cmd, args, { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "inherit"], ...opts }).trim();
+// null when stdout is inherited (check.mjs runs that way)
+const sh = (cmd, args, opts = {}) => String(execFileSync(cmd, args, { cwd: ROOT, encoding: "utf8", stdio: ["ignore", "pipe", "inherit"], ...opts }) ?? "").trim();
 // gh and other .cmd shims need a shell on Windows
 const gh = (args, opts) => sh(process.platform === "win32" ? "gh.exe" : "gh", args, opts);
 const git = (args) => sh("git", args);
@@ -47,8 +48,11 @@ function ensureRelease() {
 }
 const assetNames = () => ensureRelease();
 
+// render keeps one core free for other tasks on the hub (Ellert, 2026-11-03); the routine also pins the affinity
+const WORKERS = String(Math.max(1, Math.min(8, cpus().length - 1)));
 function explainroo(cmd, slug) {
-  const r = spawnSync("node", [join(EXPLAINROO, "bin", "explainroo.js"), cmd, join(ROOT, "media", slug)], { cwd: EXPLAINROO, stdio: "inherit" });
+  const extra = cmd === "render" ? ["--workers", WORKERS] : [];
+  const r = spawnSync("node", [join(EXPLAINROO, "bin", "explainroo.js"), cmd, join(ROOT, "media", slug), ...extra], { cwd: EXPLAINROO, stdio: "inherit" });
   if (r.status !== 0) throw new Error(`explainroo ${cmd} ${slug} failed (exit ${r.status})`);
 }
 
