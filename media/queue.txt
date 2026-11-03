@@ -1,6 +1,5 @@
 # One briefing slug per line, top = the next video to put on its page (one a week).
 # New topic: add its slug at the end, or at the top to jump the queue. Lines starting with # are ignored.
-email-security
 cookies
 tls-cipher-suites
 ransomware

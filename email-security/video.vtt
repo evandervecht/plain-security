@@ -1,0 +1,146 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:04.240
+Can a stranger send email that
+looks like it comes from our CFO?
+
+00:00:04.560 --> 00:00:06.230
+Email breaks in four ways.
+
+00:00:07.583 --> 00:00:09.253
+First, someone listens in.
+
+00:00:09.523 --> 00:00:12.433
+A message crosses several
+networks before it lands.
+
+00:00:12.813 --> 00:00:15.783
+If one hop uses plaintext instead of TLS,
+
+00:00:16.253 --> 00:00:18.003
+whoever sits there can read it.
+
+00:00:18.183 --> 00:00:20.293
+Nothing breaks and no alert fires,
+
+00:00:20.743 --> 00:00:22.553
+so it can go unnoticed for years.
+
+00:00:23.683 --> 00:00:25.973
+Second, someone rewrites the message.
+
+00:00:26.263 --> 00:00:30.943
+Often the attacker writes from a hacked
+supplier mailbox and changes one bank
+
+00:00:30.943 --> 00:00:31.893
+account number.
+
+00:00:32.118 --> 00:00:36.448
+Both sides see a normal thread,
+and the mismatch surfaces weeks later.
+
+00:00:36.698 --> 00:00:38.028
+Consider a call-back:
+
+00:00:38.458 --> 00:00:42.048
+confirm any bank change by phone,
+on a number you already have.
+
+00:00:43.083 --> 00:00:45.033
+Third, someone pretends to be us.
+
+00:00:45.348 --> 00:00:50.308
+Nothing in the email protocol stops a
+stranger from typing our domain into the
+
+00:00:50.308 --> 00:00:51.018
+From field.
+
+00:00:51.353 --> 00:00:53.303
+The cost is CEO fraud,
+
+00:00:53.693 --> 00:00:57.983
+phishing of our customers under our brand,
+and our own mail landing in spam.
+
+00:00:59.150 --> 00:01:01.080
+Fourth, someone sits in the middle.
+
+00:01:01.300 --> 00:01:04.450
+Encryption between mail
+servers is optional by default,
+
+00:01:04.960 --> 00:01:09.690
+so an attacker can strip the offer,
+and both servers fall back to plaintext.
+
+00:01:10.050 --> 00:01:13.280
+From there, they read everything
+and can change anything.
+
+00:01:13.555 --> 00:01:15.365
+That is why it matters at the top.
+
+00:01:15.660 --> 00:01:18.330
+It defeats the assumption
+that we have encryption.
+
+00:01:19.550 --> 00:01:20.760
+What good looks like.
+
+00:01:21.045 --> 00:01:23.775
+SPF lists who may send as our domain.
+
+00:01:24.540 --> 00:01:26.010
+DKIM signs each message.
+
+00:01:26.400 --> 00:01:29.570
+DMARC tells receivers what
+to do when those fail.
+
+00:01:29.830 --> 00:01:31.060
+Only reject blocks.
+
+00:01:31.570 --> 00:01:34.580
+MTA-STS and DANE make
+encryption mandatory,
+
+00:01:35.090 --> 00:01:36.680
+so a stripped connection fails.
+
+00:01:37.060 --> 00:01:40.170
+These are DNS records
+and mail server settings,
+
+00:01:40.400 --> 00:01:42.390
+so the cost is engineering hours.
+
+00:01:42.875 --> 00:01:46.765
+NIS2 Article 21 lists cyber
+hygiene and encryption,
+
+00:01:47.255 --> 00:01:49.205
+and these controls help show both.
+
+00:01:51.030 --> 00:01:52.240
+A suggested first step.
+
+00:01:52.525 --> 00:01:57.115
+Ask whether we move DMARC to reject,
+and MTA-STS to enforce.
+
+00:01:57.600 --> 00:02:01.050
+The monitoring modes cost the
+same effort and block nothing.
+
+00:02:01.315 --> 00:02:03.725
+A free online test shows where we stand.
+
+00:02:05.283 --> 00:02:06.813
+Four ways email breaks.
+
+00:02:07.188 --> 00:02:10.278
+Enforce the records,
+and keep the call-back for payments.
+
