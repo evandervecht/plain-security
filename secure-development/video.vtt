@@ -1,0 +1,129 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:04.400
+Which of our applications has no
+owner and no maintenance budget?
+
+00:00:04.700 --> 00:00:07.990
+Four ways software fails
+before anyone attacks it.
+
+00:00:09.250 --> 00:00:11.300
+First, keys typed into the code.
+
+00:00:11.560 --> 00:00:13.530
+That code is copied to every laptop,
+
+00:00:14.020 --> 00:00:16.350
+the build server, backups and agencies.
+
+00:00:16.795 --> 00:00:21.585
+If the repository goes public by accident,
+bots find the keys within minutes.
+
+00:00:21.910 --> 00:00:24.440
+Keys committed years
+ago usually still work.
+
+00:00:25.450 --> 00:00:26.880
+Second, the build pipeline.
+
+00:00:27.435 --> 00:00:31.345
+A chain of machines compiles,
+tests and publishes every release.
+
+00:00:31.670 --> 00:00:34.120
+It runs unattended, with broad rights.
+
+00:00:34.455 --> 00:00:37.065
+An attacker adds a few
+lines during the build.
+
+00:00:37.380 --> 00:00:39.430
+The result is signed with our certificate,
+
+00:00:39.880 --> 00:00:41.310
+and customers trust it.
+
+00:00:42.283 --> 00:00:45.093
+Third, security tested once,
+after the fact.
+
+00:00:45.943 --> 00:00:50.523
+A penetration test months after release
+finds flaws that were cheap to fix during
+
+00:00:50.523 --> 00:00:51.113
+design.
+
+00:00:51.553 --> 00:00:55.443
+Now the code is live, and the flaws
+were reachable the whole time.
+
+00:00:56.450 --> 00:00:58.600
+Fourth, software behaves like a pet.
+
+00:00:58.885 --> 00:01:00.115
+The agency delivers,
+
+00:01:00.585 --> 00:01:04.155
+the contract ends,
+and nobody is assigned to the application.
+
+00:01:04.510 --> 00:01:07.740
+Components age,
+and advisories pile up unread.
+
+00:01:08.025 --> 00:01:11.195
+The portal still holds every
+customer record it collected.
+
+00:01:12.283 --> 00:01:13.493
+What good looks like.
+
+00:01:13.778 --> 00:01:15.408
+Secret scanning and a vault.
+
+00:01:16.288 --> 00:01:16.818
+A protected pipeline:
+
+00:01:17.468 --> 00:01:20.338
+MFA, least privilege and signed builds.
+
+00:01:20.458 --> 00:01:23.968
+Security in the definition of done,
+with automated checks.
+
+00:01:24.358 --> 00:01:27.408
+A named owner and a budget
+for every application.
+
+00:01:27.773 --> 00:01:31.443
+NIS2 names security in
+development and maintenance,
+
+00:01:32.073 --> 00:01:35.403
+and the OWASP Top Ten is the
+yardstick for the checks.
+
+00:01:37.330 --> 00:01:38.540
+A suggested first step.
+
+00:01:38.825 --> 00:01:41.275
+Ask for the list of
+applications in production.
+
+00:01:41.715 --> 00:01:44.285
+Mark the ones with no owner and no budget.
+
+00:01:44.650 --> 00:01:47.900
+That list is the real risk
+register for this topic.
+
+00:01:49.450 --> 00:01:51.020
+Four ways software fails.
+
+00:01:51.350 --> 00:01:54.080
+Every application needs
+an owner and a budget.
+

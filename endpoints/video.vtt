@@ -1,0 +1,140 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:04.720
+How many devices hold our company data,
+and how many could we wipe tonight?
+
+00:00:05.060 --> 00:00:07.010
+Four ways a device fails us.
+
+00:00:08.350 --> 00:00:10.700
+First, a laptop is left in a taxi.
+
+00:00:11.095 --> 00:00:14.165
+A login password protects the screen,
+not the disk.
+
+00:00:14.515 --> 00:00:15.325
+Without encryption,
+
+00:00:15.735 --> 00:00:17.705
+every file is readable in minutes.
+
+00:00:18.065 --> 00:00:23.355
+That is usually a reportable GDPR breach,
+with a 72-hour clock.
+
+00:00:23.615 --> 00:00:27.225
+With encryption on,
+it is a hardware replacement and a form.
+
+00:00:28.250 --> 00:00:31.320
+Second, company mail on a
+phone we have never seen.
+
+00:00:31.615 --> 00:00:34.365
+We cannot enforce a screen lock,
+check encryption,
+
+00:00:34.735 --> 00:00:36.385
+or wipe it when it is lost.
+
+00:00:36.760 --> 00:00:39.350
+The downloaded files outlive the employee.
+
+00:00:39.725 --> 00:00:42.335
+The point is not banning personal devices.
+
+00:00:42.820 --> 00:00:46.070
+Devices we can wipe,
+update and lock are welcome.
+
+00:00:46.380 --> 00:00:48.110
+The rest read mail in the browser.
+
+00:00:49.350 --> 00:00:51.840
+Third, everyone is
+their own administrator.
+
+00:00:52.235 --> 00:00:56.145
+One click on a fake PDF tool
+installs it system-wide.
+
+00:00:56.435 --> 00:00:58.885
+It switches off the
+security tools and hides.
+
+00:00:59.255 --> 00:01:02.825
+Removing admin rights costs a
+few weeks of helpdesk friction.
+
+00:01:03.225 --> 00:01:05.435
+Keeping them costs the first incident.
+
+00:01:06.483 --> 00:01:09.313
+Fourth, the browser is
+the new operating system.
+
+00:01:09.578 --> 00:01:10.808
+Updates wait weeks,
+
+00:01:11.178 --> 00:01:13.188
+a fake update banner delivers malware,
+
+00:01:13.758 --> 00:01:16.428
+and a resold extension reads every page.
+
+00:01:16.783 --> 00:01:20.423
+All of it happens inside the
+logged-in session, after MFA,
+
+00:01:20.423 --> 00:01:22.773
+and needs no admin rights.
+
+00:01:23.883 --> 00:01:25.093
+What good looks like.
+
+00:01:25.378 --> 00:01:27.508
+Disk encryption and remote wipe.
+
+00:01:27.833 --> 00:01:31.623
+No standing local admin,
+and an approved software catalogue.
+
+00:01:31.998 --> 00:01:35.248
+Auto-update within days,
+and an extension allow-list.
+
+00:01:35.563 --> 00:01:39.293
+These are settings in the device
+management we already pay for.
+
+00:01:39.558 --> 00:01:41.248
+NIS2 names cyber hygiene,
+
+00:01:41.998 --> 00:01:44.388
+encryption and access
+control as risk measures.
+
+00:01:46.263 --> 00:01:47.473
+A suggested first step.
+
+00:01:47.758 --> 00:01:49.028
+Ask two questions.
+
+00:01:49.333 --> 00:01:51.663
+How many devices hold company data?
+
+00:01:52.013 --> 00:01:53.623
+And how many could we wipe tonight?
+
+00:01:53.988 --> 00:01:57.238
+If the second number is smaller,
+that gap is the risk.
+
+00:01:58.683 --> 00:02:00.333
+Four ways a device fails.
+
+00:02:00.633 --> 00:02:02.683
+Count the devices we cannot wipe.
+

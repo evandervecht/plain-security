@@ -1,0 +1,139 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:05.690
+Which outside apps can sign in to
+our Microsoft 365 without anyone
+
+00:00:05.690 --> 00:00:07.000
+typing a password?
+
+00:00:07.355 --> 00:00:09.845
+On 16 October 2026,
+
+00:00:10.195 --> 00:00:15.735
+ConnectWise reported unauthorized access
+to the app credentials of its Cloud Backup
+
+00:00:15.735 --> 00:00:16.465
+service.
+
+00:00:16.785 --> 00:00:18.175
+Three questions matter.
+
+00:00:19.550 --> 00:00:21.560
+First, whose key opens the door?
+
+00:00:21.835 --> 00:00:25.405
+Someone with those credentials
+signs in as the app itself.
+
+00:00:25.725 --> 00:00:28.575
+There is no user and
+no multi-factor prompt.
+
+00:00:28.925 --> 00:00:31.055
+Once an administrator approves an app,
+
+00:00:31.265 --> 00:00:34.095
+it keeps its rights until
+someone removes them.
+
+00:00:34.295 --> 00:00:39.245
+Microsoft reports one management app
+that gave itself Global Administrator.
+
+00:00:40.383 --> 00:00:42.253
+Second, how fast do they move?
+
+00:00:43.223 --> 00:00:47.773
+Microsoft says the attackers used an
+open-source framework of AI agents.
+
+00:00:48.093 --> 00:00:51.983
+They tried to sign in to
+more than 2,250 tenants.
+
+00:00:52.333 --> 00:00:56.543
+In several cases, privileged access
+came in less than three hours.
+
+00:00:56.873 --> 00:00:58.723
+A monthly review is too slow.
+
+00:00:59.013 --> 00:01:03.003
+Consider alerts on new app keys
+and admin roles, day and night.
+
+00:01:04.017 --> 00:01:06.867
+Third, what if our backup
+supplier is the incident?
+
+00:01:07.187 --> 00:01:11.317
+ConnectWise suspended the backup service,
+and two more as a precaution.
+
+00:01:11.807 --> 00:01:15.417
+It says existing archives
+remain encrypted and preserved.
+
+00:01:15.812 --> 00:01:20.742
+On 23 October 2026,
+it had given no firm date to return.
+
+00:01:21.032 --> 00:01:25.242
+If an MSP runs our IT,
+did they use these tools for us?
+
+00:01:26.283 --> 00:01:27.493
+What good looks like.
+
+00:01:27.838 --> 00:01:33.188
+NIS2 Article 21 requires supply
+chain security and access control.
+
+00:01:33.443 --> 00:01:37.253
+That means a list of every outside
+app with its rights and an owner.
+
+00:01:37.573 --> 00:01:39.663
+Logs searched by application ID.
+
+00:01:40.068 --> 00:01:41.818
+Alerts handled within the hour.
+
+00:01:42.108 --> 00:01:44.678
+And a second copy of
+critical mail and files.
+
+00:01:46.630 --> 00:01:47.840
+A suggested first step.
+
+00:01:48.125 --> 00:01:50.935
+Ask which outside apps can
+read our mail and files,
+
+00:01:51.325 --> 00:01:52.835
+or change admin roles.
+
+00:01:53.215 --> 00:01:56.925
+Ask whether anyone would notice
+a new admin role within hours.
+
+00:01:57.305 --> 00:02:00.015
+Ask for a written tenant
+review from our MSP.
+
+00:02:00.465 --> 00:02:03.715
+Keep the affected apps disabled,
+rather than deleted,
+
+00:02:03.965 --> 00:02:06.235
+until ConnectWise gives instructions.
+
+00:02:08.017 --> 00:02:10.507
+This attack used trust
+we had already given.
+
+00:02:10.807 --> 00:02:12.637
+Trim what outside apps can do.
+

@@ -1,0 +1,146 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:03.620
+Can an attacker get into our
+systems without the password?
+
+00:00:04.450 --> 00:00:06.820
+A stolen session cookie does exactly that.
+
+00:00:07.005 --> 00:00:10.155
+It skips the multi-factor
+check the user already passed.
+
+00:00:11.617 --> 00:00:13.607
+First, a script reads the cookie.
+
+00:00:14.002 --> 00:00:16.992
+An attacker injects
+JavaScript into a page,
+
+00:00:17.342 --> 00:00:21.692
+and that script can read any
+cookie without the HttpOnly flag.
+
+00:00:22.067 --> 00:00:25.797
+Nothing looks wrong, and the
+multi-factor check was already passed.
+
+00:00:26.177 --> 00:00:28.427
+Consider the HttpOnly flag,
+
+00:00:28.857 --> 00:00:31.067
+so JavaScript cannot touch the cookie.
+
+00:00:32.117 --> 00:00:34.787
+Second, someone catches
+the cookie on its way.
+
+00:00:35.062 --> 00:00:37.352
+A phishing proxy or plain HTTP
+
+00:00:37.862 --> 00:00:39.592
+lets the attacker copy it.
+
+00:00:39.762 --> 00:00:41.932
+Wi-Fi sniffing works the same way.
+
+00:00:42.117 --> 00:00:44.167
+Consider phishing-resistant MFA,
+
+00:00:44.577 --> 00:00:47.047
+the Secure flag and HSTS.
+
+00:00:48.117 --> 00:00:50.827
+Third and fourth,
+the session itself is abused.
+
+00:00:51.272 --> 00:00:51.962
+With fixation,
+
+00:00:52.332 --> 00:00:56.842
+we hand out a session ID that the attacker
+guessed first, because it was weak.
+
+00:00:57.132 --> 00:00:58.382
+With a forged request,
+
+00:00:58.832 --> 00:01:03.042
+the browser sends the cookie along with
+something the user never asked for.
+
+00:01:03.232 --> 00:01:07.302
+Suggested: strong randomness,
+a new ID at every login,
+
+00:01:07.472 --> 00:01:10.362
+SameSite Lax and CSRF tokens.
+
+00:01:11.483 --> 00:01:13.953
+Fifth, a local AI coding agent.
+
+00:01:14.183 --> 00:01:16.603
+It can read the browser's
+profile files directly,
+
+00:01:16.603 --> 00:01:19.693
+with no JavaScript and no network.
+
+00:01:20.118 --> 00:01:23.888
+HttpOnly, Secure and
+SameSite do not help here.
+
+00:01:24.118 --> 00:01:29.248
+Consider a sandboxed agent, device-bound
+sessions and an outbound allowlist.
+
+00:01:30.217 --> 00:01:31.427
+What good looks like.
+
+00:01:31.712 --> 00:01:34.662
+Defence in depth,
+several layers that work together.
+
+00:01:34.992 --> 00:01:38.602
+HttpOnly stops script theft,
+but not interception.
+
+00:01:39.077 --> 00:01:40.307
+Secure stops interception,
+
+00:01:40.857 --> 00:01:41.847
+but not fixation.
+
+00:01:42.397 --> 00:01:44.247
+SameSite stops forged requests,
+
+00:01:44.697 --> 00:01:46.047
+but not injected scripts.
+
+00:01:46.522 --> 00:01:48.312
+The weakest link breaks the chain.
+
+00:01:50.130 --> 00:01:51.340
+A suggested first step.
+
+00:01:51.625 --> 00:01:53.975
+Ask the security lead for five numbers.
+
+00:01:54.340 --> 00:01:57.470
+The share of cookies
+with HttpOnly and Secure,
+
+00:01:57.960 --> 00:02:01.410
+and the share of sign-ins
+with phishing-resistant MFA.
+
+00:02:02.015 --> 00:02:06.045
+Also open XSS and CSRF
+findings from testing.
+
+00:02:07.717 --> 00:02:10.307
+A stolen cookie is a stolen identity.
+
+00:02:10.592 --> 00:02:12.982
+Layer the controls, and track the numbers.
+

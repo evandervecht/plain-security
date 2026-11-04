@@ -1,0 +1,134 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:02.740
+The alarm has gone off
+at three in the morning.
+
+00:00:03.015 --> 00:00:04.785
+Who decides what happens next?
+
+00:00:05.140 --> 00:00:08.130
+The first 72 hours go wrong in four ways.
+
+00:00:09.483 --> 00:00:11.353
+First, nobody knows who decides.
+
+00:00:11.873 --> 00:00:13.903
+It is Sunday, three in the morning,
+
+00:00:14.173 --> 00:00:17.203
+and the on-call engineer sees
+the encryption spreading.
+
+00:00:17.528 --> 00:00:21.618
+Switching off the network would also
+stop the factory and the webshop.
+
+00:00:21.928 --> 00:00:24.718
+Is that the engineer's call, or the CEO's?
+
+00:00:24.863 --> 00:00:27.693
+Every minute spent finding out,
+the incident grows.
+
+00:00:28.883 --> 00:00:31.533
+Second, the evidence is
+gone within the hour.
+
+00:00:31.788 --> 00:00:35.138
+The instinct is to reboot the
+server and wipe the laptop.
+
+00:00:35.608 --> 00:00:38.918
+That destroys the memory,
+the logs and the timestamps.
+
+00:00:39.158 --> 00:00:43.588
+Then we cannot say what was taken,
+and the insurer may refuse the claim.
+
+00:00:44.550 --> 00:00:47.620
+Third, five audiences hear
+five different stories.
+
+00:00:47.925 --> 00:00:51.435
+Staff, customers, press,
+the regulator and the insurer.
+
+00:00:51.800 --> 00:00:55.110
+Someone says no data was
+affected before anyone knows.
+
+00:00:55.470 --> 00:00:58.040
+The legal clocks started
+when we became aware:
+
+00:00:58.650 --> 00:01:01.920
+a 24-hour early warning
+under the NIS2 directive,
+
+00:01:02.450 --> 00:01:05.240
+and 72 hours under GDPR.
+
+00:01:06.283 --> 00:01:08.673
+Fourth, day one is spent looking for help.
+
+00:01:09.418 --> 00:01:12.908
+Forensic firms are fully booked,
+because everyone is calling at once.
+
+00:01:13.233 --> 00:01:16.533
+Without a retainer,
+day one becomes a procurement exercise,
+
+00:01:16.533 --> 00:01:19.023
+with the attacker still inside.
+
+00:01:20.183 --> 00:01:21.393
+What good looks like.
+
+00:01:21.678 --> 00:01:25.428
+A response plan with written
+decision rights and named deputies.
+
+00:01:25.868 --> 00:01:27.158
+A printed phone list.
+
+00:01:27.468 --> 00:01:28.858
+Isolate, don't wipe.
+
+00:01:29.228 --> 00:01:31.798
+Pre-approved templates,
+and a deadline list.
+
+00:01:32.048 --> 00:01:33.918
+A retainer signed in peacetime.
+
+00:01:34.188 --> 00:01:37.898
+An out-of-band channel,
+and a yearly tabletop exercise.
+
+00:01:38.273 --> 00:01:40.943
+NIS2 Article 23 sets the clocks.
+
+00:01:42.863 --> 00:01:44.073
+A suggested first step.
+
+00:01:44.358 --> 00:01:45.628
+Ask two questions.
+
+00:01:45.933 --> 00:01:48.323
+When did this board last
+rehearse an incident?
+
+00:01:48.598 --> 00:01:51.828
+Is the phone list printed somewhere
+that is not on the network?
+
+00:01:53.450 --> 00:01:55.340
+Nothing on this list is technology.
+
+00:01:55.930 --> 00:01:59.240
+It is paper,
+phone numbers and one rehearsal a year.
+

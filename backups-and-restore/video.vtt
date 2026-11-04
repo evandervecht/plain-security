@@ -1,0 +1,133 @@
+WEBVTT
+
+00:00:00.690 --> 00:00:02.860
+If ransomware hits tonight,
+could we restore?
+
+00:00:03.235 --> 00:00:05.085
+Two numbers decide the next weeks:
+
+00:00:05.515 --> 00:00:08.325
+how much work is lost,
+and how long we are down.
+
+00:00:08.630 --> 00:00:10.720
+Four questions show where we stand.
+
+00:00:12.083 --> 00:00:14.413
+First, do we know our recovery targets?
+
+00:00:14.768 --> 00:00:17.758
+The RPO is how much work we accept losing.
+
+00:00:18.108 --> 00:00:20.978
+The RTO is how long we accept being down.
+
+00:00:21.288 --> 00:00:22.378
+In most organisations,
+
+00:00:22.968 --> 00:00:26.958
+IT set both by default,
+from whatever the backup tool did.
+
+00:00:27.223 --> 00:00:32.173
+Consider a short list: the ten systems
+that matter most, with two numbers each.
+
+00:00:33.250 --> 00:00:35.540
+Second, can an attacker reach the backups?
+
+00:00:35.975 --> 00:00:40.005
+Ransomware crews look for the backup
+server before they encrypt anything.
+
+00:00:40.235 --> 00:00:42.585
+If it accepts the same
+administrator login,
+
+00:00:43.015 --> 00:00:44.265
+the backups go first.
+
+00:00:44.670 --> 00:00:48.960
+The old rule is three copies,
+on two kinds of storage, one off-site.
+
+00:00:49.215 --> 00:00:53.285
+Ransomware adds one more:
+a copy that is offline or immutable.
+
+00:00:54.417 --> 00:00:56.687
+Third, has anyone restored everything?
+
+00:00:56.987 --> 00:00:59.157
+The backup job says green every night.
+
+00:00:59.422 --> 00:01:03.272
+But a report shows the copy was written,
+not that it can be read back.
+
+00:01:03.572 --> 00:01:07.602
+One example is the key kept on the
+server that was just encrypted.
+
+00:01:08.102 --> 00:01:10.912
+A timed restore test
+turns hope into a fact.
+
+00:01:11.983 --> 00:01:14.313
+Fourth, who backs up
+our cloud applications?
+
+00:01:14.798 --> 00:01:16.868
+The provider keeps the service running.
+
+00:01:17.798 --> 00:01:20.748
+But Microsoft keeps deleted
+content for at most 30 days.
+
+00:01:21.068 --> 00:01:23.378
+Protecting our own data is our job.
+
+00:01:24.417 --> 00:01:25.627
+What good looks like.
+
+00:01:25.972 --> 00:01:28.282
+NIST defines both recovery targets.
+
+00:01:28.607 --> 00:01:32.017
+NCSC UK guidance sets the three copies.
+
+00:01:32.377 --> 00:01:36.537
+GDPR Article 32 asks for
+the ability to restore,
+
+00:01:36.537 --> 00:01:38.687
+and regular testing of it.
+
+00:01:40.430 --> 00:01:41.640
+A suggested first step.
+
+00:01:41.925 --> 00:01:44.555
+Ask IT for the ten most important systems,
+
+00:01:45.045 --> 00:01:46.875
+and the hours each could be down.
+
+00:01:47.165 --> 00:01:50.355
+Then ask whether anyone has
+restored them end to end,
+
+00:01:50.465 --> 00:01:54.515
+from a copy an attacker could not reach,
+with a stopwatch running.
+
+00:01:54.815 --> 00:01:57.745
+How much downtime to
+accept is the board's call.
+
+00:01:59.250 --> 00:02:00.520
+A backup is a hope.
+
+00:02:00.850 --> 00:02:02.200
+A restore is a fact.
+

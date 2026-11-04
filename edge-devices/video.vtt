@@ -1,0 +1,135 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:02.900
+Who owns our VPN box, and is it patched?
+
+00:00:03.330 --> 00:00:06.420
+Four questions decide
+whether it is the way in.
+
+00:00:07.683 --> 00:00:09.053
+First, who owns it?
+
+00:00:09.318 --> 00:00:11.708
+Servers have an owner and a patch cycle.
+
+00:00:11.928 --> 00:00:16.468
+The VPN or firewall was often
+installed by a supplier years ago,
+
+00:00:16.468 --> 00:00:18.398
+and sits outside both.
+
+00:00:18.688 --> 00:00:24.348
+Mandiant's 2026 report finds exploits
+were the most common way in for the sixth
+
+00:00:24.348 --> 00:00:25.238
+year running.
+
+00:00:26.250 --> 00:00:27.940
+Second, how fast is it patched?
+
+00:00:28.420 --> 00:00:32.390
+Attackers start within days,
+sometimes before the fix exists.
+
+00:00:33.805 --> 00:00:34.105
+In 2025,
+
+00:00:34.225 --> 00:00:38.685
+Dutch organisations were breached through
+a Citrix flaw seven weeks before the
+
+00:00:38.685 --> 00:00:39.175
+patch.
+
+00:00:39.515 --> 00:00:44.575
+Verizon finds only 26% of
+known-exploited holes were fully fixed,
+
+00:00:44.575 --> 00:00:47.405
+after a median of 43 days.
+
+00:00:47.720 --> 00:00:50.290
+A box past end-of-life never gets a fix.
+
+00:00:51.383 --> 00:00:52.973
+Third, what does it expose?
+
+00:00:53.423 --> 00:00:56.993
+The admin page is often reachable
+from the whole internet.
+
+00:00:57.318 --> 00:01:01.668
+A VPN login with only a password
+is one guess from the inside.
+
+00:01:02.138 --> 00:01:04.188
+Both are settings, not purchases.
+
+00:01:05.417 --> 00:01:07.887
+Fourth, how much does one login open?
+
+00:01:08.172 --> 00:01:12.482
+A classic VPN puts a connected
+laptop inside the network.
+
+00:01:13.327 --> 00:01:14.817
+A stolen login reaches everything.
+
+00:01:15.157 --> 00:01:16.207
+With zero trust,
+
+00:01:16.597 --> 00:01:18.547
+access is granted per application,
+
+00:01:19.157 --> 00:01:21.147
+so a stolen login reaches one.
+
+00:01:22.117 --> 00:01:23.327
+What good looks like.
+
+00:01:23.612 --> 00:01:29.292
+The Five Eyes guidance of February 2025
+names an inventory of internet-facing
+
+00:01:29.292 --> 00:01:32.862
+devices, with support dates,
+as a baseline.
+
+00:01:33.232 --> 00:01:36.142
+Edge advisories get an
+emergency patch lane.
+
+00:01:36.477 --> 00:01:38.667
+The admin page stays off the internet,
+
+00:01:39.037 --> 00:01:41.727
+and every remote login uses MFA.
+
+00:01:42.297 --> 00:01:47.847
+NIS2 Article 21 requires vulnerability
+handling in the maintenance of systems.
+
+00:01:49.797 --> 00:01:51.007
+A suggested first step.
+
+00:01:51.292 --> 00:01:54.322
+Make one list of every
+device facing the internet.
+
+00:01:54.637 --> 00:01:58.667
+Add an owner's name, the version,
+and the vendor's end-of-support date.
+
+00:01:58.992 --> 00:02:02.662
+Then ask how many days pass
+between an advisory and our patch.
+
+00:02:04.283 --> 00:02:06.073
+A list, a setting and a date.
+
+00:02:06.388 --> 00:02:08.038
+That closes most of the door.
+

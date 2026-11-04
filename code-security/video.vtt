@@ -1,0 +1,129 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:02.920
+Do we know what is inside
+the software we ship?
+
+00:00:03.250 --> 00:00:04.900
+Four places flaws hide.
+
+00:00:06.217 --> 00:00:07.767
+First, the code we write.
+
+00:00:08.117 --> 00:00:12.067
+Broken access control is number
+one in the OWASP Top Ten.
+
+00:00:12.337 --> 00:00:14.027
+Scanners are good at known patterns.
+
+00:00:14.562 --> 00:00:17.912
+They cannot know that an invoice
+belongs to another customer.
+
+00:00:18.983 --> 00:00:20.793
+Second, the open-source parts.
+
+00:00:21.178 --> 00:00:24.388
+Modern software is assembled
+from reused components.
+
+00:00:24.878 --> 00:00:26.628
+When a flaw is published in one,
+
+00:00:26.858 --> 00:00:29.928
+every application shipping
+the old version has it too.
+
+00:00:30.763 --> 00:00:33.853
+An SBOM, the list of
+components in a release,
+
+00:00:34.183 --> 00:00:37.073
+is matched against public
+vulnerability databases.
+
+00:00:38.483 --> 00:00:40.353
+Third, how things are configured.
+
+00:00:40.748 --> 00:00:45.218
+Servers and storage are described in
+text files, so they are also code.
+
+00:00:45.558 --> 00:00:50.088
+One line that opens a storage bucket
+is copied to every environment.
+
+00:00:50.313 --> 00:00:53.863
+An image built two years ago still
+carries two-year-old libraries.
+
+00:00:55.150 --> 00:00:56.680
+Fourth, too many findings.
+
+00:00:57.070 --> 00:01:01.220
+Scanners report every flaw,
+whether or not our software uses it.
+
+00:01:01.400 --> 00:01:03.930
+A severity score alone
+keeps the list long.
+
+00:01:04.220 --> 00:01:05.830
+Three questions shrink it.
+
+00:01:06.075 --> 00:01:07.805
+Is the flawed code reachable?
+
+00:01:08.050 --> 00:01:11.780
+Is it being exploited now,
+according to the KEV catalogue?
+
+00:01:12.250 --> 00:01:15.840
+Is exploitation likely soon,
+according to EPSS?
+
+00:01:16.917 --> 00:01:18.127
+What good looks like.
+
+00:01:18.412 --> 00:01:22.522
+A second person reads any change
+that decides who may see what.
+
+00:01:22.797 --> 00:01:26.647
+Dependency scanning,
+with an SBOM for every release.
+
+00:01:26.942 --> 00:01:28.032
+Templates and images
+
+00:01:28.462 --> 00:01:29.732
+checked before deployment.
+
+00:01:30.022 --> 00:01:31.512
+Exploited flaws first.
+
+00:01:31.882 --> 00:01:36.912
+NIS2 Article 21 names security
+in development and maintenance.
+
+00:01:38.930 --> 00:01:40.140
+A suggested first step.
+
+00:01:40.425 --> 00:01:41.675
+Ask for two numbers.
+
+00:01:42.075 --> 00:01:45.225
+Known-exploited flaws that
+are reachable in production.
+
+00:01:45.655 --> 00:01:48.305
+And how many days the
+oldest one has been open.
+
+00:01:49.850 --> 00:01:51.500
+Four places flaws hide.
+
+00:01:51.775 --> 00:01:54.025
+Count what is exploited and reachable.
+

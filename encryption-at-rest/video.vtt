@@ -1,0 +1,142 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:03.540
+If someone steals our encrypted data,
+can they read it?
+
+00:00:03.760 --> 00:00:05.330
+Usually not from a disk.
+
+00:00:05.690 --> 00:00:07.400
+Usually yes from a login.
+
+00:00:07.620 --> 00:00:09.450
+Four questions decide which.
+
+00:00:10.883 --> 00:00:13.553
+First, locked on the disk, open at login.
+
+00:00:14.433 --> 00:00:16.983
+A stolen disk or backup
+yields nothing readable.
+
+00:00:17.358 --> 00:00:21.948
+A phished account or a leaked access
+key reads everything in plain text.
+
+00:00:22.268 --> 00:00:23.338
+"Encrypted at rest"
+
+00:00:23.788 --> 00:00:28.838
+in a questionnaire answers the stolen disk
+question, not the stolen login question.
+
+00:00:29.883 --> 00:00:32.653
+Second, whoever holds
+the key holds the data.
+
+00:00:32.918 --> 00:00:37.228
+A key stored next to the data is a
+safe with the key taped to the door.
+
+00:00:37.503 --> 00:00:40.113
+Cloud providers manage keys by default,
+
+00:00:40.623 --> 00:00:44.433
+so anyone with enough admin access
+in our account can use them.
+
+00:00:44.648 --> 00:00:48.458
+For the most sensitive data,
+consider a key we manage ourselves,
+
+00:00:48.888 --> 00:00:51.618
+with different people
+managing keys and data.
+
+00:00:51.878 --> 00:00:54.388
+Lose the key, and we lose the data too.
+
+00:00:55.417 --> 00:00:57.407
+Third, the copy nobody encrypted.
+
+00:00:57.927 --> 00:00:59.517
+The database is encrypted.
+
+00:01:00.007 --> 00:01:02.477
+The nightly export, the USB stick,
+
+00:01:02.927 --> 00:01:07.017
+the old laptop and the test system
+loaded with real data may not be.
+
+00:01:07.257 --> 00:01:09.127
+One readable copy is enough.
+
+00:01:10.183 --> 00:01:11.873
+Fourth, the quantum question.
+
+00:01:12.183 --> 00:01:16.753
+Stored data under AES-256
+is not the weak spot.
+
+00:01:17.078 --> 00:01:20.028
+A large quantum computer would
+break public-key encryption,
+
+00:01:20.558 --> 00:01:22.908
+such as RSA and ECC.
+
+00:01:23.343 --> 00:01:25.383
+That matters for recorded network traffic,
+
+00:01:25.383 --> 00:01:28.593
+and for archives
+encrypted to a public key.
+
+00:01:29.617 --> 00:01:30.827
+What good looks like.
+
+00:01:31.112 --> 00:01:32.382
+Access comes first:
+
+00:01:33.132 --> 00:01:36.782
+multi-factor login, least privilege,
+and alerts on bulk reading.
+
+00:01:37.117 --> 00:01:40.627
+Keys are kept apart from data,
+and every use is logged.
+
+00:01:40.927 --> 00:01:43.297
+Coverage is checked for every location.
+
+00:01:43.662 --> 00:01:46.742
+DORA's technical standard,
+Articles 6 and 7,
+
+00:01:46.742 --> 00:01:52.112
+requires an encryption policy and key
+management over the whole key lifecycle.
+
+00:01:53.830 --> 00:01:55.040
+A suggested first step.
+
+00:01:55.325 --> 00:01:56.655
+Ask three questions.
+
+00:01:56.950 --> 00:01:58.840
+Who can read it while the system runs?
+
+00:01:59.215 --> 00:02:01.325
+Where are the keys, and who can use them?
+
+00:02:01.555 --> 00:02:03.165
+Which copies are not encrypted?
+
+00:02:04.883 --> 00:02:07.133
+Is it encrypted is the wrong question.
+
+00:02:07.423 --> 00:02:08.833
+Ask who can read it.
+

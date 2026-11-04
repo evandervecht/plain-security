@@ -1,0 +1,114 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:03.120
+How long does a known hole
+stay open on our systems?
+
+00:00:03.515 --> 00:00:05.285
+Patching fails in four ways.
+
+00:00:06.617 --> 00:00:08.307
+First, the fix is delayed.
+
+00:00:08.692 --> 00:00:10.202
+When a vendor publishes a fix,
+
+00:00:10.832 --> 00:00:12.662
+scanners sweep the internet within hours.
+
+00:00:13.062 --> 00:00:16.952
+Ours sits in a queue, three weeks
+from the next maintenance window.
+
+00:00:17.222 --> 00:00:21.772
+The number that matters is the days
+between fix published and fix applied.
+
+00:00:22.850 --> 00:00:25.080
+Second, software that cannot be patched.
+
+00:00:25.470 --> 00:00:28.860
+The vendor stopped support years ago,
+but it still runs payroll.
+
+00:00:29.290 --> 00:00:31.400
+Every new hole stays open for good.
+
+00:00:31.670 --> 00:00:35.820
+Windows 10 support ended
+on 14 October 2025.
+
+00:00:37.017 --> 00:00:39.667
+Third, the box at the
+edge that nobody owns.
+
+00:00:40.547 --> 00:00:43.457
+A VPN or firewall appliance
+faces the internet.
+
+00:00:43.787 --> 00:00:47.677
+The vendor's critical notice
+goes to a mailbox nobody reads.
+
+00:00:48.037 --> 00:00:52.087
+One appliance with no owner
+undoes every control behind it.
+
+00:00:53.050 --> 00:00:55.440
+Fourth, systems we did not know we had.
+
+00:00:55.675 --> 00:00:59.845
+A test server, an agency website,
+a cloud machine from a trial.
+
+00:01:00.170 --> 00:01:02.820
+None is on the inventory,
+so none is patched.
+
+00:01:03.250 --> 00:01:05.860
+Attackers scan everything
+with our name on it.
+
+00:01:06.783 --> 00:01:07.993
+What good looks like.
+
+00:01:08.278 --> 00:01:11.268
+A complete inventory,
+kept current automatically.
+
+00:01:11.708 --> 00:01:15.298
+Patch deadlines, in days for
+anything the internet can reach.
+
+00:01:15.623 --> 00:01:18.513
+An emergency path outside
+the change window.
+
+00:01:18.773 --> 00:01:20.963
+A named owner for every edge device.
+
+00:01:21.383 --> 00:01:25.693
+NIS2 names vulnerability handling
+as a risk-management measure.
+
+00:01:27.430 --> 00:01:28.640
+A suggested first step.
+
+00:01:28.925 --> 00:01:33.815
+Ask how many days a critical fix for
+an internet-facing system waits today.
+
+00:01:34.145 --> 00:01:38.035
+Then ask whether that number is on
+a dashboard reported to the board.
+
+00:01:38.360 --> 00:01:41.730
+If nobody can answer the first,
+the second is the problem.
+
+00:01:43.283 --> 00:01:44.913
+Known hole, published fix.
+
+00:01:45.318 --> 00:01:47.328
+Measure the days, and name an owner.
+

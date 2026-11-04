@@ -1,0 +1,135 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:03.660
+Will the data we encrypt today
+still be safe in ten years?
+
+00:00:04.005 --> 00:00:07.055
+Quantum computers and
+AI speed each other up.
+
+00:00:07.250 --> 00:00:08.440
+Four risks follow.
+
+00:00:09.850 --> 00:00:12.180
+First, harvest now, decrypt later.
+
+00:00:12.510 --> 00:00:16.340
+A hostile party may be recording
+our encrypted traffic today.
+
+00:00:16.630 --> 00:00:19.700
+It then waits for a quantum
+computer that can read it.
+
+00:00:19.940 --> 00:00:23.390
+If the data still matters in ten years,
+the risk is today.
+
+00:00:24.450 --> 00:00:26.500
+Second, AI may find shortcuts.
+
+00:00:27.005 --> 00:00:32.355
+AI can spot patterns in encrypted data
+and in implementations that people missed.
+
+00:00:32.700 --> 00:00:34.510
+This is not a known attack yet.
+
+00:00:34.780 --> 00:00:36.370
+It is a category of risk.
+
+00:00:36.675 --> 00:00:40.105
+We cannot assume our encryption
+is safe until we test it.
+
+00:00:41.083 --> 00:00:43.213
+Third, quantum and AI together.
+
+00:00:43.488 --> 00:00:48.378
+A large quantum computer breaks
+RSA and ECC with Shor's algorithm,
+
+00:00:48.748 --> 00:00:50.218
+with no help from AI.
+
+00:00:50.688 --> 00:00:53.398
+AES-256 stays strong.
+
+00:00:53.693 --> 00:00:58.523
+AI speeds up quantum research,
+and finds implementation flaws faster.
+
+00:01:00.497 --> 00:01:01.087
+Fourth, migration lag.
+
+00:01:01.332 --> 00:01:06.642
+The Dutch AIVD says a useful quantum
+computer is possible from 2030.
+
+00:01:07.732 --> 00:01:11.522
+Migration is long, because it touches
+every system that holds secrets.
+
+00:01:11.917 --> 00:01:15.467
+Data encrypted today stays
+exposed if we switch late.
+
+00:01:16.517 --> 00:01:17.727
+What good looks like.
+
+00:01:18.352 --> 00:01:19.502
+A cryptographic inventory.
+
+00:01:20.007 --> 00:01:21.817
+The NIST post-quantum standards,
+
+00:01:22.247 --> 00:01:23.037
+FIPS 203,
+
+00:01:23.707 --> 00:01:24.357
+204
+
+00:01:24.787 --> 00:01:25.717
+and 205.
+
+00:01:26.227 --> 00:01:28.297
+Hybrid post-quantum key exchange.
+
+00:01:28.622 --> 00:01:31.092
+Hardware security modules hold the keys.
+
+00:01:31.457 --> 00:01:33.707
+And the ability to switch
+algorithms quickly.
+
+00:01:35.630 --> 00:01:36.840
+A suggested first step.
+
+00:01:37.125 --> 00:01:39.755
+Ask for an inventory of
+where we use encryption,
+
+00:01:40.265 --> 00:01:43.295
+plus a plan, by the end of 2027.
+
+00:01:43.565 --> 00:01:46.755
+Aim to protect the most
+sensitive data by 2030.
+
+00:01:47.305 --> 00:01:48.855
+Finish by 2035.
+
+00:01:49.350 --> 00:01:50.960
+That is a suggested timeline,
+
+00:01:51.410 --> 00:01:52.680
+not a legal deadline.
+
+00:01:54.383 --> 00:01:57.353
+The data we encrypt today
+will outlive both threats.
+
+00:01:57.713 --> 00:01:59.223
+Start the migration now.
+

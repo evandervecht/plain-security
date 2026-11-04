@@ -1,0 +1,140 @@
+WEBVTT
+
+00:00:00.670 --> 00:00:04.700
+A supplier sends a SOC 2 report,
+and someone files it as audited.
+
+00:00:04.925 --> 00:00:07.855
+Four pages decide whether
+that means anything.
+
+00:00:09.183 --> 00:00:11.013
+First, the type and the period.
+
+00:00:11.328 --> 00:00:13.458
+A Type 1 report covers one day.
+
+00:00:13.698 --> 00:00:17.408
+A Type 2 report covers a period,
+and it ended months ago.
+
+00:00:17.673 --> 00:00:21.563
+The standard says a Type 2 ordinarily
+covers at least six months.
+
+00:00:21.903 --> 00:00:24.093
+The report is a photograph of the past,
+
+00:00:24.503 --> 00:00:26.153
+not a guarantee for next year.
+
+00:00:27.117 --> 00:00:28.207
+Second, the scope.
+
+00:00:28.602 --> 00:00:32.392
+The opinion covers exactly what
+the system description says.
+
+00:00:32.682 --> 00:00:35.372
+Your module or region may not be in it.
+
+00:00:35.597 --> 00:00:38.887
+A cloud provider may be carved out,
+and so not tested.
+
+00:00:39.197 --> 00:00:42.147
+A clean opinion on the
+wrong scope is no assurance.
+
+00:00:43.350 --> 00:00:44.420
+Third, your part.
+
+00:00:44.775 --> 00:00:48.465
+Every report lists the controls
+the supplier assumed you run.
+
+00:00:48.750 --> 00:00:50.420
+The auditor did not test them.
+
+00:00:50.650 --> 00:00:51.580
+Typical lines:
+
+00:00:52.010 --> 00:00:55.440
+who gets access, who removes leavers,
+who reviews the logs.
+
+00:00:55.800 --> 00:00:58.290
+They rarely reach the
+people who run our side.
+
+00:00:59.283 --> 00:01:01.233
+Fourth, the exceptions at the back.
+
+00:01:01.513 --> 00:01:03.303
+The opinion is on page three.
+
+00:01:03.533 --> 00:01:05.383
+The exceptions are on page sixty.
+
+00:01:05.768 --> 00:01:08.218
+A clean opinion with exceptions is normal.
+
+00:01:08.548 --> 00:01:10.918
+Read each one for what
+it means for our service.
+
+00:01:12.178 --> 00:01:15.128
+And configuration,
+access and data use are never tested.
+
+00:01:16.183 --> 00:01:17.393
+What good looks like.
+
+00:01:17.678 --> 00:01:22.068
+Type, period, date and auditor are
+recorded before anyone reads on.
+
+00:01:22.368 --> 00:01:24.518
+A scope map has one line per service:
+
+00:01:25.008 --> 00:01:26.998
+in, carved out, or not covered.
+
+00:01:27.303 --> 00:01:29.873
+Every assumed control gets a named owner.
+
+00:01:30.198 --> 00:01:32.948
+Every exception gets a
+rating for our service.
+
+00:01:33.288 --> 00:01:35.358
+This takes an afternoon per report.
+
+00:01:35.728 --> 00:01:40.258
+NIS2 requires supply chain
+security measures, in Article 21,
+
+00:01:40.568 --> 00:01:43.038
+and the report is one way to show them.
+
+00:01:44.797 --> 00:01:46.007
+A suggested first step.
+
+00:01:46.292 --> 00:01:49.942
+Is our service in scope,
+in a Type 2, less than a year old?
+
+00:01:50.157 --> 00:01:52.407
+Who owns our list of assumed controls?
+
+00:01:52.832 --> 00:01:57.582
+Accepting a weaker report can be
+reasonable, as long as it is a decision.
+
+00:01:59.117 --> 00:02:00.027
+Four pages.
+
+00:02:00.437 --> 00:02:03.727
+Read the report for what it covers,
+and what it leaves to us.
+

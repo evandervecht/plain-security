@@ -1,0 +1,143 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:03.820
+Can a laptop in the office
+reach our production line today?
+
+00:00:04.120 --> 00:00:05.830
+Four ways the plant stops.
+
+00:00:07.117 --> 00:00:09.687
+First, the office network
+reaches the plant.
+
+00:00:09.992 --> 00:00:10.762
+Controllers,
+
+00:00:11.032 --> 00:00:14.962
+badge readers and cameras were plugged
+into whatever cable was nearest.
+
+00:00:15.427 --> 00:00:20.057
+Today that cable usually leads to the
+same network as the office laptops.
+
+00:00:20.547 --> 00:00:25.017
+Infection that starts in finance can
+reach the machine that fills the bottles.
+
+00:00:26.183 --> 00:00:28.733
+Second, these devices cannot be patched.
+
+00:00:29.108 --> 00:00:31.058
+A controller gets an update never.
+
+00:00:31.393 --> 00:00:34.663
+The vendor is gone,
+or an update means stopping production.
+
+00:00:35.183 --> 00:00:39.693
+Cameras and door controllers ship with
+a factory password nobody changes.
+
+00:00:40.123 --> 00:00:44.473
+The choice is to isolate, replace early,
+or accept that it is open.
+
+00:00:44.758 --> 00:00:47.288
+That is a business
+decision with a price tag.
+
+00:00:48.317 --> 00:00:50.187
+Third, the vendor's back door.
+
+00:00:50.492 --> 00:00:53.822
+The vendor set up remote access years ago,
+and it stayed.
+
+00:00:54.182 --> 00:00:58.332
+One password, shared by the whole
+service team, valid around the clock,
+
+00:00:58.642 --> 00:00:59.812
+straight to the controllers.
+
+00:01:00.297 --> 00:01:03.667
+The maintenance contract
+usually says nothing about it.
+
+00:01:04.650 --> 00:01:06.480
+Fourth, the damage is physical.
+
+00:01:06.790 --> 00:01:09.020
+A changed setpoint overheats a vessel.
+
+00:01:09.375 --> 00:01:14.145
+The operator screen can show normal
+values while the process is anything but.
+
+00:01:14.250 --> 00:01:16.200
+That is not restored from a backup.
+
+00:01:16.580 --> 00:01:19.050
+From 20 January 2027,
+
+00:01:19.420 --> 00:01:24.220
+the Machinery Regulation requires
+that connected devices cannot make new
+
+00:01:24.220 --> 00:01:25.470
+machinery unsafe.
+
+00:01:26.683 --> 00:01:27.893
+What good looks like.
+
+00:01:28.178 --> 00:01:30.768
+A device inventory,
+with an owner for each.
+
+00:01:31.083 --> 00:01:34.733
+A wall between office and plant,
+with one monitored crossing.
+
+00:01:35.113 --> 00:01:40.083
+Vendor access only on request, through
+a jump host that records the session.
+
+00:01:40.368 --> 00:01:44.298
+Plant monitoring, and offline
+backups of every configuration.
+
+00:01:44.608 --> 00:01:46.198
+IEC 62443
+
+00:01:46.848 --> 00:01:49.898
+zones and conduits are
+the common yardstick.
+
+00:01:51.697 --> 00:01:52.907
+A suggested first step.
+
+00:01:53.192 --> 00:01:54.462
+Ask two questions.
+
+00:01:54.767 --> 00:01:58.157
+Can a laptop in the office
+reach the production line today?
+
+00:01:58.522 --> 00:02:00.172
+And who would notice if it did?
+
+00:02:00.482 --> 00:02:02.952
+If the answers are probably and nobody,
+
+00:02:03.202 --> 00:02:06.232
+the first control is a
+line on a network diagram.
+
+00:02:07.850 --> 00:02:09.560
+Four ways the plant stops.
+
+00:02:09.805 --> 00:02:11.895
+Draw the line between office and plant.
+

@@ -1,0 +1,128 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:03.940
+What happens when our own staff,
+and our own assistants, use AI?
+
+00:00:04.390 --> 00:00:06.180
+It can turn on us in four ways.
+
+00:00:07.550 --> 00:00:10.400
+First, our secrets go
+in and do not come back.
+
+00:00:10.675 --> 00:00:15.645
+A colleague puts a contract of forty
+pages into a free chatbot for a summary.
+
+00:00:15.930 --> 00:00:20.520
+Free tools typically keep what is typed,
+and may use it to train the next model.
+
+00:00:20.720 --> 00:00:22.490
+There is no alert and no log.
+
+00:00:22.855 --> 00:00:24.765
+Forbidding the tools does not work.
+
+00:00:25.055 --> 00:00:27.225
+The paste moves to a personal phone.
+
+00:00:28.183 --> 00:00:31.113
+Second, our assistant takes
+orders from a stranger.
+
+00:00:31.478 --> 00:00:35.728
+An attacker sends one email with
+instructions hidden in white text.
+
+00:00:36.038 --> 00:00:40.348
+The assistant cannot tell our
+instructions from text it happens to read.
+
+00:00:40.688 --> 00:00:44.478
+The more it may send, delete or pay,
+the more one email can do.
+
+00:00:45.517 --> 00:00:48.967
+Third, the CFO on the
+phone is not the CFO.
+
+00:00:49.307 --> 00:00:52.617
+A few minutes of public audio
+is enough to clone a voice.
+
+00:00:52.967 --> 00:00:55.417
+The attacker phones
+Finance late on a Friday,
+
+00:00:55.847 --> 00:00:57.517
+and urgency is the weapon.
+
+00:00:57.812 --> 00:01:01.002
+Voice and video can no
+longer prove who someone is.
+
+00:01:01.983 --> 00:01:04.693
+Fourth, it sounded right,
+and it was made up.
+
+00:01:04.943 --> 00:01:08.873
+AI is wrong in exactly the
+same tone as when it is right.
+
+00:01:09.173 --> 00:01:13.323
+A memo reaches the board table with
+a court ruling that does not exist.
+
+00:01:13.738 --> 00:01:16.468
+The output is a draft,
+like a junior colleague's.
+
+00:01:17.617 --> 00:01:18.827
+What good looks like.
+
+00:01:19.112 --> 00:01:22.062
+One approved tool,
+with no training on our data.
+
+00:01:22.352 --> 00:01:24.582
+AI agents get the access of the task,
+
+00:01:25.132 --> 00:01:28.742
+and a person approves anything that sends,
+deletes or pays.
+
+00:01:29.147 --> 00:01:32.737
+Requests for money by voice are
+confirmed on a known number.
+
+00:01:33.107 --> 00:01:37.257
+OWASP ranks prompt injection
+first in its LLM Top 10.
+
+00:01:37.487 --> 00:01:42.337
+And the AI Act, Article 4,
+asks us to support staff's AI literacy.
+
+00:01:44.063 --> 00:01:45.273
+A suggested first step.
+
+00:01:45.558 --> 00:01:50.468
+Start with an inventory of where AI is
+used, with what data and what rights.
+
+00:01:50.848 --> 00:01:55.018
+Then consider one approved tool
+and a usage policy of one page.
+
+00:01:55.398 --> 00:01:56.928
+Where to start is your call.
+
+00:01:58.483 --> 00:02:00.453
+Four ways AI turns on us.
+
+00:02:00.673 --> 00:02:04.603
+Treat the output as a draft,
+and everything it reads as untrusted.
+
