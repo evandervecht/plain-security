@@ -1,0 +1,125 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:03.360
+Do we know what our AI agents
+can do on our computers?
+
+00:00:03.795 --> 00:00:07.305
+Claude, Codex and Hermes now
+come up in the boardroom.
+
+00:00:07.510 --> 00:00:11.280
+Five things decide whether they
+are a gain or a new way in.
+
+00:00:12.550 --> 00:00:15.140
+First, the model answers
+and the harness acts.
+
+00:00:15.500 --> 00:00:18.070
+A model takes in text and gives text back.
+
+00:00:18.355 --> 00:00:20.605
+The harness is the program around it.
+
+00:00:20.790 --> 00:00:25.100
+It runs the commands the model asks for,
+and decides what needs approval.
+
+00:00:25.490 --> 00:00:28.940
+So ask which model, which harness,
+and where our data goes.
+
+00:00:30.017 --> 00:00:31.927
+Second, three words you will hear.
+
+00:00:32.217 --> 00:00:35.127
+An agent is a model and
+a harness in a loop.
+
+00:00:35.377 --> 00:00:38.567
+A skill is a folder of
+instructions for one task.
+
+00:00:38.952 --> 00:00:43.762
+An MCP server plugs the agent into mail,
+tickets or a database.
+
+00:00:44.202 --> 00:00:46.972
+Each one adds power,
+and a way to misuse it.
+
+00:00:47.983 --> 00:00:50.693
+Third and fourth,
+skills and servers are software.
+
+00:00:51.133 --> 00:00:52.483
+Text can hide in a skill.
+
+00:00:52.863 --> 00:00:57.453
+Invisible characters show nothing
+on screen, yet models can read them.
+
+00:00:57.653 --> 00:00:59.883
+Scripts in a skill are run, not read.
+
+00:01:00.228 --> 00:01:02.948
+An MCP server often runs on a laptop,
+
+00:01:02.948 --> 00:01:07.358
+with the same rights as the
+AI application that starts it.
+
+00:01:07.548 --> 00:01:12.778
+OWASP puts prompt injection at number
+one in its Top 10 for AI applications.
+
+00:01:13.983 --> 00:01:16.013
+Fifth, limits outside the model.
+
+00:01:16.283 --> 00:01:20.833
+A model can be talked into things,
+so safety cannot rest on it saying no.
+
+00:01:21.118 --> 00:01:25.408
+The harness runs in a sandbox that
+reaches only the project folder.
+
+00:01:25.793 --> 00:01:27.903
+Risky actions wait for a person.
+
+00:01:28.950 --> 00:01:30.160
+What good looks like.
+
+00:01:30.445 --> 00:01:34.375
+One approved list of agents,
+skills and servers, with an owner.
+
+00:01:34.680 --> 00:01:37.170
+A person reads every file before install.
+
+00:01:37.535 --> 00:01:39.825
+Each server gets its own narrow token.
+
+00:01:40.130 --> 00:01:43.540
+Agents run in a sandbox,
+and every action is logged.
+
+00:01:45.397 --> 00:01:46.607
+A suggested first step.
+
+00:01:46.892 --> 00:01:50.642
+Ask which AI agents our people use,
+and who chose them.
+
+00:01:50.837 --> 00:01:54.307
+Then consider one approved list,
+with settings fixed centrally.
+
+00:01:55.883 --> 00:01:58.933
+Agents are safe because of
+limits around the model.
+
+00:01:59.158 --> 00:02:01.448
+Approve the harness, not only the model.
+

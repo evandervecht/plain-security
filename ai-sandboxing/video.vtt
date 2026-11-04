@@ -1,0 +1,130 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:02.580
+Where should an AI
+agent be allowed to run?
+
+00:00:02.880 --> 00:00:06.730
+Sooner or later, one will follow
+an instruction we did not give.
+
+00:00:07.555 --> 00:00:09.485
+A sandbox can fall short in four ways.
+
+00:00:10.817 --> 00:00:12.807
+First, the agent runs as you.
+
+00:00:13.057 --> 00:00:18.187
+On a work laptop, it has that person's
+files, saved passwords and cloud keys.
+
+00:00:18.582 --> 00:00:21.972
+One hidden line in a web
+page or ticket can steer it.
+
+00:00:22.152 --> 00:00:26.202
+NCSC UK advises safeguards
+outside the model.
+
+00:00:26.442 --> 00:00:30.972
+And one vendor's documentation
+says its sandbox is off by default.
+
+00:00:32.083 --> 00:00:34.413
+Second, a container is a thin wall.
+
+00:00:34.708 --> 00:00:37.858
+Every container on a machine
+talks to the same kernel.
+
+00:00:38.188 --> 00:00:43.218
+A microVM or a virtual machine
+gives the agent a kernel of its own.
+
+00:00:43.423 --> 00:00:48.193
+For code an AI wrote after reading the
+internet, consider a stronger wall.
+
+00:00:49.217 --> 00:00:52.967
+Third, the door to the internet is open,
+and the keys are inside.
+
+00:00:53.432 --> 00:00:56.782
+A hijacked agent can send
+what it reads to any site.
+
+00:00:57.082 --> 00:00:58.952
+Two settings close most of this.
+
+00:00:59.227 --> 00:01:03.397
+Block outbound traffic by default,
+with a short list of allowed sites.
+
+00:01:03.762 --> 00:01:08.632
+And keep the real keys outside, handing
+in a short-lived token for each task.
+
+00:01:09.783 --> 00:01:12.033
+Finally, the pilot that never ended.
+
+00:01:12.318 --> 00:01:14.728
+It starts with test data and an end date.
+
+00:01:15.033 --> 00:01:17.723
+Then someone copies in real customer data.
+
+00:01:17.998 --> 00:01:21.828
+Months later, it is in daily use,
+with no owner and no logs.
+
+00:01:22.223 --> 00:01:25.293
+Personal data in a pilot
+is still personal data.
+
+00:01:26.317 --> 00:01:27.527
+What good looks like.
+
+00:01:27.812 --> 00:01:31.842
+A throwaway machine for each task,
+with nothing of value inside.
+
+00:01:32.277 --> 00:01:34.187
+A wall matched to what runs in it.
+
+00:01:34.387 --> 00:01:37.497
+Outbound blocked by default,
+and no standing keys.
+
+00:01:37.932 --> 00:01:41.942
+A named person approves merging,
+deploying, sending and paying.
+
+00:01:42.262 --> 00:01:47.472
+OWASP lists unexpected code execution
+among the top ten risks for agents.
+
+00:01:49.397 --> 00:01:50.607
+A suggested first step.
+
+00:01:50.892 --> 00:01:55.042
+Check whether agents run sandboxed today,
+rather than assuming it.
+
+00:01:55.242 --> 00:01:58.432
+Then give them a machine of their own,
+not someone's laptop.
+
+00:01:58.912 --> 00:02:01.042
+And set three rules for every pilot:
+
+00:02:01.692 --> 00:02:04.442
+fake data, an end date,
+one route to production.
+
+00:02:04.847 --> 00:02:06.377
+Where to start is your call.
+
+00:02:07.917 --> 00:02:11.207
+Give the agent nothing of value,
+and nowhere to send it.
+

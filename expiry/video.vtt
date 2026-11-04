@@ -1,0 +1,148 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:03.800
+Could we go offline because
+somebody forgot to renew something?
+
+00:00:04.060 --> 00:00:06.770
+Four things with an expiry date can do it.
+
+00:00:08.017 --> 00:00:09.107
+First, the domain.
+
+00:00:09.537 --> 00:00:12.227
+It is rented, usually a year at a time.
+
+00:00:12.472 --> 00:00:14.502
+Renewal fails when a card expires,
+
+00:00:15.152 --> 00:00:18.122
+or the contact mailbox
+belongs to someone who left.
+
+00:00:18.467 --> 00:00:22.797
+Then a stranger can register the name,
+and our email arrives at them.
+
+00:00:23.750 --> 00:00:24.940
+Second, DNS.
+
+00:00:25.405 --> 00:00:27.435
+One provider answers for everything,
+
+00:00:27.925 --> 00:00:31.675
+so if it stops, website,
+email and logins stop together.
+
+00:00:32.000 --> 00:00:33.590
+Signatures expire too.
+
+00:00:33.920 --> 00:00:35.810
+On 5 May 2026,
+
+00:00:36.220 --> 00:00:40.660
+a faulty key rollover at the German
+registry left most German domains
+
+00:00:40.660 --> 00:00:43.230
+unreachable for about three hours.
+
+00:00:44.317 --> 00:00:45.527
+Third, a certificate.
+
+00:00:46.052 --> 00:00:48.462
+A TLS certificate has an end date.
+
+00:00:48.742 --> 00:00:49.552
+When it passes,
+
+00:00:49.922 --> 00:00:53.352
+browsers warn,
+and systems refuse to talk to each other.
+
+00:00:53.592 --> 00:00:54.642
+In 2018,
+
+00:00:54.792 --> 00:01:00.052
+one expired certificate in Ericsson
+software took mobile networks offline in
+
+00:01:00.052 --> 00:01:02.342
+several countries for most of a day.
+
+00:01:02.567 --> 00:01:05.977
+The internal ones nobody
+watches expire on a Sunday.
+
+00:01:07.083 --> 00:01:08.933
+Fourth, shorter lifetimes.
+
+00:01:09.123 --> 00:01:12.933
+An industry rule, not a law,
+cuts how long certificates last.
+
+00:01:13.358 --> 00:01:17.048
+Public certificates used to last 398 days.
+
+00:01:17.418 --> 00:01:19.328
+From 15 March 2029,
+
+00:01:19.698 --> 00:01:21.868
+the maximum is 47 days.
+
+00:01:22.223 --> 00:01:24.333
+Renewing by hand will not keep up.
+
+00:01:25.350 --> 00:01:26.560
+What good looks like.
+
+00:01:26.845 --> 00:01:31.035
+One inventory of everything with a date,
+each with an owner by name.
+
+00:01:31.300 --> 00:01:35.030
+Auto-renew on a company account,
+with a lock on the main domain.
+
+00:01:35.330 --> 00:01:37.800
+Alerts thirty days ahead, sent to a team.
+
+00:01:38.135 --> 00:01:40.425
+ACME renews certificates by itself.
+
+00:01:40.735 --> 00:01:44.685
+NCSC UK guidance suggests auto-renewal,
+
+00:01:45.155 --> 00:01:46.545
+a shared contact mailbox
+
+00:01:47.015 --> 00:01:50.085
+and two-step verification
+on the registrar account.
+
+00:01:51.897 --> 00:01:53.107
+A suggested first step.
+
+00:01:53.392 --> 00:01:56.682
+Make one list of every domain
+and certificate we own.
+
+00:01:56.942 --> 00:01:59.272
+Give each an expiry date and an owner.
+
+00:01:59.617 --> 00:02:03.457
+Then ask what would stop if the
+certificate on our busiest system link
+
+00:02:03.457 --> 00:02:04.887
+expired tonight.
+
+00:02:06.517 --> 00:02:07.827
+Nobody hacked anything.
+
+00:02:08.267 --> 00:02:09.277
+A date passed.
+
+00:02:09.627 --> 00:02:11.397
+A name on a list prevents it.
+

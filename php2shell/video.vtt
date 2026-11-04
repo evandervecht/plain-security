@@ -1,0 +1,124 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:03.700
+Can one request from the internet
+take over our web server?
+
+00:00:04.055 --> 00:00:09.905
+On 21 October 2026,
+the PHP project fixed two critical flaws.
+
+00:00:10.300 --> 00:00:11.750
+They need no login.
+
+00:00:11.960 --> 00:00:13.350
+Three questions matter.
+
+00:00:14.717 --> 00:00:16.107
+First, are we updated?
+
+00:00:16.492 --> 00:00:18.482
+The flaws are in PHP itself,
+
+00:00:18.912 --> 00:00:19.942
+not in our website.
+
+00:00:20.387 --> 00:00:24.777
+One request, with no login,
+can run an attacker's code on the server.
+
+00:00:25.097 --> 00:00:26.747
+Both are rated critical.
+
+00:00:27.037 --> 00:00:30.427
+PHP says its own settings
+reduce some attack paths,
+
+00:00:30.677 --> 00:00:33.087
+but only the update makes a server safe.
+
+00:00:34.117 --> 00:00:37.307
+Second, is any of our
+PHP too old for a fix?
+
+00:00:37.682 --> 00:00:41.492
+PHP 8.1 and older get no official release.
+
+00:00:41.842 --> 00:00:45.072
+Linux distributions may
+ship a patch as a package.
+
+00:00:45.417 --> 00:00:49.647
+Moving an old application is
+rarely a job for a single day.
+
+00:00:49.857 --> 00:00:52.367
+So it needs a budget, an owner and a date.
+
+00:00:53.450 --> 00:00:57.360
+Third, where does PHP run that
+we do not manage ourselves?
+
+00:00:57.795 --> 00:00:59.525
+Hosted websites, plugins,
+
+00:01:00.195 --> 00:01:01.805
+container images and appliances.
+
+00:01:02.275 --> 00:01:03.905
+There we often wait for the vendor.
+
+00:01:04.295 --> 00:01:08.335
+So the question becomes:
+which suppliers run PHP for us,
+
+00:01:08.335 --> 00:01:10.465
+and have they confirmed the update?
+
+00:01:11.450 --> 00:01:12.660
+What good looks like.
+
+00:01:13.025 --> 00:01:18.875
+NIS2 Article 21 requires vulnerability
+handling and supply chain security.
+
+00:01:19.130 --> 00:01:22.540
+In practice that is a version
+list with end-of-support dates,
+
+00:01:23.030 --> 00:01:27.480
+an upgrade plan with a date, and written
+confirmation from every supplier.
+
+00:01:27.840 --> 00:01:30.730
+A software bill of materials
+in contracts answers
+
+00:01:31.220 --> 00:01:33.310
+"where do we run PHP" from a list.
+
+00:01:35.197 --> 00:01:36.407
+A suggested first step.
+
+00:01:36.692 --> 00:01:39.622
+Ask which internet-facing systems run PHP,
+
+00:01:40.172 --> 00:01:42.862
+including those that suppliers run for us.
+
+00:01:43.097 --> 00:01:45.307
+Which run a version with no official fix?
+
+00:01:45.692 --> 00:01:50.662
+And who confirms in writing that each
+is updated or isolated, and by when?
+
+00:01:50.942 --> 00:01:53.252
+Update now, then check for intruders.
+
+00:01:54.817 --> 00:01:56.467
+Two flaws, three questions.
+
+00:01:56.842 --> 00:01:59.792
+Update first, then list every PHP we run.
+

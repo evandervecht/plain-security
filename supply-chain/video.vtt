@@ -1,0 +1,145 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:03.060
+Can an attacker reach us
+through a vendor we trust?
+
+00:00:03.435 --> 00:00:04.845
+Yes, in four ways.
+
+00:00:06.217 --> 00:00:09.407
+First, the update we trusted
+carried the attacker in.
+
+00:00:09.587 --> 00:00:13.497
+The poisoned version is signed
+with the vendor's real certificate.
+
+00:00:13.937 --> 00:00:16.287
+Our own systems install it on schedule.
+
+00:00:16.687 --> 00:00:20.297
+One compromised vendor reaches
+every customer at once.
+
+00:00:20.622 --> 00:00:24.592
+Tools with the deepest access
+are the most likely to be abused.
+
+00:00:25.717 --> 00:00:28.387
+Second, our supplier's key opens our door.
+
+00:00:28.657 --> 00:00:32.227
+Our IT partner holds a standing
+login into our systems.
+
+00:00:32.622 --> 00:00:36.152
+Often it is one shared account,
+valid around the clock,
+
+00:00:36.322 --> 00:00:38.192
+with more rights than the job needs.
+
+00:00:38.607 --> 00:00:39.877
+Break into one supplier,
+
+00:00:40.287 --> 00:00:43.197
+and the intruder holds the
+keys of dozens of companies.
+
+00:00:43.597 --> 00:00:46.007
+Every login looks like
+routine maintenance.
+
+00:00:47.217 --> 00:00:50.047
+Third, our software is
+built from strangers' code.
+
+00:00:50.347 --> 00:00:54.477
+Our app is a thin layer on top of
+hundreds of open-source components.
+
+00:00:54.957 --> 00:00:58.587
+When a maintainer is tricked,
+or hands the project to a stranger,
+
+00:00:59.097 --> 00:01:01.507
+the next version can carry malicious code.
+
+00:01:01.837 --> 00:01:03.187
+It runs under our name.
+
+00:01:03.502 --> 00:01:06.112
+And without a list of components,
+we cannot answer:
+
+00:01:06.502 --> 00:01:07.292
+are we affected?
+
+00:01:08.417 --> 00:01:10.927
+Fourth, their breach,
+but the data is ours.
+
+00:01:11.372 --> 00:01:14.642
+Payroll records and the
+customer list live with vendors.
+
+00:01:15.037 --> 00:01:17.027
+Those vendors run on other vendors.
+
+00:01:17.462 --> 00:01:21.552
+When one is breached, the data leaks
+without a single packet touching us.
+
+00:01:21.747 --> 00:01:26.057
+Under GDPR, the breach
+notification clock is still ours.
+
+00:01:27.183 --> 00:01:28.393
+What good looks like.
+
+00:01:28.678 --> 00:01:33.128
+One list of every supplier that holds
+our data or can reach our systems.
+
+00:01:33.533 --> 00:01:37.263
+Contract clauses cover breach
+notification and audit rights.
+
+00:01:37.573 --> 00:01:40.643
+Supplier logins are named
+accounts that expire.
+
+00:01:41.018 --> 00:01:43.228
+Updates reach a small test group first.
+
+00:01:43.613 --> 00:01:48.043
+A software bill of materials alerts
+us the day a component turns bad.
+
+00:01:48.318 --> 00:01:52.088
+This is mostly a list,
+a contract and a habit, not a product.
+
+00:01:52.388 --> 00:01:56.638
+NIS2 names supply chain security
+as a risk management measure.
+
+00:01:58.363 --> 00:01:59.573
+A suggested first step.
+
+00:01:59.858 --> 00:02:03.268
+Ask which suppliers can reach what,
+and who owns that list.
+
+00:02:03.598 --> 00:02:07.208
+If nobody can produce it within the hour,
+that is the finding.
+
+00:02:08.817 --> 00:02:10.587
+Four ways trust gets abused.
+
+00:02:10.997 --> 00:02:13.987
+Know the list,
+and write the clauses before you sign.
+

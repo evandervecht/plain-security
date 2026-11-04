@@ -1,0 +1,123 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:02.980
+How does a stolen login
+become weeks of downtime?
+
+00:00:03.535 --> 00:00:05.305
+Ransomware takes four steps.
+
+00:00:06.717 --> 00:00:09.167
+First, someone walks in
+through the front door.
+
+00:00:09.987 --> 00:00:13.717
+A VPN with no second factor,
+or an unpatched edge device.
+
+00:00:14.097 --> 00:00:17.207
+They sign in like an employee,
+so no alarm fires.
+
+00:00:17.657 --> 00:00:22.127
+Consider a second factor that resists
+phishing, and a small, patched edge.
+
+00:00:23.150 --> 00:00:26.040
+Second, one laptop
+becomes the whole company.
+
+00:00:26.350 --> 00:00:28.900
+On a flat network with
+shared admin accounts,
+
+00:00:29.210 --> 00:00:31.240
+the attacker reaches domain admin.
+
+00:00:31.575 --> 00:00:33.365
+Then everything is reachable.
+
+00:00:33.610 --> 00:00:35.100
+Consider segmentation,
+
+00:00:35.470 --> 00:00:37.500
+tiered admin and endpoint detection.
+
+00:00:38.550 --> 00:00:40.640
+Third, they copy everything first.
+
+00:00:41.010 --> 00:00:44.080
+The night before,
+they copy the data and encrypt later.
+
+00:00:44.450 --> 00:00:47.900
+A leak site threatens to
+publish the data unless we pay.
+
+00:00:48.180 --> 00:00:50.690
+That makes it a data breach,
+not just downtime.
+
+00:00:51.275 --> 00:00:54.865
+Consider egress monitoring and
+least-privilege data access.
+
+00:00:56.017 --> 00:00:57.767
+Fourth, the backups go first.
+
+00:00:58.122 --> 00:01:01.872
+At two on a Friday night,
+the attacker deletes the online backup.
+
+00:01:02.227 --> 00:01:03.837
+Then the ransom is demanded.
+
+00:01:04.297 --> 00:01:08.307
+Consider an immutable offline copy,
+and a tested full restore.
+
+00:01:09.450 --> 00:01:10.660
+What good looks like.
+
+00:01:10.945 --> 00:01:12.715
+Two numbers decide everything.
+
+00:01:13.075 --> 00:01:16.585
+How many days can we be down,
+and how much data can we lose?
+
+00:01:16.950 --> 00:01:19.120
+Every control is priced against them.
+
+00:01:19.330 --> 00:01:22.100
+Decide now, in calm,
+whether we would ever pay.
+
+00:01:22.390 --> 00:01:25.160
+Paying a sanctioned group
+can itself be unlawful.
+
+00:01:25.570 --> 00:01:30.280
+Report to the police either way, and
+check No More Ransom for a free decryptor.
+
+00:01:32.063 --> 00:01:33.273
+A suggested first step.
+
+00:01:33.558 --> 00:01:35.488
+Ask the CIO for four numbers.
+
+00:01:35.848 --> 00:01:40.398
+External logins without a second factor,
+and days to patch a critical flaw.
+
+00:01:40.773 --> 00:01:45.263
+The date of the last full restore test,
+and the share of endpoints with detection.
+
+00:01:47.017 --> 00:01:48.707
+Four steps to a standstill.
+
+00:01:48.922 --> 00:01:51.092
+Break the chain, and test the restore.
+

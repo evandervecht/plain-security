@@ -1,0 +1,147 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:04.140
+Where is the file that maps everything
+we run, and who can read it?
+
+00:00:04.375 --> 00:00:06.125
+It is called the Terraform state.
+
+00:00:06.485 --> 00:00:10.015
+Five things decide whether it
+is an asset or a liability.
+
+00:00:11.650 --> 00:00:13.060
+First, what state is.
+
+00:00:13.385 --> 00:00:14.895
+The code says what we want.
+
+00:00:15.205 --> 00:00:17.715
+The state records what
+was built, and its ID.
+
+00:00:18.160 --> 00:00:20.050
+The cloud is what actually runs.
+
+00:00:20.405 --> 00:00:23.275
+Lose the state,
+and the tool forgets what it owns.
+
+00:00:24.383 --> 00:00:25.493
+Second, secrets.
+
+00:00:25.933 --> 00:00:31.423
+The tool's documentation says a secret in
+the configuration is stored in the state.
+
+00:00:31.708 --> 00:00:33.678
+Cloud storage encrypts it at rest,
+
+00:00:34.108 --> 00:00:36.638
+but decrypts it for
+everyone with read access.
+
+00:00:37.063 --> 00:00:40.273
+So the reader list matters more
+than the encryption setting.
+
+00:00:41.283 --> 00:00:43.373
+Third, two writers, one file.
+
+00:00:43.653 --> 00:00:47.723
+If a pipeline and an engineer change
+the same infrastructure at once,
+
+00:00:48.013 --> 00:00:49.523
+one overwrites the other.
+
+00:00:49.758 --> 00:00:51.108
+Locking stops that.
+
+00:00:51.393 --> 00:00:55.323
+With Amazon S3,
+it is switched off unless you turn it on.
+
+00:00:55.608 --> 00:00:59.418
+Versioning keeps earlier copies,
+so a bad change can be undone.
+
+00:01:00.650 --> 00:01:03.140
+Fourth, who builds the
+place where state lives?
+
+00:01:03.505 --> 00:01:06.875
+The storage must exist
+before Terraform can use it.
+
+00:01:07.080 --> 00:01:11.740
+A usual way out is to start with a
+small local setup, build the locked,
+
+00:01:11.740 --> 00:01:15.430
+versioned, encrypted bucket,
+and then move the state in.
+
+00:01:16.450 --> 00:01:17.920
+Fifth, where the state lives.
+
+00:01:18.380 --> 00:01:20.650
+HCP Terraform, GitLab,
+
+00:01:21.020 --> 00:01:24.270
+Amazon S3 and Azure storage
+all encrypt at rest.
+
+00:01:24.675 --> 00:01:26.585
+The difference is who can read it.
+
+00:01:27.550 --> 00:01:28.760
+What good looks like.
+
+00:01:29.045 --> 00:01:31.755
+Remote state, never in a code repository.
+
+00:01:32.250 --> 00:01:33.960
+A short, reviewed reader list.
+
+00:01:34.250 --> 00:01:35.800
+No secrets in the state.
+
+00:01:36.090 --> 00:01:36.980
+Locking on.
+
+00:01:37.325 --> 00:01:38.295
+Versions on.
+
+00:01:38.610 --> 00:01:40.880
+A documented bootstrap, with an owner.
+
+00:01:41.330 --> 00:01:43.660
+NIS2 Article 21 lists backup,
+
+00:01:44.390 --> 00:01:46.220
+access control, asset management.
+
+00:01:46.550 --> 00:01:48.400
+Well run state can support them.
+
+00:01:50.130 --> 00:01:51.340
+A suggested first step.
+
+00:01:51.625 --> 00:01:52.975
+Ask for the list of readers,
+
+00:01:53.365 --> 00:01:54.755
+not the encryption setting.
+
+00:01:55.040 --> 00:01:57.710
+And ask whether anyone
+has tried restoring it.
+
+00:01:59.150 --> 00:02:01.000
+Treat the state as a crown jewel.
+
+00:02:01.345 --> 00:02:02.195
+Give it an owner.
+

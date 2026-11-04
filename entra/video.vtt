@@ -1,0 +1,130 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:04.940
+Could one phished administrator
+hand over our whole Microsoft 365?
+
+00:00:06.210 --> 00:00:08.900
+Entra ID is where it breaks, in four ways.
+
+00:00:10.250 --> 00:00:12.360
+First, too many people own the tenant.
+
+00:00:12.750 --> 00:00:15.200
+Global Administrator is the master key.
+
+00:00:15.515 --> 00:00:18.705
+It reads every mailbox and
+changes every password.
+
+00:00:19.150 --> 00:00:22.700
+Most tenants give it permanently
+to far more people than they think.
+
+00:00:23.000 --> 00:00:25.730
+Fool one of them,
+and the whole tenant is taken.
+
+00:00:26.783 --> 00:00:28.473
+Second, the gate is open.
+
+00:00:28.788 --> 00:00:33.438
+Legacy sign-in sends a bare password
+and cannot ask for a second factor.
+
+00:00:33.673 --> 00:00:36.323
+Some administrators are exempt from MFA,
+
+00:00:36.833 --> 00:00:40.623
+and personal phones nobody
+manages open company mail.
+
+00:00:40.908 --> 00:00:44.378
+The company believes it has MFA,
+but not where it counts.
+
+00:00:45.483 --> 00:00:47.173
+Third, the guests never left.
+
+00:00:47.483 --> 00:00:49.773
+Inviting an outsider takes one click.
+
+00:00:50.048 --> 00:00:52.998
+Removing one takes a decision nobody owns.
+
+00:00:53.398 --> 00:00:56.808
+Guests keep every Team and
+folder they were ever added to.
+
+00:00:57.028 --> 00:01:01.078
+Board material stays readable by
+people we no longer work with.
+
+00:01:02.117 --> 00:01:04.427
+Fourth, the back door between two worlds.
+
+00:01:04.717 --> 00:01:07.727
+A sync tool links our own
+directory with the cloud.
+
+00:01:08.067 --> 00:01:11.557
+Its server holds credentials strong
+enough to change cloud accounts.
+
+00:01:11.992 --> 00:01:15.142
+So a breach in either world
+becomes a breach of both.
+
+00:01:16.217 --> 00:01:17.427
+What good looks like.
+
+00:01:17.712 --> 00:01:20.902
+PIM means nobody is an
+administrator by default.
+
+00:01:21.282 --> 00:01:23.752
+Aim for five eligible people or fewer.
+
+00:01:24.762 --> 00:01:29.402
+A Conditional Access baseline blocks
+legacy sign-in and demands a second factor
+
+00:01:29.402 --> 00:01:30.312
+from everyone.
+
+00:01:30.567 --> 00:01:33.357
+Administrators get
+passkeys or hardware keys.
+
+00:01:33.717 --> 00:01:36.307
+Every guest gets an owner and an expiry.
+
+00:01:36.617 --> 00:01:38.967
+The sync server is treated as tier zero.
+
+00:01:39.272 --> 00:01:42.362
+These are settings in a
+licence we already pay for.
+
+00:01:42.577 --> 00:01:46.747
+NIS2 names access control and
+secure sign-in among its measures.
+
+00:01:48.630 --> 00:01:49.840
+A suggested first step.
+
+00:01:50.125 --> 00:01:53.995
+Ask how many people can take over the
+tenant today, and how many should.
+
+00:01:54.305 --> 00:01:58.415
+If the answer is above five,
+or nobody knows, that is the finding.
+
+00:02:00.017 --> 00:02:01.667
+Four ways to lose the tenant.
+
+00:02:02.017 --> 00:02:04.887
+Fewer standing administrators,
+and a closed gate.
+

@@ -1,0 +1,115 @@
+WEBVTT
+
+00:00:00.350 --> 00:00:03.000
+Can we be offline without
+anyone breaking in?
+
+00:00:03.250 --> 00:00:06.220
+A DDoS attack can do it, in four ways.
+
+00:00:07.583 --> 00:00:09.273
+First, the pipe fills up.
+
+00:00:09.498 --> 00:00:13.548
+Hundreds of thousands of hijacked
+devices send traffic at once.
+
+00:00:13.873 --> 00:00:18.143
+Our connection has a fixed size,
+so real customers cannot get through.
+
+00:00:18.393 --> 00:00:22.823
+Only capacity in front of us,
+bigger than any attacker, absorbs it.
+
+00:00:23.783 --> 00:00:25.533
+Second, expensive requests.
+
+00:00:25.993 --> 00:00:30.003
+Bots ask for product searches,
+logins and password resets.
+
+00:00:30.343 --> 00:00:33.673
+The dashboards say the site is up,
+but nobody can use it.
+
+00:00:33.913 --> 00:00:37.383
+Capping the expensive actions
+helps more than adding servers.
+
+00:00:38.583 --> 00:00:40.913
+Third, one address book for everything.
+
+00:00:41.228 --> 00:00:43.058
+Customers find us through DNS.
+
+00:00:43.598 --> 00:00:47.968
+If that provider fails, our website,
+email and app vanish at once.
+
+00:00:48.308 --> 00:00:50.318
+It is rarely on the risk register.
+
+00:00:51.450 --> 00:00:52.580
+Fourth, the timing.
+
+00:00:52.940 --> 00:00:54.870
+Attackers pick our busiest day.
+
+00:00:55.130 --> 00:00:59.020
+A short demonstration attack
+is followed by a demand to pay.
+
+00:00:59.280 --> 00:01:02.450
+Paying proves that we pay,
+and invites the next demand.
+
+00:01:03.550 --> 00:01:04.760
+What good looks like.
+
+00:01:05.045 --> 00:01:08.955
+A CDN with scrubbing sits in
+front of everything public.
+
+00:01:09.225 --> 00:01:12.595
+Two independent DNS
+providers answer for us.
+
+00:01:12.840 --> 00:01:16.790
+Rate limiting and bot management
+protect the expensive pages.
+
+00:01:17.240 --> 00:01:21.190
+A failover page and a tested
+runbook keep customers informed.
+
+00:01:21.545 --> 00:01:26.835
+NIS2 names business continuity and crisis
+management as risk-management measures.
+
+00:01:28.697 --> 00:01:29.907
+A suggested first step.
+
+00:01:30.192 --> 00:01:33.502
+Ask what one hour offline
+costs on our busiest day.
+
+00:01:33.712 --> 00:01:38.122
+Then ask who, by name, may switch the
+mitigation on at three in the morning.
+
+00:01:38.412 --> 00:01:41.762
+If either answer takes longer
+than a minute, that is the gap.
+
+00:01:42.057 --> 00:01:44.987
+Consider deciding in
+advance that we do not pay.
+
+00:01:46.517 --> 00:01:48.887
+Availability is revenue per hour.
+
+00:01:49.147 --> 00:01:53.177
+Put capacity in front of us,
+and decide before the demand arrives.
+
