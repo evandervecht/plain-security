@@ -8,8 +8,11 @@ the rendered files are assets of the GitHub release `videos`, and a page links t
   `build/` and `out/` are explainroo's own output and stay out of git.
 - `media/queue.txt`: the release order, top = next. Add a new slug at the end, or at the top to jump the queue.
 - `tools/media.mjs`: `render` (voice, check, render, verify every queued slug that has no upload yet), `upload`
-  (the mp4, vtt and cover as `<slug>.mp4` etc. on the release), `release` (the head of the queue onto its page,
-  on a branch and a `chore(media)` PR), `status`. The hub runs `render` then `release` once a week.
+  (the mp4, vtt and cover as `<slug>.mp4` etc. on the release, plus the video's sound as `<slug>.mp3`), `release`
+  (the head of the queue onto its page and into `podcast.xml`, on a branch and a `chore(media)` PR), `feed`
+  (rebuild `podcast.xml` by hand), `status`. The hub runs `render` then `release` once a week.
+- `podcast.xml` (site root): the podcast, one episode per page that carries its video, the mp3 as enclosure.
+  Generated; do not edit.
 
 A new briefing gets its project when the briefing is written (see AGENTS.md, "Video"): script first, then the
 pictures, then `node <explainroo>/bin/explainroo.js check media/<slug>` until it is clean. The hub renders it.
