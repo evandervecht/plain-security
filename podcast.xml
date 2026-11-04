@@ -1,0 +1,444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Plain Security</title>
+  <link>https://plain-security.fyi/</link>
+  <atom:link href="https://plain-security.fyi/podcast.xml" rel="self" type="application/rss+xml"/>
+  <language>en</language>
+  <description>Two-minute security briefings for the board: how it breaks, what stops it, one suggested first step. The sound of the briefing videos on plain-security.fyi.</description>
+  <itunes:author>Plain Security</itunes:author>
+  <itunes:explicit>false</itunes:explicit>
+  <item>
+    <title>Email security: four ways it breaks</title>
+    <link>https://plain-security.fyi/email-security/</link>
+    <guid isPermaLink="false">plain-security-email-security</guid>
+    <pubDate>Tue, 03 Nov 2026 10:54:04 GMT</pubDate>
+    <description>Interception, tampering, spoofing and man-in-the-middle. What each costs, what stops it.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/email-security.mp3" length="1606050" type="audio/mpeg"/>
+    <itunes:episode>48</itunes:episode>
+  </item>
+  <item>
+    <title>Cookie hijacking: how attackers use borrowed credentials</title>
+    <link>https://plain-security.fyi/cookies/</link>
+    <guid isPermaLink="false">plain-security-cookies</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>How stolen or intercepted cookies enable account takeover, bypass MFA, and impersonate users on trusted downstream systems.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/cookies.mp3" length="1637397" type="audio/mpeg"/>
+    <itunes:episode>47</itunes:episode>
+  </item>
+  <item>
+    <title>SSL and TLS cipher suites: a layer deeper into encryption in transit</title>
+    <link>https://plain-security.fyi/tls-cipher-suites/</link>
+    <guid isPermaLink="false">plain-security-tls-cipher-suites</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>A layer deeper into encryption in transit: weak suites, downgrades and key exchange. What to ask of IT.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/tls-cipher-suites.mp3" length="1467810" type="audio/mpeg"/>
+    <itunes:episode>46</itunes:episode>
+  </item>
+  <item>
+    <title>Ransomware: four steps to a standstill</title>
+    <link>https://plain-security.fyi/ransomware/</link>
+    <guid isPermaLink="false">plain-security-ransomware</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>One stolen login, four steps to a standstill. What happens at each step, what breaks the chain.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/ransomware.mp3" length="1375023" type="audio/mpeg"/>
+    <itunes:episode>45</itunes:episode>
+  </item>
+  <item>
+    <title>Decrease the blast radius: the difference between an incident and a crisis</title>
+    <link>https://plain-security.fyi/blast-radius/</link>
+    <guid isPermaLink="false">plain-security-blast-radius</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>One breach becomes a total outage — unless networks are segmented, admin is tiered, and permissions are minimal. The difference between an incident and a crisis.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/blast-radius.mp3" length="1288819" type="audio/mpeg"/>
+    <itunes:episode>44</itunes:episode>
+  </item>
+  <item>
+    <title>Phishing: four ways a person gets played</title>
+    <link>https://plain-security.fyi/phishing/</link>
+    <guid isPermaLink="false">plain-security-phishing</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Fake login pages, MFA fatigue, CEO fraud and every other channel. What one click can and cannot do.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/phishing.mp3" length="1410132" type="audio/mpeg"/>
+    <itunes:episode>43</itunes:episode>
+  </item>
+  <item>
+    <title>Passwords and identity: who can get in, and who can do anything</title>
+    <link>https://plain-security.fyi/identity/</link>
+    <guid isPermaLink="false">plain-security-identity</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Reused passwords, phone-read codes, leavers and standing admins. Who can get in, who can do anything.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/identity.mp3" length="1343676" type="audio/mpeg"/>
+    <itunes:episode>42</itunes:episode>
+  </item>
+  <item>
+    <title>Entra ID: the keys to Microsoft 365</title>
+    <link>https://plain-security.fyi/entra/</link>
+    <guid isPermaLink="false">plain-security-entra</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Global Admins, an open Conditional Access gate, guests who never left, and the hybrid sync back door.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/entra.mp3" length="1540849" type="audio/mpeg"/>
+    <itunes:episode>41</itunes:episode>
+  </item>
+  <item>
+    <title>IAM: who may do what, and who checks</title>
+    <link>https://plain-security.fyi/iam/</link>
+    <guid isPermaLink="false">plain-security-iam</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Orphaned service accounts, wildcard roles, one person with both signatures, shared admin logins. With examples.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/iam.mp3" length="1521413" type="audio/mpeg"/>
+    <itunes:episode>40</itunes:episode>
+  </item>
+  <item>
+    <title>Supply chain attacks: breached through someone we trust</title>
+    <link>https://plain-security.fyi/supply-chain/</link>
+    <guid isPermaLink="false">plain-security-supply-chain</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Breached through someone we trust: vendor updates, supplier logins, open-source code and SaaS leaks.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/supply-chain.mp3" length="1649622" type="audio/mpeg"/>
+    <itunes:episode>39</itunes:episode>
+  </item>
+  <item>
+    <title>Cloud misconfiguration: the cloud is secure, our settings are not</title>
+    <link>https://plain-security.fyi/cloud/</link>
+    <guid isPermaLink="false">plain-security-cloud</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>The cloud is secure, our settings are not. Four mistakes behind most cloud breaches, and what prevents each.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/cloud.mp3" length="1724542" type="audio/mpeg"/>
+    <itunes:episode>38</itunes:episode>
+  </item>
+  <item>
+    <title>Shared responsibility: whose job is it?</title>
+    <link>https://plain-security.fyi/shared-responsibility/</link>
+    <guid isPermaLink="false">plain-security-shared-responsibility</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>The provider secures the cloud, you secure what you put in it. Where the line sits for IaaS, PaaS and SaaS.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/shared-responsibility.mp3" length="1623291" type="audio/mpeg"/>
+    <itunes:episode>37</itunes:episode>
+  </item>
+  <item>
+    <title>The 90-page report: what a clean opinion does and does not tell you</title>
+    <link>https://plain-security.fyi/assurance-reports/</link>
+    <guid isPermaLink="false">plain-security-assurance-reports</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Your supplier sent a 90-page assurance report. Which type it is, what period and scope it covers, the controls it assumes you run, how to read the exceptions, and what a clean opinion never tells you.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/assurance-reports.mp3" length="1525802" type="audio/mpeg"/>
+    <itunes:episode>36</itunes:episode>
+  </item>
+  <item>
+    <title>Insider threat: four people who already have the keys</title>
+    <link>https://plain-security.fyi/insider/</link>
+    <guid isPermaLink="false">plain-security-insider</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Four people who already have the keys: leaver, careless colleague, unwatched admin, pressured employee.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/insider.mp3" length="1326436" type="audio/mpeg"/>
+    <itunes:episode>35</itunes:episode>
+  </item>
+  <item>
+    <title>DDoS: offline without a break-in</title>
+    <link>https://plain-security.fyi/ddos/</link>
+    <guid isPermaLink="false">plain-security-ddos</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Offline without a break-in. Floods, fake shoppers, one DNS provider, extortion, what keeps us up.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/ddos.mp3" length="1400414" type="audio/mpeg"/>
+    <itunes:episode>34</itunes:episode>
+  </item>
+  <item>
+    <title>Things that expire: domains, DNS and certificates</title>
+    <link>https://plain-security.fyi/expiry/</link>
+    <guid isPermaLink="false">plain-security-expiry</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Could we go offline because somebody forgot to renew something? Domains, DNS and certificates all carry a date, and public certificates shrink to 47 days by 2029.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/expiry.mp3" length="1617649" type="audio/mpeg"/>
+    <itunes:episode>33</itunes:episode>
+  </item>
+  <item>
+    <title>The unpatched server: known hole, published fix, still open</title>
+    <link>https://plain-security.fyi/patching/</link>
+    <guid isPermaLink="false">plain-security-patching</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Known hole, published fix, still open. Four ways patching fails, and the one control that closes each.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/patching.mp3" length="1330197" type="audio/mpeg"/>
+    <itunes:episode>32</itunes:episode>
+  </item>
+  <item>
+    <title>Fixing vulnerabilities with AI: faster, not on autopilot</title>
+    <link>https://plain-security.fyi/ai-vulnerability-remediation/</link>
+    <guid isPermaLink="false">plain-security-ai-vulnerability-remediation</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>How automated and AI vulnerability remediation actually works: ranking, bots and AI that write the fix, auto-merge and poisoned updates, and fixing agents with too much access.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/ai-vulnerability-remediation.mp3" length="1607618" type="audio/mpeg"/>
+    <itunes:episode>31</itunes:episode>
+  </item>
+  <item>
+    <title>The box at the edge: who owns it, and is it patched?</title>
+    <link>https://plain-security.fyi/edge-devices/</link>
+    <guid isPermaLink="false">plain-security-edge-devices</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>VPN and firewall appliances are the most common way in. Who owns the box, is it patched, is the admin page on the internet, and what zero trust changes.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/edge-devices.mp3" length="1578465" type="audio/mpeg"/>
+    <itunes:episode>30</itunes:episode>
+  </item>
+  <item>
+    <title>php2shell: one request, and the web server is theirs</title>
+    <link>https://plain-security.fyi/php2shell/</link>
+    <guid isPermaLink="false">plain-security-php2shell</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Two critical PHP flaws (CVE-2026-109618 and CVE-2026-109619) can let anyone run code on a web server without logging in. Update, find old PHP, and ask your suppliers.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/php2shell.mp3" length="1478782" type="audio/mpeg"/>
+    <itunes:episode>29</itunes:episode>
+  </item>
+  <item>
+    <title>The trusted app that let them in: ConnectWise Cloud Backup</title>
+    <link>https://plain-security.fyi/connectwise-cloud-backup/</link>
+    <guid isPermaLink="false">plain-security-connectwise-cloud-backup</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Attackers stole the keys of a trusted Microsoft 365 backup app and signed in as the app, with no user and no MFA, helped by AI agents. What it means for you, and the questions worth asking.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/connectwise-cloud-backup.mp3" length="1633322" type="audio/mpeg"/>
+    <itunes:episode>28</itunes:episode>
+  </item>
+  <item>
+    <title>Could we restore? Backups, and the restore nobody tested</title>
+    <link>https://plain-security.fyi/backups-and-restore/</link>
+    <guid isPermaLink="false">plain-security-backups-and-restore</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>If ransomware hits tonight, how long until we are back? Recovery targets in plain words, the copy an attacker cannot delete, the restore nobody tested, and the cloud data nobody backs up.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/backups-and-restore.mp3" length="1508875" type="audio/mpeg"/>
+    <itunes:episode>27</itunes:episode>
+  </item>
+  <item>
+    <title>Shadow IT: the data you don't know you have</title>
+    <link>https://plain-security.fyi/shadow-it/</link>
+    <guid isPermaLink="false">plain-security-shadow-it</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Company data in tools nobody approved, accounts nobody manages, apps nobody revoked. How to see it again.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/shadow-it.mp3" length="1545864" type="audio/mpeg"/>
+    <itunes:episode>26</itunes:episode>
+  </item>
+  <item>
+    <title>AI at work: four ways it turns on us</title>
+    <link>https://plain-security.fyi/ai-security/</link>
+    <guid isPermaLink="false">plain-security-ai-security</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Public chatbots, hijacked assistants, cloned voices and confident nonsense. What each costs, what contains it.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/ai-security.mp3" length="1536773" type="audio/mpeg"/>
+    <itunes:episode>25</itunes:episode>
+  </item>
+  <item>
+    <title>A sandbox for AI: where should an agent be allowed to run?</title>
+    <link>https://plain-security.fyi/ai-sandboxing/</link>
+    <guid isPermaLink="false">plain-security-ai-sandboxing</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Where should an AI agent be allowed to run? A throwaway machine with its own kernel, no standing keys, a closed door to the internet, and a person at every exit.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/ai-sandboxing.mp3" length="1615454" type="audio/mpeg"/>
+    <itunes:episode>24</itunes:episode>
+  </item>
+  <item>
+    <title>How AI agents work: the model, the harness, and what you plug in</title>
+    <link>https://plain-security.fyi/ai-agents/</link>
+    <guid isPermaLink="false">plain-security-ai-agents</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>How AI agents such as Claude Code, Codex and Hermes Agent work: the model and the harness, agents, skills and MCP servers, why to review skills and servers before installing, and what keeps them contained.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/ai-agents.mp3" length="1499471" type="audio/mpeg"/>
+    <itunes:episode>23</itunes:episode>
+  </item>
+  <item>
+    <title>Sovereign cloud: sovereign from whom?</title>
+    <link>https://plain-security.fyi/cloud-sovereignty/</link>
+    <guid isPermaLink="false">plain-security-cloud-sovereignty</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Sovereign from whom? The EU&amp;#x27;s own yardstick, the law that follows the provider, what still leaves with your SaaS, and whether you could leave.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/cloud-sovereignty.mp3" length="1589750" type="audio/mpeg"/>
+    <itunes:episode>22</itunes:episode>
+  </item>
+  <item>
+    <title>CADA or the framework? Same ladder, different rules</title>
+    <link>https://plain-security.fyi/cada-vs-sovereignty-framework/</link>
+    <guid isPermaLink="false">plain-security-cada-vs-sovereignty-framework</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>The Commission&amp;#x27;s SEAL ladder and the proposed law&amp;#x27;s four assurance levels. What each is, how the levels work, who would have to comply, three examples.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/cada-vs-sovereignty-framework.mp3" length="1478782" type="audio/mpeg"/>
+    <itunes:episode>21</itunes:episode>
+  </item>
+  <item>
+    <title>Encrypted at rest: who can still read it?</title>
+    <link>https://plain-security.fyi/encryption-at-rest/</link>
+    <guid isPermaLink="false">plain-security-encryption-at-rest</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Encrypted, so safe? Only against a stolen disk. Logins, keys, forgotten copies, and what quantum really changes.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/encryption-at-rest.mp3" length="1586615" type="audio/mpeg"/>
+    <itunes:episode>20</itunes:episode>
+  </item>
+  <item>
+    <title>Quantum and AI: when two threats converge</title>
+    <link>https://plain-security.fyi/quantum-and-ai/</link>
+    <guid isPermaLink="false">plain-security-quantum-and-ai</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Encrypted today, decrypted tomorrow. How quantum computers and AI together threaten current encryption, and why migration must start now.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/quantum-and-ai.mp3" length="1471885" type="audio/mpeg"/>
+    <itunes:episode>19</itunes:episode>
+  </item>
+  <item>
+    <title>Your website is a front door</title>
+    <link>https://plain-security.fyi/web-security/</link>
+    <guid isPermaLink="false">plain-security-web-security</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Injection, forgotten plugins, account takeover and skimmed checkouts. Four ways in, one control each.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/web-security.mp3" length="1535833" type="audio/mpeg"/>
+    <itunes:episode>18</itunes:episode>
+  </item>
+  <item>
+    <title>Endpoints: laptops, phones and the kitchen table</title>
+    <link>https://plain-security.fyi/endpoints/</link>
+    <guid isPermaLink="false">plain-security-endpoints</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Lost laptops, unmanaged phones, admin for everyone, an outdated browser. Where the data really lives.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/endpoints.mp3" length="1514517" type="audio/mpeg"/>
+    <itunes:episode>17</itunes:episode>
+  </item>
+  <item>
+    <title>Knowing what to protect: four ways we lose track of data</title>
+    <link>https://plain-security.fyi/data/</link>
+    <guid isPermaLink="false">plain-security-data</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Crown jewels nobody can name, forty copies, links for anyone, data kept fifteen years. How to see it again.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/data.mp3" length="1358096" type="audio/mpeg"/>
+    <itunes:episode>16</itunes:episode>
+  </item>
+  <item>
+    <title>Would we even notice? Four ways an attack stays invisible</title>
+    <link>https://plain-security.fyi/detection/</link>
+    <guid isPermaLink="false">plain-security-detection</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Logs nobody kept, alerts nobody read, half the estate unwatched, tickets read Monday. Would we notice?</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/detection.mp3" length="1459347" type="audio/mpeg"/>
+    <itunes:episode>15</itunes:episode>
+  </item>
+  <item>
+    <title>The factory, the building and the cameras: four ways they stop</title>
+    <link>https://plain-security.fyi/ot-iot/</link>
+    <guid isPermaLink="false">plain-security-ot-iot</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Production lines, building systems and cameras that cannot be patched. Four ways they stop, one fix each.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/ot-iot.mp3" length="1625485" type="audio/mpeg"/>
+    <itunes:episode>14</itunes:episode>
+  </item>
+  <item>
+    <title>Building software that holds</title>
+    <link>https://plain-security.fyi/secure-development/</link>
+    <guid isPermaLink="false">plain-security-secure-development</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Secrets in code, a hijacked build server, testing after launch, apps nobody owns. What closes each gap.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/secure-development.mp3" length="1411072" type="audio/mpeg"/>
+    <itunes:episode>13</itunes:episode>
+  </item>
+  <item>
+    <title>Code security: what is inside the software we ship</title>
+    <link>https://plain-security.fyi/code-security/</link>
+    <guid isPermaLink="false">plain-security-code-security</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Your own code, open-source parts, server templates and container images: where security flaws hide, and how to tell which ones matter.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/code-security.mp3" length="1409191" type="audio/mpeg"/>
+    <itunes:episode>12</itunes:episode>
+  </item>
+  <item>
+    <title>The pentest came back fine. Are we safe now?</title>
+    <link>https://plain-security.fyi/pentest/</link>
+    <guid isPermaLink="false">plain-security-pentest</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>The pentest came back fine. Are we safe now? What was tested and when, how much the tester knew, findings that never get fixed, and the difference between a scan, a pentest and a red team.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/pentest.mp3" length="1636770" type="audio/mpeg"/>
+    <itunes:episode>11</itunes:episode>
+  </item>
+  <item>
+    <title>How much security is enough?</title>
+    <link>https://plain-security.fyi/security-governance/</link>
+    <guid isPermaLink="false">plain-security-security-governance</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>What should we spend, who should the CISO report to, and which numbers should the board see every quarter? Budget benchmarks, the CISO's independence, five numbers for the dashboard, external review, and what NIS2 and DORA ask of the board.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/security-governance.mp3" length="1515458" type="audio/mpeg"/>
+    <itunes:episode>10</itunes:episode>
+  </item>
+  <item>
+    <title>Buying a company, buying its breaches</title>
+    <link>https://plain-security.fyi/acquisitions/</link>
+    <guid isPermaLink="false">plain-security-acquisitions</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>When you buy a company, you also buy its network, its accounts, its data and whoever is already inside. An inherited attacker, the estate nobody listed, connecting on day one, warranties and insurance, and the personal data that comes with the deal.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/acquisitions.mp3" length="1658400" type="audio/mpeg"/>
+    <itunes:episode>9</itunes:episode>
+  </item>
+  <item>
+    <title>Terraform state: the map of everything you run</title>
+    <link>https://plain-security.fyi/terraform-state/</link>
+    <guid isPermaLink="false">plain-security-terraform-state</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>What Terraform state is, why it holds the map of your infrastructure and often its passwords, locking and versions, the chicken-and-egg of where it lives, and HCP Terraform, GitLab, S3 and Azure compared.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/terraform-state.mp3" length="1509815" type="audio/mpeg"/>
+    <itunes:episode>8</itunes:episode>
+  </item>
+  <item>
+    <title>We sell products with software in them. What does the CRA ask of us, and from when?</title>
+    <link>https://plain-security.fyi/cra/</link>
+    <guid isPermaLink="false">plain-security-cra</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>We sell products with software in them. What the CRA asks of makers, importers and resellers: reporting since September 2026, CE mark and support period from December 2027.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/cra.mp3" length="1547745" type="audio/mpeg"/>
+    <itunes:episode>7</itunes:episode>
+  </item>
+  <item>
+    <title>The first 72 hours. Four ways they go wrong.</title>
+    <link>https://plain-security.fyi/incident-response/</link>
+    <guid isPermaLink="false">plain-security-incident-response</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Who decides, what gets wiped, who says what, who to call. How the first three days derail.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/incident-response.mp3" length="1472199" type="audio/mpeg"/>
+    <itunes:episode>6</itunes:episode>
+  </item>
+  <item>
+    <title>Cyber insurance: four surprises at claim time</title>
+    <link>https://plain-security.fyi/cyber-insurance/</link>
+    <guid isPermaLink="false">plain-security-cyber-insurance</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>The policy is a control with small print. Questionnaire, exclusions, sub-limits, notification: what each costs.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/cyber-insurance.mp3" length="1594452" type="audio/mpeg"/>
+    <itunes:episode>5</itunes:episode>
+  </item>
+  <item>
+    <title>NIS2 and DORA: the law now names the board</title>
+    <link>https://plain-security.fyi/nis2-dora/</link>
+    <guid isPermaLink="false">plain-security-nis2-dora</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>The law now names the board. Four things that changed, and what has to be in place before the audit.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/nis2-dora.mp3" length="1711376" type="audio/mpeg"/>
+    <itunes:episode>4</itunes:episode>
+  </item>
+  <item>
+    <title>Cbw and Wwke: one date, two kinds of resilience</title>
+    <link>https://plain-security.fyi/cbw-wwke/</link>
+    <guid isPermaLink="false">plain-security-cbw-wwke</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Two Dutch laws started on 15 August 2026: one for cyber, one for physical resilience. Which one applies to you, what differs, and the one board decision that covers both.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/cbw-wwke.mp3" length="1695076" type="audio/mpeg"/>
+    <itunes:episode>3</itunes:episode>
+  </item>
+  <item>
+    <title>You are the target: four routes in</title>
+    <link>https://plain-security.fyi/board-as-target/</link>
+    <guid isPermaLink="false">plain-security-board-as-target</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>Board members are a route in: private mail and phones, a cloned voice on a call, the board pack, and travel. Four routes, and what closes each.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/board-as-target.mp3" length="1733319" type="audio/mpeg"/>
+    <itunes:episode>2</itunes:episode>
+  </item>
+  <item>
+    <title>Eight ways to prove who you are</title>
+    <link>https://plain-security.fyi/auth-protocols/</link>
+    <guid isPermaLink="false">plain-security-auth-protocols</guid>
+    <pubDate>Wed, 04 Nov 2026 13:35:25 GMT</pubDate>
+    <description>OAuth2, SAML, OIDC, mTLS, passkeys, Kerberos, LDAP, RADIUS, API keys and AI agents. When to use each, where it breaks, and what AI changes.</description>
+    <enclosure url="https://github.com/evandervecht/plain-security/releases/download/videos/auth-protocols.mp3" length="1617335" type="audio/mpeg"/>
+    <itunes:episode>1</itunes:episode>
+  </item>
+</channel>
+</rss>
